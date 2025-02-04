@@ -176,7 +176,7 @@ class ParsedExercise(PydanticBase):
     text_reference: Annotated[deltas.Deltas, WriteOnly()]
     wording_paragraphs_per_pagelet: Annotated[int | None, WriteOnly()]
     adaptation: Annotated[Adaptation, WriteOnly()]
-    adapted: Annotated[renderable.Exercise, Computed()]
+    adapted: Annotated[renderable.Exercise | None, Computed()] = None
 
 
 class SyntheticError(PydanticBase):

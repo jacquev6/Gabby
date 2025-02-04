@@ -6,8 +6,7 @@ export interface Settings {
   tricolorWording: boolean
 }
 
-
-export type Exercise = paths['/api/parsedExercises/{id}']['get']['responses']['200']['content']['application/vnd.api+json']['data']['attributes']['adapted']
+export type Exercise = Exclude<paths['/api/parsedExercises/{id}']['get']['responses']['200']['content']['application/vnd.api+json']['data']['attributes']['adapted'], null>
 
 export type Section = Exercise['pagelets'][number]['instructions']
 

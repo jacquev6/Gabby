@@ -4,7 +4,6 @@ import uuid
 from starlette import status
 
 from . import api_models
-from . import deltas
 from . import renderable
 from . import settings
 from .exercises import Exercise
@@ -98,32 +97,32 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
             "textbook_page": None,  # @todo Rename to textbookPage
             "pagelets": [{
                 "instructions": {"paragraphs": [
-                    {"tokens": [
-                        {"type": "plainText", "text": "This"},
-                        {"type": "whitespace"},
-                        {"type": "plainText", "text": "is"},
-                        {"type": "whitespace"},
-                        {"type": "plainText", "text": "the"},
-                        {"type": "whitespace"},
-                        {"type": "plainText", "text": "{"},
-                        {"type": "plainText", "text": "boxed"},
-                        {"type": "plainText", "text": "-"},
-                        {"type": "plainText", "text": "text"},
-                        {"type": "plainText", "text": "|"},
-                        {"type": "plainText", "text": "instructions"},
-                        {"type": "plainText", "text": "}"},
-                        {"type": "plainText", "text": "."},
+                    {"contents": [
+                        {"kind": "text", "text": "This"},
+                        {"kind": "whitespace"},
+                        {"kind": "text", "text": "is"},
+                        {"kind": "whitespace"},
+                        {"kind": "text", "text": "the"},
+                        {"kind": "whitespace"},
+                        {"kind": "text", "text": "{"},
+                        {"kind": "text", "text": "boxed"},
+                        {"kind": "text", "text": "-"},
+                        {"kind": "text", "text": "text"},
+                        {"kind": "text", "text": "|"},
+                        {"kind": "text", "text": "instructions"},
+                        {"kind": "text", "text": "}"},
+                        {"kind": "text", "text": "."},
                     ]},
                 ]},
-                "wording": {"paragraphs": [{"tokens": [
-                    {"type": "plainText", "text": "This"},
-                    {"type": "whitespace"},
-                    {"type": "plainText", "text": "is"},
-                    {"type": "whitespace"},
-                    {"type": "plainText", "text": "the"},
-                    {"type": "whitespace"},
-                    {"type": "plainText", "text": "wording"},
-                    {"type": "plainText", "text": "."},
+                "wording": {"paragraphs": [{"contents": [
+                    {"kind": "text", "text": "This"},
+                    {"kind": "whitespace"},
+                    {"kind": "text", "text": "is"},
+                    {"kind": "whitespace"},
+                    {"kind": "text", "text": "the"},
+                    {"kind": "whitespace"},
+                    {"kind": "text", "text": "wording"},
+                    {"kind": "text", "text": "."},
                 ]}]},
             }],
         })
@@ -167,26 +166,26 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
             "textbook_page": None,  # @todo Rename to textbookPage
             "pagelets": [{
                 "instructions": {"paragraphs": [
-                    {"tokens": [
-                        {"type": "plainText", "text": "This"},
-                        {"type": "whitespace"},
-                        {"type": "plainText", "text": "is"},
-                        {"type": "whitespace"},
-                        {"type": "plainText", "text": "the"},
-                        {"type": "whitespace"},
-                        {"type": "plainText", "text": "instructions"},
-                        {"type": "plainText", "text": "."},
+                    {"contents": [
+                        {"kind": "text", "text": "This"},
+                        {"kind": "whitespace"},
+                        {"kind": "text", "text": "is"},
+                        {"kind": "whitespace"},
+                        {"kind": "text", "text": "the"},
+                        {"kind": "whitespace"},
+                        {"kind": "text", "text": "instructions"},
+                        {"kind": "text", "text": "."},
                     ]},
                 ]},
-                "wording": {"paragraphs": [{"tokens": [
-                    {"type": "selectableText", "text": "This", "colors": ["red", "green", "blue"], "boxed": False},
-                    {"type": "whitespace"},
-                    {"type": "selectableText", "text": "is", "colors": ["red", "green", "blue"], "boxed": False},
-                    {"type": "whitespace"},
-                    {"type": "selectableText", "text": "the", "colors": ["red", "green", "blue"], "boxed": False},
-                    {"type": "whitespace"},
-                    {"type": "selectableText", "text": "wording", "colors": ["red", "green", "blue"], "boxed": False},
-                    {"type": "plainText", "text": "."},
+                "wording": {"paragraphs": [{"contents": [
+                    {"kind": "selectableInput", "contents": [{"kind": "text", "text": "This"}], "colors": ["red", "green", "blue"], "boxed": False},
+                    {"kind": "whitespace"},
+                    {"kind": "selectableInput", "contents": [{"kind": "text", "text": "is"}], "colors": ["red", "green", "blue"], "boxed": False},
+                    {"kind": "whitespace"},
+                    {"kind": "selectableInput", "contents": [{"kind": "text", "text": "the"}], "colors": ["red", "green", "blue"], "boxed": False},
+                    {"kind": "whitespace"},
+                    {"kind": "selectableInput", "contents": [{"kind": "text", "text": "wording"}], "colors": ["red", "green", "blue"], "boxed": False},
+                    {"kind": "text", "text": "."},
                 ]}]},
             }],
         })
@@ -230,46 +229,46 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
             "textbook_page": None,  # @todo Rename to textbookPage
             "pagelets": [{
                 "instructions": {"paragraphs": [
-                    {"tokens": [
-                        {"type": "plainText", "text": "This"},
-                        {"type": "whitespace"},
-                        {"type": "plainText", "text": "is"},
-                        {"type": "whitespace"},
-                        {"type": "plainText", "text": "the"},
-                        {"type": "whitespace"},
-                        {"type": "plainText", "text": "instructions"},
-                        {"type": "plainText", "text": "."},
+                    {"contents": [
+                        {"kind": "text", "text": "This"},
+                        {"kind": "whitespace"},
+                        {"kind": "text", "text": "is"},
+                        {"kind": "whitespace"},
+                        {"kind": "text", "text": "the"},
+                        {"kind": "whitespace"},
+                        {"kind": "text", "text": "instructions"},
+                        {"kind": "text", "text": "."},
                     ]},
-                    {"tokens": [
-                        {"type": "plainText", "text": "This"},
-                        {"type": "whitespace"},
-                        {"type": "plainText", "text": "is"},
-                        {"type": "whitespace"},
-                        {"type": "plainText", "text": "the"},
-                        {"type": "whitespace"},
-                        {"type": "plainText", "text": "example"},
-                        {"type": "plainText", "text": "."},
+                    {"contents": [
+                        {"kind": "text", "text": "This"},
+                        {"kind": "whitespace"},
+                        {"kind": "text", "text": "is"},
+                        {"kind": "whitespace"},
+                        {"kind": "text", "text": "the"},
+                        {"kind": "whitespace"},
+                        {"kind": "text", "text": "example"},
+                        {"kind": "text", "text": "."},
                     ]},
-                    {"tokens": [
-                        {"type": "plainText", "text": "This"},
-                        {"type": "whitespace"},
-                        {"type": "plainText", "text": "is"},
-                        {"type": "whitespace"},
-                        {"type": "plainText", "text": "the"},
-                        {"type": "whitespace"},
-                        {"type": "plainText", "text": "clue"},
-                        {"type": "plainText", "text": "."},
+                    {"contents": [
+                        {"kind": "text", "text": "This"},
+                        {"kind": "whitespace"},
+                        {"kind": "text", "text": "is"},
+                        {"kind": "whitespace"},
+                        {"kind": "text", "text": "the"},
+                        {"kind": "whitespace"},
+                        {"kind": "text", "text": "clue"},
+                        {"kind": "text", "text": "."},
                     ]},
                 ]},
-                "wording": {"paragraphs": [{"tokens": [
-                    {"type": "selectableText", "text": "This", "colors": ["red", "green", "blue"], "boxed": False},
-                    {"type": "whitespace"},
-                    {"type": "selectableText", "text": "is", "colors": ["red", "green", "blue"], "boxed": False},
-                    {"type": "whitespace"},
-                    {"type": "selectableText", "text": "the", "colors": ["red", "green", "blue"], "boxed": False},
-                    {"type": "whitespace"},
-                    {"type": "selectableText", "text": "wording", "colors": ["red", "green", "blue"], "boxed": False},
-                    {"type": "plainText", "text": "."},
+                "wording": {"paragraphs": [{"contents": [
+                    {"kind": "selectableInput", "contents": [{"kind": "text", "text": "This"}], "colors": ["red", "green", "blue"], "boxed": False},
+                    {"kind": "whitespace"},
+                    {"kind": "selectableInput", "contents": [{"kind": "text", "text": "is"}], "colors": ["red", "green", "blue"], "boxed": False},
+                    {"kind": "whitespace"},
+                    {"kind": "selectableInput", "contents": [{"kind": "text", "text": "the"}], "colors": ["red", "green", "blue"], "boxed": False},
+                    {"kind": "whitespace"},
+                    {"kind": "selectableInput", "contents": [{"kind": "text", "text": "wording"}], "colors": ["red", "green", "blue"], "boxed": False},
+                    {"kind": "text", "text": "."},
                 ]}]},
             }],
         })
@@ -306,20 +305,20 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
             "number": "A.1",
             "textbook_page": None,  # @todo Rename to textbookPage
             "pagelets": [{
-                "instructions": {"paragraphs": [{"tokens": [
-                    {"type": "plainText", "text": "This"},
-                    {"type": "whitespace"},
-                    {"type": "plainText", "text": "is"},
-                    {"type": "whitespace"},
-                    {"type": "plainText", "text": "the"},
-                    {"type": "whitespace"},
-                    {"type": "plainText", "text": "instructions"},
-                    {"type": "plainText", "text": "."},
+                "instructions": {"paragraphs": [{"contents": [
+                    {"kind": "text", "text": "This"},
+                    {"kind": "whitespace"},
+                    {"kind": "text", "text": "is"},
+                    {"kind": "whitespace"},
+                    {"kind": "text", "text": "the"},
+                    {"kind": "whitespace"},
+                    {"kind": "text", "text": "instructions"},
+                    {"kind": "text", "text": "."},
                 ]}]},
-                "wording": {"paragraphs": [{"tokens": [
-                    {"type": "plainText", "text": "Fill"},
-                    {"type": "whitespace"},
-                    {"type": "freeTextInput"},
+                "wording": {"paragraphs": [{"contents": [
+                    {"kind": "text", "text": "Fill"},
+                    {"kind": "whitespace"},
+                    {"kind": "freeTextInput"},
                 ]}]},
             }],
         })
@@ -370,23 +369,23 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
             "number": "A.1",
             "textbook_page": None,  # @todo Rename to textbookPage
             "pagelets": [{
-                "instructions": {"paragraphs": [{"tokens": [
-                    {"type": "boxedText", "text": "a"},
-                    {"type": "whitespace"},
-                    {"type": "plainText", "text": "ou"},
-                    {"type": "whitespace"},
-                    {"type": "boxedText", "text": "b"},
+                "instructions": {"paragraphs": [{"contents": [
+                    {"kind": "passiveSequence", "contents": [{"kind": "text", "text": "a"}], "boxed": True},
+                    {"kind": "whitespace"},
+                    {"kind": "text", "text": "ou"},
+                    {"kind": "whitespace"},
+                    {"kind": "passiveSequence", "contents": [{"kind": "text", "text": "b"}], "boxed": True},
                 ]}]},
                 "wording": {"paragraphs": [
-                    {"tokens": [
-                        {"type": "plainText", "text": "A"},
-                        {"type": "whitespace"},
-                        {"type": "multipleChoicesInput", "show_arrow_before": False, "choices": ["a", "b"], "show_choices_by_default": False},
+                    {"contents": [
+                        {"kind": "text", "text": "A"},
+                        {"kind": "whitespace"},
+                        {"kind": "multipleChoicesInput", "show_arrow_before": False, "choices": [[{"kind": "text", "text": "a"}], [{"kind": "text", "text": "b"}]], "show_choices_by_default": False},
                     ]},
-                    {"tokens": [
-                        {"type": "plainText", "text": "B"},
-                        {"type": "whitespace"},
-                        {"type": "multipleChoicesInput", "show_arrow_before": False, "choices": ["a", "b"], "show_choices_by_default": False},
+                    {"contents": [
+                        {"kind": "text", "text": "B"},
+                        {"kind": "whitespace"},
+                        {"kind": "multipleChoicesInput", "show_arrow_before": False, "choices": [[{"kind": "text", "text": "a"}], [{"kind": "text", "text": "b"}]], "show_choices_by_default": False},
                     ]},
                 ]},
             }],
@@ -439,15 +438,15 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
             "number": "A.1",
             "textbook_page": None,  # @todo Rename to textbookPage
             "pagelets": [{
-                "instructions": {"paragraphs": [{"tokens": [
-                    {"type": "plainText", "text": "Instructions"},
-                    {"type": "plainText", "text": "."},
+                "instructions": {"paragraphs": [{"contents": [
+                    {"kind": "text", "text": "Instructions"},
+                    {"kind": "text", "text": "."},
                 ]}]},
-                "wording": {"paragraphs": [{"tokens": [
-                    {"type": "plainText", "text": "A"},
-                    {"type": "whitespace"},
-                    {"type": "multipleChoicesInput", "show_arrow_before": False, "choices": ["alpha", "beta"], "show_choices_by_default": False},
-                    {"type": "plainText", "text": "."},
+                "wording": {"paragraphs": [{"contents": [
+                    {"kind": "text", "text": "A"},
+                    {"kind": "whitespace"},
+                    {"kind": "multipleChoicesInput", "show_arrow_before": False, "choices": [[{"kind": "text", "text": "alpha"}], [{"kind": "text", "text": "beta"}]], "show_choices_by_default": False},
+                    {"kind": "text", "text": "."},
                 ]}]},
             }],
         })
@@ -530,18 +529,18 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "instructions": {
                         "paragraphs": [
                             {
-                                "tokens": [
-                                    {"text": "Blah", "type": "plainText"},
-                                    {"type": "whitespace"},
-                                    {"text": "n", "type": "boxedText"},
-                                    {"text": ",", "type": "plainText"},
-                                    {"type": "whitespace"},
-                                    {"text": "u", "type": "boxedText"},
-                                    {"type": "whitespace"},
-                                    {"text": "ou", "type": "plainText"},
-                                    {"type": "whitespace"},
-                                    {"text": "nt", "type": "boxedText"},
-                                    {"text": ".", "type": "plainText"},
+                                "contents": [
+                                    {"kind": "text", "text": "Blah"},
+                                    {"kind": "whitespace"},
+                                    {"kind": "passiveSequence", "contents": [{"kind": "text", "text": "n"}], "boxed": True},
+                                    {"kind": "text", "text": ","},
+                                    {"kind": "whitespace"},
+                                    {"kind": "passiveSequence", "contents": [{"kind": "text", "text": "u"}], "boxed": True},
+                                    {"kind": "whitespace"},
+                                    {"kind": "text", "text": "ou"},
+                                    {"kind": "whitespace"},
+                                    {"kind": "passiveSequence", "contents": [{"kind": "text", "text": "nt"}], "boxed": True},
+                                    {"kind": "text", "text": "."},
                                 ]
                             }
                         ]
@@ -549,13 +548,13 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                     "wording": {
                         "paragraphs": [
                             {
-                                "tokens": [
-                                    {"text": "Blah", "type": "plainText"},
-                                    {"type": "whitespace"},
-                                    {"text": "...", "type": "plainText"},
-                                    {"type": "whitespace"},
-                                    {"text": "blih", "type": "plainText"},
-                                    {"text": ".", "type": "plainText"},
+                                "contents": [
+                                    {"kind": "text", "text": "Blah"},
+                                    {"kind": "whitespace"},
+                                    {"kind": "text", "text": "..."},
+                                    {"kind": "whitespace"},
+                                    {"kind": "text", "text": "blih"},
+                                    {"kind": "text", "text": "."},
                                 ]
                             }
                         ]

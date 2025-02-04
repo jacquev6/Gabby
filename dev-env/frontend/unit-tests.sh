@@ -30,3 +30,10 @@ fi
   frontend-shell \
     npx cypress run \
       --component "$@"
+
+# Cypress puts screenshots in a different place when invoked with --spec. Fix that.
+for d in $(find ../../frontend/cypress/screenshots -maxdepth 1 -name 'TricolorSection*.cy.*')
+do
+  mkdir -p ../../frontend/cypress/screenshots/adapted/components
+  mv $d ../../frontend/cypress/screenshots/adapted/components
+done

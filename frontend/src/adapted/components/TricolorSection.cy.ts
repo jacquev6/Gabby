@@ -3,19 +3,19 @@ import type { Paragraph } from '$adapted/types'
 
 
 function makeToken(text: string) {
-  return {type: 'plainText' as const, text}
+  return {kind: 'text' as const, text}
 }
 
 function makeSentence(prefix: string, length=26) {
-  const tokens: Paragraph['tokens'] = [
+  const contents: Paragraph['contents'] = [
     makeToken(prefix + 'A')
   ]
   for (let i = 1; i < length; i++) {
-    tokens.push({type: 'whitespace'})
-    tokens.push(makeToken(prefix + String.fromCharCode('A'.charCodeAt(0) + i)))
+    contents.push({kind: 'whitespace'})
+    contents.push(makeToken(prefix + String.fromCharCode('A'.charCodeAt(0) + i)))
   }
-  tokens.push(makeToken('.'))
-  return tokens
+  contents.push(makeToken('.'))
+  return contents
 }
 
 const color1 = 'rgb(0, 0, 255)'
@@ -24,8 +24,8 @@ const color3 = 'rgb(0, 204, 0)'
 
 const props = {
   paragraphs: [
-    {tokens: [...makeSentence('A'), {type: 'whitespace'}, ...makeSentence('B'), {type: 'whitespace'}, ...makeSentence('C')]},
-    {tokens: [...makeSentence('D'), {type: 'whitespace'}, ...makeSentence('E'), {type: 'whitespace'}, ...makeSentence('F')]},
+    {contents: [...makeSentence('A'), {kind: 'whitespace'}, ...makeSentence('B'), {kind: 'whitespace'}, ...makeSentence('C')]},
+    {contents: [...makeSentence('D'), {kind: 'whitespace'}, ...makeSentence('E'), {kind: 'whitespace'}, ...makeSentence('F')]},
   ] as Paragraph[],
   paragraphIndexOffset: 0,
   modelValue: {} as Record<string, any/* @todo Type */>,
@@ -92,14 +92,14 @@ describe('TricolorSection', () => {
     cy.mount(TricolorSection, mountOptions)
     cy.viewport(1140, 600)
 
-    cy.vue().then((w) => w.setProps({paragraphs: [{tokens: [
-      ...makeSentence('A', 10), {type: 'whitespace'},
-      ...makeSentence('B', 10), {type: 'whitespace'},
-      ...makeSentence('C', 10), {type: 'whitespace'},
-      ...makeSentence('D', 10), {type: 'whitespace'},
-      ...makeSentence('E', 10), {type: 'whitespace'},
-      ...makeSentence('F', 10), {type: 'whitespace'},
-      ...makeSentence('G', 10), {type: 'whitespace'},
+    cy.vue().then((w) => w.setProps({paragraphs: [{contents: [
+      ...makeSentence('A', 10), {kind: 'whitespace'},
+      ...makeSentence('B', 10), {kind: 'whitespace'},
+      ...makeSentence('C', 10), {kind: 'whitespace'},
+      ...makeSentence('D', 10), {kind: 'whitespace'},
+      ...makeSentence('E', 10), {kind: 'whitespace'},
+      ...makeSentence('F', 10), {kind: 'whitespace'},
+      ...makeSentence('G', 10), {kind: 'whitespace'},
       ...makeSentence('H', 10)
     ]}]}))
 
@@ -125,7 +125,7 @@ describe('TricolorSection', () => {
       {
         props: {
           paragraphs: [
-            {tokens: makeSentence('A', 10)},
+            {contents: makeSentence('A', 10)},
           ],
           paragraphIndexOffset: 0,
           modelValue: [],
@@ -151,7 +151,7 @@ describe('TricolorSection', () => {
       {
         props: {
           paragraphs: [{
-            tokens: [makeToken('abcdefghijkl'), {type: 'whitespace'}, makeToken('mnopqrstuvwxyz')],
+            contents: [makeToken('abcdefghijkl'), {kind: 'whitespace'}, makeToken('mnopqrstuvwxyz')],
           }],
           paragraphIndexOffset: 0,
           modelValue: [],

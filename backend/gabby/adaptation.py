@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-import copy
-import re
-import itertools
 from typing import Iterable
+import copy
+import itertools
+import json
+import re
+import traceback
 import unittest
 
 from . import deltas
@@ -15,7 +17,7 @@ from . import renderable as r
 from .api_models import Adaptation, TokensItems, Selectable
 
 
-def adapt(exercise: exercises.Exercise) -> renderable.Exercise:
+def adapt(exercise: exercises.Exercise) -> renderable.Exercise | None:
     return _Adapter(exercise).adapted
 
 
@@ -23,7 +25,7 @@ class _Adapter:
     def __init__(self, exercise: exercises.Exercise):
         self.show_mcq_choices_by_default = exercise.adaptation.show_mcq_choices_by_default
         self.show_arrow_before_mcq_fields = exercise.adaptation.show_arrow_before_mcq_fields
-        self.global_placeholders: list[tuple[str, renderable.SentenceToken]] = []
+        self.global_placeholders: list[tuple[str, renderable.AnyRenderable]] = []
         self.letters_are_items = False
         self.words_are_items = False
         self.punctuation_is_items = False
@@ -38,7 +40,7 @@ class _Adapter:
         self.mcq_below_items = None
 
         if exercise.adaptation.placeholder_for_fill_with_free_text is not None:
-            self.global_placeholders.append((exercise.adaptation.placeholder_for_fill_with_free_text, renderable.FreeTextInput()))
+            self.global_placeholders.append((exercise.adaptation.placeholder_for_fill_with_free_text, renderable.FreeTextInput(kind="freeTextInput")))
 
         if exercise.adaptation.items is not None:
             self.letters_are_items = exercise.adaptation.items.kind == "characters" and exercise.adaptation.items.letters
@@ -51,9 +53,10 @@ class _Adapter:
                 self.items_are_selectable = True
                 self.colors_for_selectable_items = exercise.adaptation.items_are_selectable.colors
 
-        for (start, separator1, separator2, stop, placeholder, text) in self.gather_choices(exercise.instructions):
+        for start, separator1, separator2, stop, placeholder, text in self.gather_choices(exercise.instructions):
             if placeholder == "":
                 mcq = renderable.MultipleChoicesInput(
+                    kind="multipleChoicesInput",
                     show_arrow_before=self.show_arrow_before_mcq_fields,
                     choices=self.separate_choices(start, separator1, separator2, stop, placeholder, text),
                     show_choices_by_default=self.show_mcq_choices_by_default,
@@ -67,6 +70,7 @@ class _Adapter:
                     (
                         placeholder,
                         renderable.MultipleChoicesInput(
+                            kind="multipleChoicesInput",
                             show_arrow_before=self.show_arrow_before_mcq_fields,
                             choices=self.separate_choices(start, separator1, separator2, stop, placeholder, text),
                             show_choices_by_default=self.show_mcq_choices_by_default,
@@ -74,13 +78,23 @@ class _Adapter:
                     ),
                 )
 
-        instructions = self.postprocess_section(renderable.Section(paragraphs=list(itertools.chain.from_iterable(
-            self.adapt_instructions(part)
-            for part in [exercise.instructions, exercise.example, exercise.clue]
-        ))))
+        instructions = self.postprocess_section(
+            renderable.Section(
+                paragraphs=list(
+                    itertools.chain.from_iterable(
+                        self.adapt_instructions(part)
+                        for part in [
+                            exercise.instructions,
+                            exercise.example,
+                            exercise.clue,
+                        ]
+                    )
+                )
+            )
+        )
 
         pagelets = list(
-            r.Pagelet(
+            renderable.Pagelet(
                 instructions=instructions,
                 wording=self.postprocess_section(renderable.Section(paragraphs=wording_paragraphs)),
             )
@@ -88,17 +102,19 @@ class _Adapter:
         )
 
         if exercise.text_reference != deltas.empty:
-            pagelets.append(r.Pagelet(
-                instructions=self.postprocess_section(renderable.Section(paragraphs=list(self.adapt_instructions(exercise.text_reference)))),
-                wording=renderable.Section(paragraphs=[]),
-            ))
+            pagelets.append(
+                renderable.Pagelet(
+                    instructions=self.postprocess_section(renderable.Section(paragraphs=list(self.adapt_instructions(exercise.text_reference)))),
+                    wording=renderable.Section(paragraphs=[]),
+                )
+            )
 
         self.adapted = renderable.Exercise(number=exercise.number, textbook_page=exercise.textbook_page, pagelets=pagelets)
 
     def adapt_instructions(self, instructions: deltas.Deltas) -> Iterable[renderable.Paragraph]:
         for paragraph_deltas in self.split_deltas(instructions, r"\s*\n\s*\n\s*"):
             for sentence_deltas in self.split_deltas_into_sentences(paragraph_deltas):
-                yield renderable.Paragraph(tokens=list(self.adapt_instructions_sentence(sentence_deltas)))
+                yield renderable.Paragraph(contents=list(self.adapt_instructions_sentence(sentence_deltas)))
 
     def adapt_instructions_sentence(self, sentence_deltas: deltas.Deltas):
         for delta in sentence_deltas:
@@ -106,17 +122,17 @@ class _Adapter:
                 for text in re.split(r"(\.\.\.|\s+|\W)", delta.insert):
                     if text != "":
                         if text.strip() == "":
-                            yield renderable.Whitespace()
+                            yield renderable.Whitespace(kind="whitespace")
                         else:
-                            yield renderable.PlainText(text=text)
+                            yield renderable.Text(kind="text", text=text)
 
             elif "sel" in delta.attributes:
                 assert delta.attributes == {"sel": delta.attributes["sel"]}
 
                 if len(self.colors_for_selectable_items) > delta.attributes["sel"] - 1:
-                    yield renderable.SelectedText(text=delta.insert, color=self.colors_for_selectable_items[delta.attributes["sel"] - 1])
+                    yield renderable.Text(kind="text", text=delta.insert, highlighted=self.colors_for_selectable_items[delta.attributes["sel"] - 1])
                 else:
-                    yield renderable.PlainText(text=delta.insert)
+                    yield renderable.Text(kind="text", text=delta.insert)
 
             elif "choices2" in delta.attributes:
                 assert delta.attributes == {"choices2": delta.attributes["choices2"]}
@@ -130,21 +146,26 @@ class _Adapter:
 
                 choices = self.separate_choices(start, separator1, separator2, stop, placeholder, text)
                 # Always format choices the same way in instructions: https://github.com/jacquev6/Gabby/issues/74
-                yield renderable.BoxedText(text=choices[0])
+                yield renderable.PassiveSequence(kind="passiveSequence", contents=choices[0], boxed=True)
                 for choice in choices[1:-1]:
-                    yield renderable.PlainText(text=",")
-                    yield renderable.Whitespace()
-                    yield renderable.BoxedText(text=choice)
+                    yield renderable.Text(kind="text", text=",")
+                    yield renderable.Whitespace(kind="whitespace")
+                    yield renderable.PassiveSequence(kind="passiveSequence", contents=choice, boxed=True)
                 if len(choices) > 1:
-                    yield renderable.Whitespace()
-                    yield renderable.PlainText(text="ou")  # @todo Fix this if we ever support exercises in English
-                    yield renderable.Whitespace()
-                    yield renderable.BoxedText(text=choices[-1])
+                    yield renderable.Whitespace(kind="whitespace")
+                    yield renderable.Text(kind="text", text="ou")  # @todo Fix this if we ever support exercises in English
+                    yield renderable.Whitespace(kind="whitespace")
+                    yield renderable.PassiveSequence(kind="passiveSequence", contents=choices[-1], boxed=True)
 
             elif "bold" in delta.attributes or "italic" in delta.attributes:
                 assert set(delta.attributes.keys()) <= {"bold", "italic"}
 
-                yield renderable.PassiveFormattedText(type="passiveFormattedText", text=delta.insert, bold=delta.attributes.get("bold", False), italic=delta.attributes.get("italic", False))
+                yield renderable.Text(
+                    kind="text",
+                    text=delta.insert,
+                    bold=delta.attributes.get("bold", False),
+                    italic=delta.attributes.get("italic", False),
+                )
 
             else:
                 assert False, f"Unknown attributes: {delta.attributes}"
@@ -174,19 +195,27 @@ class _Adapter:
                     delta.insert = delta.insert.replace(placeholder, f"ph{index}hp")
 
         return [
-            renderable.Paragraph(tokens=list(self.adapt_wording_paragraph(paragraph_deltas)))
+            renderable.Paragraph(contents=list(self.adapt_wording_paragraph(paragraph_deltas)))
             for paragraph_deltas in self.split_deltas(pagelet_deltas, r"\s*\n\s*")
         ]
 
     def adapt_wording_paragraph(self, paragraph_deltas: deltas.Deltas):
         sentence_specific_placeholders = []
 
-        for (start, separator1, separator2, stop, placeholder, text) in self.gather_choices(paragraph_deltas):
+        for (
+            start,
+            separator1,
+            separator2,
+            stop,
+            placeholder,
+            text,
+        ) in self.gather_choices(paragraph_deltas):
             if placeholder != "":
                 sentence_specific_placeholders.append(
                     (
                         placeholder,
                         renderable.MultipleChoicesInput(
+                            kind="multipleChoicesInput",
                             show_arrow_before=self.show_arrow_before_mcq_fields,
                             choices=self.separate_choices(start, separator1, separator2, stop, placeholder, text),
                             show_choices_by_default=self.show_mcq_choices_by_default,
@@ -207,8 +236,8 @@ class _Adapter:
             for delta in list_header_deltas:
                 for text in re.split(r"(\.\.\.|\s+|\W|ph\d+hp)", delta.insert):
                     if text != "":
-                        yield renderable.PlainText(text=text)
-            yield renderable.Whitespace()
+                        yield renderable.Text(kind="text", text=text)
+            yield renderable.Whitespace(kind="whitespace")
 
         if self.sentences_are_items:
             assert not self.letters_are_items
@@ -217,13 +246,20 @@ class _Adapter:
             is_first_sentence = True
             for sentence_deltas in self.split_deltas_into_sentences(paragraph_deltas):
                 if not is_first_sentence:
-                    yield renderable.Whitespace()
+                    yield renderable.Whitespace(kind="whitespace")
                 is_first_sentence = False
                 contents = list(self.adapt_wording_sentence(sentence_deltas, sentence_placeholders))
-                while contents[0].type == "whitespace":
+                while contents[0].kind == "whitespace":
                     contents.pop(0)
                 if self.items_are_selectable:
-                    contents = [renderable.Selectable(contents=contents, colors=self.colors_for_selectable_items, boxed=self.items_are_boxed)]
+                    contents = [
+                        renderable.SelectableInput(
+                            kind="selectableInput",
+                            contents=contents,
+                            colors=self.colors_for_selectable_items,
+                            boxed=self.items_are_boxed,
+                        )
+                    ]
                 elif self.items_are_boxed:
                     contents = [renderable.Boxed(contents=contents)]
                 else:
@@ -231,14 +267,25 @@ class _Adapter:
                 if self.mcq_below_items is None:
                     yield from contents
                     if self.mcq_beside_items is not None:
-                        yield renderable.Whitespace()
+                        yield renderable.Whitespace(kind="whitespace")
                         yield self.mcq_beside_items
                 else:
-                    yield renderable.Stack(type="stack", contents=[renderable.Line(type="line", contents=contents), self.mcq_below_items])
+                    yield renderable.AnySequence(
+                        kind="sequence",
+                        contents=[
+                            renderable.AnySequence(kind="sequence", contents=contents),
+                            self.mcq_below_items,
+                        ],
+                        vertical=True,
+                    )
         else:
             yield from self.adapt_wording_sentence(paragraph_deltas, sentence_placeholders)
 
-    def adapt_wording_sentence(self, sentence_deltas: deltas.Deltas, sentence_placeholders: list[tuple[str, renderable.SentenceToken]]):
+    def adapt_wording_sentence(
+        self,
+        sentence_deltas: deltas.Deltas,
+        sentence_placeholders: list[tuple[str, renderable.SentenceToken]],
+    ):
         for delta in sentence_deltas:
             if delta.attributes == {}:
                 for i, text in enumerate(re.split(r"(\.\.\.|\s+|\W|ph\d+hp)", delta.insert)):
@@ -246,60 +293,99 @@ class _Adapter:
                         if i % 2 == 1:
                             # Separator: punctuation, spacing, placeholders
                             if text.strip() == "":
-                                yield renderable.Whitespace()
+                                yield renderable.Whitespace(kind="whitespace")
                             elif text.startswith("ph") and text.endswith("hp"):
                                 index = int(text[2:-2])
                                 yield sentence_placeholders[index][1]
                             else:
                                 if self.punctuation_is_items:
                                     if self.items_are_selectable:
-                                        item = renderable.SelectableText(text=text, colors=self.colors_for_selectable_items, boxed=self.items_are_boxed)
+                                        item = renderable.SelectableInput(
+                                            kind="selectableInput",
+                                            contents=[renderable.Text(kind="text", text=text)],
+                                            colors=self.colors_for_selectable_items,
+                                            boxed=self.items_are_boxed,
+                                        )
                                     elif self.items_are_boxed:
-                                        item = renderable.BoxedText(text=text)
+                                        item = renderable.PassiveSequence(
+                                            kind="passiveSequence",
+                                            contents=[renderable.Text(kind="text", text=text)],
+                                            boxed=True,
+                                        )
                                     else:
-                                        item = renderable.PlainText(text=text)
+                                        item = renderable.Text(kind="text", text=text)
                                     if self.mcq_below_items is None:
                                         yield item
                                         if self.mcq_beside_items is not None:
-                                            yield renderable.Whitespace()
+                                            yield renderable.Whitespace(kind="whitespace")
                                             yield self.mcq_beside_items
                                     else:
-                                        yield renderable.Stack(type="stack", contents=[item, self.mcq_below_items])
+                                        yield renderable.AnySequence(
+                                            kind="sequence",
+                                            contents=[item, self.mcq_below_items],
+                                            vertical=True,
+                                        )
                                 else:
-                                    yield renderable.PlainText(text=text)
+                                    yield renderable.Text(kind="text", text=text)
                         else:
                             # Separated: words
                             if self.letters_are_items:
                                 for letter in text:
                                     if self.items_are_selectable:
-                                        item = renderable.SelectableText(text=letter, colors=self.colors_for_selectable_items, boxed=self.items_are_boxed)
+                                        item = renderable.SelectableInput(
+                                            kind="selectableInput",
+                                            contents=[renderable.Text(kind="text", text=letter)],
+                                            colors=self.colors_for_selectable_items,
+                                            boxed=self.items_are_boxed,
+                                        )
                                     elif self.items_are_boxed:
-                                        item = renderable.BoxedText(text=letter)
+                                        item = renderable.PassiveSequence(
+                                            kind="passiveSequence",
+                                            contents=[renderable.Text(kind="text", text=letter)],
+                                            boxed=True,
+                                        )
                                     else:
-                                        item = renderable.PlainText(text=letter)
+                                        item = renderable.Text(kind="text", text=letter)
                                     if self.mcq_below_items is None:
                                         yield item
                                         if self.mcq_beside_items is not None:
-                                            yield renderable.Whitespace()
+                                            yield renderable.Whitespace(kind="whitespace")
                                             yield self.mcq_beside_items
                                     else:
-                                        yield renderable.Stack(type="stack", contents=[item, self.mcq_below_items])
+                                        yield renderable.AnySequence(
+                                            kind="sequence",
+                                            contents=[item, self.mcq_below_items],
+                                            vertical=True,
+                                        )
                             elif self.words_are_items:
                                 if self.items_are_selectable:
-                                    item = renderable.SelectableText(text=text, colors=self.colors_for_selectable_items, boxed=self.items_are_boxed)
+                                    item = renderable.SelectableInput(
+                                        kind="selectableInput",
+                                        contents=[renderable.Text(kind="text", text=text)],
+                                        colors=self.colors_for_selectable_items,
+                                        boxed=self.items_are_boxed,
+                                    )
                                 elif self.items_are_boxed:
-                                    item = renderable.BoxedText(text=text)
+                                    item = renderable.PassiveSequence(
+                                        kind="passiveSequence",
+                                        contents=[renderable.Text(kind="text", text=text)],
+                                        boxed=True,
+                                    )
                                 else:
-                                    item = renderable.PlainText(text=text)
+                                    item = renderable.Text(kind="text", text=text)
                                 if self.mcq_below_items is None:
                                     yield item
                                     if self.mcq_beside_items is not None:
-                                        yield renderable.Whitespace()
+                                        yield renderable.Whitespace(kind="whitespace")
                                         yield self.mcq_beside_items
                                 else:
-                                    yield renderable.Stack(type="stack", contents=[item, self.mcq_below_items])
+                                    yield renderable.AnySequence(
+                                        kind="sequence",
+                                        contents=[item, self.mcq_below_items],
+                                        vertical=True,
+                                    )
                             else:
-                                yield renderable.PlainText(text=text)
+                                yield renderable.Text(kind="text", text=text)
 
             elif "manual-item" in delta.attributes:
                 assert delta.attributes == {"manual-item": delta.attributes["manual-item"]}
@@ -307,29 +393,47 @@ class _Adapter:
                 for text in re.split(r"(\.\.\.|\s+|\W)", delta.insert):
                     if text != "":
                         if text.strip() == "":
-                            yield renderable.Whitespace()
+                            yield renderable.Whitespace(kind="whitespace")
                         else:
                             if self.manual_items_are_items:
                                 if self.items_are_selectable:
-                                    item = renderable.SelectableText(text=text, colors=self.colors_for_selectable_items, boxed=self.items_are_boxed)
+                                    item = renderable.SelectableInput(
+                                        kind="selectableInput",
+                                        contents=[renderable.Text(kind="text", text=text)],
+                                        colors=self.colors_for_selectable_items,
+                                        boxed=self.items_are_boxed,
+                                    )
                                 elif self.items_are_boxed:
-                                    item = renderable.BoxedText(text=text)
+                                    item = renderable.PassiveSequence(
+                                        kind="passiveSequence",
+                                        contents=[renderable.Text(kind="text", text=text)],
+                                        boxed=True,
+                                    )
                                 else:
-                                    item = renderable.PlainText(text=text)
+                                    item = renderable.Text(kind="text", text=text)
                                 if self.mcq_below_items is None:
                                     yield item
                                     if self.mcq_beside_items is not None:
-                                        yield renderable.Whitespace()
+                                        yield renderable.Whitespace(kind="whitespace")
                                         yield self.mcq_beside_items
                                 else:
-                                    yield renderable.Stack(type="stack", contents=[item, self.mcq_below_items])
+                                    yield renderable.AnySequence(
+                                        kind="sequence",
+                                        contents=[item, self.mcq_below_items],
+                                        vertical=True,
+                                    )
                             else:
-                                yield renderable.PlainText(text=text)
+                                yield renderable.Text(kind="text", text=text)
 
             elif "bold" in delta.attributes or "italic" in delta.attributes:
                 assert set(delta.attributes.keys()) <= {"bold", "italic"}
 
-                yield renderable.PassiveFormattedText(type="passiveFormattedText", text=delta.insert, bold=delta.attributes.get("bold", False), italic=delta.attributes.get("italic", False))
+                yield renderable.Text(
+                    kind="text",
+                    text=delta.insert,
+                    bold=delta.attributes.get("bold", False),
+                    italic=delta.attributes.get("italic", False),
+                )
 
             elif "choices2" in delta.attributes:
                 assert delta.attributes == {"choices2": delta.attributes["choices2"]}
@@ -342,8 +446,16 @@ class _Adapter:
                     separator2 = choices_settings["separator2"] or None
                     stop = choices_settings["stop"] or None
                     yield renderable.MultipleChoicesInput(
+                        kind="multipleChoicesInput",
                         show_arrow_before=self.show_arrow_before_mcq_fields,
-                        choices=self.separate_choices(start, separator1, separator2, stop, placeholder, delta.insert),
+                        choices=self.separate_choices(
+                            start,
+                            separator1,
+                            separator2,
+                            stop,
+                            placeholder,
+                            delta.insert,
+                        ),
                         show_choices_by_default=self.show_mcq_choices_by_default,
                     )
 
@@ -397,41 +509,76 @@ class _Adapter:
 
             if number_prefix is not None and len(paragraph_deltas[0].insert) > len(number_prefix) and paragraph_deltas[0].insert[len(number_prefix)] in ").":
                 # "1. 2. 3.", "1) 2) 3)", etc.
-                list_header_deltas.append(deltas.InsertOp(insert=paragraph_deltas[0].insert[:len(number_prefix) + 1], attributes=paragraph_deltas[0].attributes))
-                paragraph_deltas[0].insert = paragraph_deltas[0].insert[len(number_prefix) + 1:].lstrip()
-            elif len(paragraph_deltas[0].insert) > 1 and paragraph_deltas[0].insert[0] in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" and paragraph_deltas[0].insert[1] in ").":
+                list_header_deltas.append(
+                    deltas.InsertOp(
+                        insert=paragraph_deltas[0].insert[: len(number_prefix) + 1],
+                        attributes=paragraph_deltas[0].attributes,
+                    )
+                )
+                paragraph_deltas[0].insert = paragraph_deltas[0].insert[len(number_prefix) + 1 :].lstrip()
+            elif (
+                len(paragraph_deltas[0].insert) > 1
+                and paragraph_deltas[0].insert[0] in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                and paragraph_deltas[0].insert[1] in ")."
+            ):
                 # "a. b. c.", "A) B) C)", etc.
-                list_header_deltas.append(deltas.InsertOp(insert=paragraph_deltas[0].insert[:2], attributes=paragraph_deltas[0].attributes))
+                list_header_deltas.append(
+                    deltas.InsertOp(
+                        insert=paragraph_deltas[0].insert[:2],
+                        attributes=paragraph_deltas[0].attributes,
+                    )
+                )
                 paragraph_deltas[0].insert = paragraph_deltas[0].insert[2:].lstrip()
             elif len(paragraph_deltas[0].insert) > 0 and paragraph_deltas[0].insert[0] in "◆■":
                 # "◆", "■", etc.
-                list_header_deltas.append(deltas.InsertOp(insert=paragraph_deltas[0].insert[0], attributes=paragraph_deltas[0].attributes))
+                list_header_deltas.append(
+                    deltas.InsertOp(
+                        insert=paragraph_deltas[0].insert[0],
+                        attributes=paragraph_deltas[0].attributes,
+                    )
+                )
                 paragraph_deltas[0].insert = paragraph_deltas[0].insert[1:].lstrip()
 
             return (list_header_deltas, paragraph_deltas)
 
     __apostrophes = [
         # https://fr.wikipedia.org/wiki/Apostrophe_(typographie) mentions one more encoding than https://en.wikipedia.org/wiki/Apostrophe
-        "\u2019", "\u0027", "\u02BC",
+        "\u2019",
+        "\u0027",
+        "\u02BC",
     ]
 
     def postprocess_section(self, section: renderable.Section) -> renderable.Section:
         section = copy.deepcopy(section)
         for paragraph in section.paragraphs:
-            fixed_tokens = []
-            for token in paragraph.tokens:
-                if token.type == "whitespace" and len(fixed_tokens) == 0:
+            fixed_contents = []
+            for content in paragraph.contents:
+                if content.kind == "whitespace" and len(fixed_contents) == 0:
                     pass
-                elif token.type == "whitespace" and len(fixed_tokens) > 0 and fixed_tokens[-1].type == "whitespace":
+                elif content.kind == "whitespace" and len(fixed_contents) > 0 and fixed_contents[-1].kind == "whitespace":
                     pass
-                elif token.type in ["plainText", "selectableText", "boxedText"] and token.text in self.__apostrophes and len(fixed_tokens) > 0 and fixed_tokens[-1].type in ["selectableText", "boxedText"]:
-                    fixed_tokens[-1].text += token.text
+                elif (
+                    content.kind == "text"
+                    and content.text in self.__apostrophes
+                    and len(fixed_contents) > 0
+                    and fixed_contents[-1].kind in ["selectableInput", "passiveSequence"]
+                ):
+                    fixed_contents[-1].contents.append(content)
+                elif (
+                    content.kind == "passiveSequence"
+                    and len(content.contents) == 1
+                    and content.contents[0].kind == "text"
+                    and content.contents[0].text in self.__apostrophes
+                    and len(fixed_contents) > 0
+                    and fixed_contents[-1].kind in ["selectableInput", "passiveSequence"]
+                ):
+                    fixed_contents[-1].contents.append(content.contents[0])
                 else:
-                    fixed_tokens.append(token)
-            while len(fixed_tokens) > 0 and fixed_tokens[-1].type == "whitespace":
-                fixed_tokens.pop(-1)
-            paragraph.tokens = fixed_tokens
-        section.paragraphs = list(filter(lambda p: len(p.tokens) > 0, section.paragraphs))
+                    fixed_contents.append(content)
+            while len(fixed_contents) > 0 and fixed_contents[-1].kind == "whitespace":
+                fixed_contents.pop(-1)
+            paragraph.contents = fixed_contents
+        section.paragraphs = list(filter(lambda p: len(p.contents) > 0, section.paragraphs))
         return section
 
     def gather_choices(self, deltas):
@@ -457,17 +604,84 @@ class _Adapter:
             choices = text.split(separator1)
         if separator2 is not None:
             choices[-1:] = choices[-1].split(separator2)
-        return list(filter(lambda c: c != "", [choice.strip() for choice in choices]))
+        return list([renderable.Text(kind="text", text=text)] for text in filter(lambda c: c != "", [choice.strip() for choice in choices]))
 
 
 class AdaptationTestCase(unittest.TestCase):
     maxDiff = None
+    generate_frontend_tests = True
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tests_to_generate = []
+        return super().setUpClass()
+
+    @classmethod
+    def tearDownClass(cls):
+        def generate():
+            yield "import TricolorSection from './TricolorSection.vue'"
+            yield ""
+            yield f"describe('TricolorSection for {cls.__name__}', () => " "{"
+            yield "  beforeEach(() => {"
+            yield "    cy.viewport(1000, 100)"
+            yield "  })"
+            seen_paragraphs = set()
+            for (test_id, adapted) in cls.tests_to_generate:
+                for pagelet_index, pagelet in enumerate(adapted.pagelets):
+                    for section_name in ["instructions", "wording"]:
+                        paragraphs = json.dumps(getattr(pagelet, section_name).model_dump()["paragraphs"])
+                        if paragraphs in seen_paragraphs:
+                            continue
+                        seen_paragraphs.add(paragraphs)
+                        yield ""
+                        yield f"  it('renders {test_id} pagelet {pagelet_index} {section_name}', () => " "{"
+                        yield "    cy.mount(TricolorSection, {"
+                        yield "      props: {"
+                        yield f"        paragraphs: {paragraphs},"
+                        yield "        modelValue: {},"
+                        yield "      },"
+                        yield "    })"
+                        yield f"    cy.screenshot('{test_id}.{pagelet_index}.{section_name}')"
+                        yield "  })"
+            yield "})"
+
+        if cls.generate_frontend_tests:
+            with open(f"../frontend/src/adapted/components/TricolorSection.{cls.__name__}.generated.cy.js", "w") as f:
+                for line in generate():
+                    f.write(line)
+                    f.write("\n")
+
+        return super().tearDownClass()
 
     def do_test(self, exercise, expected_adapted):
         actual_adapted = exercise.make_adapted()
         if actual_adapted != expected_adapted:
-            print("actual_adapted:", [actual_adapted])
+            calling_frame = traceback.extract_stack()[-2]
+            print(
+                f"actual_adapted at {calling_frame.filename}:{calling_frame.lineno}:",
+                repr([actual_adapted])[1:-1]
+                .replace("bold=False, ", "")
+                .replace("italic=False, ", "")
+                .replace("highlighted=None, ", "")
+                .replace("boxed=False, ", "")
+                .replace("show_arrow_before=False, ", "")
+                .replace("show_choices_by_default=False, ", "")
+                .replace("vertical=False, ", "")
+                .replace("Exercise(", "nr.Exercise(")
+                .replace("Pagelet(", "nr.Pagelet(")
+                .replace("Section(", "nr.Section(")
+                .replace("Paragraph(", "nr.Paragraph(")
+                .replace("Text(", "nr.Text(")
+                .replace("Whitespace(", "nr.Whitespace(")
+                .replace("FreeTextInput(", "nr.FreeTextInput(")
+                .replace("MultipleChoicesInput(", "nr.MultipleChoicesInput(")
+                .replace("SelectableInput(", "nr.SelectableInput(")
+                .replace("PassiveSequence(", "nr.PassiveSequence(")
+                .replace("AnySequence(", "nr.AnySequence("),
+            )
         self.assertEqual(actual_adapted, expected_adapted)
+
+        self.tests_to_generate.append((self.id(), expected_adapted))
 
 
 class WordingPaginationTestCase(AdaptationTestCase):
@@ -493,14 +707,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                     show_mcq_choices_by_default=False,
                 ),
             ),
-            r.Exercise(
-                number="number",
-                textbook_page=None,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[]),
-                    wording=r.Section(paragraphs=[]),
-                )],
-            ),
+            r.Exercise(number="number", textbook_page=None, pagelets=[r.Pagelet(instructions=r.Section(paragraphs=[]), wording=r.Section(paragraphs=[]))]),
         )
 
     def test_single_paragraph(self):
@@ -528,12 +735,11 @@ class WordingPaginationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=None,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[r.PlainText(text="wording")]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[]), wording=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="wording")])])
+                    )
+                ],
             ),
         )
 
@@ -562,14 +768,18 @@ class WordingPaginationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=None,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("1")]),
-                        r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("2")]),
-                        r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("3")]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="1")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="2")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="3")]),
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -600,25 +810,33 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 textbook_page=None,
                 pagelets=[
                     r.Pagelet(
-                        instructions=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[r.PlainText(text="instructions")]),
-                            r.Paragraph(tokens=[r.PlainText(text="example")]),
-                            r.Paragraph(tokens=[r.PlainText(text="clue")]),
-                        ]),
-                        wording=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("1")]),
-                            r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("2")]),
-                        ]),
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="example")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="1")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="2")]),
+                            ]
+                        ),
                     ),
                     r.Pagelet(
-                        instructions=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[r.PlainText(text="instructions")]),
-                            r.Paragraph(tokens=[r.PlainText(text="example")]),
-                            r.Paragraph(tokens=[r.PlainText(text="clue")]),
-                        ]),
-                        wording=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("3")]),
-                        ]),
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="example")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="3")])
+                            ]
+                        ),
                     ),
                 ],
             ),
@@ -651,20 +869,24 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 textbook_page=None,
                 pagelets=[
                     r.Pagelet(
-                        instructions=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[r.PlainText(text="instructions")]),
-                            r.Paragraph(tokens=[r.PlainText(text="example")]),
-                            r.Paragraph(tokens=[r.PlainText(text="clue")]),
-                        ]),
-                        wording=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("1")]),
-                            r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("2")]),
-                            r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("3")]),
-                            r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("4")]),
-                            r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("5")]),
-                            r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("6")]),
-                        ]),
-                    ),
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="example")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="1")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="2")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="3")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="4")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="5")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="6")]),
+                            ]
+                        ),
+                    )
                 ],
             ),
         )
@@ -696,28 +918,36 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 textbook_page=None,
                 pagelets=[
                     r.Pagelet(
-                        instructions=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[r.PlainText(text="instructions")]),
-                            r.Paragraph(tokens=[r.PlainText(text="example")]),
-                            r.Paragraph(tokens=[r.PlainText(text="clue")]),
-                        ]),
-                        wording=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("1")]),
-                            r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("2")]),
-                        ]),
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="example")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="1")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="2")]),
+                            ]
+                        ),
                     ),
                     r.Pagelet(
-                        instructions=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[r.PlainText(text="instructions")]),
-                            r.Paragraph(tokens=[r.PlainText(text="example")]),
-                            r.Paragraph(tokens=[r.PlainText(text="clue")]),
-                        ]),
-                        wording=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("3")]),
-                            r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("4")]),
-                            r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("5")]),
-                            r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("6")]),
-                        ]),
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="example")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="3")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="4")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="5")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="6")]),
+                            ]
+                        ),
                     ),
                 ],
             ),
@@ -750,37 +980,49 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 textbook_page=None,
                 pagelets=[
                     r.Pagelet(
-                        instructions=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[r.PlainText(text="instructions")]),
-                            r.Paragraph(tokens=[r.PlainText(text="example")]),
-                            r.Paragraph(tokens=[r.PlainText(text="clue")]),
-                        ]),
-                        wording=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("1")]),
-                            r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("2")]),
-                        ]),
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="example")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="1")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="2")]),
+                            ]
+                        ),
                     ),
                     r.Pagelet(
-                        instructions=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[r.PlainText(text="instructions")]),
-                            r.Paragraph(tokens=[r.PlainText(text="example")]),
-                            r.Paragraph(tokens=[r.PlainText(text="clue")]),
-                        ]),
-                        wording=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("3")]),
-                            r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("4")]),
-                            r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("5")]),
-                        ]),
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="example")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="3")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="4")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="5")]),
+                            ]
+                        ),
                     ),
                     r.Pagelet(
-                        instructions=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[r.PlainText(text="instructions")]),
-                            r.Paragraph(tokens=[r.PlainText(text="example")]),
-                            r.Paragraph(tokens=[r.PlainText(text="clue")]),
-                        ]),
-                        wording=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[r.PlainText(text="wording"), r.Whitespace(), r.PlainText("6")]),
-                        ]),
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="example")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="6")])
+                            ]
+                        ),
                     ),
                 ],
             ),
@@ -823,35 +1065,37 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="instructions"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="The"),
-                            r.Whitespace(),
-                            r.PlainText(text="wording"),
-                            r.Whitespace(),
-                            r.PlainText(text="of"),
-                            r.Whitespace(),
-                            r.PlainText(text="this"),
-                            r.Whitespace(),
-                            r.FreeTextInput(),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.PlainText(text="a"),
-                            r.Whitespace(),
-                            r.FreeTextInput(),
-                            r.Whitespace(),
-                            r.PlainText(text="sentence"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="The"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wording"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="of"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="this"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.FreeTextInput(kind="freeTextInput"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="a"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.FreeTextInput(kind="freeTextInput"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="sentence"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -884,22 +1128,24 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=None,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="instructions"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.FreeTextInput(),
-                            r.Whitespace(),
-                            r.PlainText(text="a"),
-                            r.Whitespace(),
-                            r.FreeTextInput(),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.FreeTextInput(kind="freeTextInput"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="a"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.FreeTextInput(kind="freeTextInput"),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -932,28 +1178,22 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="instructions"),
-                            r.Whitespace(),
-                            r.PlainText(text="are"),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="on"),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="multiple"),
-                            r.Whitespace(),
-                            r.PlainText(text="lines"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="wording"),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[r.Text(kind="text", text="instructions"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="are")]
+                                ),
+                                r.Paragraph(contents=[r.Text(kind="text", text="on")]),
+                                r.Paragraph(
+                                    contents=[r.Text(kind="text", text="multiple"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="lines")]
+                                ),
+                            ]
+                        ),
+                        wording=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="wording")])]),
+                    )
+                ],
             ),
         )
 
@@ -986,38 +1226,44 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="instructions"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="foo"),
-                            r.Whitespace(),
-                            r.PlainText(text="toto"),
-                            r.Whitespace(),
-                            r.PlainText(text=":"),
-                            r.Whitespace(),
-                            r.FreeTextInput(),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="bar"),
-                            r.Whitespace(),
-                            r.PlainText(text=":"),
-                            r.Whitespace(),
-                            r.FreeTextInput(),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="baz"),
-                            r.Whitespace(),
-                            r.PlainText(text=":"),
-                            r.Whitespace(),
-                            r.FreeTextInput(),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="foo"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="toto"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text=":"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.FreeTextInput(kind="freeTextInput"),
+                                    ]
+                                ),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="bar"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text=":"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.FreeTextInput(kind="freeTextInput"),
+                                    ]
+                                ),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="baz"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text=":"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.FreeTextInput(kind="freeTextInput"),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -1050,26 +1296,36 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="{"),
-                            r.PlainText(text="tag"),
-                            r.PlainText(text="|"),
-                            r.PlainText(text="abc"),
-                            r.PlainText(text="}"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="{"),
-                            r.PlainText(text="tag"),
-                            r.PlainText(text="|"),
-                            r.PlainText(text="def"),
-                            r.PlainText(text="}"),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="{"),
+                                        r.Text(kind="text", text="tag"),
+                                        r.Text(kind="text", text="|"),
+                                        r.Text(kind="text", text="abc"),
+                                        r.Text(kind="text", text="}"),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="{"),
+                                        r.Text(kind="text", text="tag"),
+                                        r.Text(kind="text", text="|"),
+                                        r.Text(kind="text", text="def"),
+                                        r.Text(kind="text", text="}"),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -1102,18 +1358,12 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="abc"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="def"),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="abc")])]),
+                        wording=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="def")])]),
+                    )
+                ],
             ),
         )
 
@@ -1150,51 +1400,61 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="instructions"),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="This"),
-                            r.Whitespace(),
-                            r.PlainText(text="@"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.PlainText(text="the"),
-                            r.Whitespace(),
-                            r.PlainText(text="example"),
-                            r.PlainText(text="."),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="This"),
-                            r.Whitespace(),
-                            r.PlainText(text="@"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.PlainText(text="the"),
-                            r.Whitespace(),
-                            r.PlainText(text="clue"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="This"),
-                            r.Whitespace(),
-                            r.FreeTextInput(),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.PlainText(text="the"),
-                            r.Whitespace(),
-                            r.PlainText(text="wording"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="This"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="@"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="the"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="example"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                ),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="This"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="@"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="the"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="clue"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                ),
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="This"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.FreeTextInput(kind="freeTextInput"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="the"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wording"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -1225,36 +1485,40 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Instructions"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.SelectableText(text="T", colors=["red"], boxed=False),
-                        r.SelectableText(text="h", colors=["red"], boxed=False),
-                        r.SelectableText(text="i", colors=["red"], boxed=False),
-                        r.SelectableText(text="s", colors=["red"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="i", colors=["red"], boxed=False),
-                        r.SelectableText(text="s", colors=["red"], boxed=False),
-                        r.PlainText(text=","),
-                        r.Whitespace(),
-                        r.SelectableText(text="t", colors=["red"], boxed=False),
-                        r.SelectableText(text="h", colors=["red"], boxed=False),
-                        r.SelectableText(text="e", colors=["red"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="w", colors=["red"], boxed=False),
-                        r.SelectableText(text="o", colors=["red"], boxed=False),
-                        r.SelectableText(text="r", colors=["red"], boxed=False),
-                        r.SelectableText(text="d", colors=["red"], boxed=False),
-                        r.SelectableText(text="i", colors=["red"], boxed=False),
-                        r.SelectableText(text="n", colors=["red"], boxed=False),
-                        r.SelectableText(text="g", colors=["red"], boxed=False),
-                        r.PlainText(text="."),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="T")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="h")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="i")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="s")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="i")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="s")]),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="t")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="h")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="e")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="w")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="o")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="r")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="d")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="i")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="n")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="g")]),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -1283,24 +1547,28 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Instructions"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.SelectableText(text="This", colors=["red", "blue"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="is", colors=["red", "blue"], boxed=False),
-                        r.PlainText(text=","),
-                        r.Whitespace(),
-                        r.SelectableText(text="the", colors=["red", "blue"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="wording", colors=["red", "blue"], boxed=False),
-                        r.PlainText(text="."),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.SelectableInput(kind="selectableInput", colors=["red", "blue"], contents=[r.Text(kind="text", text="This")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red", "blue"], contents=[r.Text(kind="text", text="is")]),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red", "blue"], contents=[r.Text(kind="text", text="the")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red", "blue"], contents=[r.Text(kind="text", text="wording")]),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -1329,24 +1597,40 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Instructions"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.SelectableText(text="This", colors=["green", "yellow", "orange"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="is", colors=["green", "yellow", "orange"], boxed=False),
-                        r.SelectableText(text=",", colors=["green", "yellow", "orange"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="the", colors=["green", "yellow", "orange"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="wording", colors=["green", "yellow", "orange"], boxed=False),
-                        r.SelectableText(text=".", colors=["green", "yellow", "orange"], boxed=False),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.SelectableInput(
+                                            kind="selectableInput", colors=["green", "yellow", "orange"], contents=[r.Text(kind="text", text="This")]
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(
+                                            kind="selectableInput", colors=["green", "yellow", "orange"], contents=[r.Text(kind="text", text="is")]
+                                        ),
+                                        r.SelectableInput(
+                                            kind="selectableInput", colors=["green", "yellow", "orange"], contents=[r.Text(kind="text", text=",")]
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(
+                                            kind="selectableInput", colors=["green", "yellow", "orange"], contents=[r.Text(kind="text", text="the")]
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(
+                                            kind="selectableInput", colors=["green", "yellow", "orange"], contents=[r.Text(kind="text", text="wording")]
+                                        ),
+                                        r.SelectableInput(
+                                            kind="selectableInput", colors=["green", "yellow", "orange"], contents=[r.Text(kind="text", text=".")]
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -1375,24 +1659,32 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Instructions"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.PlainText(text="This"),
-                        r.Whitespace(),
-                        r.PlainText(text="is"),
-                        r.SelectableText(text=",", colors=["green", "yellow", "orange"], boxed=False),
-                        r.Whitespace(),
-                        r.PlainText(text="the"),
-                        r.Whitespace(),
-                        r.PlainText(text="wording"),
-                        r.SelectableText(text=".", colors=["green", "yellow", "orange"], boxed=False),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="This"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.SelectableInput(
+                                            kind="selectableInput", colors=["green", "yellow", "orange"], contents=[r.Text(kind="text", text=",")]
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="the"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wording"),
+                                        r.SelectableInput(
+                                            kind="selectableInput", colors=["green", "yellow", "orange"], contents=[r.Text(kind="text", text=".")]
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -1421,24 +1713,36 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Instructions"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.SelectableText(text="This", colors=["red", "blue"], boxed=True),
-                        r.Whitespace(),
-                        r.SelectableText(text="is", colors=["red", "blue"], boxed=True),
-                        r.PlainText(text=","),
-                        r.Whitespace(),
-                        r.SelectableText(text="the", colors=["red", "blue"], boxed=True),
-                        r.Whitespace(),
-                        r.SelectableText(text="wording", colors=["red", "blue"], boxed=True),
-                        r.PlainText(text="."),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.SelectableInput(
+                                            kind="selectableInput", colors=["red", "blue"], boxed=True, contents=[r.Text(kind="text", text="This")]
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(
+                                            kind="selectableInput", colors=["red", "blue"], boxed=True, contents=[r.Text(kind="text", text="is")]
+                                        ),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(
+                                            kind="selectableInput", colors=["red", "blue"], boxed=True, contents=[r.Text(kind="text", text="the")]
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(
+                                            kind="selectableInput", colors=["red", "blue"], boxed=True, contents=[r.Text(kind="text", text="wording")]
+                                        ),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -1469,65 +1773,67 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 pagelets=[
                     r.Pagelet(
-                        instructions=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[
-                                r.PlainText(text="Instructions"),
-                            ]),
-                        ]),
-                        wording=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[
-                                r.PlainText(text="a"),
-                                r.PlainText(text="."),
-                                r.Whitespace(),
-                                r.SelectableText(text="First", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="list", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="element", colors=["red"], boxed=False),
-                                r.SelectableText(text=".", colors=["red"], boxed=False),
-                            ]),
-                            r.Paragraph(tokens=[
-                                r.PlainText(text="b"),
-                                r.PlainText(text="."),
-                                r.Whitespace(),
-                                r.SelectableText(text="Second", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="element", colors=["red"], boxed=False),
-                                r.SelectableText(text=",", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="still", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="in", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="list", colors=["red"], boxed=False),
-                                r.SelectableText(text=".", colors=["red"], boxed=False),
-                            ]),
-                        ]),
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="a"),
+                                        r.Text(kind="text", text="."),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="First")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="list")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="element")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                    ]
+                                ),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="b"),
+                                        r.Text(kind="text", text="."),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="Second")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="element")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=",")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="still")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="in")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="list")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                    ]
+                                ),
+                            ]
+                        ),
                     ),
                     r.Pagelet(
-                        instructions=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[
-                                r.PlainText(text="Instructions"),
-                            ]),
-                        ]),
-                        wording=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[
-                                r.PlainText(text="c"),
-                                r.PlainText(text="."),
-                                r.Whitespace(),
-                                r.SelectableText(text="Third", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="element", colors=["red"], boxed=False),
-                                r.SelectableText(text=".", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="The", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="last", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="one", colors=["red"], boxed=False),
-                                r.SelectableText(text="!", colors=["red"], boxed=False),
-                            ]),
-                        ]),
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="c"),
+                                        r.Text(kind="text", text="."),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="Third")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="element")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="The")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="last")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="one")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="!")]),
+                                    ]
+                                )
+                            ]
+                        ),
                     ),
                 ],
             ),
@@ -1560,65 +1866,67 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 pagelets=[
                     r.Pagelet(
-                        instructions=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[
-                                r.PlainText(text="Instructions"),
-                            ]),
-                        ]),
-                        wording=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[
-                                r.PlainText(text="1"),
-                                r.PlainText(text=")"),
-                                r.Whitespace(),
-                                r.SelectableText(text="First", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="list", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="element", colors=["red"], boxed=False),
-                                r.SelectableText(text=".", colors=["red"], boxed=False),
-                            ]),
-                            r.Paragraph(tokens=[
-                                r.PlainText(text="2"),
-                                r.PlainText(text=")"),
-                                r.Whitespace(),
-                                r.SelectableText(text="Second", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="element", colors=["red"], boxed=False),
-                                r.SelectableText(text=",", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="still", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="in", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="list", colors=["red"], boxed=False),
-                                r.SelectableText(text=".", colors=["red"], boxed=False),
-                            ]),
-                        ]),
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="1"),
+                                        r.Text(kind="text", text=")"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="First")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="list")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="element")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                    ]
+                                ),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="2"),
+                                        r.Text(kind="text", text=")"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="Second")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="element")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=",")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="still")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="in")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="list")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                    ]
+                                ),
+                            ]
+                        ),
                     ),
                     r.Pagelet(
-                        instructions=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[
-                                r.PlainText(text="Instructions"),
-                            ]),
-                        ]),
-                        wording=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[
-                                r.PlainText(text="3"),
-                                r.PlainText(text=")"),
-                                r.Whitespace(),
-                                r.SelectableText(text="Third", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="element", colors=["red"], boxed=False),
-                                r.SelectableText(text=".", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="The", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="last", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="one", colors=["red"], boxed=False),
-                                r.SelectableText(text="!", colors=["red"], boxed=False),
-                            ]),
-                        ]),
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="3"),
+                                        r.Text(kind="text", text=")"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="Third")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="element")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="The")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="last")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="one")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="!")]),
+                                    ]
+                                )
+                            ]
+                        ),
                     ),
                 ],
             ),
@@ -1651,62 +1959,64 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 pagelets=[
                     r.Pagelet(
-                        instructions=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[
-                                r.PlainText(text="Instructions"),
-                            ]),
-                        ]),
-                        wording=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[
-                                r.PlainText(text="◆"),
-                                r.Whitespace(),
-                                r.SelectableText(text="First", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="list", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="element", colors=["red"], boxed=False),
-                                r.SelectableText(text=".", colors=["red"], boxed=False),
-                            ]),
-                            r.Paragraph(tokens=[
-                                r.PlainText(text="◆"),
-                                r.Whitespace(),
-                                r.SelectableText(text="Second", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="element", colors=["red"], boxed=False),
-                                r.SelectableText(text=",", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="still", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="in", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="list", colors=["red"], boxed=False),
-                                r.SelectableText(text=".", colors=["red"], boxed=False),
-                            ]),
-                        ]),
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="◆"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="First")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="list")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="element")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                    ]
+                                ),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="◆"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="Second")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="element")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=",")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="still")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="in")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="list")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                    ]
+                                ),
+                            ]
+                        ),
                     ),
                     r.Pagelet(
-                        instructions=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[
-                                r.PlainText(text="Instructions"),
-                            ]),
-                        ]),
-                        wording=r.Section(paragraphs=[
-                            r.Paragraph(tokens=[
-                                r.PlainText(text="◆"),
-                                r.Whitespace(),
-                                r.SelectableText(text="Third", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="element", colors=["red"], boxed=False),
-                                r.SelectableText(text=".", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="The", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="last", colors=["red"], boxed=False),
-                                r.Whitespace(),
-                                r.SelectableText(text="one", colors=["red"], boxed=False),
-                                r.SelectableText(text="!", colors=["red"], boxed=False),
-                            ]),
-                        ]),
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="◆"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="Third")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="element")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="The")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="last")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="one")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="!")]),
+                                    ]
+                                )
+                            ]
+                        ),
                     ),
                 ],
             ),
@@ -1718,7 +2028,12 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="Affirmative sentence. Exclamative sentence! Phrase exclamative ! Interrogative sentence? Phrase interrogative ? Suspens...\n", attributes={})],
+                wording=[
+                    d.InsertOp(
+                        insert="Affirmative sentence. Exclamative sentence! Phrase exclamative ! Interrogative sentence? Phrase interrogative ? Suspens...\n",
+                        attributes={},
+                    )
+                ],
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
@@ -1737,82 +2052,87 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Instructions"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.Selectable(
-                                contents=[
-                                    r.PlainText(text="Affirmative"),
-                                    r.Whitespace(),
-                                    r.PlainText(text="sentence"),
-                                    r.PlainText(text="."),
-                                ],
-                                colors=["red", "blue"],
-                                boxed=True,
-                            ),
-                            r.Whitespace(),
-                            r.Selectable(
-                                contents=[
-                                    r.PlainText(text="Exclamative"),
-                                    r.Whitespace(),
-                                    r.PlainText(text="sentence"),
-                                    r.PlainText(text="!"),
-                                ],
-                                colors=["red", "blue"],
-                                boxed=True,
-                            ),
-                            r.Whitespace(),
-                            r.Selectable(
-                                contents=[
-                                    r.PlainText(text="Phrase"),
-                                    r.Whitespace(),
-                                    r.PlainText(text="exclamative"),
-                                    r.Whitespace(),
-                                    r.PlainText(text="!"),
-                                ],
-                                colors=["red", "blue"],
-                                boxed=True,
-                            ),
-                            r.Whitespace(),
-                            r.Selectable(
-                                contents=[
-                                    r.PlainText(text="Interrogative"),
-                                    r.Whitespace(),
-                                    r.PlainText(text="sentence"),
-                                    r.PlainText(text="?"),
-                                ],
-                                colors=["red", "blue"],
-                                boxed=True,
-                            ),
-                            r.Whitespace(),
-                            r.Selectable(
-                                contents=[
-                                    r.PlainText(text="Phrase"),
-                                    r.Whitespace(),
-                                    r.PlainText(text="interrogative"),
-                                    r.Whitespace(),
-                                    r.PlainText(text="?"),
-                                ],
-                                colors=["red", "blue"],
-                                boxed=True,
-                            ),
-                            r.Whitespace(),
-                            r.Selectable(
-                                contents=[
-                                    r.PlainText(text="Suspens"),
-                                    r.PlainText(text="..."),
-                                ],
-                                colors=["red", "blue"],
-                                boxed=True,
-                            ),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.SelectableInput(
+                                            kind="selectableInput",
+                                            colors=["red", "blue"],
+                                            boxed=True,
+                                            contents=[
+                                                r.Text(kind="text", text="Affirmative"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="sentence"),
+                                                r.Text(kind="text", text="."),
+                                            ],
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(
+                                            kind="selectableInput",
+                                            colors=["red", "blue"],
+                                            boxed=True,
+                                            contents=[
+                                                r.Text(kind="text", text="Exclamative"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="sentence"),
+                                                r.Text(kind="text", text="!"),
+                                            ],
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(
+                                            kind="selectableInput",
+                                            colors=["red", "blue"],
+                                            boxed=True,
+                                            contents=[
+                                                r.Text(kind="text", text="Phrase"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="exclamative"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="!"),
+                                            ],
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(
+                                            kind="selectableInput",
+                                            colors=["red", "blue"],
+                                            boxed=True,
+                                            contents=[
+                                                r.Text(kind="text", text="Interrogative"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="sentence"),
+                                                r.Text(kind="text", text="?"),
+                                            ],
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(
+                                            kind="selectableInput",
+                                            colors=["red", "blue"],
+                                            boxed=True,
+                                            contents=[
+                                                r.Text(kind="text", text="Phrase"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="interrogative"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="?"),
+                                            ],
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(
+                                            kind="selectableInput",
+                                            colors=["red", "blue"],
+                                            boxed=True,
+                                            contents=[r.Text(kind="text", text="Suspens"), r.Text(kind="text", text="...")],
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -1847,24 +2167,28 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Instructions"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.PlainText(text="This"),
-                        r.Whitespace(),
-                        r.SelectableText(text="is", colors=["red", "blue"], boxed=False),
-                        r.SelectableText(text=",", colors=["red", "blue"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="the", colors=["red", "blue"], boxed=False),
-                        r.Whitespace(),
-                        r.PlainText(text="wording"),
-                        r.PlainText(text="."),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="This"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red", "blue"], contents=[r.Text(kind="text", text="is")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red", "blue"], contents=[r.Text(kind="text", text=",")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red", "blue"], contents=[r.Text(kind="text", text="the")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wording"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -1899,24 +2223,34 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Instructions"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.PlainText(text="This"),
-                        r.Whitespace(),
-                        r.SelectableText(text="is", colors=["red", "blue"], boxed=True),
-                        r.SelectableText(text=",", colors=["red", "blue"], boxed=True),
-                        r.Whitespace(),
-                        r.SelectableText(text="the", colors=["red", "blue"], boxed=True),
-                        r.Whitespace(),
-                        r.PlainText(text="wording"),
-                        r.PlainText(text="."),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="This"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(
+                                            kind="selectableInput", colors=["red", "blue"], boxed=True, contents=[r.Text(kind="text", text="is")]
+                                        ),
+                                        r.SelectableInput(
+                                            kind="selectableInput", colors=["red", "blue"], boxed=True, contents=[r.Text(kind="text", text=",")]
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(
+                                            kind="selectableInput", colors=["red", "blue"], boxed=True, contents=[r.Text(kind="text", text="the")]
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wording"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -1945,24 +2279,28 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Instructions"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.BoxedText(text="This"),
-                        r.Whitespace(),
-                        r.BoxedText(text="is"),
-                        r.PlainText(text=","),
-                        r.Whitespace(),
-                        r.BoxedText(text="the"),
-                        r.Whitespace(),
-                        r.BoxedText(text="wording"),
-                        r.PlainText(text="."),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="This")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="is")], boxed=True),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="the")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="wording")], boxed=True),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -1987,39 +2325,51 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
-                    adaptation=Adaptation(
-                        kind="generic",
-                        placeholder_for_fill_with_free_text=None,
-                        items={"kind": "tokens", "words": True, "punctuation": False},
-                        items_are_selectable={"colors": ["red", "green", "blue"]},
-                        items_are_boxed=False,
-                        items_have_mcq_beside=False,
-                        items_have_mcq_below=False,
-                        show_arrow_before_mcq_fields=False,
-                        show_mcq_choices_by_default=False,
-                    ),
+                adaptation=Adaptation(
+                    kind="generic",
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "tokens", "words": True, "punctuation": False},
+                    items_are_selectable={"colors": ["red", "green", "blue"]},
+                    items_are_boxed=False,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
             ),
             r.Exercise(
                 number="number",
                 textbook_page=None,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.SelectedText(text="abc", color="red"),
-                            r.Whitespace(),
-                            r.SelectedText(text="def", color="green"),
-                            r.Whitespace(),
-                            r.SelectedText(text="ghi", color="blue"),
-                            r.Whitespace(),
-                            r.PlainText(text="jkl"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.SelectableText(text="wording", colors=["red", "green", "blue"], boxed=False),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", highlighted="red", text="abc"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", highlighted="green", text="def"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", highlighted="blue", text="ghi"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="jkl"),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.SelectableInput(
+                                            kind="selectableInput", colors=["red", "green", "blue"], contents=[r.Text(kind="text", text="wording")]
+                                        )
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -2030,7 +2380,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(insert="alpha, bravo, charlie", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.InsertOp(
+                        insert="alpha, bravo, charlie",
+                        attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
+                    ),
                     d.InsertOp(insert="\n", attributes={}),
                 ],
                 wording=[d.InsertOp(insert="Abcd\n", attributes={})],
@@ -2052,36 +2405,80 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Instructions"),
-                            r.Whitespace(),
-                            r.BoxedText(text="alpha"),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.BoxedText(text="bravo"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="charlie"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.PlainText(text="A"),
-                        r.Whitespace(),
-                        r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        r.PlainText(text="b"),
-                        r.Whitespace(),
-                        r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        r.PlainText(text="c"),
-                        r.Whitespace(),
-                        r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        r.PlainText(text="d"),
-                        r.Whitespace(),
-                        r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Instructions"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="charlie")], boxed=True),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="A"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text="b"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text="c"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text="d"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -2092,7 +2489,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(insert="alpha, bravo, charlie", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.InsertOp(
+                        insert="alpha, bravo, charlie",
+                        attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
+                    ),
                     d.InsertOp(insert="\n", attributes={}),
                 ],
                 wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
@@ -2114,41 +2514,85 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Instructions"),
-                            r.Whitespace(),
-                            r.BoxedText(text="alpha"),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.BoxedText(text="bravo"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="charlie"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.PlainText(text="This"),
-                        r.Whitespace(),
-                        r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        r.Whitespace(),
-                        r.PlainText(text="is"),
-                        r.Whitespace(),
-                        r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        r.PlainText(text=","),
-                        r.Whitespace(),
-                        r.PlainText(text="the"),
-                        r.Whitespace(),
-                        r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        r.Whitespace(),
-                        r.PlainText(text="wording"),
-                        r.Whitespace(),
-                        r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        r.PlainText(text="."),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Instructions"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="charlie")], boxed=True),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="This"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="the"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wording"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -2159,7 +2603,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(insert="alpha, bravo, charlie", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.InsertOp(
+                        insert="alpha, bravo, charlie",
+                        attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
+                    ),
                     d.InsertOp(insert="\n", attributes={}),
                 ],
                 wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
@@ -2181,45 +2628,105 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Instructions"),
-                            r.Whitespace(),
-                            r.BoxedText(text="alpha"),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.BoxedText(text="bravo"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="charlie"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.PlainText(text="This"),
-                        r.Whitespace(),
-                        r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        r.Whitespace(),
-                        r.PlainText(text="is"),
-                        r.Whitespace(),
-                        r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        r.PlainText(text=","),
-                        r.Whitespace(),
-                        r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        r.Whitespace(),
-                        r.PlainText(text="the"),
-                        r.Whitespace(),
-                        r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        r.Whitespace(),
-                        r.PlainText(text="wording"),
-                        r.Whitespace(),
-                        r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        r.PlainText(text="."),
-                        r.Whitespace(),
-                        r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Instructions"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="charlie")], boxed=True),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="This"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="the"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wording"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text="."),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -2230,7 +2737,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(insert="alpha, bravo, charlie", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.InsertOp(
+                        insert="alpha, bravo, charlie",
+                        attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
+                    ),
                     d.InsertOp(insert="\n", attributes={}),
                 ],
                 wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
@@ -2252,37 +2762,65 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Instructions"),
-                            r.Whitespace(),
-                            r.BoxedText(text="alpha"),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.BoxedText(text="bravo"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="charlie"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.PlainText(text="This"),
-                        r.Whitespace(),
-                        r.PlainText(text="is"),
-                        r.PlainText(text=","),
-                        r.Whitespace(),
-                        r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        r.Whitespace(),
-                        r.PlainText(text="the"),
-                        r.Whitespace(),
-                        r.PlainText(text="wording"),
-                        r.PlainText(text="."),
-                        r.Whitespace(),
-                        r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Instructions"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="charlie")], boxed=True),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="This"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="the"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wording"),
+                                        r.Text(kind="text", text="."),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -2293,10 +2831,18 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(insert="alpha, bravo, charlie", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.InsertOp(
+                        insert="alpha, bravo, charlie",
+                        attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
+                    ),
                     d.InsertOp(insert="\n", attributes={}),
                 ],
-                wording=[d.InsertOp(insert="Affirmative sentence. Exclamative sentence! Phrase exclamative ! Interrogative sentence? Phrase interrogative ? Suspens...\n", attributes={})],
+                wording=[
+                    d.InsertOp(
+                        insert="Affirmative sentence. Exclamative sentence! Phrase exclamative ! Interrogative sentence? Phrase interrogative ? Suspens...\n",
+                        attributes={},
+                    )
+                ],
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
@@ -2315,67 +2861,125 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Instructions"),
-                            r.Whitespace(),
-                            r.BoxedText(text="alpha"),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.BoxedText(text="bravo"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="charlie"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Affirmative"),
-                            r.Whitespace(),
-                            r.PlainText(text="sentence"),
-                            r.PlainText(text="."),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                            r.Whitespace(),
-                            r.PlainText(text="Exclamative"),
-                            r.Whitespace(),
-                            r.PlainText(text="sentence"),
-                            r.PlainText(text="!"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                            r.Whitespace(),
-                            r.PlainText(text="Phrase"),
-                            r.Whitespace(),
-                            r.PlainText(text="exclamative"),
-                            r.Whitespace(),
-                            r.PlainText(text="!"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                            r.Whitespace(),
-                            r.PlainText(text="Interrogative"),
-                            r.Whitespace(),
-                            r.PlainText(text="sentence"),
-                            r.PlainText(text="?"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                            r.Whitespace(),
-                            r.PlainText(text="Phrase"),
-                            r.Whitespace(),
-                            r.PlainText(text="interrogative"),
-                            r.Whitespace(),
-                            r.PlainText(text="?"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                            r.Whitespace(),
-                            r.PlainText(text="Suspens"),
-                            r.PlainText(text="..."),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Instructions"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="charlie")], boxed=True),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Affirmative"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="sentence"),
+                                        r.Text(kind="text", text="."),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="Exclamative"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="sentence"),
+                                        r.Text(kind="text", text="!"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="Phrase"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="exclamative"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="!"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="Interrogative"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="sentence"),
+                                        r.Text(kind="text", text="?"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="Phrase"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="interrogative"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="?"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="Suspens"),
+                                        r.Text(kind="text", text="..."),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -2386,7 +2990,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(insert="alpha, bravo, charlie", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.InsertOp(
+                        insert="alpha, bravo, charlie",
+                        attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
+                    ),
                     d.InsertOp(insert="\n", attributes={}),
                 ],
                 wording=[
@@ -2414,37 +3021,65 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Instructions"),
-                            r.Whitespace(),
-                            r.BoxedText(text="alpha"),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.BoxedText(text="bravo"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="charlie"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.PlainText(text="This"),
-                        r.Whitespace(),
-                        r.PlainText(text="is"),
-                        r.Whitespace(),
-                        r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        r.PlainText(text=","),
-                        r.Whitespace(),
-                        r.PlainText(text="the"),
-                        r.Whitespace(),
-                        r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        r.Whitespace(),
-                        r.PlainText(text="wording"),
-                        r.PlainText(text="."),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Instructions"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="charlie")], boxed=True),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="This"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="the"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wording"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -2455,7 +3090,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(insert="alpha, bravo, charlie", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.InsertOp(
+                        insert="alpha, bravo, charlie",
+                        attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
+                    ),
                     d.InsertOp(insert="\n", attributes={}),
                 ],
                 wording=[d.InsertOp(insert="Abcd\n", attributes={})],
@@ -2477,40 +3115,100 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Instructions"),
-                            r.Whitespace(),
-                            r.BoxedText(text="alpha"),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.BoxedText(text="bravo"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="charlie"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.Stack(type="stack", contents=[
-                            r.PlainText(text="A"),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        ]),
-                        r.Stack(type="stack", contents=[
-                            r.PlainText(text="b"),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        ]),
-                        r.Stack(type="stack", contents=[
-                            r.PlainText(text="c"),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        ]),
-                        r.Stack(type="stack", contents=[
-                            r.PlainText(text="d"),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        ]),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Instructions"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="charlie")], boxed=True),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.Text(kind="text", text="A"),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.Text(kind="text", text="b"),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.Text(kind="text", text="c"),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.Text(kind="text", text="d"),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -2521,7 +3219,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(insert="alpha, bravo, charlie", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.InsertOp(
+                        insert="alpha, bravo, charlie",
+                        attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
+                    ),
                     d.InsertOp(insert="\n", attributes={}),
                 ],
                 wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
@@ -2543,45 +3244,105 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Instructions"),
-                            r.Whitespace(),
-                            r.BoxedText(text="alpha"),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.BoxedText(text="bravo"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="charlie"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.Stack(type="stack", contents=[
-                            r.PlainText(text="This"),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        ]),
-                        r.Whitespace(),
-                        r.Stack(type="stack", contents=[
-                            r.PlainText(text="is"),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        ]),
-                        r.PlainText(text=","),
-                        r.Whitespace(),
-                        r.Stack(type="stack", contents=[
-                            r.PlainText(text="the"),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        ]),
-                        r.Whitespace(),
-                        r.Stack(type="stack", contents=[
-                            r.PlainText(text="wording"),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        ]),
-                        r.PlainText(text="."),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Instructions"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="charlie")], boxed=True),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.Text(kind="text", text="This"),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.Text(kind="text", text="is"),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.Text(kind="text", text="the"),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.Text(kind="text", text="wording"),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -2592,7 +3353,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(insert="alpha, bravo, charlie", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.InsertOp(
+                        insert="alpha, bravo, charlie",
+                        attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
+                    ),
                     d.InsertOp(insert="\n", attributes={}),
                 ],
                 wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
@@ -2614,51 +3378,135 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Instructions"),
-                            r.Whitespace(),
-                            r.BoxedText(text="alpha"),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.BoxedText(text="bravo"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="charlie"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.Stack(type="stack", contents=[
-                            r.PlainText(text="This"),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        ]),
-                        r.Whitespace(),
-                        r.Stack(type="stack", contents=[
-                            r.PlainText(text="is"),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        ]),
-                        r.Stack(type="stack", contents=[
-                            r.PlainText(text=","),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        ]),
-                        r.Whitespace(),
-                        r.Stack(type="stack", contents=[
-                            r.PlainText(text="the"),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        ]),
-                        r.Whitespace(),
-                        r.Stack(type="stack", contents=[
-                            r.PlainText(text="wording"),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        ]),
-                        r.Stack(type="stack", contents=[
-                            r.PlainText(text="."),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        ]),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Instructions"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="charlie")], boxed=True),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.Text(kind="text", text="This"),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.Text(kind="text", text="is"),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.Text(kind="text", text=","),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.Text(kind="text", text="the"),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.Text(kind="text", text="wording"),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.Text(kind="text", text="."),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -2669,7 +3517,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(insert="alpha, bravo, charlie", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.InsertOp(
+                        insert="alpha, bravo, charlie",
+                        attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
+                    ),
                     d.InsertOp(insert="\n", attributes={}),
                 ],
                 wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
@@ -2691,39 +3542,75 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Instructions"),
-                            r.Whitespace(),
-                            r.BoxedText(text="alpha"),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.BoxedText(text="bravo"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="charlie"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.PlainText(text="This"),
-                        r.Whitespace(),
-                        r.PlainText(text="is"),
-                        r.Stack(type="stack", contents=[
-                            r.PlainText(text=","),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        ]),
-                        r.Whitespace(),
-                        r.PlainText(text="the"),
-                        r.Whitespace(),
-                        r.PlainText(text="wording"),
-                        r.Stack(type="stack", contents=[
-                            r.PlainText(text="."),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        ]),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Instructions"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="charlie")], boxed=True),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="This"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.Text(kind="text", text=","),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="the"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wording"),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.Text(kind="text", text="."),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -2734,10 +3621,18 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(insert="alpha, bravo, charlie", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.InsertOp(
+                        insert="alpha, bravo, charlie",
+                        attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
+                    ),
                     d.InsertOp(insert="\n", attributes={}),
                 ],
-                wording=[d.InsertOp(insert="Affirmative sentence. Exclamative sentence! Phrase exclamative ! Interrogative sentence? Phrase interrogative ? Suspens...\n", attributes={})],
+                wording=[
+                    d.InsertOp(
+                        insert="Affirmative sentence. Exclamative sentence! Phrase exclamative ! Interrogative sentence? Phrase interrogative ? Suspens...\n",
+                        attributes={},
+                    )
+                ],
                 example=[d.InsertOp(insert="\n", attributes={})],
                 clue=[d.InsertOp(insert="\n", attributes={})],
                 wording_paragraphs_per_pagelet=3,
@@ -2756,85 +3651,188 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Instructions"),
-                            r.Whitespace(),
-                            r.BoxedText(text="alpha"),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.BoxedText(text="bravo"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="charlie"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.Stack(type="stack", contents=[
-                                r.Line(type="line", contents=[
-                                    r.PlainText(text="Affirmative"),
-                                    r.Whitespace(),
-                                    r.PlainText(text="sentence"),
-                                    r.PlainText(text="."),
-                                ]),
-                                r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                            ]),
-                            r.Whitespace(),
-                            r.Stack(type="stack", contents=[
-                                r.Line(type="line", contents=[
-                                    r.PlainText(text="Exclamative"),
-                                    r.Whitespace(),
-                                    r.PlainText(text="sentence"),
-                                    r.PlainText(text="!"),
-                                ]),
-                                r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                            ]),
-                            r.Whitespace(),
-                            r.Stack(type="stack", contents=[
-                                r.Line(type="line", contents=[
-                                    r.PlainText(text="Phrase"),
-                                    r.Whitespace(),
-                                    r.PlainText(text="exclamative"),
-                                    r.Whitespace(),
-                                    r.PlainText(text="!"),
-                                ]),
-                                r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                            ]),
-                            r.Whitespace(),
-                            r.Stack(type="stack", contents=[
-                                r.Line(type="line", contents=[
-                                    r.PlainText(text="Interrogative"),
-                                    r.Whitespace(),
-                                    r.PlainText(text="sentence"),
-                                    r.PlainText(text="?"),
-                                ]),
-                                r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                            ]),
-                            r.Whitespace(),
-                            r.Stack(type="stack", contents=[
-                                r.Line(type="line", contents=[
-                                    r.PlainText(text="Phrase"),
-                                    r.Whitespace(),
-                                    r.PlainText(text="interrogative"),
-                                    r.Whitespace(),
-                                    r.PlainText(text="?"),
-                                ]),
-                                r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                            ]),
-                            r.Whitespace(),
-                            r.Stack(type="stack", contents=[
-                                r.Line(type="line", contents=[
-                                    r.PlainText(text="Suspens"),
-                                    r.PlainText(text="..."),
-                                ]),
-                                r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                            ]),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Instructions"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="charlie")], boxed=True),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.AnySequence(
+                                                    kind="sequence",
+                                                    contents=[
+                                                        r.Text(kind="text", text="Affirmative"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", text="sentence"),
+                                                        r.Text(kind="text", text="."),
+                                                    ],
+                                                    vertical=False,
+                                                ),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.AnySequence(
+                                                    kind="sequence",
+                                                    contents=[
+                                                        r.Text(kind="text", text="Exclamative"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", text="sentence"),
+                                                        r.Text(kind="text", text="!"),
+                                                    ],
+                                                    vertical=False,
+                                                ),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.AnySequence(
+                                                    kind="sequence",
+                                                    contents=[
+                                                        r.Text(kind="text", text="Phrase"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", text="exclamative"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", text="!"),
+                                                    ],
+                                                    vertical=False,
+                                                ),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.AnySequence(
+                                                    kind="sequence",
+                                                    contents=[
+                                                        r.Text(kind="text", text="Interrogative"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", text="sentence"),
+                                                        r.Text(kind="text", text="?"),
+                                                    ],
+                                                    vertical=False,
+                                                ),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.AnySequence(
+                                                    kind="sequence",
+                                                    contents=[
+                                                        r.Text(kind="text", text="Phrase"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", text="interrogative"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", text="?"),
+                                                    ],
+                                                    vertical=False,
+                                                ),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.AnySequence(
+                                                    kind="sequence",
+                                                    contents=[r.Text(kind="text", text="Suspens"), r.Text(kind="text", text="...")],
+                                                    vertical=False,
+                                                ),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -2845,7 +3843,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(insert="alpha, bravo, charlie", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.InsertOp(
+                        insert="alpha, bravo, charlie",
+                        attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
+                    ),
                     d.InsertOp(insert="\n", attributes={}),
                 ],
                 wording=[
@@ -2873,39 +3874,75 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Instructions"),
-                            r.Whitespace(),
-                            r.BoxedText(text="alpha"),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.BoxedText(text="bravo"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="charlie"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.PlainText(text="This"),
-                        r.Whitespace(),
-                        r.Stack(type="stack", contents=[
-                            r.PlainText(text="is"),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        ]),
-                        r.PlainText(text=","),
-                        r.Whitespace(),
-                        r.Stack(type="stack", contents=[
-                            r.PlainText(text="the"),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo", "charlie"], show_choices_by_default=False),
-                        ]),
-                        r.Whitespace(),
-                        r.PlainText(text="wording"),
-                        r.PlainText(text="."),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Instructions"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="charlie")], boxed=True),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="This"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.Text(kind="text", text="is"),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.Text(kind="text", text="the"),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[
+                                                        [r.Text(kind="text", text="alpha")],
+                                                        [r.Text(kind="text", text="bravo")],
+                                                        [r.Text(kind="text", text="charlie")],
+                                                    ],
+                                                    show_choices_by_default=False,
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wording"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -2942,31 +3979,49 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.BoxedText(text="a"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="b"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="A"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["a", "b"], show_choices_by_default=False),
-                            r.Whitespace(),
-                            r.PlainText(text="B"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["a", "b"], show_choices_by_default=False),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="a")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="b")], boxed=True),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="A"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="a")], [r.Text(kind="text", text="b")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="B"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="a")], [r.Text(kind="text", text="b")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -3005,75 +4060,97 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.BoxedText(text="a"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="b"),
-                            r.PlainText(text="."),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="This"),
-                            r.Whitespace(),
-                            r.PlainText(text="{"),
-                            r.PlainText(text="choices2"),
-                            r.PlainText(text="|"),
-                            r.PlainText(text="|"),
-                            r.PlainText(text="/"),
-                            r.PlainText(text="|"),
-                            r.PlainText(text="|"),
-                            r.PlainText(text="|"),
-                            r.PlainText(text="|"),
-                            r.PlainText(text="is"),
-                            r.PlainText(text="}"),
-                            r.Whitespace(),
-                            r.PlainText(text="the"),
-                            r.Whitespace(),
-                            r.PlainText(text="@"),
-                            r.Whitespace(),
-                            r.PlainText(text="example"),
-                            r.PlainText(text="."),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="This"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.PlainText(text="{"),
-                            r.PlainText(text="choices2"),
-                            r.PlainText(text="|"),
-                            r.PlainText(text="|"),
-                            r.PlainText(text="/"),
-                            r.PlainText(text="|"),
-                            r.PlainText(text="|"),
-                            r.PlainText(text="|"),
-                            r.PlainText(text="|"),
-                            r.PlainText(text="the"),
-                            r.PlainText(text="}"),
-                            r.Whitespace(),
-                            r.PlainText(text="@"),
-                            r.Whitespace(),
-                            r.PlainText(text="clue"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="A"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["a", "b"], show_choices_by_default=False),
-                            r.Whitespace(),
-                            r.PlainText(text="B"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["a", "b"], show_choices_by_default=False),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="a")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="b")], boxed=True),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                ),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="This"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="{"),
+                                        r.Text(kind="text", text="choices2"),
+                                        r.Text(kind="text", text="|"),
+                                        r.Text(kind="text", text="|"),
+                                        r.Text(kind="text", text="/"),
+                                        r.Text(kind="text", text="|"),
+                                        r.Text(kind="text", text="|"),
+                                        r.Text(kind="text", text="|"),
+                                        r.Text(kind="text", text="|"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Text(kind="text", text="}"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="the"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="@"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="example"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                ),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="This"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="{"),
+                                        r.Text(kind="text", text="choices2"),
+                                        r.Text(kind="text", text="|"),
+                                        r.Text(kind="text", text="|"),
+                                        r.Text(kind="text", text="/"),
+                                        r.Text(kind="text", text="|"),
+                                        r.Text(kind="text", text="|"),
+                                        r.Text(kind="text", text="|"),
+                                        r.Text(kind="text", text="|"),
+                                        r.Text(kind="text", text="the"),
+                                        r.Text(kind="text", text="}"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="@"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="clue"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                ),
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="A"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="a")], [r.Text(kind="text", text="b")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="B"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="a")], [r.Text(kind="text", text="b")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -3108,31 +4185,49 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.BoxedText(text="a"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="b"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="A"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["a", "b"], show_choices_by_default=False),
-                            r.Whitespace(),
-                            r.PlainText(text="B"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["a", "b"], show_choices_by_default=False),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="a")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="b")], boxed=True),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="A"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="a")], [r.Text(kind="text", text="b")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="B"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="a")], [r.Text(kind="text", text="b")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -3167,27 +4262,41 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.BoxedText(text="a b"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="A"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["a b"], show_choices_by_default=False),
-                            r.Whitespace(),
-                            r.PlainText(text="B"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["a b"], show_choices_by_default=False),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="a b")], boxed=True),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="A"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput", choices=[[r.Text(kind="text", text="a b")]], show_choices_by_default=False
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="B"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput", choices=[[r.Text(kind="text", text="a b")]], show_choices_by_default=False
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -3198,7 +4307,9 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Choose ", attributes={}),
-                    d.InsertOp(insert="a, b, c or d", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "or", "stop": "", "placeholder": "..."}}),
+                    d.InsertOp(
+                        insert="a, b, c or d", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "or", "stop": "", "placeholder": "..."}}
+                    ),
                     d.InsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[
@@ -3222,37 +4333,65 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.BoxedText(text="a"),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.BoxedText(text="b"),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.BoxedText(text="c"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="d"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="A"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["a", "b", "c", "d"], show_choices_by_default=False),
-                            r.Whitespace(),
-                            r.PlainText(text="B"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["a", "b", "c", "d"], show_choices_by_default=False),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="a")], boxed=True),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="b")], boxed=True),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="c")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="d")], boxed=True),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="A"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="a")],
+                                                [r.Text(kind="text", text="b")],
+                                                [r.Text(kind="text", text="c")],
+                                                [r.Text(kind="text", text="d")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="B"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="a")],
+                                                [r.Text(kind="text", text="b")],
+                                                [r.Text(kind="text", text="c")],
+                                                [r.Text(kind="text", text="d")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -3263,7 +4402,9 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Choose ", attributes={}),
-                    d.InsertOp(insert="a, b, c, or d", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "or", "stop": "", "placeholder": "..."}}),
+                    d.InsertOp(
+                        insert="a, b, c, or d", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "or", "stop": "", "placeholder": "..."}}
+                    ),
                     d.InsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[
@@ -3287,37 +4428,65 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.BoxedText(text="a"),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.BoxedText(text="b"),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.BoxedText(text="c"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="d"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="A"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["a", "b", "c", "d"], show_choices_by_default=False),
-                            r.Whitespace(),
-                            r.PlainText(text="B"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["a", "b", "c", "d"], show_choices_by_default=False),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="a")], boxed=True),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="b")], boxed=True),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="c")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="d")], boxed=True),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="A"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="a")],
+                                                [r.Text(kind="text", text="b")],
+                                                [r.Text(kind="text", text="c")],
+                                                [r.Text(kind="text", text="d")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="B"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="a")],
+                                                [r.Text(kind="text", text="b")],
+                                                [r.Text(kind="text", text="c")],
+                                                [r.Text(kind="text", text="d")],
+                                            ],
+                                            show_choices_by_default=False,
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -3328,7 +4497,9 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Choose ", attributes={}),
-                    d.InsertOp(insert="a / b // c", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "..."}}),
+                    d.InsertOp(
+                        insert="a / b // c", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "..."}}
+                    ),
                     d.InsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[
@@ -3352,34 +4523,52 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.BoxedText(text="a"),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.BoxedText(text="b"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="c"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="A"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["a", "b", "c"], show_choices_by_default=False),
-                            r.Whitespace(),
-                            r.PlainText(text="B"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["a", "b", "c"], show_choices_by_default=False),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="a")], boxed=True),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="b")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="c")], boxed=True),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="A"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="a")], [r.Text(kind="text", text="b")], [r.Text(kind="text", text="c")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="B"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="a")], [r.Text(kind="text", text="b")], [r.Text(kind="text", text="c")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -3390,7 +4579,9 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Choose ", attributes={}),
-                    d.InsertOp(insert="(a or b)", attributes={"choices2": {"start": "(", "separator1": "or", "separator2": "", "stop": ")", "placeholder": "..."}}),
+                    d.InsertOp(
+                        insert="(a or b)", attributes={"choices2": {"start": "(", "separator1": "or", "separator2": "", "stop": ")", "placeholder": "..."}}
+                    ),
                     d.InsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[
@@ -3414,31 +4605,49 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.BoxedText(text="a"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="b"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="A"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["a", "b"], show_choices_by_default=False),
-                            r.Whitespace(),
-                            r.PlainText(text="B"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["a", "b"], show_choices_by_default=False),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="a")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="b")], boxed=True),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="A"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="a")], [r.Text(kind="text", text="b")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="B"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="a")], [r.Text(kind="text", text="b")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -3475,44 +4684,72 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.BoxedText(text="a"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="b"),
-                            r.Whitespace(),
-                            r.PlainText(text="and"),
-                            r.Whitespace(),
-                            r.BoxedText(text="c"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="d"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="A"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["a", "b"], show_choices_by_default=False),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["c", "d"], show_choices_by_default=False),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="B"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["a", "b"], show_choices_by_default=False),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["c", "d"], show_choices_by_default=False),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="a")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="b")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="and"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="c")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="d")], boxed=True),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="A"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="a")], [r.Text(kind="text", text="b")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="c")], [r.Text(kind="text", text="d")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                    ]
+                                ),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="B"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="a")], [r.Text(kind="text", text="b")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="c")], [r.Text(kind="text", text="d")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -3548,37 +4785,55 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Complète"),
-                            r.Whitespace(),
-                            r.PlainText(text="les"),
-                            r.Whitespace(),
-                            r.PlainText(text="mots"),
-                            r.Whitespace(),
-                            r.PlainText(text="avec"),
-                            r.Whitespace(),
-                            r.BoxedText(text="m"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="n"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="i"),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["m", "n"], show_choices_by_default=False),
-                            r.PlainText(text="mense"),
-                            r.Whitespace(),
-                            r.PlainText(text="i"),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["m", "n"], show_choices_by_default=False),
-                            r.PlainText(text="juste"),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Complète"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="les"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="mots"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="avec"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="m")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="n")], boxed=True),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="i"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="m")], [r.Text(kind="text", text="n")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text="mense"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="i"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="m")], [r.Text(kind="text", text="n")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text="juste"),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -3617,28 +4872,46 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.PlainText(text="wisely"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="A"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["a", "b", "c"], show_choices_by_default=False),
-                            r.Whitespace(),
-                            r.PlainText(text="B"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["d", "e"], show_choices_by_default=False),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wisely"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="A"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="a")], [r.Text(kind="text", text="b")], [r.Text(kind="text", text="c")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="B"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="d")], [r.Text(kind="text", text="e")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -3684,24 +4957,38 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.PlainText(text="wisely"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="A"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["blah", "blih"], show_choices_by_default=False),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wisely"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="A"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="blah")], [r.Text(kind="text", text="blih")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -3747,24 +5034,38 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.PlainText(text="wisely"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="A"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["blah", "blih"], show_choices_by_default=False),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wisely"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="A"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="blah")], [r.Text(kind="text", text="blih")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -3810,24 +5111,38 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.PlainText(text="wisely"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="A"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["blah", "blih"], show_choices_by_default=False),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wisely"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="A"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="blah")], [r.Text(kind="text", text="blih")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -3873,24 +5188,36 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.PlainText(text="wisely"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="A"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["blah / blih"], show_choices_by_default=False),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wisely"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="A"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput", choices=[[r.Text(kind="text", text="blah / blih")]], show_choices_by_default=False
+                                        ),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -3936,24 +5263,38 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.PlainText(text="wisely"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="A"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["blah", "blih"], show_choices_by_default=False),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wisely"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="A"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="blah")], [r.Text(kind="text", text="blih")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -3999,24 +5340,38 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.PlainText(text="wisely"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="A"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["blah", "blih"], show_choices_by_default=False),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wisely"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="A"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="blah")], [r.Text(kind="text", text="blih")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -4062,28 +5417,42 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.PlainText(text="wisely"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="The"),
-                            r.Whitespace(),
-                            r.PlainText(text="sky"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["blue", "red"], show_choices_by_default=False),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wisely"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="The"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="sky"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="blue")], [r.Text(kind="text", text="red")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -4128,28 +5497,42 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.PlainText(text="wisely"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="The"),
-                            r.Whitespace(),
-                            r.PlainText(text="sky"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["blue", "red"], show_choices_by_default=False),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wisely"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="The"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="sky"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="blue")], [r.Text(kind="text", text="red")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -4194,37 +5577,55 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.PlainText(text="wisely"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="The"),
-                            r.Whitespace(),
-                            r.PlainText(text="sky"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["blue", "yellow"], show_choices_by_default=False),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.PlainText(text="the"),
-                            r.Whitespace(),
-                            r.PlainText(text="sun"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["blue", "yellow"], show_choices_by_default=False),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wisely"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="The"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="sky"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="blue")], [r.Text(kind="text", text="yellow")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="the"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="sun"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="blue")], [r.Text(kind="text", text="yellow")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -4282,37 +5683,55 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.PlainText(text="wisely"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="The"),
-                            r.Whitespace(),
-                            r.PlainText(text="sky"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["blue", "red"], show_choices_by_default=False),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.PlainText(text="the"),
-                            r.Whitespace(),
-                            r.PlainText(text="sun"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["green", "yellow"], show_choices_by_default=False),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wisely"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="The"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="sky"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="blue")], [r.Text(kind="text", text="red")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="the"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="sun"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="green")], [r.Text(kind="text", text="yellow")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -4371,38 +5790,58 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.PlainText(text="wisely"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="The"),
-                            r.Whitespace(),
-                            r.PlainText(text="sky"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["blue", "red"], show_choices_by_default=False),
-                            r.PlainText(text="."),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="The"),
-                            r.Whitespace(),
-                            r.PlainText(text="sun"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["green", "yellow"], show_choices_by_default=False),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wisely"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="The"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="sky"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="blue")], [r.Text(kind="text", text="red")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                ),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="The"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="sun"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="green")], [r.Text(kind="text", text="yellow")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -4461,37 +5900,55 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.PlainText(text="wisely"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="The"),
-                            r.Whitespace(),
-                            r.PlainText(text="sky"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["blue", "red"], show_choices_by_default=False),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.PlainText(text="the"),
-                            r.Whitespace(),
-                            r.PlainText(text="sun"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["green", "yellow"], show_choices_by_default=False),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wisely"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="The"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="sky"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="blue")], [r.Text(kind="text", text="red")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="the"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="sun"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="green")], [r.Text(kind="text", text="yellow")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -4526,35 +5983,37 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=None,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="instructions"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.SelectableText(text="The", colors=["red", "blue"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="wording", colors=["red", "blue"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="of", colors=["red", "blue"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="this", colors=["red", "blue"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="exercise", colors=["red", "blue"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="is", colors=["red", "blue"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="a", colors=["red", "blue"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="single", colors=["red", "blue"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="sentence", colors=["red", "blue"], boxed=False),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.SelectableInput(kind="selectableInput", colors=["red", "blue"], contents=[r.Text(kind="text", text="The")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red", "blue"], contents=[r.Text(kind="text", text="wording")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red", "blue"], contents=[r.Text(kind="text", text="of")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red", "blue"], contents=[r.Text(kind="text", text="this")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red", "blue"], contents=[r.Text(kind="text", text="exercise")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red", "blue"], contents=[r.Text(kind="text", text="is")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red", "blue"], contents=[r.Text(kind="text", text="a")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red", "blue"], contents=[r.Text(kind="text", text="single")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red", "blue"], contents=[r.Text(kind="text", text="sentence")]),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -4594,24 +6053,36 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=None,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.SelectedText(text="abc", color="red"),
-                            r.Whitespace(),
-                            r.SelectedText(text="def", color="green"),
-                            r.Whitespace(),
-                            r.SelectedText(text="ghi", color="blue"),
-                            r.Whitespace(),
-                            r.PlainText(text="jkl"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.SelectableText(text="wording", colors=["red", "green", "blue"], boxed=False),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", highlighted="red", text="abc"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", highlighted="green", text="def"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", highlighted="blue", text="ghi"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="jkl"),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.SelectableInput(
+                                            kind="selectableInput", colors=["red", "green", "blue"], contents=[r.Text(kind="text", text="wording")]
+                                        )
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -4645,18 +6116,18 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=None,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.SelectedText(text="abc", color="red"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.SelectableText(text="wording", colors=["red"], boxed=False),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", highlighted="red", text="abc")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="wording")])]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -4689,28 +6160,28 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="instructions"),
-                            r.Whitespace(),
-                            r.PlainText(text="are"),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="on"),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="multiple"),
-                            r.Whitespace(),
-                            r.PlainText(text="lines"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.SelectableText(text="wording", colors=["red"], boxed=False),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[r.Text(kind="text", text="instructions"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="are")]
+                                ),
+                                r.Paragraph(contents=[r.Text(kind="text", text="on")]),
+                                r.Paragraph(
+                                    contents=[r.Text(kind="text", text="multiple"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="lines")]
+                                ),
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="wording")])]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -4743,28 +6214,30 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="instructions"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.SelectableText(text="wording", colors=["red"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="is", colors=["red"], boxed=False),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.SelectableText(text="on", colors=["red"], boxed=False),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.SelectableText(text="multiple", colors=["red"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="lines", colors=["red"], boxed=False),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="wording")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="is")]),
+                                    ]
+                                ),
+                                r.Paragraph(contents=[r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="on")])]),
+                                r.Paragraph(
+                                    contents=[
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="multiple")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="lines")]),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -4797,26 +6270,36 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="{"),
-                            r.PlainText(text="tag"),
-                            r.PlainText(text="|"),
-                            r.PlainText(text="abc"),
-                            r.PlainText(text="}"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="{"),
-                            r.SelectableText(text="tag", colors=["red"], boxed=False),
-                            r.PlainText(text="|"),
-                            r.SelectableText(text="def", colors=["red"], boxed=False),
-                            r.PlainText(text="}"),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="{"),
+                                        r.Text(kind="text", text="tag"),
+                                        r.Text(kind="text", text="|"),
+                                        r.Text(kind="text", text="abc"),
+                                        r.Text(kind="text", text="}"),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="{"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="tag")]),
+                                        r.Text(kind="text", text="|"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="def")]),
+                                        r.Text(kind="text", text="}"),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -4849,18 +6332,16 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="abc"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.SelectableText(text="def", colors=["red"], boxed=False),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="abc")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(contents=[r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="def")])])
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -4897,38 +6378,46 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=None,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="instructions"),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="This"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.PlainText(text="the"),
-                            r.Whitespace(),
-                            r.PlainText(text="example"),
-                            r.PlainText(text="."),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="This"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.PlainText(text="the"),
-                            r.Whitespace(),
-                            r.PlainText(text="clue"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.SelectableText(text="wording", colors=["red"], boxed=False),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="This"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="the"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="example"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                ),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="This"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="the"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="clue"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                ),
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="wording")])]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -4971,28 +6460,40 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=None,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="instructions"),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.SelectedText(text="abc", color="red"),
-                            r.Whitespace(),
-                            r.SelectedText(text="def", color="green"),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.SelectedText(text="ghi", color="blue"),
-                            r.Whitespace(),
-                            r.PlainText(text="jkl"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.SelectableText(text="wording", colors=["red", "green", "blue"], boxed=False),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", highlighted="red", text="abc"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", highlighted="green", text="def"),
+                                    ]
+                                ),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", highlighted="blue", text="ghi"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="jkl"),
+                                    ]
+                                ),
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.SelectableInput(
+                                            kind="selectableInput", colors=["red", "green", "blue"], contents=[r.Text(kind="text", text="wording")]
+                                        )
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -5025,42 +6526,60 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=None,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.PlainText(text="Selectionne"),
-                        r.Whitespace(),
-                        r.PlainText(text="les"),
-                        r.Whitespace(),
-                        r.PlainText(text="articles"),
-                        r.PlainText(text="."),
-                    ])]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.SelectableText(text="La", colors=["red"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="maison", colors=["red"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="est", colors=["red"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="belle", colors=["red"], boxed=False),
-                        r.PlainText(text="."),
-                        r.Whitespace(),
-                        r.SelectableText(text="L'", colors=["red"], boxed=False),
-                        r.SelectableText(text="école", colors=["red"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="est", colors=["red"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="fermée", colors=["red"], boxed=False),
-                        r.PlainText(text="."),
-                        r.Whitespace(),
-                        r.SelectableText(text="L’", colors=["red"], boxed=False),
-                        r.SelectableText(text="automobile", colors=["red"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="est", colors=["red"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="verte", colors=["red"], boxed=False),
-                        r.PlainText(text="."),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Selectionne"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="les"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="articles"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="La")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="maison")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="est")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="belle")]),
+                                        r.Text(kind="text", text="."),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(
+                                            kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="L"), r.Text(kind="text", text="'")]
+                                        ),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="école")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="est")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="fermée")]),
+                                        r.Text(kind="text", text="."),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(
+                                            kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="L"), r.Text(kind="text", text="’")]
+                                        ),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="automobile")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="est")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="verte")]),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -5093,44 +6612,58 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=None,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.PlainText(text="Selectionne"),
-                        r.Whitespace(),
-                        r.PlainText(text="les"),
-                        r.Whitespace(),
-                        r.PlainText(text="articles"),
-                        r.PlainText(text="."),
-                    ])]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.PlainText(text="La"),
-                        r.Whitespace(),
-                        r.PlainText(text="maison"),
-                        r.Whitespace(),
-                        r.PlainText(text="est"),
-                        r.Whitespace(),
-                        r.PlainText(text="belle"),
-                        r.SelectableText(text=".", colors=["red"], boxed=False),
-                        r.Whitespace(),
-                        r.PlainText(text="L"),
-                        r.SelectableText(text="'", colors=["red"], boxed=False),
-                        r.PlainText(text="école"),
-                        r.Whitespace(),
-                        r.PlainText(text="est"),
-                        r.Whitespace(),
-                        r.PlainText(text="fermée"),
-                        r.SelectableText(text=".", colors=["red"], boxed=False),
-                        r.Whitespace(),
-                        r.PlainText(text="L"),
-                        r.SelectableText(text="’", colors=["red"], boxed=False),
-                        r.PlainText(text="automobile"),
-                        r.Whitespace(),
-                        r.PlainText(text="est"),
-                        r.Whitespace(),
-                        r.PlainText(text="verte"),
-                        r.SelectableText(text=".", colors=["red"], boxed=False),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Selectionne"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="les"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="articles"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="La"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="maison"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="est"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="belle"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="L"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="'")]),
+                                        r.Text(kind="text", text="école"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="est"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="fermée"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="L"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="’")]),
+                                        r.Text(kind="text", text="automobile"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="est"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="verte"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -5163,42 +6696,58 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=None,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.PlainText(text="Selectionne"),
-                        r.Whitespace(),
-                        r.PlainText(text="les"),
-                        r.Whitespace(),
-                        r.PlainText(text="articles"),
-                        r.PlainText(text="."),
-                    ])]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.SelectableText(text="La", colors=["red"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="maison", colors=["red"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="est", colors=["red"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="belle", colors=["red"], boxed=False),
-                        r.SelectableText(text=".", colors=["red"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="L'", colors=["red"], boxed=False),
-                        r.SelectableText(text="école", colors=["red"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="est", colors=["red"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="fermée", colors=["red"], boxed=False),
-                        r.SelectableText(text=".", colors=["red"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="L’", colors=["red"], boxed=False),
-                        r.SelectableText(text="automobile", colors=["red"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="est", colors=["red"], boxed=False),
-                        r.Whitespace(),
-                        r.SelectableText(text="verte", colors=["red"], boxed=False),
-                        r.SelectableText(text=".", colors=["red"], boxed=False),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Selectionne"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="les"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="articles"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="La")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="maison")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="est")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="belle")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="L")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="'")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="école")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="est")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="fermée")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="L")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="’")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="automobile")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="est")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="verte")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -5231,42 +6780,60 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=None,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.PlainText(text="Selectionne"),
-                        r.Whitespace(),
-                        r.PlainText(text="les"),
-                        r.Whitespace(),
-                        r.PlainText(text="articles"),
-                        r.PlainText(text="."),
-                    ])]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.BoxedText(text="La"),
-                        r.Whitespace(),
-                        r.BoxedText(text="maison"),
-                        r.Whitespace(),
-                        r.BoxedText(text="est"),
-                        r.Whitespace(),
-                        r.BoxedText(text="belle"),
-                        r.PlainText(text="."),
-                        r.Whitespace(),
-                        r.BoxedText(text="L'"),
-                        r.BoxedText(text="école"),
-                        r.Whitespace(),
-                        r.BoxedText(text="est"),
-                        r.Whitespace(),
-                        r.BoxedText(text="fermée"),
-                        r.PlainText(text="."),
-                        r.Whitespace(),
-                        r.BoxedText(text="L’"),
-                        r.BoxedText(text="automobile"),
-                        r.Whitespace(),
-                        r.BoxedText(text="est"),
-                        r.Whitespace(),
-                        r.BoxedText(text="verte"),
-                        r.PlainText(text="."),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Selectionne"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="les"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="articles"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="La")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="maison")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="est")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="belle")], boxed=True),
+                                        r.Text(kind="text", text="."),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(
+                                            kind="passiveSequence", contents=[r.Text(kind="text", text="L"), r.Text(kind="text", text="'")], boxed=True
+                                        ),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="école")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="est")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="fermée")], boxed=True),
+                                        r.Text(kind="text", text="."),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(
+                                            kind="passiveSequence", contents=[r.Text(kind="text", text="L"), r.Text(kind="text", text="’")], boxed=True
+                                        ),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="automobile")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="est")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="verte")], boxed=True),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -5299,44 +6866,58 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=None,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.PlainText(text="Selectionne"),
-                        r.Whitespace(),
-                        r.PlainText(text="les"),
-                        r.Whitespace(),
-                        r.PlainText(text="articles"),
-                        r.PlainText(text="."),
-                    ])]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.PlainText(text="La"),
-                        r.Whitespace(),
-                        r.PlainText(text="maison"),
-                        r.Whitespace(),
-                        r.PlainText(text="est"),
-                        r.Whitespace(),
-                        r.PlainText(text="belle"),
-                        r.BoxedText(text="."),
-                        r.Whitespace(),
-                        r.PlainText(text="L"),
-                        r.BoxedText(text="'"),
-                        r.PlainText(text="école"),
-                        r.Whitespace(),
-                        r.PlainText(text="est"),
-                        r.Whitespace(),
-                        r.PlainText(text="fermée"),
-                        r.BoxedText(text="."),
-                        r.Whitespace(),
-                        r.PlainText(text="L"),
-                        r.BoxedText(text="’"),
-                        r.PlainText(text="automobile"),
-                        r.Whitespace(),
-                        r.PlainText(text="est"),
-                        r.Whitespace(),
-                        r.PlainText(text="verte"),
-                        r.BoxedText(text="."),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Selectionne"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="les"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="articles"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="La"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="maison"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="est"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="belle"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text=".")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="L"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="'")], boxed=True),
+                                        r.Text(kind="text", text="école"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="est"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="fermée"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text=".")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="L"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="’")], boxed=True),
+                                        r.Text(kind="text", text="automobile"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="est"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="verte"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text=".")], boxed=True),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -5369,42 +6950,56 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=None,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.PlainText(text="Selectionne"),
-                        r.Whitespace(),
-                        r.PlainText(text="les"),
-                        r.Whitespace(),
-                        r.PlainText(text="articles"),
-                        r.PlainText(text="."),
-                    ])]),
-                    wording=r.Section(paragraphs=[r.Paragraph(tokens=[
-                        r.BoxedText(text="La"),
-                        r.Whitespace(),
-                        r.BoxedText(text="maison"),
-                        r.Whitespace(),
-                        r.BoxedText(text="est"),
-                        r.Whitespace(),
-                        r.BoxedText(text="belle"),
-                        r.BoxedText(text="."),
-                        r.Whitespace(),
-                        r.BoxedText(text="L'"),
-                        r.BoxedText(text="école"),
-                        r.Whitespace(),
-                        r.BoxedText(text="est"),
-                        r.Whitespace(),
-                        r.BoxedText(text="fermée"),
-                        r.BoxedText(text="."),
-                        r.Whitespace(),
-                        r.BoxedText(text="L’"),
-                        r.BoxedText(text="automobile"),
-                        r.Whitespace(),
-                        r.BoxedText(text="est"),
-                        r.Whitespace(),
-                        r.BoxedText(text="verte"),
-                        r.BoxedText(text="."),
-                    ])]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Selectionne"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="les"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="articles"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="La")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="maison")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="est")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="belle")], boxed=True),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text=".")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="L"), r.Text(kind="text", text="'")], boxed=True),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="école")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="est")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="fermée")], boxed=True),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text=".")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="L"), r.Text(kind="text", text="’")], boxed=True),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="automobile")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="est")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="verte")], boxed=True),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text=".")], boxed=True),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -5450,75 +7045,89 @@ class LenientParagraphTestCase(AdaptationTestCase):
                     items_have_mcq_below=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
-                )
+                ),
             ),
             r.Exercise(
                 number="number",
                 textbook_page=None,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="This"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.PlainText(text="a"),
-                            r.Whitespace(),
-                            r.PassiveFormattedText(type="passiveFormattedText", text="strict", bold=True, italic=False),
-                            r.Whitespace(),
-                            r.PlainText(text="instructions"),
-                            r.Whitespace(),
-                            r.PassiveFormattedText(type="passiveFormattedText", text="paragraph", bold=False, italic=True),
-                            r.PlainText(text="."),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="And"),
-                            r.Whitespace(),
-                            r.PlainText(text="this"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.PlainText(text="a"),
-                            r.Whitespace(),
-                            r.PassiveFormattedText(type="passiveFormattedText", text="lenient", bold=True, italic=False),
-                            r.Whitespace(),
-                            r.PlainText(text="instructions"),
-                            r.Whitespace(),
-                            r.PassiveFormattedText(type="passiveFormattedText", text="paragraph", bold=False, italic=True),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="This"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.PlainText(text="a"),
-                            r.Whitespace(),
-                            r.PassiveFormattedText(type="passiveFormattedText", text="strict", bold=True, italic=False),
-                            r.Whitespace(),
-                            r.PlainText(text="wording"),
-                            r.Whitespace(),
-                            r.PassiveFormattedText(type="passiveFormattedText", text="paragraph", bold=False, italic=True),
-                            r.PlainText(text="."),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="And"),
-                            r.Whitespace(),
-                            r.PlainText(text="this"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.PlainText(text="a"),
-                            r.Whitespace(),
-                            r.PassiveFormattedText(type="passiveFormattedText", text="lenient", bold=True, italic=False),
-                            r.Whitespace(),
-                            r.PlainText(text="wording"),
-                            r.Whitespace(),
-                            r.PassiveFormattedText(type="passiveFormattedText", text="paragraph", bold=False, italic=True),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="This"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="a"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", bold=True, text="strict"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="instructions"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", italic=True, text="paragraph"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                ),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="And"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="this"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="a"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", bold=True, text="lenient"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="instructions"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", italic=True, text="paragraph"),
+                                    ]
+                                ),
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="This"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="a"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", bold=True, text="strict"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wording"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", italic=True, text="paragraph"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                ),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="And"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="this"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="a"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", bold=True, text="lenient"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wording"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", italic=True, text="paragraph"),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -5546,55 +7155,59 @@ class LenientParagraphTestCase(AdaptationTestCase):
                     items_have_mcq_below=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
-                )
+                ),
             ),
             r.Exercise(
                 number="number",
                 textbook_page=None,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="instructions"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.SelectableText(text="This", colors=["red"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="is", colors=["red"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="a", colors=["red"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="strict", colors=["red"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="paragraph", colors=["red"], boxed=False),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.SelectableText(text="with", colors=["red"], boxed=False),
-                            r.PlainText(text="..."),
-                            r.Whitespace(),
-                            r.SelectableText(text="some", colors=["red"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="punctuation", colors=["red"], boxed=False),
-                            r.PlainText(text="."),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.SelectableText(text="And", colors=["red"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="this", colors=["red"], boxed=False),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.SelectableText(text="is", colors=["red"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="a", colors=["red"], boxed=False),
-                            r.PlainText(text="..."),
-                            r.Whitespace(),
-                            r.SelectableText(text="lenient", colors=["red"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="paragraph", colors=["red"], boxed=False),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="This")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="is")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="a")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="strict")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="paragraph")]),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="with")]),
+                                        r.Text(kind="text", text="..."),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="some")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="punctuation")]),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                ),
+                                r.Paragraph(
+                                    contents=[
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="And")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="this")]),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="is")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="a")]),
+                                        r.Text(kind="text", text="..."),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="lenient")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="paragraph")]),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -5622,55 +7235,59 @@ class LenientParagraphTestCase(AdaptationTestCase):
                     items_have_mcq_below=False,
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
-                )
+                ),
             ),
             r.Exercise(
                 number="number",
                 textbook_page=None,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="instructions"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.SelectableText(text="This", colors=["red"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="is", colors=["red"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="a", colors=["red"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="strict", colors=["red"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="paragraph", colors=["red"], boxed=False),
-                            r.SelectableText(text=",", colors=["red"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="with", colors=["red"], boxed=False),
-                            r.SelectableText(text="...", colors=["red"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="some", colors=["red"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="punctuation", colors=["red"], boxed=False),
-                            r.SelectableText(text=".", colors=["red"], boxed=False),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.SelectableText(text="And", colors=["red"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="this", colors=["red"], boxed=False),
-                            r.SelectableText(text=",", colors=["red"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="is", colors=["red"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="a", colors=["red"], boxed=False),
-                            r.SelectableText(text="...", colors=["red"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="lenient", colors=["red"], boxed=False),
-                            r.Whitespace(),
-                            r.SelectableText(text="paragraph", colors=["red"], boxed=False),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="This")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="is")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="a")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="strict")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="paragraph")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=",")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="with")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="...")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="some")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="punctuation")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                    ]
+                                ),
+                                r.Paragraph(
+                                    contents=[
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="And")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="this")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=",")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="is")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="a")]),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="...")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="lenient")]),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="paragraph")]),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -5703,52 +7320,56 @@ class LenientParagraphTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=None,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="instructions"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="This"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.PlainText(text="a"),
-                            r.Whitespace(),
-                            r.FreeTextInput(),
-                            r.Whitespace(),
-                            r.PlainText(text="strict"),
-                            r.Whitespace(),
-                            r.PlainText(text="paragraph"),
-                            r.PlainText(text="."),
-                            r.Whitespace(),
-                            r.PlainText(text="With"),
-                            r.Whitespace(),
-                            r.PlainText(text="some"),
-                            r.Whitespace(),
-                            r.PlainText(text="punctuation"),
-                            r.PlainText(text="."),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="And"),
-                            r.Whitespace(),
-                            r.PlainText(text="this"),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.PlainText(text="a"),
-                            r.Whitespace(),
-                            r.FreeTextInput(),
-                            r.Whitespace(),
-                            r.PlainText(text="lenient"),
-                            r.Whitespace(),
-                            r.PlainText(text="paragraph"),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="This"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="a"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.FreeTextInput(kind="freeTextInput"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="strict"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="paragraph"),
+                                        r.Text(kind="text", text="."),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="With"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="some"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="punctuation"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                ),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="And"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="this"),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="a"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.FreeTextInput(kind="freeTextInput"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="lenient"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="paragraph"),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -5759,7 +7380,9 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 textbook_page=None,
                 instructions=[
                     d.InsertOp(insert="Choose ", attributes={}),
-                    d.InsertOp(insert="alpha/bravo", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "..."}}),
+                    d.InsertOp(
+                        insert="alpha/bravo", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "..."}}
+                    ),
                     d.InsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[
@@ -5783,59 +7406,79 @@ class LenientParagraphTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=None,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.BoxedText(text="alpha"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="bravo"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="This"),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.PlainText(text="a"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo"], show_choices_by_default=False),
-                            r.Whitespace(),
-                            r.PlainText(text="strict"),
-                            r.Whitespace(),
-                            r.PlainText(text="paragraph"),
-                            r.PlainText(text="."),
-                            r.Whitespace(),
-                            r.PlainText(text="With"),
-                            r.Whitespace(),
-                            r.PlainText(text="some"),
-                            r.Whitespace(),
-                            r.PlainText(text="punctuation"),
-                            r.PlainText(text="."),
-                        ]),
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="And"),
-                            r.Whitespace(),
-                            r.PlainText(text="this"),
-                            r.PlainText(text=","),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.PlainText(text="a"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo"], show_choices_by_default=False),
-                            r.Whitespace(),
-                            r.PlainText(text="lenient"),
-                            r.Whitespace(),
-                            r.PlainText(text="paragraph"),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="This"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="a"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="alpha")], [r.Text(kind="text", text="bravo")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="strict"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="paragraph"),
+                                        r.Text(kind="text", text="."),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="With"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="some"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="punctuation"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                ),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="And"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="this"),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="a"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="alpha")], [r.Text(kind="text", text="bravo")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="lenient"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="paragraph"),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -5848,7 +7491,9 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                 textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="instructions ", attributes={}),
-                    d.InsertOp(insert="short/long", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "@@@"}}),
+                    d.InsertOp(
+                        insert="short/long", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "@@@"}}
+                    ),
                     d.InsertOp(insert="\n", attributes={}),
                 ],
                 wording=[
@@ -5872,41 +7517,55 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="instructions"),
-                            r.Whitespace(),
-                            r.BoxedText(text="short"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="long"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="The"),
-                            r.Whitespace(),
-                            r.PlainText(text="wording"),
-                            r.Whitespace(),
-                            r.PlainText(text="of"),
-                            r.Whitespace(),
-                            r.PlainText(text="this"),
-                            r.Whitespace(),
-                            r.FreeTextInput(),
-                            r.Whitespace(),
-                            r.PlainText(text="is"),
-                            r.Whitespace(),
-                            r.PlainText(text="a"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["short", "long"], show_choices_by_default=False),
-                            r.Whitespace(),
-                            r.PlainText(text="sentence"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="instructions"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="short")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="long")], boxed=True),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="The"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wording"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="of"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="this"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.FreeTextInput(kind="freeTextInput"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="is"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="a"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="short")], [r.Text(kind="text", text="long")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="sentence"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -5917,7 +7576,9 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                 textbook_page=42,
                 instructions=[
                     d.InsertOp(insert="Choose wisely ", attributes={}),
-                    d.InsertOp(insert="alpha/bravo", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "@@@"}}),
+                    d.InsertOp(
+                        insert="alpha/bravo", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "@@@"}}
+                    ),
                     d.InsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[
@@ -5945,38 +7606,60 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=42,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.PlainText(text="wisely"),
-                            r.Whitespace(),
-                            r.BoxedText(text="alpha"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="bravo"),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="A"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["a", "b", "c"], show_choices_by_default=False),
-                            r.Whitespace(),
-                            r.PlainText(text="B"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["d", "e"], show_choices_by_default=False),
-                            r.Whitespace(),
-                            r.PlainText(text="C"),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo"], show_choices_by_default=False),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wisely"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="A"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="a")], [r.Text(kind="text", text="b")], [r.Text(kind="text", text="c")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="B"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="d")], [r.Text(kind="text", text="e")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="C"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="alpha")], [r.Text(kind="text", text="bravo")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )
 
@@ -5988,12 +7671,17 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                 instructions=[
                     d.InsertOp(insert="Choose wisely ", attributes={}),
                     # Multiple choices in instructions
-                    d.InsertOp(insert="alpha/bravo", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "@@@"}}),
+                    d.InsertOp(
+                        insert="alpha/bravo", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "@@@"}}
+                    ),
                 ],
                 wording=[
                     d.InsertOp(insert="Hello @@@ $$$ ....", attributes={}),
                     # Multiple choices in wording
-                    d.InsertOp(insert="(charlie|delta)", attributes={"choices2": {"start": "(", "separator1": "|", "separator2": "", "stop": ")", "placeholder": "$$$"}}),
+                    d.InsertOp(
+                        insert="(charlie|delta)",
+                        attributes={"choices2": {"start": "(", "separator1": "|", "separator2": "", "stop": ")", "placeholder": "$$$"}},
+                    ),
                     d.InsertOp(insert="\n", attributes={}),
                 ],
                 example=[d.InsertOp(insert="\n", attributes={})],
@@ -6013,32 +7701,52 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=None,
-                pagelets=[r.Pagelet(
-                    instructions=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.PlainText(text="Choose"),
-                            r.Whitespace(),
-                            r.PlainText(text="wisely"),
-                            r.Whitespace(),
-                            r.BoxedText(text="alpha"),
-                            r.Whitespace(),
-                            r.PlainText(text="ou"),
-                            r.Whitespace(),
-                            r.BoxedText(text="bravo"),
-                        ]),
-                    ]),
-                    wording=r.Section(paragraphs=[
-                        r.Paragraph(tokens=[
-                            r.SelectableText(text="Hello", colors=["red", "yellow"], boxed=True),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["alpha", "bravo"], show_choices_by_default=False),
-                            r.Whitespace(),
-                            r.MultipleChoicesInput(show_arrow_before=False, choices=["charlie", "delta"], show_choices_by_default=False),
-                            r.Whitespace(),
-                            r.FreeTextInput(),
-                            r.PlainText(text="."),
-                        ]),
-                    ]),
-                )],
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Choose"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="wisely"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.SelectableInput(
+                                            kind="selectableInput", colors=["red", "yellow"], boxed=True, contents=[r.Text(kind="text", text="Hello")]
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="alpha")], [r.Text(kind="text", text="bravo")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="charlie")], [r.Text(kind="text", text="delta")]],
+                                            show_choices_by_default=False,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.FreeTextInput(kind="freeTextInput"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
             ),
         )

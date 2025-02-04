@@ -89,6 +89,56 @@
         "title": "Adaptation",
         "type": "object"
       },
+      "AnySequence": {
+        "additionalProperties": false,
+        "properties": {
+          "contents": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/Whitespace"
+                },
+                {
+                  "$ref": "#/components/schemas/Text"
+                },
+                {
+                  "$ref": "#/components/schemas/PassiveSequence"
+                },
+                {
+                  "$ref": "#/components/schemas/FreeTextInput"
+                },
+                {
+                  "$ref": "#/components/schemas/MultipleChoicesInput"
+                },
+                {
+                  "$ref": "#/components/schemas/SelectableInput"
+                },
+                {
+                  "$ref": "#/components/schemas/AnySequence"
+                }
+              ]
+            },
+            "title": "Contents",
+            "type": "array"
+          },
+          "kind": {
+            "const": "sequence",
+            "title": "Kind",
+            "type": "string"
+          },
+          "vertical": {
+            "default": false,
+            "title": "Vertical",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "kind",
+          "contents"
+        ],
+        "title": "AnySequence",
+        "type": "object"
+      },
       "Body_login_api_token_post": {
         "properties": {
           "client_id": {
@@ -211,6 +261,21 @@
         "title": "Exercise",
         "type": "object"
       },
+      "FreeTextInput": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "freeTextInput",
+            "title": "Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "title": "FreeTextInput",
+        "type": "object"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -257,51 +322,6 @@
         "title": "ItemLinks",
         "type": "object"
       },
-      "Line": {
-        "additionalProperties": false,
-        "properties": {
-          "contents": {
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/_PlainText"
-                },
-                {
-                  "$ref": "#/components/schemas/_BoxedText"
-                },
-                {
-                  "$ref": "#/components/schemas/PassiveFormattedText"
-                },
-                {
-                  "$ref": "#/components/schemas/_SelectedText"
-                },
-                {
-                  "$ref": "#/components/schemas/_FreeTextInput"
-                },
-                {
-                  "$ref": "#/components/schemas/_MultipleChoicesInput"
-                },
-                {
-                  "$ref": "#/components/schemas/_Whitespace"
-                }
-              ]
-            },
-            "title": "Contents",
-            "type": "array"
-          },
-          "type": {
-            "const": "line",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "contents"
-        ],
-        "title": "Line",
-        "type": "object"
-      },
       "ManualItems": {
         "additionalProperties": false,
         "properties": {
@@ -315,6 +335,52 @@
           "kind"
         ],
         "title": "ManualItems",
+        "type": "object"
+      },
+      "MultipleChoicesInput": {
+        "additionalProperties": false,
+        "properties": {
+          "choices": {
+            "items": {
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/Whitespace"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Text"
+                  },
+                  {
+                    "$ref": "#/components/schemas/PassiveSequence"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            "title": "Choices",
+            "type": "array"
+          },
+          "kind": {
+            "const": "multipleChoicesInput",
+            "title": "Kind",
+            "type": "string"
+          },
+          "show_arrow_before": {
+            "default": false,
+            "title": "Show Arrow Before",
+            "type": "boolean"
+          },
+          "show_choices_by_default": {
+            "default": false,
+            "title": "Show Choices By Default",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "kind",
+          "choices"
+        ],
+        "title": "MultipleChoicesInput",
         "type": "object"
       },
       "OutputListRelationShipMeta": {
@@ -431,82 +497,75 @@
       "Paragraph": {
         "additionalProperties": false,
         "properties": {
-          "tokens": {
+          "contents": {
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/_PlainText"
+                  "$ref": "#/components/schemas/Whitespace"
                 },
                 {
-                  "$ref": "#/components/schemas/_BoxedText"
+                  "$ref": "#/components/schemas/Text"
                 },
                 {
-                  "$ref": "#/components/schemas/PassiveFormattedText"
+                  "$ref": "#/components/schemas/PassiveSequence"
                 },
                 {
-                  "$ref": "#/components/schemas/_SelectedText"
+                  "$ref": "#/components/schemas/FreeTextInput"
                 },
                 {
-                  "$ref": "#/components/schemas/_FreeTextInput"
+                  "$ref": "#/components/schemas/MultipleChoicesInput"
                 },
                 {
-                  "$ref": "#/components/schemas/_MultipleChoicesInput"
+                  "$ref": "#/components/schemas/SelectableInput"
                 },
                 {
-                  "$ref": "#/components/schemas/_Whitespace"
-                },
-                {
-                  "$ref": "#/components/schemas/Stack"
-                },
-                {
-                  "$ref": "#/components/schemas/_Selectable"
-                },
-                {
-                  "$ref": "#/components/schemas/_Boxed"
-                },
-                {
-                  "$ref": "#/components/schemas/_SelectableText"
+                  "$ref": "#/components/schemas/AnySequence"
                 }
               ]
             },
-            "title": "Tokens",
+            "title": "Contents",
             "type": "array"
           }
         },
         "required": [
-          "tokens"
+          "contents"
         ],
         "title": "Paragraph",
         "type": "object"
       },
-      "PassiveFormattedText": {
+      "PassiveSequence": {
         "additionalProperties": false,
         "properties": {
-          "bold": {
-            "title": "Bold",
+          "boxed": {
+            "default": false,
+            "title": "Boxed",
             "type": "boolean"
           },
-          "italic": {
-            "title": "Italic",
-            "type": "boolean"
+          "contents": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/Whitespace"
+                },
+                {
+                  "$ref": "#/components/schemas/Text"
+                }
+              ]
+            },
+            "title": "Contents",
+            "type": "array"
           },
-          "text": {
-            "title": "Text",
-            "type": "string"
-          },
-          "type": {
-            "const": "passiveFormattedText",
-            "title": "Type",
+          "kind": {
+            "const": "passiveSequence",
+            "title": "Kind",
             "type": "string"
           }
         },
         "required": [
-          "type",
-          "text",
-          "bold",
-          "italic"
+          "kind",
+          "contents"
         ],
-        "title": "PassiveFormattedText",
+        "title": "PassiveSequence",
         "type": "object"
       },
       "PdfRectangle": {
@@ -623,6 +682,52 @@
         "title": "Selectable",
         "type": "object"
       },
+      "SelectableInput": {
+        "additionalProperties": false,
+        "properties": {
+          "boxed": {
+            "default": false,
+            "title": "Boxed",
+            "type": "boolean"
+          },
+          "colors": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Colors",
+            "type": "array"
+          },
+          "contents": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/Whitespace"
+                },
+                {
+                  "$ref": "#/components/schemas/Text"
+                },
+                {
+                  "$ref": "#/components/schemas/PassiveSequence"
+                }
+              ]
+            },
+            "title": "Contents",
+            "type": "array"
+          },
+          "kind": {
+            "const": "selectableInput",
+            "title": "Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "colors",
+          "contents"
+        ],
+        "title": "SelectableInput",
+        "type": "object"
+      },
       "SentencesItems": {
         "additionalProperties": false,
         "properties": {
@@ -638,52 +743,45 @@
         "title": "SentencesItems",
         "type": "object"
       },
-      "Stack": {
+      "Text": {
         "additionalProperties": false,
         "properties": {
-          "contents": {
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/_PlainText"
-                },
-                {
-                  "$ref": "#/components/schemas/_BoxedText"
-                },
-                {
-                  "$ref": "#/components/schemas/PassiveFormattedText"
-                },
-                {
-                  "$ref": "#/components/schemas/_SelectedText"
-                },
-                {
-                  "$ref": "#/components/schemas/_FreeTextInput"
-                },
-                {
-                  "$ref": "#/components/schemas/_MultipleChoicesInput"
-                },
-                {
-                  "$ref": "#/components/schemas/_Whitespace"
-                },
-                {
-                  "$ref": "#/components/schemas/Line"
-                }
-              ]
-            },
-            "title": "Contents",
-            "type": "array"
+          "bold": {
+            "default": false,
+            "title": "Bold",
+            "type": "boolean"
           },
-          "type": {
-            "const": "stack",
-            "title": "Type",
+          "highlighted": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Highlighted"
+          },
+          "italic": {
+            "default": false,
+            "title": "Italic",
+            "type": "boolean"
+          },
+          "kind": {
+            "const": "text",
+            "title": "Kind",
+            "type": "string"
+          },
+          "text": {
+            "title": "Text",
             "type": "string"
           }
         },
         "required": [
-          "type",
-          "contents"
+          "kind",
+          "text"
         ],
-        "title": "Stack",
+        "title": "Text",
         "type": "object"
       },
       "TokensItems": {
@@ -744,268 +842,19 @@
         "title": "ValidationError",
         "type": "object"
       },
-      "_Boxed": {
+      "Whitespace": {
         "additionalProperties": false,
         "properties": {
-          "contents": {
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/_PlainText"
-                },
-                {
-                  "$ref": "#/components/schemas/_BoxedText"
-                },
-                {
-                  "$ref": "#/components/schemas/PassiveFormattedText"
-                },
-                {
-                  "$ref": "#/components/schemas/_SelectedText"
-                },
-                {
-                  "$ref": "#/components/schemas/_FreeTextInput"
-                },
-                {
-                  "$ref": "#/components/schemas/_MultipleChoicesInput"
-                },
-                {
-                  "$ref": "#/components/schemas/_Whitespace"
-                }
-              ]
-            },
-            "title": "Contents",
-            "type": "array"
-          },
-          "type": {
-            "const": "boxed",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "contents"
-        ],
-        "title": "_Boxed",
-        "type": "object"
-      },
-      "_BoxedText": {
-        "additionalProperties": false,
-        "properties": {
-          "text": {
-            "title": "Text",
-            "type": "string"
-          },
-          "type": {
-            "const": "boxedText",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "text"
-        ],
-        "title": "_BoxedText",
-        "type": "object"
-      },
-      "_FreeTextInput": {
-        "additionalProperties": false,
-        "properties": {
-          "type": {
-            "const": "freeTextInput",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type"
-        ],
-        "title": "_FreeTextInput",
-        "type": "object"
-      },
-      "_MultipleChoicesInput": {
-        "additionalProperties": false,
-        "properties": {
-          "choices": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Choices",
-            "type": "array"
-          },
-          "show_arrow_before": {
-            "title": "Show Arrow Before",
-            "type": "boolean"
-          },
-          "show_choices_by_default": {
-            "title": "Show Choices By Default",
-            "type": "boolean"
-          },
-          "type": {
-            "const": "multipleChoicesInput",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "show_arrow_before",
-          "choices",
-          "show_choices_by_default"
-        ],
-        "title": "_MultipleChoicesInput",
-        "type": "object"
-      },
-      "_PlainText": {
-        "additionalProperties": false,
-        "properties": {
-          "text": {
-            "title": "Text",
-            "type": "string"
-          },
-          "type": {
-            "const": "plainText",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "text"
-        ],
-        "title": "_PlainText",
-        "type": "object"
-      },
-      "_Selectable": {
-        "additionalProperties": false,
-        "properties": {
-          "boxed": {
-            "title": "Boxed",
-            "type": "boolean"
-          },
-          "colors": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Colors",
-            "type": "array"
-          },
-          "contents": {
-            "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/_PlainText"
-                },
-                {
-                  "$ref": "#/components/schemas/_BoxedText"
-                },
-                {
-                  "$ref": "#/components/schemas/PassiveFormattedText"
-                },
-                {
-                  "$ref": "#/components/schemas/_SelectedText"
-                },
-                {
-                  "$ref": "#/components/schemas/_FreeTextInput"
-                },
-                {
-                  "$ref": "#/components/schemas/_MultipleChoicesInput"
-                },
-                {
-                  "$ref": "#/components/schemas/_Whitespace"
-                }
-              ]
-            },
-            "title": "Contents",
-            "type": "array"
-          },
-          "type": {
-            "const": "selectable",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "contents",
-          "colors",
-          "boxed"
-        ],
-        "title": "_Selectable",
-        "type": "object"
-      },
-      "_SelectableText": {
-        "additionalProperties": false,
-        "properties": {
-          "boxed": {
-            "title": "Boxed",
-            "type": "boolean"
-          },
-          "colors": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Colors",
-            "type": "array"
-          },
-          "text": {
-            "title": "Text",
-            "type": "string"
-          },
-          "type": {
-            "const": "selectableText",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "text",
-          "colors",
-          "boxed"
-        ],
-        "title": "_SelectableText",
-        "type": "object"
-      },
-      "_SelectedText": {
-        "additionalProperties": false,
-        "properties": {
-          "color": {
-            "title": "Color",
-            "type": "string"
-          },
-          "text": {
-            "title": "Text",
-            "type": "string"
-          },
-          "type": {
-            "const": "selectedText",
-            "title": "Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "type",
-          "text",
-          "color"
-        ],
-        "title": "_SelectedText",
-        "type": "object"
-      },
-      "_Whitespace": {
-        "additionalProperties": false,
-        "properties": {
-          "type": {
+          "kind": {
             "const": "whitespace",
-            "title": "Type",
+            "title": "Kind",
             "type": "string"
           }
         },
         "required": [
-          "type"
+          "kind"
         ],
-        "title": "_Whitespace",
+        "title": "Whitespace",
         "type": "object"
       },
       "exerciseCreateInput": {
@@ -1794,7 +1643,14 @@
         "additionalProperties": false,
         "properties": {
           "adapted": {
-            "$ref": "#/components/schemas/Exercise"
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Exercise"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "required": [

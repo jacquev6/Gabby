@@ -3,10 +3,7 @@ import { computed, watch } from 'vue'
 import { nextTick } from 'vue'
 
 import type { Paragraph } from '$adapted/types'
-import MultipleChoicesInput from './MultipleChoicesInput.vue'
-import SelectableText from './SelectableText.vue'
-import SelectedText from './SelectedText.vue'
-import FreeTextInput from './FreeTextInput.vue'
+import Renderable from './Renderable.vue'
 
 
 const props = withDefaults(defineProps<{
@@ -35,156 +32,7 @@ const style = computed(() => ({
 
 <template>
   <p v-for="(paragraph, paragraphIndex) in paragraphs" :style :class="{first: first && paragraphIndex === 0}">
-    <!-- @todo(SOON) Refactor this horrible horrible code duplication -->
-    <template v-for="(token, tokenIndex) in paragraph.tokens">
-      <template v-for="modelKey in [`${paragraphIndex}-${tokenIndex}`]">
-        <template v-if="token.type === 'plainText'">
-          <span class="tricolorable">{{ token.text }}</span>
-        </template>
-        <template v-else-if="token.type === 'whitespace'">
-          <span>&nbsp;&nbsp;<wbr /></span>
-        </template>
-        <template v-else-if="token.type === 'boxedText'">
-          <span class="tricolorable boxed">{{ token.text }}</span>
-        </template>
-        <template v-else-if="token.type === 'passiveFormattedText'">
-          <span class="tricolorable" :class="{passiveBold: token.bold, passiveItalic: token.italic}">{{ token.text }}</span>
-        </template>
-        <template v-else-if="token.type === 'freeTextInput'">
-          <FreeTextInput class="tricolorable" v-model="models[modelKey]" />
-        </template>
-        <template v-else-if="token.type === 'selectableText'">
-          <SelectableText class="tricolorable" :colors="token.colors" :boxed="token.boxed" v-model="models[modelKey]">{{ token.text }}</SelectableText>
-        </template>
-        <template v-else-if="token.type === 'selectable'">
-          <SelectableText :colors="token.colors" :boxed="token.boxed" v-model="models[modelKey]">
-            <template v-for="subToken in token.contents">
-              <template v-if="subToken.type === 'plainText'">
-                <span class="tricolorable">{{ subToken.text }}</span>
-              </template>
-              <template v-else-if="subToken.type === 'whitespace'">
-                <span>&nbsp;&nbsp;<wbr /></span>
-              </template>
-              <template v-else-if="subToken.type === 'boxedText'">
-                <span class="tricolorable boxed">{{ subToken.text }}</span>
-              </template>
-              <template v-else-if="subToken.type === 'passiveFormattedText'">
-                <span class="tricolorable" :class="{passiveBold: subToken.bold, passiveItalic: subToken.italic}">{{ subToken.text }}</span>
-              </template>
-              <template v-else-if="subToken.type === 'freeTextInput'">
-                <FreeTextInput class="tricolorable" v-model="models[modelKey]" />
-              </template>
-              <template v-else-if="subToken.type === 'selectedText'">
-                <SelectedText class="tricolorable" :color="subToken.color" :boxed="false">{{ subToken.text }}</SelectedText>
-              </template>
-              <template v-else-if="subToken.type === 'multipleChoicesInput'">
-                <MultipleChoicesInput class="tricolorable" :showArrowBefore="subToken.show_arrow_before" :choices="subToken.choices" placeholder="...." :showChoicesByDefault="subToken.show_choices_by_default" v-model="models[modelKey]" />
-              </template>
-              <template v-else>
-                <span>{{ $t('thisIsABug') }} {{ ((t: never) => t)(subToken) }}</span>
-              </template>
-            </template>
-          </SelectableText>
-        </template>
-        <template v-else-if="token.type === 'boxed'">
-          <span class="boxed">
-            <template v-for="subToken in token.contents">
-              <template v-if="subToken.type === 'plainText'">
-                <span class="tricolorable">{{ subToken.text }}</span>
-              </template>
-              <template v-else-if="subToken.type === 'whitespace'">
-                <span>&nbsp;&nbsp;<wbr /></span>
-              </template>
-              <template v-else-if="subToken.type === 'boxedText'">
-                <span class="tricolorable boxed">{{ subToken.text }}</span>
-              </template>
-              <template v-else-if="subToken.type === 'passiveFormattedText'">
-                <span class="tricolorable" :class="{passiveBold: subToken.bold, passiveItalic: subToken.italic}">{{ subToken.text }}</span>
-              </template>
-              <template v-else-if="subToken.type === 'freeTextInput'">
-                <FreeTextInput class="tricolorable" v-model="models[modelKey]" />
-              </template>
-              <template v-else-if="subToken.type === 'selectedText'">
-                <SelectedText class="tricolorable" :color="subToken.color" :boxed="false">{{ subToken.text }}</SelectedText>
-              </template>
-              <template v-else-if="subToken.type === 'multipleChoicesInput'">
-                <MultipleChoicesInput class="tricolorable" :showArrowBefore="subToken.show_arrow_before" :choices="subToken.choices" placeholder="...." :showChoicesByDefault="subToken.show_choices_by_default" v-model="models[modelKey]" />
-              </template>
-              <template v-else>
-                <span>{{ $t('thisIsABug') }} {{ ((t: never) => t)(subToken) }}</span>
-              </template>
-            </template>
-          </span>
-        </template>
-        <template v-else-if="token.type === 'stack'">
-          <span style="display: inline-block; vertical-align: top;">
-            <p v-for="(subToken, subTokenIndex) in token.contents">
-              <template v-if="subToken.type === 'line'">
-                <template v-for="subSubToken in subToken.contents">
-                  <template v-if="subSubToken.type === 'plainText'">
-                    <span :class="{tricolorable: subTokenIndex === 0}">{{ subSubToken.text }}</span>
-                  </template>
-                  <template v-else-if="subSubToken.type === 'whitespace'">
-                    <span>&nbsp;&nbsp;<wbr /></span>
-                  </template>
-                  <template v-else-if="subSubToken.type === 'boxedText'">
-                    <span :class="{tricolorable: subTokenIndex === 0}" class="boxed">{{ subSubToken.text }}</span>
-                  </template>
-                  <template v-else-if="subSubToken.type === 'passiveFormattedText'">
-                    <span :class="{tricolorable: subTokenIndex === 0, passiveBold: subSubToken.bold, passiveItalic: subSubToken.italic}">{{ subSubToken.text }}</span>
-                  </template>
-                  <template v-else-if="subSubToken.type === 'freeTextInput'">
-                    <FreeTextInput :class="{tricolorable: subTokenIndex === 0}" v-model="models[modelKey]" />
-                  </template>
-                  <template v-else-if="subSubToken.type === 'selectedText'">
-                    <SelectedText :class="{tricolorable: subTokenIndex === 0}" :color="subSubToken.color" :boxed="false">{{ subSubToken.text }}</SelectedText>
-                  </template>
-                  <template v-else-if="subSubToken.type === 'multipleChoicesInput'">
-                    <MultipleChoicesInput :class="{tricolorable: subTokenIndex === 0}" :showArrowBefore="subSubToken.show_arrow_before" :choices="subSubToken.choices" placeholder="...." :showChoicesByDefault="subSubToken.show_choices_by_default" v-model="models[modelKey]" />
-                  </template>
-                  <template v-else>
-                    <span>{{ $t('thisIsABug') }} {{ ((t: never) => t)(subSubToken) }}</span>
-                  </template>
-                </template>
-              </template>
-              <template v-else-if="subToken.type === 'plainText'">
-                <span :class="{tricolorable: subTokenIndex === 0}">{{ subToken.text }}</span>
-              </template>
-              <template v-else-if="subToken.type === 'whitespace'">
-                <span>&nbsp;&nbsp;<wbr /></span>
-              </template>
-              <template v-else-if="subToken.type === 'boxedText'">
-                <span :class="{tricolorable: subTokenIndex === 0}" class="boxed">{{ subToken.text }}</span>
-              </template>
-              <template v-else-if="subToken.type === 'passiveFormattedText'">
-                <span :class="{tricolorable: subTokenIndex === 0, passiveBold: subToken.bold, passiveItalic: subToken.italic}">{{ subToken.text }}</span>
-              </template>
-              <template v-else-if="subToken.type === 'freeTextInput'">
-                <FreeTextInput :class="{tricolorable: subTokenIndex === 0}" v-model="models[modelKey]" />
-              </template>
-              <template v-else-if="subToken.type === 'selectedText'">
-                <SelectedText :class="{tricolorable: subTokenIndex === 0}" :color="subToken.color" :boxed="false">{{ subToken.text }}</SelectedText>
-              </template>
-              <template v-else-if="subToken.type === 'multipleChoicesInput'">
-                <MultipleChoicesInput :class="{tricolorable: subTokenIndex === 0}" :showArrowBefore="subToken.show_arrow_before" :choices="subToken.choices" placeholder="...." :showChoicesByDefault="subToken.show_choices_by_default" v-model="models[modelKey]" />
-              </template>
-              <template v-else>
-                <span>{{ $t('thisIsABug') }} {{ ((t: never) => t)(subToken) }}</span>
-              </template>
-            </p>
-          </span>
-        </template>
-        <template v-else-if="token.type === 'selectedText'">
-          <SelectedText class="tricolorable" :color="token.color" :boxed="false">{{ token.text }}</SelectedText>
-        </template>
-        <template v-else-if="token.type === 'multipleChoicesInput'">
-          <MultipleChoicesInput class="tricolorable" :showArrowBefore="token.show_arrow_before" :choices="token.choices" placeholder="...." :showChoicesByDefault="token.show_choices_by_default" v-model="models[modelKey]" />
-        </template>
-        <template v-else>
-          <span>{{ $t('thisIsABug') }} {{ ((t: never) => t)(token) }}</span>
-        </template>
-      </template>
-    </template>
+    <Renderable v-for="(node, nodeIndex) in paragraph.contents" :node="node" v-model="models" :modelKey="[paragraphIndex, nodeIndex]" :tricolorable="true" />
   </p>
 </template>
 
@@ -197,18 +45,5 @@ p {
 
 p.first {
   margin-top: -24px;
-}
-
-span.boxed {
-  padding: 4px 0;
-  outline: 2px solid black;
-}
-
-span.passiveItalic {
-  font-style: italic;
-}
-
-span.passiveBold {
-  font-weight: bold;
 }
 </style>
