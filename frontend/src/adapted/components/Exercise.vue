@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { reactive, computed, watch } from 'vue'
 
-import type { Settings, Exercise } from '$adapted/types'
-import TricolorSection from './OldTricolorSection.vue'
-import MonocolorSection from './OldMonocolorSection.vue'
+import type { Settings, NewExercise as Exercise } from '$adapted/types'
+import TricolorSection from './NewTricolorSection.vue'
+import MonocolorSection from './NewMonocolorSection.vue'
 
 
 const props = withDefaults(defineProps<{

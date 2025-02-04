@@ -54,12 +54,12 @@ describe('Gabby', () => {
     cy.get('div:contains("Selectable") >input').check()
     cy.get('span.maybe-usable-colors-container span.usable-colors-button[data-cy-colors="2"]').click()
 
-    cy.get('span:contains("artificial")').last().click()
-    cy.get('span:contains("artificial")').last().should('have.css', 'background-color', 'rgb(255, 255, 0)')
-    cy.get('span:contains("artificial")').last().click()
-    cy.get('span:contains("artificial")').last().should('have.css', 'background-color', 'rgb(255, 192, 203)')
-    cy.get('span:contains("artificial")').last().click()
-    cy.get('span:contains("artificial")').last().should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
+    cy.get('span:contains("artificial")').first().click()
+    cy.get('span:contains("artificial")').first().should('have.css', 'background-color', 'rgb(255, 255, 0)')
+    cy.get('span:contains("artificial")').first().click()
+    cy.get('span:contains("artificial")').first().should('have.css', 'background-color', 'rgb(255, 192, 203)')
+    cy.get('span:contains("artificial")').first().click()
+    cy.get('span:contains("artificial")').first().should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
 
     cy.get('button:contains("Save then next")').click()
     notBusy()

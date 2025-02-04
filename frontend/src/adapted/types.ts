@@ -23,6 +23,6 @@ export type NewParagraph = NewSection['paragraphs'][number]
 export interface Data {
   projectId: string,
   exercises: {
-    [id: string]: Exercise,
+    [id: string]: NewExercise,
   },
 }

@@ -88,17 +88,17 @@ describe('Gabby', () => {
       cy.get('italic-blot:contains("italic")').should('exist')
       cy.get('bold-blot:contains("both")').should('exist')
       cy.get('italic-blot:contains("both")').should('exist')
-      cy.get('div:has(>h1:contains("Adapted exercise")) span.passiveItalic:contains("italic")').should('exist')
-      cy.get('div:has(>h1:contains("Adapted exercise")) span.passiveBold:contains("bold")').should('exist')
-      cy.get('div:has(>h1:contains("Adapted exercise")) span.passiveBold.passiveItalic:contains("both")').should('exist')
+      cy.get('div:has(>h1:contains("Adapted exercise")) span.italic:contains("italic")').should('exist')
+      cy.get('div:has(>h1:contains("Adapted exercise")) span.bold:contains("bold")').should('exist')
+      cy.get('div:has(>h1:contains("Adapted exercise")) span.bold.italic:contains("both")').should('exist')
 
       cy.get(fieldAlias).type('{selectAll}X', {delay: 0})
       notBusy()
       cy.get(fieldAlias).should('contain.text', 'X')
       cy.get('bold-blot').should('not.exist')
       cy.get('italic-blot').should('not.exist')
-      cy.get('span.passiveItalic').should('not.exist')
-      cy.get('span.passiveBold').should('not.exist')
+      cy.get('span.italic').should('not.exist')
+      cy.get('span.bold').should('not.exist')
     }
   })
 

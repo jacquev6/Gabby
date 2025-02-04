@@ -51,7 +51,7 @@ const adaptedExercise = computed(() => {
   if (parsedExercise.value === null) {
     return null
   } else {
-    return parsedExercise.value.attributes.oldAdapted
+    return parsedExercise.value.attributes.newAdapted
   }
 })
 
