@@ -102,7 +102,7 @@ describe('Gabby', () => {
       selectRange(node, 0, node, 21)
     })
     cy.get('label:contains("Separators") + input').should('have.value', ',')
-    cy.get('label + input').eq(4).should('have.value', '')  // Very fragile selector; sorry, future me!
+    cy.get('label + input').eq(5).should('have.value', '')  // Very fragile selector; sorry, future me!
   })
 
   it('detects "◆" as the only MCQ separator', () => {
@@ -119,7 +119,7 @@ describe('Gabby', () => {
       selectRange(node, 0, node, 23)
     })
     cy.get('label:contains("Separators") + input').should('have.value', '◆')
-    cy.get('label + input').eq(4).should('have.value', '')  // Very fragile selector; sorry, future me!
+    cy.get('label + input').eq(5).should('have.value', '')  // Very fragile selector; sorry, future me!
   })
 
   it('detects "ou" as the only MCQ separator', () => {
@@ -136,7 +136,7 @@ describe('Gabby', () => {
       selectRange(node, 0, node, 14)
     })
     cy.get('label:contains("Separators") + input').should('have.value', 'ou')
-    cy.get('label + input').eq(4).should('have.value', '')  // Very fragile selector; sorry, future me!
+    cy.get('label + input').eq(5).should('have.value', '')  // Very fragile selector; sorry, future me!
   })
 
   it('detects comma and "ou" as a MCQ separators', () => {
@@ -153,7 +153,7 @@ describe('Gabby', () => {
       selectRange(node, 0, node, 23)
     })
     cy.get('label:contains("Separators") + input').should('have.value', ',')
-    cy.get('label + input').eq(4).should('have.value', 'ou')  // Very fragile selector; sorry, future me!
+    cy.get('label + input').eq(5).should('have.value', 'ou')  // Very fragile selector; sorry, future me!
   })
 
   it('does not detect "or" as a MCQ separator', () => {
@@ -170,7 +170,7 @@ describe('Gabby', () => {
       selectRange(node, 0, node, 14)
     })
     cy.get('label:contains("Separators") + input').should('have.value', '')
-    cy.get('label + input').eq(4).should('have.value', '')  // Very fragile selector; sorry, future me!
+    cy.get('label + input').eq(5).should('have.value', '')  // Very fragile selector; sorry, future me!
   })
 
   it('detects similar MCQs automatically', () => {
@@ -188,7 +188,7 @@ describe('Gabby', () => {
       selectRange(node, 10, node, 25)
     })
     cy.get('label:contains("Separators") + input').should('have.value', '–')
-    cy.get('label + input').eq(4).should('have.value', '')  // Very fragile selector; sorry, future me!
+    cy.get('label + input').eq(5).should('have.value', '')  // Very fragile selector; sorry, future me!
     cy.get('label:contains("Start") + input').should('have.value', '(')
     cy.get('label:contains("Stop") + input').should('have.value', ')')
     cy.get('label:contains("Placeholder") + input').click().type('…')

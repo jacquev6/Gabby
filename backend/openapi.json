@@ -19,6 +19,9 @@
                 "$ref": "#/components/schemas/ManualItems"
               },
               {
+                "$ref": "#/components/schemas/SeparatedItems"
+              },
+              {
                 "type": "null"
               }
             ],
@@ -758,6 +761,26 @@
           "kind"
         ],
         "title": "SentencesItems",
+        "type": "object"
+      },
+      "SeparatedItems": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "separated",
+            "title": "Kind",
+            "type": "string"
+          },
+          "separator": {
+            "title": "Separator",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "separator"
+        ],
+        "title": "SeparatedItems",
         "type": "object"
       },
       "Text": {

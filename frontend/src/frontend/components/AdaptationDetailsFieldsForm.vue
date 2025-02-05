@@ -234,6 +234,8 @@ const settings = reactive({
       isPunctuation: false,
       isSentences: false,
       isManual: false,
+      isSeparated: false,
+      separator: '',
     },
     effects: {
       isSelectable: false,
@@ -259,6 +261,7 @@ const isLettersProxy = computed({
       settings.itemized.items.isPunctuation = false
       settings.itemized.items.isSentences = false
       settings.itemized.items.isManual = false
+      settings.itemized.items.isSeparated = false
     }
   },
 })
@@ -273,6 +276,7 @@ const isWordsProxy = computed({
       settings.itemized.items.isLetters = false
       settings.itemized.items.isSentences = false
       settings.itemized.items.isManual = false
+      settings.itemized.items.isSeparated = false
     }
   },
 })
@@ -287,6 +291,7 @@ const isPunctuationProxy = computed({
       settings.itemized.items.isLetters = false
       settings.itemized.items.isSentences = false
       settings.itemized.items.isManual = false
+      settings.itemized.items.isSeparated = false
     }
   },
 })
@@ -302,6 +307,7 @@ const isSentencesProxy = computed({
       settings.itemized.items.isWords = false
       settings.itemized.items.isPunctuation = false
       settings.itemized.items.isManual = false
+      settings.itemized.items.isSeparated = false
     }
   },
 })
@@ -317,6 +323,23 @@ const isManualProxy = computed({
       settings.itemized.items.isWords = false
       settings.itemized.items.isPunctuation = false
       settings.itemized.items.isSentences = false
+      settings.itemized.items.isSeparated = false
+    }
+  },
+})
+
+const isSeparatedProxy = computed({
+  get() {
+    return settings.itemized.items.isSeparated
+  },
+  set(value: boolean) {
+    settings.itemized.items.isSeparated = value
+    if (value) {
+      settings.itemized.items.isLetters = false
+      settings.itemized.items.isWords = false
+      settings.itemized.items.isPunctuation = false
+      settings.itemized.items.isSentences = false
+      settings.itemized.items.isManual = false
     }
   },
 })
@@ -355,6 +378,7 @@ watch(
         || settings.itemized.items.isPunctuation
         || settings.itemized.items.isSentences
         || settings.itemized.items.isManual
+        || (settings.itemized.items.isSeparated && settings.itemized.items.separator !== '')
       const hasEffects =
         settings.itemized.effects.isSelectable
         || settings.itemized.effects.isBoxed
@@ -367,6 +391,8 @@ watch(
         settings.itemized.items.isPunctuation = false
         settings.itemized.items.isSentences = false
         settings.itemized.items.isManual = false
+        settings.itemized.items.isSeparated = false
+        settings.itemized.items.separator = ''
         settings.itemized.effects.isSelectable = false
         settings.itemized.effects.isBoxed = false
         settings.itemized.effects.hasMcqBeside = false
@@ -379,26 +405,42 @@ watch(
         settings.itemized.items.isPunctuation = false
         settings.itemized.items.isSentences = false
         settings.itemized.items.isManual = false
+        settings.itemized.items.isSeparated = false
+        settings.itemized.items.separator = ''
       } else if (model.adaptation.items.kind === 'tokens') {
         settings.itemized.items.isLetters = false
         settings.itemized.items.isWords = model.adaptation.items.words
         settings.itemized.items.isPunctuation = model.adaptation.items.punctuation
         settings.itemized.items.isSentences = false
         settings.itemized.items.isManual = false
+        settings.itemized.items.isSeparated = false
+        settings.itemized.items.separator = ''
       } else if (model.adaptation.items.kind === 'manual') {
         settings.itemized.items.isLetters = false
         settings.itemized.items.isWords = false
         settings.itemized.items.isPunctuation = false
         settings.itemized.items.isSentences = false
         settings.itemized.items.isManual = true
+        settings.itemized.items.isSeparated = false
+        settings.itemized.items.separator = ''
       } else if (model.adaptation.items.kind === 'sentences') {
         settings.itemized.items.isLetters = false
         settings.itemized.items.isWords = false
         settings.itemized.items.isPunctuation = false
         settings.itemized.items.isSentences = true
         settings.itemized.items.isManual = false
+        settings.itemized.items.isSeparated = false
+        settings.itemized.items.separator = ''
+      } else if (model.adaptation.items.kind === 'separated') {
+        settings.itemized.items.isLetters = false
+        settings.itemized.items.isWords = false
+        settings.itemized.items.isPunctuation = false
+        settings.itemized.items.isSentences = false
+        settings.itemized.items.isManual = false
+        settings.itemized.items.isSeparated = true
+        settings.itemized.items.separator = model.adaptation.items.separator
       } else {
-        console.assert(false, model.adaptation.items as never)
+        console.assert(false, ((items: never) => items)(model.adaptation.items))
       }
 
       if (model.adaptation.items_are_selectable !== null) {
@@ -447,6 +489,8 @@ watch(
           return {kind: 'sentences' as const}
         } else if (settings.itemized.items.isManual) {
           return {kind: 'manual' as const}
+        } else if (settings.itemized.items.isSeparated && settings.itemized.items.separator !== '') {
+          return {kind: 'separated' as const, separator: settings.itemized.items.separator}
         } else {
           return null
         }
@@ -542,6 +586,7 @@ defineExpose({
     <BLabeledCheckbox v-model="isPunctuationProxy" :label="$t('itemsPunctuation')" />
     <BLabeledCheckbox v-model="isSentencesProxy" :label="$t('itemsSentences')" />
     <BLabeledCheckbox v-model="isManualProxy" :label="$t('itemsManual')" />
+    <BLabeledCheckbox v-model="isSeparatedProxy" :label="$t('itemsSeparated')"><input @click="isSeparatedProxy = true" v-model="settings.itemized.items.separator" style="width: 2em" /></BLabeledCheckbox>
   </div>
   <p>{{ $t('effects') }}</p>
   <BLabeledCheckbox :label="$t('effectsSelectable')" v-model="settings.itemized.effects.isSelectable" />

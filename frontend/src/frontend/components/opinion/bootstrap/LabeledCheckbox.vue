@@ -18,5 +18,6 @@ const id = `checkbox-${ Math.floor(Math.random() * 4000000000) }`
   <div class="form-check">
     <input class="form-check-input" :id="id" type="checkbox" v-model="model" v-bind="$attrs" />
     <label class="form-check-label" :for="id">{{ label }}</label>
+    <slot></slot>
   </div>
 </template>

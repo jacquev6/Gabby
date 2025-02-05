@@ -154,7 +154,7 @@ export interface components {
     /** Adaptation */
     Adaptation: {
       /** Items */
-      items: components["schemas"]["CharactersItems"] | components["schemas"]["TokensItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"] | null;
+      items: components["schemas"]["CharactersItems"] | components["schemas"]["TokensItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"] | components["schemas"]["SeparatedItems"] | null;
       /** Items Are Boxed */
       items_are_boxed: boolean;
       items_are_selectable: components["schemas"]["Selectable"] | null;
@@ -401,6 +401,16 @@ export interface components {
        * @constant
        */
       kind: "sentences";
+    };
+    /** SeparatedItems */
+    SeparatedItems: {
+      /**
+       * Kind
+       * @constant
+       */
+      kind: "separated";
+      /** Separator */
+      separator: string;
     };
     /** Text */
     Text: {

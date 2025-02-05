@@ -121,10 +121,14 @@ class SentencesItems(PydanticBase):
 class ManualItems(PydanticBase):
     kind: Literal["manual"]
 
+class SeparatedItems(PydanticBase):
+    kind: Literal["separated"]
+    separator: str
+
 class Selectable(PydanticBase):
     colors: list[str]
 
-Items = CharactersItems | TokensItems | SentencesItems | ManualItems
+Items = CharactersItems | TokensItems | SentencesItems | ManualItems | SeparatedItems
 
 class Adaptation(PydanticBase):
     kind: Literal["generic", "fill-with-free-text", "multiple-choices"]

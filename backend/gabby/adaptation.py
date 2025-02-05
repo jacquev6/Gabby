@@ -35,6 +35,7 @@ class _Adapter:
         self.punctuation_is_items = False
         self.sentences_are_items = False
         self.manual_items_are_items = False
+        self.items_separator = None
         self.items_are_selectable = False
         self.items_are_boxed = False
         self.colors_for_selectable_items = []
@@ -52,6 +53,7 @@ class _Adapter:
             self.punctuation_is_items = exercise.adaptation.items.kind == "tokens" and exercise.adaptation.items.punctuation
             self.sentences_are_items = exercise.adaptation.items.kind == "sentences"
             self.manual_items_are_items = exercise.adaptation.items.kind == "manual"
+            self.items_separator = re.escape(exercise.adaptation.items.separator) if exercise.adaptation.items.kind == "separated" else None
             self.items_are_boxed = exercise.adaptation.items_are_boxed
             if exercise.adaptation.items_are_selectable is not None:
                 self.items_are_selectable = True
@@ -260,6 +262,18 @@ class _Adapter:
                 while contents[0].kind == "whitespace":
                     contents.pop(0)
                 yield from self.decorate_item(contents)
+        elif self.items_separator is not None:
+            is_first_item = True
+            for item_deltas in self.split_deltas(paragraph_deltas, self.items_separator):
+                if not is_first_item:
+                    yield renderable.Whitespace(kind="whitespace")
+                is_first_item = False
+                contents = list(self.adapt_wording_sentence(item_deltas, sentence_placeholders))
+                while contents[0].kind == "whitespace":
+                    contents.pop(0)
+                while contents[-1].kind == "whitespace":
+                    contents.pop(-1)
+                yield from self.decorate_item(contents)
         else:
             yield from self.adapt_wording_sentence(paragraph_deltas, sentence_placeholders)
 
@@ -376,7 +390,7 @@ class _Adapter:
         if self.single_item_per_paragraph:
             yield self.paragraph_separator
 
-    def split_deltas(self, section_deltas: deltas.Deltas, explicit_paragraph_separator_pattern: str) -> Iterable[deltas.Deltas]:
+    def split_deltas(self, section_deltas: deltas.Deltas, separator_pattern: str) -> Iterable[deltas.Deltas]:
         section_deltas = copy.deepcopy(section_deltas)
         assert len(section_deltas) > 0
         section_deltas[0].insert = section_deltas[0].insert.lstrip()
@@ -387,7 +401,7 @@ class _Adapter:
             if "choices2" in delta.attributes:
                 current_paragraph.append(delta)
             else:
-                for i, paragraph_part in enumerate(re.split(explicit_paragraph_separator_pattern, delta.insert)):
+                for i, paragraph_part in enumerate(re.split(separator_pattern, delta.insert)):
                     if i > 0:
                         yield current_paragraph
                         current_paragraph = []
@@ -568,6 +582,8 @@ class AdaptationTestCase(unittest.TestCase):
         return super().tearDownClass()
 
     def do_test(self, exercise, expected_adapted):
+        self.tests_to_generate.append((self.id(), expected_adapted))
+
         actual_adapted = exercise.make_adapted()
         if actual_adapted != expected_adapted:
             calling_frame = traceback.extract_stack()[-2]
@@ -575,12 +591,26 @@ class AdaptationTestCase(unittest.TestCase):
                 f"actual_adapted at {calling_frame.filename}:{calling_frame.lineno}:",
                 repr([actual_adapted])[1:-1]
                 .replace("bold=False, ", "")
+                .replace("bold=False,", "")
+                .replace("bold=False", "")
                 .replace("italic=False, ", "")
+                .replace("italic=False,", "")
+                .replace("italic=False", "")
                 .replace("highlighted=None, ", "")
+                .replace("highlighted=None,", "")
+                .replace("highlighted=None", "")
                 .replace("boxed=False, ", "")
+                .replace("boxed=False,", "")
+                .replace("boxed=False", "")
                 .replace("show_arrow_before=False, ", "")
+                .replace("show_arrow_before=False,", "")
+                .replace("show_arrow_before=False", "")
                 .replace("show_choices_by_default=False, ", "")
+                .replace("show_choices_by_default=False,", "")
+                .replace("show_choices_by_default=False", "")
                 .replace("vertical=False, ", "")
+                .replace("vertical=False,", "")
+                .replace("vertical=False", "")
                 .replace("Exercise(", "r.Exercise(")
                 .replace("Pagelet(", "r.Pagelet(")
                 .replace("Section(", "r.Section(")
@@ -594,8 +624,6 @@ class AdaptationTestCase(unittest.TestCase):
                 .replace("AnySequence(", "r.AnySequence("),
             )
         self.assertEqual(actual_adapted, expected_adapted)
-
-        self.tests_to_generate.append((self.id(), expected_adapted))
 
 
 class WordingPaginationTestCase(AdaptationTestCase):
@@ -4205,6 +4233,213 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                                         r.Text(kind="text", text="."),
                                     ]
                                 )
+                            ]
+                        ),
+                    )
+                ],
+            ),
+        )
+
+    def test_mcq_below_separated_items(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[
+                    d.InsertOp(insert="Indique le genre de chacun de ces groupes nominaux (", attributes={}),
+                    d.InsertOp(
+                        insert="singulier ou pluriel",
+                        attributes={"choices2": {"start": "", "separator1": "ou", "separator2": "", "stop": "", "placeholder": ""}},
+                    ),
+                    d.InsertOp(insert=")\n", attributes={}),
+                ],
+                wording=[
+                    d.InsertOp(insert="a. les tables / les chaises / les fauteuils\nb. les enfants / les personnes âgées / les adultes\n", attributes={}),
+                ],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                adaptation=Adaptation(
+                    kind="generic",
+                    wording_paragraphs_per_pagelet=3,
+                    single_item_per_paragraph=False,
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "separated", "separator": "/"},
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=True,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Indique"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="le"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="genre"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="de"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="chacun"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="de"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ces"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="groupes"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="nominaux"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="("),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="singulier")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="pluriel")], boxed=True),
+                                        r.Text(kind="text", text=")"),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="a"),
+                                        r.Text(kind="text", text="."),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.AnySequence(
+                                                    kind="sequence",
+                                                    contents=[
+                                                        r.Text(kind="text", text="les"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", text="tables"),
+                                                    ],
+                                                ),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.AnySequence(
+                                                    kind="sequence",
+                                                    contents=[
+                                                        r.Text(kind="text", text="les"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", text="chaises"),
+                                                    ],
+                                                ),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.AnySequence(
+                                                    kind="sequence",
+                                                    contents=[
+                                                        r.Text(kind="text", text="les"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", text="fauteuils"),
+                                                    ],
+                                                ),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                    ]
+                                ),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="b"),
+                                        r.Text(kind="text", text="."),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.AnySequence(
+                                                    kind="sequence",
+                                                    contents=[
+                                                        r.Text(kind="text", text="les"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", text="enfants"),
+                                                    ],
+                                                ),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.AnySequence(
+                                                    kind="sequence",
+                                                    contents=[
+                                                        r.Text(kind="text", text="les"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", text="personnes"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", text="âgées"),
+                                                    ],
+                                                ),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.AnySequence(
+                                                    kind="sequence",
+                                                    contents=[
+                                                        r.Text(kind="text", text="les"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", text="adultes"),
+                                                    ],
+                                                ),
+                                                r.MultipleChoicesInput(
+                                                    kind="multipleChoicesInput",
+                                                    choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        ),
+                                    ]
+                                ),
                             ]
                         ),
                     )
