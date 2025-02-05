@@ -102,7 +102,8 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     def text_reference(self, text_reference: deltas.Deltas):
         self._text_reference = [delta.model_dump() for delta in text_reference]
 
-    wording_paragraphs_per_pagelet: orm.Mapped[int | None] = orm.mapped_column(nullable=True)
+    # @todo(After migration dd7b7de68daa is applied) Remove the following field
+    _old_wording_paragraphs_per_pagelet: orm.Mapped[int | None] = orm.mapped_column(name="wording_paragraphs_per_pagelet", nullable=True)
 
     _rectangles: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="rectangles", default=[], server_default="[]")
 
@@ -125,6 +126,8 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
             case 0:
                 return api_models.Adaptation(
                     kind="generic",
+                    wording_paragraphs_per_pagelet=None,
+                    single_item_per_paragraph=False,
                     placeholder_for_fill_with_free_text=None,
                     items=None,
                     items_are_selectable=None,
@@ -316,7 +319,6 @@ class ExercisesResource:
         example,
         clue,
         text_reference,
-        wording_paragraphs_per_pagelet,
         rectangles,
         adaptation,
         session: SessionDependable,
@@ -334,7 +336,6 @@ class ExercisesResource:
             example=example,
             clue=clue,
             text_reference=text_reference,
-            wording_paragraphs_per_pagelet=wording_paragraphs_per_pagelet,
             rectangles=rectangles,
             adaptation=adaptation,
             created_by=authenticated_user,

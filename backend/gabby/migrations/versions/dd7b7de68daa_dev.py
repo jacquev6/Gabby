@@ -23,6 +23,8 @@ def upgrade():
         for exercise in session.query(Exercise).all():
             adaptation = copy.deepcopy(exercise._adaptation)
 
+            adaptation["settings"].setdefault("wording_paragraphs_per_pagelet", exercise._old_wording_paragraphs_per_pagelet)
+            adaptation["settings"].setdefault("single_item_per_paragraph", False)
             adaptation["settings"].setdefault("placeholder_for_fill_with_free_text", None)
             adaptation["settings"].setdefault("items", None)
             adaptation["settings"].setdefault("items_are_selectable", None)

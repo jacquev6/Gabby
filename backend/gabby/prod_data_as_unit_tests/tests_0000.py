@@ -20,8 +20,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number="Be b'ebbbaabe",
@@ -45,8 +44,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='fill-with-free-text', placeholder_for_fill_with_free_text='...', items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='fill-with-free-text', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text='...', items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='3',
@@ -74,8 +72,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='fill-with-free-text', placeholder_for_fill_with_free_text='...', items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='fill-with-free-text', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text='...', items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='5',
@@ -103,8 +100,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='Caac-bu cobbebb ab c’affebbe ?\n➞\nBe caac-bu fac cobbebb ab c’affebbe ?\n', attributes={})],
                 clue=[InsertOp(insert='Caac-bu cobbebb ab c’affebbe\n➞\na. Be becobbaac-bu ?\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=TokensItems(kind='tokens', words=True, punctuation=True), items_are_selectable=Selectable(colors=['#ffff00']), items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=TokensItems(kind='tokens', words=True, punctuation=True), items_are_selectable=Selectable(colors=['#ffff00']), items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='8',
@@ -132,8 +128,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='9',
@@ -161,8 +156,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='5',
@@ -190,8 +184,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='6',
@@ -219,8 +212,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='7',
@@ -248,8 +240,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='8',
@@ -281,8 +272,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='multiple-choices', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='multiple-choices', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='9',
@@ -314,8 +304,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='10',
@@ -343,8 +332,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='11',
@@ -372,8 +360,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='12',
@@ -401,8 +388,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='13',
@@ -430,8 +416,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='14',
@@ -455,8 +440,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='A boa de boueb',
@@ -484,8 +468,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='Aubodacbée',
@@ -509,8 +492,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='multiple-choices', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='multiple-choices', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='5',
@@ -538,8 +520,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='a. B’afaabeub ecb febdu.\nb. Babfeubeucebebb, cob afaob ecb eb fabbe !\nc. Ab ce bebboufe ceub au babaeu du décebb.\nd. Febdabb ba buab, ab a eu bbèc fboad.\ne. Cobbebb fa-b-ab deccabeb ce boubob ?\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='6',
@@ -563,8 +544,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='multiple-choices', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='multiple-choices', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='7',
@@ -592,8 +572,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=TokensItems(kind='tokens', words=True, punctuation=True), items_are_selectable=Selectable(colors=['#ffff00']), items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=TokensItems(kind='tokens', words=True, punctuation=True), items_are_selectable=Selectable(colors=['#ffff00']), items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='8',
@@ -621,8 +600,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='9',
@@ -650,8 +628,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='10',
@@ -679,8 +656,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='11',
@@ -708,8 +684,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='multiple-choices', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='multiple-choices', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='12',
@@ -741,8 +716,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='13',
@@ -766,8 +740,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='14',
@@ -791,8 +764,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='A boa de boueb',
@@ -820,8 +792,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='Aubodacbée',
@@ -845,8 +816,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='4',
@@ -874,8 +844,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='5',
@@ -899,8 +868,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='6',
@@ -924,8 +892,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='7',
@@ -953,8 +920,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='8',
@@ -982,8 +948,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='9',
@@ -1011,8 +976,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='10',
@@ -1040,8 +1004,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='11',
@@ -1069,8 +1032,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='Bu doac fbebdbe ce cabof. ➞ Fbebdc ce cabof !\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='12',
@@ -1098,8 +1060,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='13',
@@ -1135,8 +1096,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='14',
@@ -1160,8 +1120,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='15',
@@ -1185,8 +1144,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='A boa de boueb',
@@ -1210,8 +1168,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='Aubodacbée',
@@ -1239,8 +1196,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='Bu ec cobbebb.\n➞ Ec-bu cobbebb ? / Ecb-ce bue bu ec cobbebb ?\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='4',
@@ -1268,8 +1224,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='5',
@@ -1297,8 +1252,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='6',
@@ -1326,8 +1280,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='7',
@@ -1359,8 +1312,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=TokensItems(kind='tokens', words=True, punctuation=True), items_are_selectable=Selectable(colors=['#ffff00']), items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=TokensItems(kind='tokens', words=True, punctuation=True), items_are_selectable=Selectable(colors=['#ffff00']), items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='8',
@@ -1388,8 +1340,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='fill-with-free-text', placeholder_for_fill_with_free_text='...', items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='fill-with-free-text', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text='...', items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='13',
@@ -1417,8 +1368,7 @@ class DatabaseAsUnitTests0000(AdaptationTestCase):
                 example=[InsertOp(insert='\n', attributes={})],
                 clue=[InsertOp(insert='\n', attributes={})],
                 text_reference=[InsertOp(insert='\n', attributes={})],
-                wording_paragraphs_per_pagelet=3,
-                adaptation=Adaptation(kind='generic', placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
+                adaptation=Adaptation(kind='generic', wording_paragraphs_per_pagelet=3, single_item_per_paragraph=False, placeholder_for_fill_with_free_text=None, items=None, items_are_selectable=None, items_are_boxed=False, items_have_mcq_beside=False, items_have_mcq_below=False, show_arrow_before_mcq_fields=False, show_mcq_choices_by_default=False),
             ),
             r.Exercise(
                 number='8',

@@ -173,6 +173,10 @@ export interface components {
       show_arrow_before_mcq_fields: boolean;
       /** Show Mcq Choices By Default */
       show_mcq_choices_by_default: boolean;
+      /** Single Item Per Paragraph */
+      single_item_per_paragraph: boolean;
+      /** Wording Paragraphs Per Pagelet */
+      wording_paragraphs_per_pagelet: number | null;
     };
     /** AnySequence */
     AnySequence: {
@@ -469,7 +473,8 @@ export interface components {
        *   "items_have_mcq_beside": false,
        *   "kind": "generic",
        *   "show_arrow_before_mcq_fields": false,
-       *   "show_mcq_choices_by_default": false
+       *   "show_mcq_choices_by_default": false,
+       *   "single_item_per_paragraph": false
        * }
        */
       adaptation?: components["schemas"]["Adaptation"];
@@ -532,8 +537,6 @@ export interface components {
        * ]
        */
       wording?: components["schemas"]["InsertOp"][];
-      /** Wordingparagraphsperpagelet */
-      wordingParagraphsPerPagelet?: number | null;
     };
     /** exerciseCreateInputDataRelationships */
     exerciseCreateInputDataRelationships: {
@@ -586,8 +589,6 @@ export interface components {
       updatedAt: string;
       /** Wording */
       wording: components["schemas"]["InsertOp"][];
-      /** Wordingparagraphsperpagelet */
-      wordingParagraphsPerPagelet: number | null;
     };
     /** exerciseOutputItemRelationships */
     exerciseOutputItemRelationships: {
@@ -635,8 +636,6 @@ export interface components {
       textReference?: components["schemas"]["InsertOp"][];
       /** Wording */
       wording?: components["schemas"]["InsertOp"][];
-      /** Wordingparagraphsperpagelet */
-      wordingParagraphsPerPagelet?: number | null;
     };
     /** exerciseUpdateInputDataRelationships */
     exerciseUpdateInputDataRelationships: Record<string, never>;
@@ -723,8 +722,6 @@ export interface components {
       textReference: components["schemas"]["InsertOp"][];
       /** Wording */
       wording: components["schemas"]["InsertOp"][];
-      /** Wordingparagraphsperpagelet */
-      wordingParagraphsPerPagelet: number | null;
     };
     /** parsedExerciseCreateInputDataRelationships */
     parsedExerciseCreateInputDataRelationships: Record<string, never>;

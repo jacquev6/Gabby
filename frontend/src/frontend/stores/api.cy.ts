@@ -1663,6 +1663,8 @@ describe('ApiStore - Application - 2', () => {
         instructions: [{insert: 'Do this\n', attributes: {}}],
         adaptation: {
           kind: 'generic',
+          wording_paragraphs_per_pagelet: null,
+          single_item_per_paragraph: false,
           placeholder_for_fill_with_free_text: null,
           items: {kind: 'tokens', words: true, punctuation: false},
           items_are_selectable: {colors: ['red', 'green', 'blue', 'purple']},

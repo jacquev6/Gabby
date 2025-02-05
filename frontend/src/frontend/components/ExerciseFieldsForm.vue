@@ -33,7 +33,6 @@ export type Model = MakeModelOptions & {
   example: Deltas
   clue: Deltas
   textReference: Deltas
-  wordingParagraphsPerPagelet: number | null
   rectangles: PdfRectangle[]
   adaptation: Adaptation
   inProgress:
@@ -66,10 +65,11 @@ function makeModel(options: MakeModelOptions): Model {
     example: [{insert: '\n', attributes: {}}],
     clue: [{insert: '\n', attributes: {}}],
     textReference: [{insert: '\n', attributes: {}}],
-    wordingParagraphsPerPagelet: null,
     rectangles: [],
     adaptation: {
       kind: 'generic',
+      wording_paragraphs_per_pagelet: null,
+      single_item_per_paragraph: false,
       placeholder_for_fill_with_free_text: null,
       items: null,
       items_are_selectable: null,
@@ -100,7 +100,6 @@ export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exi
   model.example = deepCopy(exercise.attributes.example)
   model.clue = deepCopy(exercise.attributes.clue)
   model.textReference = deepCopy(exercise.attributes.textReference)
-  model.wordingParagraphsPerPagelet = exercise.attributes.wordingParagraphsPerPagelet
   model.adaptation = deepCopy(exercise.attributes.adaptation)
   model.rectangles = deepCopy(exercise.attributes.rectangles)
   model.inProgress = {
@@ -130,6 +129,8 @@ export function modelIsEmpty(model: Model) {
       model.adaptation,
       ((a: Adaptation) => a)({  // I don't know how to annotate expressions in TypeScript. This simply ensures the literal is indeed and Adaptation.
         kind: 'generic',
+        wording_paragraphs_per_pagelet: null,
+        single_item_per_paragraph: false,
         placeholder_for_fill_with_free_text: null,
         items: null,
         items_are_selectable: null,
@@ -186,7 +187,6 @@ export async function getParsed(model: Model) {
       example: downgradeDeltas(model.example),
       clue: downgradeDeltas(model.clue),
       textReference: downgradeDeltas(model.textReference),
-      wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
       adaptation: model.adaptation,
     },
     {},
@@ -206,7 +206,6 @@ export async function create(project: Project, textbook: Textbook | null, model:
       example: downgradeDeltas(model.example),
       clue: downgradeDeltas(model.clue),
       textReference: downgradeDeltas(model.textReference),
-      wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
       adaptation: model.adaptation,
       rectangles: model.rectangles,
     },
@@ -225,7 +224,6 @@ export async function save(exercise: Exercise & InCache & Exists, model: Model) 
       example: downgradeDeltas(model.example),
       clue: downgradeDeltas(model.clue),
       textReference: downgradeDeltas(model.textReference),
-      wordingParagraphsPerPagelet: model.wordingParagraphsPerPagelet,
       adaptation: model.adaptation,
       rectangles: model.rectangles,
     },

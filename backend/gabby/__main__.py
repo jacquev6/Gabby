@@ -203,7 +203,6 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
             example=waste_deltas(exercise.example),
             clue=waste_deltas(exercise.clue),
             text_reference=waste_deltas(exercise.text_reference),
-            wording_paragraphs_per_pagelet=exercise.wording_paragraphs_per_pagelet,
             adaptation=exercise.adaptation,
         )
 
@@ -250,7 +249,6 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
             yield f"                example={repr(exercise.example)},"
             yield f"                clue={repr(exercise.clue)},"
             yield f"                text_reference={repr(exercise.text_reference)},"
-            yield f"                wording_paragraphs_per_pagelet={repr(exercise.wording_paragraphs_per_pagelet)},"
             yield f"                adaptation={repr(exercise.adaptation)},"
             yield f"            ),"
             yield f"            r.Exercise("

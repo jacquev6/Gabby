@@ -261,6 +261,8 @@ def create_test_exercises_1(session, admin):
         ],
         adaptation=Adaptation(
             kind="multiple-choices",
+            wording_paragraphs_per_pagelet=3,
+            single_item_per_paragraph=False,
             placeholder_for_fill_with_free_text=None,
             items=None,
             items_are_selectable=None,
@@ -270,7 +272,6 @@ def create_test_exercises_1(session, admin):
             show_arrow_before_mcq_fields=False,
             show_mcq_choices_by_default=False,
         ),
-        wording_paragraphs_per_pagelet=3,
         created_by=admin,
         updated_by=admin,
     )
@@ -478,6 +479,8 @@ def create_test_exercises_2(session, admin):
         ],
         adaptation=Adaptation(
             kind="generic",
+            wording_paragraphs_per_pagelet=3,
+            single_item_per_paragraph=False,
             placeholder_for_fill_with_free_text=None,
             items=api_models.TokensItems(
                 kind="tokens",
@@ -493,7 +496,6 @@ def create_test_exercises_2(session, admin):
             show_arrow_before_mcq_fields=False,
             show_mcq_choices_by_default=False,
         ),
-        wording_paragraphs_per_pagelet=3,
         created_by=admin,
         updated_by=admin,
     )
@@ -549,6 +551,8 @@ def create_test_exercises_2(session, admin):
         ],
         adaptation=Adaptation(
             kind="fill-with-free-text",
+            wording_paragraphs_per_pagelet=None,
+            single_item_per_paragraph=False,
             placeholder_for_fill_with_free_text="…",
             items=None,
             items_are_selectable=None,
@@ -605,6 +609,8 @@ def create_test_exercises_2(session, admin):
         ],
         adaptation=Adaptation(
             kind="multiple-choices",
+            wording_paragraphs_per_pagelet=3,
+            single_item_per_paragraph=False,
             placeholder_for_fill_with_free_text=None,
             items=None,
             items_are_selectable=None,
@@ -614,7 +620,6 @@ def create_test_exercises_2(session, admin):
             show_arrow_before_mcq_fields=False,
             show_mcq_choices_by_default=False,
         ),
-        wording_paragraphs_per_pagelet=3,
         created_by=admin,
         updated_by=admin,
     )
@@ -665,9 +670,10 @@ def create_test_exercises_3(session, admin):
                 attributes={},
             )
         ],
-        wording_paragraphs_per_pagelet=1,
         adaptation=Adaptation(
             kind="generic",
+            wording_paragraphs_per_pagelet=1,
+            single_item_per_paragraph=False,
             placeholder_for_fill_with_free_text=None,
             items=api_models.TokensItems(kind="tokens", words=True, punctuation=False),
             items_are_selectable=api_models.Selectable(
@@ -743,9 +749,10 @@ def create_test_exercises_3(session, admin):
             ),
             deltas.InsertOp(insert="\n\n", attributes={}),
         ],
-        wording_paragraphs_per_pagelet=3,
         adaptation=Adaptation(
             kind="multiple-choices",
+            wording_paragraphs_per_pagelet=3,
+            single_item_per_paragraph=False,
             placeholder_for_fill_with_free_text=None,
             items=None,
             items_are_selectable=None,

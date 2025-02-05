@@ -73,10 +73,27 @@
           "show_mcq_choices_by_default": {
             "title": "Show Mcq Choices By Default",
             "type": "boolean"
+          },
+          "single_item_per_paragraph": {
+            "title": "Single Item Per Paragraph",
+            "type": "boolean"
+          },
+          "wording_paragraphs_per_pagelet": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wording Paragraphs Per Pagelet"
           }
         },
         "required": [
           "kind",
+          "wording_paragraphs_per_pagelet",
+          "single_item_per_paragraph",
           "placeholder_for_fill_with_free_text",
           "items",
           "items_are_selectable",
@@ -903,7 +920,8 @@
               "items_have_mcq_beside": false,
               "kind": "generic",
               "show_arrow_before_mcq_fields": false,
-              "show_mcq_choices_by_default": false
+              "show_mcq_choices_by_default": false,
+              "single_item_per_paragraph": false
             }
           },
           "clue": {
@@ -993,17 +1011,6 @@
             },
             "title": "Wording",
             "type": "array"
-          },
-          "wordingParagraphsPerPagelet": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Wordingparagraphsperpagelet"
           }
         },
         "required": [
@@ -1150,17 +1157,6 @@
             },
             "title": "Wording",
             "type": "array"
-          },
-          "wordingParagraphsPerPagelet": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Wordingparagraphsperpagelet"
           }
         },
         "required": [
@@ -1173,7 +1169,6 @@
           "example",
           "clue",
           "textReference",
-          "wordingParagraphsPerPagelet",
           "rectangles",
           "adaptation"
         ],
@@ -1322,17 +1317,6 @@
             },
             "title": "Wording",
             "type": "array"
-          },
-          "wordingParagraphsPerPagelet": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Wordingparagraphsperpagelet"
           }
         },
         "title": "exerciseUpdateInputDataAttributes",
@@ -1562,17 +1546,6 @@
             },
             "title": "Wording",
             "type": "array"
-          },
-          "wordingParagraphsPerPagelet": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Wordingparagraphsperpagelet"
           }
         },
         "required": [
@@ -1582,7 +1555,6 @@
           "example",
           "clue",
           "textReference",
-          "wordingParagraphsPerPagelet",
           "adaptation"
         ],
         "title": "parsedExerciseCreateInputDataAttributes",

@@ -128,6 +128,8 @@ Items = CharactersItems | TokensItems | SentencesItems | ManualItems
 
 class Adaptation(PydanticBase):
     kind: Literal["generic", "fill-with-free-text", "multiple-choices"]
+    wording_paragraphs_per_pagelet: int | None
+    single_item_per_paragraph: bool
     placeholder_for_fill_with_free_text: str | None
     items: Items | None
     items_are_selectable: Selectable | None
@@ -151,12 +153,12 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
     clue: deltas.Deltas = deltas.empty
     text_reference: deltas.Deltas = deltas.empty
 
-    wording_paragraphs_per_pagelet: int | None = None
-
     rectangles: list[PdfRectangle] = []
 
     adaptation: Adaptation = Adaptation(
         kind="generic",
+        wording_paragraphs_per_pagelet=None,
+        single_item_per_paragraph=False,
         placeholder_for_fill_with_free_text=None,
         items=None,
         items_are_selectable=None,
@@ -174,7 +176,6 @@ class ParsedExercise(PydanticBase):
     example: Annotated[deltas.Deltas, WriteOnly()]
     clue: Annotated[deltas.Deltas, WriteOnly()]
     text_reference: Annotated[deltas.Deltas, WriteOnly()]
-    wording_paragraphs_per_pagelet: Annotated[int | None, WriteOnly()]
     adaptation: Annotated[Adaptation, WriteOnly()]
     adapted: Annotated[renderable.Exercise, Computed()]
 

@@ -3,7 +3,7 @@ import { computed, ref, watch } from 'vue'
 import deepCopy from 'deep-copy'
 import deepEqual from 'deep-equal'
 
-import { BBusy, BButton } from '$frontend/components/opinion/bootstrap'
+import { BBusy, BButton, BLabeledCheckbox } from '$frontend/components/opinion/bootstrap'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import type { Exists, InCache, ParsedExercise } from '$frontend/stores/api'
 import { type Model, getParsed } from '$frontend/components/ExerciseFieldsForm.vue'
@@ -111,7 +111,8 @@ defineExpose({
                   <template #distribution>
                     <div class="mb-3">
                       <p class="form-label">{{ $t('exerciseDistribution') }}</p>
-                      <DistributionToggles v-model="model.wordingParagraphsPerPagelet" />
+                      <DistributionToggles v-model="model.adaptation.wording_paragraphs_per_pagelet" />
+                      <BLabeledCheckbox v-model="model.adaptation.single_item_per_paragraph" :label="$t('singleItemPerParagraph')" />
                     </div>
                   </template>
                 </ToolsGutter>

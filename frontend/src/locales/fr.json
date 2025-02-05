@@ -137,6 +137,7 @@
   "italicButton": "Italique",
   "exerciseDistribution": "Répartition",
   "exerciseLinesPerPage": "1 ligne par page | {n} lignes par page",
+  "singleItemPerParagraph": "1 item par ligne",
   "items": "Items",
   "itemsLetters": "Lettres",
   "itemsWords": "Mots",
