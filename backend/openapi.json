@@ -1643,14 +1643,7 @@
         "additionalProperties": false,
         "properties": {
           "adapted": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/Exercise"
-              },
-              {
-                "type": "null"
-              }
-            ]
+            "$ref": "#/components/schemas/Exercise"
           }
         },
         "required": [
