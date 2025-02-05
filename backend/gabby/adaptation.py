@@ -259,35 +259,7 @@ class _Adapter:
                 contents = list(self.adapt_wording_sentence(sentence_deltas, sentence_placeholders))
                 while contents[0].kind == "whitespace":
                     contents.pop(0)
-                if self.items_are_selectable:
-                    contents = [
-                        renderable.SelectableInput(
-                            kind="selectableInput",
-                            contents=contents,
-                            colors=self.colors_for_selectable_items,
-                            boxed=self.items_are_boxed,
-                        )
-                    ]
-                elif self.items_are_boxed:
-                    contents = [renderable.Boxed(contents=contents)]
-                else:
-                    pass
-                if self.mcq_below_items is None:
-                    yield from contents
-                    if self.mcq_beside_items is not None:
-                        yield renderable.Whitespace(kind="whitespace")
-                        yield self.mcq_beside_items
-                else:
-                    yield renderable.AnySequence(
-                        kind="sequence",
-                        contents=[
-                            renderable.AnySequence(kind="sequence", contents=contents),
-                            self.mcq_below_items,
-                        ],
-                        vertical=True,
-                    )
-                if self.single_item_per_paragraph:
-                    yield self.paragraph_separator
+                yield from self.decorate_item(contents)
         else:
             yield from self.adapt_wording_sentence(paragraph_deltas, sentence_placeholders)
 
@@ -308,98 +280,18 @@ class _Adapter:
                                 index = int(text[2:-2])
                                 yield sentence_placeholders[index][1]
                             else:
+                                item = renderable.Text(kind="text", text=text)
                                 if self.punctuation_is_items:
-                                    if self.items_are_selectable:
-                                        item = renderable.SelectableInput(
-                                            kind="selectableInput",
-                                            contents=[renderable.Text(kind="text", text=text)],
-                                            colors=self.colors_for_selectable_items,
-                                            boxed=self.items_are_boxed,
-                                        )
-                                    elif self.items_are_boxed:
-                                        item = renderable.PassiveSequence(
-                                            kind="passiveSequence",
-                                            contents=[renderable.Text(kind="text", text=text)],
-                                            boxed=True,
-                                        )
-                                    else:
-                                        item = renderable.Text(kind="text", text=text)
-                                    if self.mcq_below_items is None:
-                                        yield item
-                                        if self.mcq_beside_items is not None:
-                                            yield renderable.Whitespace(kind="whitespace")
-                                            yield self.mcq_beside_items
-                                    else:
-                                        yield renderable.AnySequence(
-                                            kind="sequence",
-                                            contents=[item, self.mcq_below_items],
-                                            vertical=True,
-                                        )
-                                    if self.single_item_per_paragraph:
-                                        yield self.paragraph_separator
+                                    yield from self.decorate_item([item])
                                 else:
-                                    yield renderable.Text(kind="text", text=text)
+                                    yield item
                         else:
                             # Separated: words
                             if self.letters_are_items:
                                 for letter in text:
-                                    if self.items_are_selectable:
-                                        item = renderable.SelectableInput(
-                                            kind="selectableInput",
-                                            contents=[renderable.Text(kind="text", text=letter)],
-                                            colors=self.colors_for_selectable_items,
-                                            boxed=self.items_are_boxed,
-                                        )
-                                    elif self.items_are_boxed:
-                                        item = renderable.PassiveSequence(
-                                            kind="passiveSequence",
-                                            contents=[renderable.Text(kind="text", text=letter)],
-                                            boxed=True,
-                                        )
-                                    else:
-                                        item = renderable.Text(kind="text", text=letter)
-                                    if self.mcq_below_items is None:
-                                        yield item
-                                        if self.mcq_beside_items is not None:
-                                            yield renderable.Whitespace(kind="whitespace")
-                                            yield self.mcq_beside_items
-                                    else:
-                                        yield renderable.AnySequence(
-                                            kind="sequence",
-                                            contents=[item, self.mcq_below_items],
-                                            vertical=True,
-                                        )
-                                    if self.single_item_per_paragraph:
-                                        yield self.paragraph_separator
+                                    yield from self.decorate_item([renderable.Text(kind="text", text=letter)])
                             elif self.words_are_items:
-                                if self.items_are_selectable:
-                                    item = renderable.SelectableInput(
-                                        kind="selectableInput",
-                                        contents=[renderable.Text(kind="text", text=text)],
-                                        colors=self.colors_for_selectable_items,
-                                        boxed=self.items_are_boxed,
-                                    )
-                                elif self.items_are_boxed:
-                                    item = renderable.PassiveSequence(
-                                        kind="passiveSequence",
-                                        contents=[renderable.Text(kind="text", text=text)],
-                                        boxed=True,
-                                    )
-                                else:
-                                    item = renderable.Text(kind="text", text=text)
-                                if self.mcq_below_items is None:
-                                    yield item
-                                    if self.mcq_beside_items is not None:
-                                        yield renderable.Whitespace(kind="whitespace")
-                                        yield self.mcq_beside_items
-                                else:
-                                    yield renderable.AnySequence(
-                                        kind="sequence",
-                                        contents=[item, self.mcq_below_items],
-                                        vertical=True,
-                                    )
-                                if self.single_item_per_paragraph:
-                                    yield self.paragraph_separator
+                                yield from self.decorate_item([renderable.Text(kind="text", text=text)])
                             else:
                                 yield renderable.Text(kind="text", text=text)
 
@@ -411,37 +303,11 @@ class _Adapter:
                         if text.strip() == "":
                             yield renderable.Whitespace(kind="whitespace")
                         else:
+                            item = renderable.Text(kind="text", text=text)
                             if self.manual_items_are_items:
-                                if self.items_are_selectable:
-                                    item = renderable.SelectableInput(
-                                        kind="selectableInput",
-                                        contents=[renderable.Text(kind="text", text=text)],
-                                        colors=self.colors_for_selectable_items,
-                                        boxed=self.items_are_boxed,
-                                    )
-                                elif self.items_are_boxed:
-                                    item = renderable.PassiveSequence(
-                                        kind="passiveSequence",
-                                        contents=[renderable.Text(kind="text", text=text)],
-                                        boxed=True,
-                                    )
-                                else:
-                                    item = renderable.Text(kind="text", text=text)
-                                if self.mcq_below_items is None:
-                                    yield item
-                                    if self.mcq_beside_items is not None:
-                                        yield renderable.Whitespace(kind="whitespace")
-                                        yield self.mcq_beside_items
-                                else:
-                                    yield renderable.AnySequence(
-                                        kind="sequence",
-                                        contents=[item, self.mcq_below_items],
-                                        vertical=True,
-                                    )
-                                if self.single_item_per_paragraph:
-                                    yield self.paragraph_separator
+                                yield from self.decorate_item([item])
                             else:
-                                yield renderable.Text(kind="text", text=text)
+                                yield item
 
             elif "bold" in delta.attributes or "italic" in delta.attributes:
                 assert set(delta.attributes.keys()) <= {"bold", "italic"}
@@ -479,6 +345,36 @@ class _Adapter:
 
             else:
                 assert False, f"Unknown attributes: {delta.attributes}"
+
+    def decorate_item(self, contents):
+        if self.items_are_selectable:
+            contents = [renderable.SelectableInput(
+                kind="selectableInput",
+                contents=contents,
+                colors=self.colors_for_selectable_items,
+                boxed=self.items_are_boxed,
+            )]
+        elif self.items_are_boxed:
+            contents = [renderable.PassiveSequence(
+                kind="passiveSequence",
+                contents=contents,
+                boxed=True,
+            )]
+        else:
+            pass
+        if self.mcq_below_items is None:
+            yield from contents
+            if self.mcq_beside_items is not None:
+                yield renderable.Whitespace(kind="whitespace")
+                yield self.mcq_beside_items
+        else:
+            yield renderable.AnySequence(
+                kind="sequence",
+                contents=[contents[0] if len(contents) == 1 else renderable.AnySequence(kind="sequence", contents=contents), self.mcq_below_items],
+                vertical=True,
+            )
+        if self.single_item_per_paragraph:
+            yield self.paragraph_separator
 
     def split_deltas(self, section_deltas: deltas.Deltas, explicit_paragraph_separator_pattern: str) -> Iterable[deltas.Deltas]:
         section_deltas = copy.deepcopy(section_deltas)
