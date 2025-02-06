@@ -377,34 +377,14 @@ watch(
   model,
   model => {
     if (model.adaptation.items === null) {
-      const hasItems =
-        settings.itemized.items.isLetters
-        || settings.itemized.items.isWords
-        || settings.itemized.items.isPunctuation
-        || settings.itemized.items.isSentences
-        || settings.itemized.items.isManual
-        || (settings.itemized.items.isSeparated && settings.itemized.items.separator !== '')
-      const hasEffects =
-        settings.itemized.effects.isSelectable
-        || settings.itemized.effects.isBoxed
-        || settings.itemized.effects.hasMcqBeside
-        || settings.itemized.effects.hasMcqBelow
-
-      if (hasItems && hasEffects) {
-        settings.itemized.items.isLetters = false
-        settings.itemized.items.isWords = false
-        settings.itemized.items.isPunctuation = false
-        settings.itemized.items.isSentences = false
-        settings.itemized.items.isManual = false
-        settings.itemized.items.isSeparated = false
-        settings.itemized.items.separator = ''
-        settings.itemized.effects.isSelectable = false
-        settings.itemized.effects.isBoxed = false
-        settings.itemized.effects.hasMcqBeside = false
-        settings.itemized.effects.hasMcqBelow = false
-      }
-    } else {
-      if (model.adaptation.items.kind === 'characters') {
+      settings.itemized.items.isLetters = false
+      settings.itemized.items.isWords = false
+      settings.itemized.items.isPunctuation = false
+      settings.itemized.items.isSentences = false
+      settings.itemized.items.isManual = false
+      settings.itemized.items.isSeparated = false
+      settings.itemized.items.separator = ''
+    } else if (model.adaptation.items.kind === 'characters') {
         settings.itemized.items.isLetters = model.adaptation.items.letters
         settings.itemized.items.isWords = false
         settings.itemized.items.isPunctuation = false
@@ -412,55 +392,58 @@ watch(
         settings.itemized.items.isManual = false
         settings.itemized.items.isSeparated = false
         settings.itemized.items.separator = ''
-      } else if (model.adaptation.items.kind === 'tokens') {
-        settings.itemized.items.isLetters = false
-        settings.itemized.items.isWords = model.adaptation.items.words
-        settings.itemized.items.isPunctuation = model.adaptation.items.punctuation
-        settings.itemized.items.isSentences = false
-        settings.itemized.items.isManual = false
-        settings.itemized.items.isSeparated = false
-        settings.itemized.items.separator = ''
-      } else if (model.adaptation.items.kind === 'manual') {
-        settings.itemized.items.isLetters = false
-        settings.itemized.items.isWords = false
-        settings.itemized.items.isPunctuation = false
-        settings.itemized.items.isSentences = false
-        settings.itemized.items.isManual = true
-        settings.itemized.items.isSeparated = false
-        settings.itemized.items.separator = ''
-      } else if (model.adaptation.items.kind === 'sentences') {
-        settings.itemized.items.isLetters = false
-        settings.itemized.items.isWords = false
-        settings.itemized.items.isPunctuation = false
-        settings.itemized.items.isSentences = true
-        settings.itemized.items.isManual = false
-        settings.itemized.items.isSeparated = false
-        settings.itemized.items.separator = ''
-      } else if (model.adaptation.items.kind === 'separated') {
-        settings.itemized.items.isLetters = false
-        settings.itemized.items.isWords = false
-        settings.itemized.items.isPunctuation = false
-        settings.itemized.items.isSentences = false
-        settings.itemized.items.isManual = false
-        settings.itemized.items.isSeparated = true
-        settings.itemized.items.separator = model.adaptation.items.separator
-      } else {
-        console.assert(false, ((items: never) => items)(model.adaptation.items))
-      }
-
-      if (model.adaptation.items_are_selectable !== null) {
-        settings.itemized.effects.isSelectable = true
-        settings.itemized.effects.selectable.colorsCount = model.adaptation.items_are_selectable.colors.length
-        settings.itemized.effects.selectable.allColors.splice(
-          0,
-          model.adaptation.items_are_selectable.colors.length,
-          ...model.adaptation.items_are_selectable.colors
-        )
-      }
-      settings.itemized.effects.isBoxed = model.adaptation.items_are_boxed
-      settings.itemized.effects.hasMcqBeside = model.adaptation.items_have_mcq_beside
-      settings.itemized.effects.hasMcqBelow = model.adaptation.items_have_mcq_below
+    } else if (model.adaptation.items.kind === 'tokens') {
+      settings.itemized.items.isLetters = false
+      settings.itemized.items.isWords = model.adaptation.items.words
+      settings.itemized.items.isPunctuation = model.adaptation.items.punctuation
+      settings.itemized.items.isSentences = false
+      settings.itemized.items.isManual = false
+      settings.itemized.items.isSeparated = false
+      settings.itemized.items.separator = ''
+    } else if (model.adaptation.items.kind === 'manual') {
+      settings.itemized.items.isLetters = false
+      settings.itemized.items.isWords = false
+      settings.itemized.items.isPunctuation = false
+      settings.itemized.items.isSentences = false
+      settings.itemized.items.isManual = true
+      settings.itemized.items.isSeparated = false
+      settings.itemized.items.separator = ''
+    } else if (model.adaptation.items.kind === 'sentences') {
+      settings.itemized.items.isLetters = false
+      settings.itemized.items.isWords = false
+      settings.itemized.items.isPunctuation = false
+      settings.itemized.items.isSentences = true
+      settings.itemized.items.isManual = false
+      settings.itemized.items.isSeparated = false
+      settings.itemized.items.separator = ''
+    } else if (model.adaptation.items.kind === 'separated') {
+      settings.itemized.items.isLetters = false
+      settings.itemized.items.isWords = false
+      settings.itemized.items.isPunctuation = false
+      settings.itemized.items.isSentences = false
+      settings.itemized.items.isManual = false
+      settings.itemized.items.isSeparated = true
+      settings.itemized.items.separator = model.adaptation.items.separator
+    } else {
+      console.assert(false, ((items: never) => items)(model.adaptation.items))
     }
+
+    if (model.adaptation.items_are_selectable === null) {
+      settings.itemized.effects.isSelectable = false
+      settings.itemized.effects.selectable.colorsCount = 2
+      settings.itemized.effects.selectable.allColors.splice(0, settings.itemized.effects.selectable.allColors.length, ...defaultColorsForSelectableEffect)
+    } else {
+      settings.itemized.effects.isSelectable = true
+      settings.itemized.effects.selectable.colorsCount = model.adaptation.items_are_selectable.colors.length
+      settings.itemized.effects.selectable.allColors.splice(
+        0,
+        model.adaptation.items_are_selectable.colors.length,
+        ...model.adaptation.items_are_selectable.colors
+      )
+    }
+    settings.itemized.effects.isBoxed = model.adaptation.items_are_boxed
+    settings.itemized.effects.hasMcqBeside = model.adaptation.items_have_mcq_beside
+    settings.itemized.effects.hasMcqBelow = model.adaptation.items_have_mcq_below
   },
   {
     deep: true,
@@ -512,23 +495,31 @@ watch(
     }
 
     // Break the infinite 'watch' loop by setting the model only if the value has actually changed.
+    let hasChanged = false
     if (!deepEqual(items, model.value.adaptation.items)) {
+      hasChanged = true
       model.value.adaptation.items = items
     }
     if (!deepEqual(selectable, model.value.adaptation.items_are_selectable)) {
+      hasChanged = true
       model.value.adaptation.items_are_selectable = selectable
     }
     if (isBoxed !== model.value.adaptation.items_are_boxed) {
+      hasChanged = true
       model.value.adaptation.items_are_boxed = isBoxed
     }
     if (hasMcqBeside !== model.value.adaptation.items_have_mcq_beside) {
+      hasChanged = true
       model.value.adaptation.items_have_mcq_beside = hasMcqBeside
     }
     if (hasMcqBelow !== model.value.adaptation.items_have_mcq_below) {
+      hasChanged = true
       model.value.adaptation.items_have_mcq_below = hasMcqBelow
     }
 
-    cleanupModel(model.value)
+    if (hasChanged) {
+      cleanupModel(model.value)
+    }
   },
   {
     deep: true,
