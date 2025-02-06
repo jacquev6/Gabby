@@ -171,7 +171,8 @@ describe('TricolorSection', () => {
         () => { cy.get('span[contenteditable]').type('foobar') },
         () => { cy.get('span[data-cy="selectable"]').click() },
         () => { cy.get('span[data-cy="selectable"]').click() },
-      ]
+      ],
+      viewportHeight: 432,
     },
   )
 
