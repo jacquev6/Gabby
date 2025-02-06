@@ -335,7 +335,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Start") + input').should('have.value', '')
     cy.get('label:contains("Stop") + input').should('have.value', '')
     cy.get('label:contains("Separators") + input').should('have.value', ',')
-    cy.get('label + input').eq(4).should('have.value', 'ou')  // Very fragile selector; sorry, future me!
+    cy.get('input[data-cy="second-mcq-separator"]').should('have.value', 'ou')
     cy.get('label:contains("Placeholder") + input').type('...', {delay: 0})
     screenshot('multiple-choices-with-choices-in-instructions', 'edit-2', {clearSel: false})
     cy.get('button:contains("OK")').click()
@@ -403,7 +403,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Start") + input').should('have.value', '')
     cy.get('label:contains("Stop") + input').should('have.value', '')
     cy.get('label:contains("Separators") + input').should('have.value', '/')
-    cy.get('label + input').eq(4).should('have.value', '')  // Very fragile selector; sorry, future me!
+    cy.get('input[data-cy="second-mcq-separator"]').should('have.value', '')
     cy.get('label:contains("Placeholder") + input').click().type('...', {delay: 0})
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-2', {clearSel: false})
     cy.get('button:contains("OK")').click()
@@ -420,7 +420,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Start") + input').should('have.value', '')
     cy.get('label:contains("Stop") + input').should('have.value', '')
     cy.get('label:contains("Separators") + input').should('have.value', '*')
-    cy.get('label + input').eq(4).should('have.value', '')  // Very fragile selector; sorry, future me!
+    cy.get('input[data-cy="second-mcq-separator"]').should('have.value', '')
     cy.get('label:contains("Placeholder") + input').click().type('@@@', {delay: 0})
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-5', {clearSel: false})
     cy.get('button:contains("OK")').click()
@@ -470,7 +470,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Start") + input').should('have.value', '(')
     cy.get('label:contains("Stop") + input').should('have.value', ')')
     cy.get('label:contains("Separators") + input').should('have.value', '/')
-    cy.get('label + input').eq(4).should('have.value', '')  // Very fragile selector; sorry, future me!
+    cy.get('input[data-cy="second-mcq-separator"]').should('have.value', '')
     screenshot('multiple-choices-with-choices-in-wording', 'edit-2', {clearSel: false})
     cy.get('button:contains("OK")').click()
     screenshot('multiple-choices-with-choices-in-wording', 'edit-3')
@@ -516,7 +516,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Start") + input').should('have.value', '(')
     cy.get('label:contains("Stop") + input').should('have.value', ')')
     cy.get('label:contains("Separators") + input').should('have.value', '/')
-    cy.get('label + input').eq(4).should('have.value', '')  // Very fragile selector; sorry, future me!
+    cy.get('input[data-cy="second-mcq-separator"]').should('have.value', '')
     cy.get('button:contains("OK")').click()
 
     cy.get('div:contains("Show choices by default") > input').click()
@@ -561,7 +561,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Start") + input').should('have.value', '(')
     cy.get('label:contains("Stop") + input').should('have.value', ')')
     cy.get('label:contains("Separators") + input').should('have.value', '/')
-    cy.get('label + input').eq(4).should('have.value', '')  // Very fragile selector; sorry, future me!
+    cy.get('input[data-cy="second-mcq-separator"]').should('have.value', '')
     cy.get('button:contains("OK")').click()
 
     cy.get('div:contains("Preceded by an arrow") > input').click()
@@ -641,7 +641,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Start") + input').should('have.value', '')
     cy.get('label:contains("Stop") + input').should('have.value', '')
     cy.get('label:contains("Separators") + input').should('have.value', 'ou')
-    cy.get('label + input').eq(4).type('{selectAll}{del}')  // Very fragile selector; sorry, future me!
+    cy.get('input[data-cy="second-mcq-separator"]').type('{selectAll}{del}')
     cy.get('label:contains("Placeholder") + input').click().type('...', {delay: 0})
     screenshot('multiple-choices-for-letter-in-word', 'edit-2', {clearSel: false})
     cy.get('button:contains("OK")').click()
@@ -686,7 +686,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Start") + input').should('have.value', '')
     cy.get('label:contains("Stop") + input').should('have.value', '')
     cy.get('label:contains("Separators") + input').should('have.value', 'ou')
-    cy.get('label + input').eq(4).should('have.value', '')  // Very fragile selector; sorry, future me!
+    cy.get('input[data-cy="second-mcq-separator"]').should('have.value', '')
     cy.get('label:contains("Placeholder") + input').should('have.value', '')
     cy.get('button:contains("OK")').click()
     cy.get('div:contains("Beside each item") > input').click()
@@ -732,7 +732,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Start") + input').should('have.value', '')
     cy.get('label:contains("Stop") + input').should('have.value', '')
     cy.get('label:contains("Separators") + input').should('have.value', 'ou')
-    cy.get('label + input').eq(4).should('have.value', '')  // Very fragile selector; sorry, future me!
+    cy.get('input[data-cy="second-mcq-separator"]').should('have.value', '')
     cy.get('label:contains("Placeholder") + input').should('have.value', '')
     cy.get('button:contains("OK")').click()
     cy.get('div:contains("Beside each item") > input').click()
@@ -780,7 +780,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Start") + input').should('have.value', '')
     cy.get('label:contains("Stop") + input').should('have.value', '')
     cy.get('label:contains("Separators") + input').should('have.value', 'ou')
-    cy.get('label + input').eq(4).should('have.value', '')  // Very fragile selector; sorry, future me!
+    cy.get('input[data-cy="second-mcq-separator"]').should('have.value', '')
     cy.get('label:contains("Placeholder") + input').should('have.value', '')
     cy.get('button:contains("OK")').click()
     cy.get('div:contains("Below each item") > input').click()
@@ -826,7 +826,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Start") + input').should('have.value', '')
     cy.get('label:contains("Stop") + input').should('have.value', '')
     cy.get('label:contains("Separators") + input').should('have.value', ',')
-    cy.get('label + input').eq(4).should('have.value', 'ou')  // Very fragile selector; sorry, future me!
+    cy.get('input[data-cy="second-mcq-separator"]').should('have.value', 'ou')
     cy.get('label:contains("Placeholder") + input').should('have.value', '')
     cy.get('button:contains("OK")').click()
     cy.get('div:contains("Beside each item") > input').click()
@@ -872,7 +872,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Start") + input').should('have.value', '')
     cy.get('label:contains("Stop") + input').should('have.value', '')
     cy.get('label:contains("Separators") + input').should('have.value', ',')
-    cy.get('label + input').eq(4).should('have.value', 'ou')  // Very fragile selector; sorry, future me!
+    cy.get('input[data-cy="second-mcq-separator"]').should('have.value', 'ou')
     cy.get('label:contains("Placeholder") + input').should('have.value', '')
     cy.get('button:contains("OK")').click()
     cy.get('div:contains("Below each item") > input').click()
@@ -918,7 +918,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Start") + input').should('have.value', '')
     cy.get('label:contains("Stop") + input').should('have.value', '')
     cy.get('label:contains("Separators") + input').should('have.value', 'ou')
-    cy.get('label + input').eq(4).should('have.value', '')  // Very fragile selector; sorry, future me!
+    cy.get('input[data-cy="second-mcq-separator"]').should('have.value', '')
     cy.get('label:contains("Placeholder") + input').should('have.value', '')
     cy.get('button:contains("OK")').click()
     cy.get('div:contains("Below each item") > input').click()

@@ -543,7 +543,7 @@ defineExpose({
       <div class="container-fluid">
         <BRow>
           <BCol><BLabeledInput :label="$t('choicesSettingsSeparators')" style="width: 8em" v-model="model.inProgress.settings.separator1" /></BCol>
-          <BCol><BLabeledInput label="&nbsp;" style="width: 8em" v-model="model.inProgress.settings.separator2" /></BCol>
+          <BCol><BLabeledInput label="&nbsp;" style="width: 8em" v-model="model.inProgress.settings.separator2" data-cy="second-mcq-separator" /></BCol>
         </BRow>
         <BRow>
           <BCol><BLabeledInput :label="$t('choicesSettingsStart')" style="width: 8em" v-model="model.inProgress.settings.start" /></BCol>
