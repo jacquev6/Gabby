@@ -269,9 +269,9 @@ class _Adapter:
                     yield renderable.Whitespace(kind="whitespace")
                 is_first_item = False
                 contents = list(self.adapt_wording_sentence(item_deltas, sentence_placeholders))
-                while contents[0].kind == "whitespace":
+                while len(contents) > 0 and contents[0].kind == "whitespace":
                     contents.pop(0)
-                while contents[-1].kind == "whitespace":
+                while len(contents) > 0 and contents[-1].kind == "whitespace":
                     contents.pop(-1)
                 yield from self.decorate_item(contents)
         else:
