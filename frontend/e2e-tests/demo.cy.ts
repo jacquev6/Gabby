@@ -922,8 +922,8 @@ describe('Gabby', () => {
     cy.get('label:contains("Placeholder") + input').should('have.value', '')
     cy.get('button:contains("OK")').click()
     cy.get('div:contains("Below each item") > input').click()
-    cy.get('div:contains("Delimited by") > input').eq(1).click().type('/')
-    cy.get('div:contains("Delimited by") > input').eq(0).should('be.checked')
+    cy.get('div:contains("Delimited by") > span > input').click().type('/')
+    cy.get('div:contains("Delimited by") > input').should('be.checked')
     screenshot('multiple-choices-below-separated-items', 'edit-1')
 
     cy.get('button:contains("Save then back")').click()

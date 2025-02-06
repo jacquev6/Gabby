@@ -393,3 +393,302 @@ class ExercisesResource:
 
 
 set_wrapper(Exercise, orm_wrapper_with_sqids(ExercisesResource.sqids))
+
+
+class SuggestedItemsSeparatorsTestCase(TransactionTestCase):
+    def setUp(self):
+        super().setUp()
+        self.project = self.create_model(Project, title="Project", description="")
+        self.textbook = self.create_model(Textbook, project=self.project, title="Textbook")
+
+    def assert_separators_equal(self, expected):
+        self.assertEqual(self.get_model(Textbook, self.textbook.id).suggested_items_separators, expected)
+
+    def test_empty_textbook(self):
+        self.assert_separators_equal([])
+
+    def test_textbook_with_irrelevant_exercises(self):
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="5",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items=None,
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="6",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "manual"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="7",
+        )
+        self.assert_separators_equal([])
+
+    def test_exercise_relevant_in_other_textbook(self):
+        other_textbook = self.create_model(Textbook, project=self.project, title="Other textbook")
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=other_textbook,
+            textbook_page=5,
+            number="5",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "separated", "separator": "#"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.assert_separators_equal([])
+
+    def test_textbook_with_one_relevant_exercise(self):
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="5",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "separated", "separator": "#"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.assert_separators_equal(["#"])
+
+    def test_textbook_with_several_relevant_exercises_with_identical_separator(self):
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="5",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "separated", "separator": "#"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="6",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "separated", "separator": "#"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="7",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "separated", "separator": "#"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.assert_separators_equal(["#"])
+
+    def test_textbook_with_several_relevant_exercises_with_different_separators(self):
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="5",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "separated", "separator": "#"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="6",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "separated", "separator": "|"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="7",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "separated", "separator": "*"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.assert_separators_equal(["#", "*", "|"])
+
+    def test_textbook_with_several_relevant_exercises_with_different_separators__in_other_order(self):
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="5",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "separated", "separator": "*"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="6",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "separated", "separator": "|"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="7",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "separated", "separator": "#"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.assert_separators_equal(["#", "*", "|"])

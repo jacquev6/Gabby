@@ -174,9 +174,11 @@ import { BRow, BCol, BLabeledInput, BButton, BLabeledCheckbox } from './opinion/
 import ExerciseFieldsForm, { type Model, cleanupModel } from './ExerciseFieldsForm.vue'
 import FloatingColorPicker from './FloatingColorPicker.vue'
 import OptionalInput from './OptionalInput.vue'
+import type { Textbook } from '$frontend/stores/api'
 
 
 defineProps<{
+  textbook: Textbook
   fields: InstanceType<typeof ExerciseFieldsForm>
 }>()
 
@@ -343,6 +345,9 @@ const isSeparatedProxy = computed({
     }
   },
 })
+
+const separatorFocused = ref(false)
+const separatorsHovered = ref(false)
 
 const hasMcqBesideProxy = computed({
   get() {
@@ -586,7 +591,31 @@ defineExpose({
     <BLabeledCheckbox v-model="isPunctuationProxy" :label="$t('itemsPunctuation')" />
     <BLabeledCheckbox v-model="isSentencesProxy" :label="$t('itemsSentences')" />
     <BLabeledCheckbox v-model="isManualProxy" :label="$t('itemsManual')" />
-    <BLabeledCheckbox v-model="isSeparatedProxy" :label="$t('itemsSeparated')"><input @click="isSeparatedProxy = true" v-model="settings.itemized.items.separator" style="width: 2em" /></BLabeledCheckbox>
+    <BLabeledCheckbox v-model="isSeparatedProxy" :label="$t('itemsSeparated')">
+      <span style="position: relative; display: inline-block">
+        <input
+          v-model="settings.itemized.items.separator"
+          style="width: 2em"
+          @focus="separatorFocused = true"
+          @click="isSeparatedProxy = true"
+          @blur="separatorFocused = false"
+        />
+        <div
+          v-if="(separatorFocused || separatorsHovered) && textbook.inCache && textbook.exists"
+          @pointerenter="separatorsHovered = true"
+          @pointerleave="separatorsHovered = false"
+          style="position: absolute; width: 2em; border: 1px solid grey; background: white; user-select: none;"
+        >
+          <p
+            v-for="value in textbook.attributes.suggestedItemsSeparators"
+            class="separatorSuggestion"
+            @click="settings.itemized.items.separator = value; separatorsHovered = false"
+          >
+            {{ value }}
+          </p>
+        </div>
+      </span>
+    </BLabeledCheckbox>
   </div>
   <p>{{ $t('effects') }}</p>
   <BLabeledCheckbox :label="$t('effectsSelectable')" v-model="settings.itemized.effects.isSelectable" />
@@ -670,5 +699,15 @@ div.ql-editor choices2-blot {
   border-top: 2px solid black;
   border-bottom: 2px solid black;
   background-color: lightgray;
+}
+
+p.separatorSuggestion {
+  margin: 0;
+  text-align: center;
+  cursor: pointer;
+}
+
+p.separatorSuggestion:hover {
+  background-color: lightblue;
 }
 </style>

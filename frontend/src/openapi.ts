@@ -1592,6 +1592,8 @@ export interface components {
       isbn: string | null;
       /** Publisher */
       publisher: string | null;
+      /** Suggesteditemsseparators */
+      suggestedItemsSeparators: string[];
       /** Title */
       title: string;
       /**

@@ -76,6 +76,7 @@ class Textbook(PydanticBase, CreatedUpdatedByAtMixin):
     project: Annotated[Project, Constant()]
     exercises: Annotated[list[Exercise], Computed()] = []
     sections: Annotated[list[Section], Computed()] = []
+    suggested_items_separators: Annotated[list[str], Computed()] = []
 
 
 class Section(PydanticBase, CreatedUpdatedByAtMixin):

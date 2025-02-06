@@ -3919,6 +3919,13 @@
             ],
             "title": "Publisher"
           },
+          "suggestedItemsSeparators": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Suggesteditemsseparators",
+            "type": "array"
+          },
           "title": {
             "title": "Title",
             "type": "string"
@@ -3946,7 +3953,8 @@
           "title",
           "publisher",
           "year",
-          "isbn"
+          "isbn",
+          "suggestedItemsSeparators"
         ],
         "title": "textbookOutputItemAttributes",
         "type": "object"

@@ -187,7 +187,7 @@ const parsedExercise = computed(() => {
 
     <template # v-if="exercise.inCache">
       <template v-if="exercise.exists && exerciseBelongsToTextbookPage">
-        <ExerciseColumns ref="exerciseColumns" mode="edit" :projectId :displayedPage :busy v-model="model">
+        <ExerciseColumns ref="exerciseColumns" mode="edit" :projectId :textbook :displayedPage :busy v-model="model">
           <template #exerciseFieldsButtons>
             <template v-if="exerciseCreationHistory.current === null">
               <p>

@@ -5,7 +5,7 @@ import deepEqual from 'deep-equal'
 
 import { BBusy, BButton, BLabeledCheckbox } from '$frontend/components/opinion/bootstrap'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
-import type { Exists, InCache, ParsedExercise } from '$frontend/stores/api'
+import type { Exists, InCache, Textbook, ParsedExercise } from '$frontend/stores/api'
 import { type Model, getParsed } from '$frontend/components/ExerciseFieldsForm.vue'
 import AdaptedExercise from './AdaptedExercise.vue'
 import ExerciseFieldsForm from '$frontend/components/ExerciseFieldsForm.vue'
@@ -19,6 +19,7 @@ import DistributionToggles from './DistributionToggles.vue'
 defineProps<{
   mode: 'edit' | 'create'
   projectId: string
+  textbook: Textbook
   displayedPage: number
   busy: boolean
 }>()
@@ -103,7 +104,7 @@ defineExpose({
                     <UndoRedoTool v-model="model" :reset="doResetUndoRedo" />
                   </template>
                   <template #adaptationDetails>
-                    <AdaptationDetailsFieldsForm ref="adaptationDetails" v-if="fields !== null" v-model="model" :fields/>
+                    <AdaptationDetailsFieldsForm ref="adaptationDetails" v-if="fields !== null" v-model="model" :textbook :fields/>
                   </template>
                   <template #basicFormatting>
                     <BasicFormattingTools v-if="fields !== null && adaptationDetails !== null" v-model="model" :fields :adaptationDetails />

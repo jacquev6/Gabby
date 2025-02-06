@@ -213,6 +213,9 @@ export async function create(project: Project, textbook: Textbook | null, model:
       project,
       textbook,
     },
+    {
+      include: ['textbook'],
+    },
   )
 }
 
@@ -228,6 +231,9 @@ export async function save(exercise: Exercise & InCache & Exists, model: Model) 
       rectangles: model.rectangles,
     },
     {},
+    {
+      include: ['textbook'],
+    },
   )
 }
 

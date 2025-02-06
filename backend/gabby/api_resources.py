@@ -282,6 +282,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "publisher": None, "year": None, "isbn": None,
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
+                    "suggestedItemsSeparators": [],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -331,6 +332,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "isbn": "9783161484100",
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
+                    "suggestedItemsSeparators": [],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -391,6 +393,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "isbn": "9783161484100",
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
+                    "suggestedItemsSeparators": [],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -427,6 +430,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "isbn": "9783161484100",
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
+                    "suggestedItemsSeparators": [],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -544,6 +548,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "isbn": "9783161484100",
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
+                        "suggestedItemsSeparators": [],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -564,6 +569,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "isbn": "9783161484101",
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
+                        "suggestedItemsSeparators": [],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -598,6 +604,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "isbn": "9783161484102",
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
+                        "suggestedItemsSeparators": [],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -652,6 +659,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "isbn": "9783161484100",
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
+                        "suggestedItemsSeparators": [],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -672,6 +680,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "isbn": "9783161484101",
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
+                        "suggestedItemsSeparators": [],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -813,6 +822,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "isbn": "9783161484102",
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
+                        "suggestedItemsSeparators": [],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -975,6 +985,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "isbn": "9783161484101",
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
+                    "suggestedItemsSeparators": [],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -1021,6 +1032,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "isbn": "9783161484100",
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
+                    "suggestedItemsSeparators": [],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -1460,6 +1472,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "publisher": None, "year": None, "isbn": None,
                         "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
+                        "suggestedItemsSeparators": [],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -1915,6 +1928,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "publisher": None, "year": None, "isbn": None,
                         "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
+                        "suggestedItemsSeparators": [],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -2026,6 +2040,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "publisher": None, "year": None, "isbn": None,
                         "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
+                        "suggestedItemsSeparators": [],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -2051,6 +2066,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "publisher": None, "year": None, "isbn": None,
                         "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][1]["attributes"]["updatedAt"],
+                        "suggestedItemsSeparators": [],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
