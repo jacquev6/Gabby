@@ -2,7 +2,8 @@
 import { computed, ref } from 'vue'
 import MultipleChoicesTools from './MultipleChoicesTools.vue'
 import ItemsTools from './ItemsTools.vue'
-import EffectsTools from './EffectsTools.vue'
+import SelectableEffectTools from './SelectableEffectTools.vue'
+import BoxedEffectTools from './BoxedEffectTools.vue'
 import { type Model } from './ExerciseFieldsForm.vue'
 import ExerciseFieldsForm from './ExerciseFieldsForm.vue'
 import type { Textbook } from '$frontend/stores/api'
@@ -59,7 +60,8 @@ const adaptationDetails = ref<InstanceType<typeof MultipleChoicesTools> | null>(
           </ExerciseToolsColumnSection>
           <ExerciseToolsColumnSection>
             <ItemsTools v-if="adaptationDetails !== null && fields !== null" v-model="model" :textbook :settings="adaptationDetails.settings" />
-            <EffectsTools v-if="adaptationDetails !== null && fields !== null" v-model="model" :settings="adaptationDetails.settings" />
+            <SelectableEffectTools v-if="adaptationDetails !== null && fields !== null" v-model="model" :settings="adaptationDetails.settings" />
+            <BoxedEffectTools v-if="adaptationDetails !== null && fields !== null" v-model="model" :settings="adaptationDetails.settings" />
           </ExerciseToolsColumnSection>
           <ExerciseToolsColumnSection>
             <template v-if="fields !== null && adaptationDetails !== null">

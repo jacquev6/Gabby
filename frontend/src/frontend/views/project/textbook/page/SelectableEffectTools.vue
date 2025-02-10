@@ -36,7 +36,6 @@ const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
       ></span>
     </span>
   </span>
-  <BLabeledCheckbox :label="$t('effectsBoxed')" v-model="settings.itemized.effects.isBoxed" />
 </template>
 
 <style scoped>
