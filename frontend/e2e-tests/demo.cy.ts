@@ -245,7 +245,7 @@ describe('Gabby', () => {
     notBusy()
 
     cy.focused().blur()
-    screenshot('select-words-with-custom-colors', 'edit-1')
+    screenshot('select-words-with-custom-colors', 'edit-1')  // @todo Stabilize: buttons for highlighting are enabled sometimes, and sometimes disabled
 
     cy.get('button:contains("Save then back")').click()
     visit('/project-xkopqm')
@@ -422,7 +422,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Separators") + input').should('have.value', '*')
     cy.get('input[data-cy="second-mcq-separator"]').should('have.value', '')
     cy.get('label:contains("Placeholder") + input').click().type('@@@', {delay: 0})
-    screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-5', {clearSel: false})
+    screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-5', {clearSel: false})  // @todo Stabilize: field "Placeholder to fill" has focus sometimes, and sometimes not
     cy.get('button:contains("OK")').click()
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-6')
 
