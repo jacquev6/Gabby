@@ -253,7 +253,7 @@ import deepCopy from 'deep-copy'
 
 import { BRow, BCol, BLabeledInput, BLabeledNumberInput, BLabeledSelect } from './opinion/bootstrap'
 import WysiwygEditor from './WysiwygEditor.vue'
-import { wysiwygBlots, wysiwygCompatibleFormats, wysiwygContagiousFormats } from './AdaptationDetailsFieldsForm.vue'
+import { wysiwygBlots, wysiwygCompatibleFormats, wysiwygContagiousFormats } from './AdaptationDetailsFieldsForm1.vue'
 import OptionalWysiwygEditor from './OptionalWysiwygEditor.vue'
 
 

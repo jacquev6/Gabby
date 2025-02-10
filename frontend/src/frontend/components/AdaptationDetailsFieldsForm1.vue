@@ -164,26 +164,10 @@ export const wysiwygBlots = [
 export const wysiwygContagiousFormats = ['choices2']
 
 export const wysiwygCompatibleFormats = [['bold', 'italic']]
-</script>
 
-<script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue'
-import deepEqual from 'deep-equal'
-
-import { BRow, BCol, BLabeledInput, BButton, BLabeledCheckbox } from './opinion/bootstrap'
-import ExerciseFieldsForm, { type Model, cleanupModel } from './ExerciseFieldsForm.vue'
-import FloatingColorPicker from './FloatingColorPicker.vue'
-import OptionalInput from './OptionalInput.vue'
-import type { Textbook } from '$frontend/stores/api'
-
-
-defineProps<{
-  textbook: Textbook
-  fields: InstanceType<typeof ExerciseFieldsForm>
-}>()
 
 // Colors provided by the client, in display order
-const allColorsForSelectableEffect = [
+export const allColorsForSelectableEffect = [
   '#ffff00',  // yellow
   '#ffcf4c',  // orange
   '#ff8084',  // red
@@ -198,6 +182,45 @@ const allColorsForSelectableEffect = [
   '#000000',  // black
 ]
 
+export interface Settings {
+  itemized: {
+    items: {
+      isLetters: boolean
+      isWords: boolean
+      isPunctuation: boolean
+      isSentences: boolean
+      isManual: boolean
+      isSeparated: boolean
+      separator: string
+    }
+    effects: {
+      isSelectable: boolean
+      selectable: {
+        colorsCount: number
+        allColors: string[]
+      }
+      isBoxed: boolean
+      hasMcqBeside: boolean
+      hasMcqBelow: boolean
+    }
+  }
+}
+</script>
+
+<script setup lang="ts">
+import { computed, reactive, ref, watch } from 'vue'
+import deepEqual from 'deep-equal'
+
+import { BRow, BCol, BLabeledInput, BButton, BLabeledCheckbox } from './opinion/bootstrap'
+import ExerciseFieldsForm, { type Model, cleanupModel } from './ExerciseFieldsForm.vue'
+import type { Textbook } from '$frontend/stores/api'
+
+
+defineProps<{
+  textbook: Textbook
+  fields: InstanceType<typeof ExerciseFieldsForm>
+}>()
+
 // Keep the 'style' section below consistent with the length of this array
 const defaultColorsForSelectableEffect = [
   allColorsForSelectableEffect[0],
@@ -210,25 +233,8 @@ const defaultColorsForSelectableEffect = [
 const model_ = defineModel<Model>({required: true})
 model = model_
 
-const fillWithFreeTextPlaceholder = computed({
-  get() {
-    if (model.value.adaptation.placeholder_for_fill_with_free_text !== null) {
-      return model.value.adaptation.placeholder_for_fill_with_free_text
-    } else {
-      return ''
-    }
-  },
-  set(value: string) {
-    if (value === '') {
-      model.value.adaptation.placeholder_for_fill_with_free_text = null
-    } else {
-      model.value.adaptation.placeholder_for_fill_with_free_text = value
-    }
-  },
-})
-
 // Keep settings in memory even when they are not used, so that they are not reset when used again.
-const settings = reactive({
+const settings = reactive<Settings>({
   itemized: {
     items: {
       isLetters: false,
@@ -251,103 +257,6 @@ const settings = reactive({
     },
   },
 })
-
-const isLettersProxy = computed({
-  get() {
-    return settings.itemized.items.isLetters
-  },
-  set(value: boolean) {
-    settings.itemized.items.isLetters = value
-    if (value) {
-      settings.itemized.items.isWords = false
-      settings.itemized.items.isPunctuation = false
-      settings.itemized.items.isSentences = false
-      settings.itemized.items.isManual = false
-      settings.itemized.items.isSeparated = false
-    }
-  },
-})
-
-const isWordsProxy = computed({
-  get() {
-    return settings.itemized.items.isWords
-  },
-  set(value: boolean) {
-    settings.itemized.items.isWords = value
-    if (value) {
-      settings.itemized.items.isLetters = false
-      settings.itemized.items.isSentences = false
-      settings.itemized.items.isManual = false
-      settings.itemized.items.isSeparated = false
-    }
-  },
-})
-
-const isPunctuationProxy = computed({
-  get() {
-    return settings.itemized.items.isPunctuation
-  },
-  set(value: boolean) {
-    settings.itemized.items.isPunctuation = value
-    if (value) {
-      settings.itemized.items.isLetters = false
-      settings.itemized.items.isSentences = false
-      settings.itemized.items.isManual = false
-      settings.itemized.items.isSeparated = false
-    }
-  },
-})
-
-const isSentencesProxy = computed({
-  get() {
-    return settings.itemized.items.isSentences
-  },
-  set(value: boolean) {
-    settings.itemized.items.isSentences = value
-    if (value) {
-      settings.itemized.items.isLetters = false
-      settings.itemized.items.isWords = false
-      settings.itemized.items.isPunctuation = false
-      settings.itemized.items.isManual = false
-      settings.itemized.items.isSeparated = false
-    }
-  },
-})
-
-const isManualProxy = computed({
-  get() {
-    return settings.itemized.items.isManual
-  },
-  set(value: boolean) {
-    settings.itemized.items.isManual = value
-    if (value) {
-      settings.itemized.items.isLetters = false
-      settings.itemized.items.isWords = false
-      settings.itemized.items.isPunctuation = false
-      settings.itemized.items.isSentences = false
-      settings.itemized.items.isSeparated = false
-    }
-  },
-})
-
-const isSeparatedProxy = computed({
-  get() {
-    return settings.itemized.items.isSeparated
-  },
-  set(value: boolean) {
-    settings.itemized.items.isSeparated = value
-    if (value) {
-      settings.itemized.items.isLetters = false
-      settings.itemized.items.isWords = false
-      settings.itemized.items.isPunctuation = false
-      settings.itemized.items.isSentences = false
-      settings.itemized.items.isManual = false
-    }
-  },
-})
-
-const separatorFocused = ref(false)
-const separatorsHovered = ref(false)
 
 const hasMcqBesideProxy = computed({
   get() {
@@ -526,10 +435,8 @@ watch(
   },
 )
 
-const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
-
 defineExpose({
-  hasManualItems: computed(() => settings.itemized.items.isManual),
+  settings,
 })
 </script>
 
@@ -552,15 +459,6 @@ defineExpose({
     </template>
   </ContextMenu>
 
-  <FloatingColorPicker
-    v-for="i in settings.itemized.effects.selectable.allColors.length"
-    ref="colorPickers"
-    v-model="settings.itemized.effects.selectable.allColors[i - 1]"
-    :colors="allColorsForSelectableEffect"
-    backdropCovers1="#left-col-2"
-    backdropCovers2="#gutter-2"
-  />
-
   <BButton primary sm @click="model.inProgress = {kind: 'multipleChoicesCreation'}">{{ $t('multipleChoicesButton') }}</BButton>
   <div style="padding-left: 1em; padding-top: 0.5em;">
     <BLabeledCheckbox :label="$t('alwaysShowMultipleChoices')" v-model="model.adaptation.show_mcq_choices_by_default" />
@@ -568,86 +466,7 @@ defineExpose({
     <BLabeledCheckbox :label="$t('multipleChoicesBesideEachItem')" v-model="hasMcqBesideProxy" />
     <BLabeledCheckbox :label="$t('multipleChoicesBelowEachItem')" v-model="hasMcqBelowProxy" />
   </div>
-
-  <hr />
-
-  <OptionalInput v-model="fillWithFreeTextPlaceholder" :label="$t('placeholderForFreeText')" />
-
-  <hr />
-
-  <div class="mb-3">
-    <p class="form-label">{{ $t('items') }}</p>
-    <BLabeledCheckbox v-model="isLettersProxy" :label="$t('itemsLetters')" />
-    <BLabeledCheckbox v-model="isWordsProxy" :label="$t('itemsWords')" />
-    <BLabeledCheckbox v-model="isPunctuationProxy" :label="$t('itemsPunctuation')" />
-    <BLabeledCheckbox v-model="isSentencesProxy" :label="$t('itemsSentences')" />
-    <BLabeledCheckbox v-model="isManualProxy" :label="$t('itemsManual')" />
-    <BLabeledCheckbox v-model="isSeparatedProxy" :label="$t('itemsSeparated')">
-      <span style="position: relative; display: inline-block">
-        <input
-          v-model="settings.itemized.items.separator"
-          style="width: 2em"
-          @focus="separatorFocused = true"
-          @click="isSeparatedProxy = true"
-          @blur="separatorFocused = false"
-        />
-        <div
-          v-if="(separatorFocused || separatorsHovered) && textbook.inCache && textbook.exists"
-          @pointerenter="separatorsHovered = true"
-          @pointerleave="separatorsHovered = false"
-          style="position: absolute; width: 2em; border: 1px solid grey; background: white; user-select: none;"
-        >
-          <p
-            v-for="value in textbook.attributes.suggestedItemsSeparators"
-            class="separatorSuggestion"
-            @click="settings.itemized.items.separator = value; separatorsHovered = false"
-          >
-            {{ value }}
-          </p>
-        </div>
-      </span>
-    </BLabeledCheckbox>
-  </div>
-  <p>{{ $t('effects') }}</p>
-  <BLabeledCheckbox :label="$t('effectsSelectable')" v-model="settings.itemized.effects.isSelectable" />
-  <span class="maybe-usable-colors-container">
-    <span v-for="i in settings.itemized.effects.selectable.allColors.length" :class="settings.itemized.effects.isSelectable && i - 1 < settings.itemized.effects.selectable.colorsCount ? 'usable-colors-container' : 'unusable-colors-container'">
-      <span
-        class="usable-colors-button"
-        :style="{backgroundColor: settings.itemized.effects.selectable.allColors[i - 1]}"
-        :data-cy-colors="i"
-        @click="settings.itemized.effects.isSelectable = true; settings.itemized.effects.selectable.colorsCount = i"
-        @contextmenu.prevent="(event) => colorPickers[i - 1].show(event.target as HTMLElement)"
-      ></span>
-    </span>
-  </span>
-  <BLabeledCheckbox :label="$t('effectsBoxed')" v-model="settings.itemized.effects.isBoxed" />
 </template>
-
-<style scoped>
-span.maybe-usable-colors-container {
-  display: block flow-root;
-  line-height: 0;
-}
-
-span.usable-colors-container {
-  display: inline flow-root;
-  background-color: var(--bs-primary);
-}
-
-span.unusable-colors-container {
-  display: inline flow-root;
-  background-color: var(--bs-secondary);
-}
-
-span.usable-colors-button {
-  display: inline flow-root;
-  margin: 0.25em;
-  width: 1.25em;
-  height: 1.25em;
-  cursor: pointer;
-}
-</style>
 
 <style>
 div.ql-editor choice-blot {
