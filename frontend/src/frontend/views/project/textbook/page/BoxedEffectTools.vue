@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { BLabeledCheckbox } from '../../../../components/opinion/bootstrap'
-import type { Settings } from './MultipleChoicesTools.vue'
+import type { Settings } from './ExerciseToolsColumn.vue'
 
 
 defineProps<{

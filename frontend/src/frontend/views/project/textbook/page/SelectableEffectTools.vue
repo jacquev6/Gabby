@@ -1,9 +1,47 @@
+<script lang="ts">
+import { InlineBlot } from '$frontend/components/Quill.vue'
+
+// Colors provided by the client, in display order
+export const allColorsForSelectableEffect = [
+  '#ffff00',  // yellow
+  '#ffcf4c',  // orange
+  '#ff8084',  // red
+  '#ffc0cb',  // pink
+  '#d49cff',  // purple
+  '#8177ff',  // dark blue
+  '#bbbbff',  // light blue
+  '#bbffbb',  // light green
+  '#68e495',  // dark green
+  '#632f2b',  // brown
+  '#bbbbbb',  // grey
+  '#000000',  // black
+]
+
+
+export class SelBlot extends InlineBlot {
+  static override blotName = 'sel'
+  static override tagName = 'sel-blot'
+
+  static override create(s: number) {
+    let node = super.create()
+    node.setAttribute('data-sel', s.toString())
+    return node
+  }
+
+  static override formats(node: HTMLElement) {
+    const data = node.getAttribute('data-sel')
+    console.assert(data !== null)
+    return Number.parseInt(data)
+  }
+}
+</script>
+
 <script setup lang="ts">
 import { ref } from 'vue'
 
 import { BLabeledCheckbox } from '../../../../components/opinion/bootstrap'
 import FloatingColorPicker from '$frontend/components/FloatingColorPicker.vue'
-import { allColorsForSelectableEffect, type Settings } from './MultipleChoicesTools.vue'
+import { type Settings } from './ExerciseToolsColumn.vue'
 
 
 defineProps<{

@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 
 import { BLabeledCheckbox } from '../../../../components/opinion/bootstrap'
 import type { Textbook } from '$frontend/stores/api'
-import type { Settings } from './MultipleChoicesTools.vue'
+import type { Settings } from './ExerciseToolsColumn.vue'
 
 
 const props = defineProps<{

@@ -2,31 +2,13 @@
 import Quill from 'quill/core'
 
 import { InlineBlot, type Model as Deltas } from '$frontend/components/Quill.vue'
-import { basicBlots } from '$frontend/components/WysiwygEditor.vue'
 import ContextMenu from '$frontend/components/ContextMenu.vue'
 
-
-class SelBlot extends InlineBlot {
-  static override blotName = 'sel'
-  static override tagName = 'sel-blot'
-
-  static override create(s: number) {
-    let node = super.create()
-    node.setAttribute('data-sel', s.toString())
-    return node
-  }
-
-  static override formats(node: HTMLElement) {
-    const data = node.getAttribute('data-sel')
-    console.assert(data !== null)
-    return Number.parseInt(data)
-  }
-}
 
 let model = ref<Model>(null as any/* OK: 'model' is assigned a value in "script setup" below */ as Model)
 const choices2ContextMenu = ref<InstanceType<typeof ContextMenu> | null>(null)
 
-class Choices2Blot extends InlineBlot {
+export class Choices2Blot extends InlineBlot {
   static override blotName = 'choices2'
   static override tagName = 'choices2-blot'
 
@@ -148,295 +130,48 @@ function doneEditingChoices2() {
   }
   model.value.inProgress = {kind: 'nothing'}
 }
-
-class ManualItemBlot extends InlineBlot {
-  static override blotName = 'manual-item'
-  static override tagName = 'manual-item-blot'
-}
-
-export const wysiwygBlots = [
-  ...basicBlots,
-  SelBlot,
-  Choices2Blot,
-  ManualItemBlot,
-]
-
-export const wysiwygContagiousFormats = ['choices2']
-
-export const wysiwygCompatibleFormats = [['bold', 'italic']]
-
-
-// Colors provided by the client, in display order
-export const allColorsForSelectableEffect = [
-  '#ffff00',  // yellow
-  '#ffcf4c',  // orange
-  '#ff8084',  // red
-  '#ffc0cb',  // pink
-  '#d49cff',  // purple
-  '#8177ff',  // dark blue
-  '#bbbbff',  // light blue
-  '#bbffbb',  // light green
-  '#68e495',  // dark green
-  '#632f2b',  // brown
-  '#bbbbbb',  // grey
-  '#000000',  // black
-]
-
-export interface Settings {
-  itemized: {
-    items: {
-      isLetters: boolean
-      isWords: boolean
-      isPunctuation: boolean
-      isSentences: boolean
-      isManual: boolean
-      isSeparated: boolean
-      separator: string
-    }
-    effects: {
-      isSelectable: boolean
-      selectable: {
-        colorsCount: number
-        allColors: string[]
-      }
-      isBoxed: boolean
-      hasMcqBeside: boolean
-      hasMcqBelow: boolean
-    }
-  }
-}
 </script>
 
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue'
-import deepEqual from 'deep-equal'
+import { computed, ref, watch } from 'vue'
 
 import { BRow, BCol, BLabeledInput, BButton, BLabeledCheckbox } from '../../../../components/opinion/bootstrap'
-import ExerciseFieldsForm, { type Model, cleanupModel } from './ExerciseFieldsForm.vue'
+import ExerciseFieldsForm, { type Model } from './ExerciseFieldsForm.vue'
 import type { Textbook } from '$frontend/stores/api'
+import type { Settings } from './ExerciseToolsColumn.vue'
 
 
-defineProps<{
+const props = defineProps<{
   textbook: Textbook
   fields: InstanceType<typeof ExerciseFieldsForm>
+  settings: Settings
 }>()
-
-// Keep the 'style' section below consistent with the length of this array
-const defaultColorsForSelectableEffect = [
-  allColorsForSelectableEffect[0],
-  allColorsForSelectableEffect[3],
-  allColorsForSelectableEffect[6],
-  allColorsForSelectableEffect[7],
-  allColorsForSelectableEffect[10],
-]
 
 const model_ = defineModel<Model>({required: true})
 model = model_
 
-// Keep settings in memory even when they are not used, so that they are not reset when used again.
-const settings = reactive<Settings>({
-  itemized: {
-    items: {
-      isLetters: false,
-      isWords: false,
-      isPunctuation: false,
-      isSentences: false,
-      isManual: false,
-      isSeparated: false,
-      separator: '',
-    },
-    effects: {
-      isSelectable: false,
-      selectable: {
-        colorsCount: 2,
-        allColors: [...defaultColorsForSelectableEffect],
-      },
-      isBoxed: false,
-      hasMcqBeside: false,
-      hasMcqBelow: false,
-    },
-  },
-})
-
 const hasMcqBesideProxy = computed({
   get() {
-    return settings.itemized.effects.hasMcqBeside
+    return props.settings.itemized.effects.hasMcqBeside
   },
   set(value: boolean) {
-    settings.itemized.effects.hasMcqBeside = value
+    props.settings.itemized.effects.hasMcqBeside = value
     if (value) {
-      settings.itemized.effects.hasMcqBelow = false
+      props.settings.itemized.effects.hasMcqBelow = false
     }
   },
 })
 
 const hasMcqBelowProxy = computed({
   get() {
-    return settings.itemized.effects.hasMcqBelow
+    return props.settings.itemized.effects.hasMcqBelow
   },
   set(value: boolean) {
-    settings.itemized.effects.hasMcqBelow = value
+    props.settings.itemized.effects.hasMcqBelow = value
     if (value) {
-      settings.itemized.effects.hasMcqBeside = false
+      props.settings.itemized.effects.hasMcqBeside = false
     }
   },
-})
-
-watch(
-  model,
-  model => {
-    if (model.adaptation.items === null) {
-      settings.itemized.items.isLetters = false
-      settings.itemized.items.isWords = false
-      settings.itemized.items.isPunctuation = false
-      settings.itemized.items.isSentences = false
-      settings.itemized.items.isManual = false
-      settings.itemized.items.isSeparated = false
-      settings.itemized.items.separator = ''
-    } else if (model.adaptation.items.kind === 'characters') {
-        settings.itemized.items.isLetters = model.adaptation.items.letters
-        settings.itemized.items.isWords = false
-        settings.itemized.items.isPunctuation = false
-        settings.itemized.items.isSentences = false
-        settings.itemized.items.isManual = false
-        settings.itemized.items.isSeparated = false
-        settings.itemized.items.separator = ''
-    } else if (model.adaptation.items.kind === 'tokens') {
-      settings.itemized.items.isLetters = false
-      settings.itemized.items.isWords = model.adaptation.items.words
-      settings.itemized.items.isPunctuation = model.adaptation.items.punctuation
-      settings.itemized.items.isSentences = false
-      settings.itemized.items.isManual = false
-      settings.itemized.items.isSeparated = false
-      settings.itemized.items.separator = ''
-    } else if (model.adaptation.items.kind === 'manual') {
-      settings.itemized.items.isLetters = false
-      settings.itemized.items.isWords = false
-      settings.itemized.items.isPunctuation = false
-      settings.itemized.items.isSentences = false
-      settings.itemized.items.isManual = true
-      settings.itemized.items.isSeparated = false
-      settings.itemized.items.separator = ''
-    } else if (model.adaptation.items.kind === 'sentences') {
-      settings.itemized.items.isLetters = false
-      settings.itemized.items.isWords = false
-      settings.itemized.items.isPunctuation = false
-      settings.itemized.items.isSentences = true
-      settings.itemized.items.isManual = false
-      settings.itemized.items.isSeparated = false
-      settings.itemized.items.separator = ''
-    } else if (model.adaptation.items.kind === 'separated') {
-      settings.itemized.items.isLetters = false
-      settings.itemized.items.isWords = false
-      settings.itemized.items.isPunctuation = false
-      settings.itemized.items.isSentences = false
-      settings.itemized.items.isManual = false
-      settings.itemized.items.isSeparated = true
-      settings.itemized.items.separator = model.adaptation.items.separator
-    } else {
-      console.assert(false, ((items: never) => items)(model.adaptation.items))
-    }
-
-    if (model.adaptation.items_are_selectable === null) {
-      settings.itemized.effects.isSelectable = false
-      settings.itemized.effects.selectable.colorsCount = 2
-      settings.itemized.effects.selectable.allColors.splice(0, settings.itemized.effects.selectable.allColors.length, ...defaultColorsForSelectableEffect)
-    } else {
-      settings.itemized.effects.isSelectable = true
-      settings.itemized.effects.selectable.colorsCount = model.adaptation.items_are_selectable.colors.length
-      settings.itemized.effects.selectable.allColors.splice(
-        0,
-        model.adaptation.items_are_selectable.colors.length,
-        ...model.adaptation.items_are_selectable.colors
-      )
-    }
-    settings.itemized.effects.isBoxed = model.adaptation.items_are_boxed
-    settings.itemized.effects.hasMcqBeside = model.adaptation.items_have_mcq_beside
-    settings.itemized.effects.hasMcqBelow = model.adaptation.items_have_mcq_below
-  },
-  {
-    deep: true,
-    immediate: true,
-  },
-)
-
-watch(
-  settings,
-  () => {
-    let isBoxed = settings.itemized.effects.isBoxed
-    let selectable = (() => {
-      if (settings.itemized.effects.isSelectable) {
-        return  {
-          colors: settings.itemized.effects.selectable.allColors.slice(0, settings.itemized.effects.selectable.colorsCount),
-        }
-      } else {
-        return null
-      }
-    })()
-    let hasMcqBeside = settings.itemized.effects.hasMcqBeside
-    let hasMcqBelow = settings.itemized.effects.hasMcqBelow
-
-    const items = (() => {
-      if (isBoxed || selectable !== null || hasMcqBeside || hasMcqBelow) {
-        if (settings.itemized.items.isLetters) {
-          return {kind: 'characters' as const, letters: true}
-        } else if (settings.itemized.items.isWords || settings.itemized.items.isPunctuation) {
-          return {kind: 'tokens' as const, words: settings.itemized.items.isWords, punctuation: settings.itemized.items.isPunctuation}
-        } else if (settings.itemized.items.isSentences) {
-          return {kind: 'sentences' as const}
-        } else if (settings.itemized.items.isManual) {
-          return {kind: 'manual' as const}
-        } else if (settings.itemized.items.isSeparated && settings.itemized.items.separator !== '') {
-          return {kind: 'separated' as const, separator: settings.itemized.items.separator}
-        } else {
-          return null
-        }
-      } else {
-        return null
-      }
-    })()
-
-    if (items === null) {
-      isBoxed = false
-      selectable = null
-      hasMcqBeside = false
-      hasMcqBelow = false
-    }
-
-    // Break the infinite 'watch' loop by setting the model only if the value has actually changed.
-    let hasChanged = false
-    if (!deepEqual(items, model.value.adaptation.items)) {
-      hasChanged = true
-      model.value.adaptation.items = items
-    }
-    if (!deepEqual(selectable, model.value.adaptation.items_are_selectable)) {
-      hasChanged = true
-      model.value.adaptation.items_are_selectable = selectable
-    }
-    if (isBoxed !== model.value.adaptation.items_are_boxed) {
-      hasChanged = true
-      model.value.adaptation.items_are_boxed = isBoxed
-    }
-    if (hasMcqBeside !== model.value.adaptation.items_have_mcq_beside) {
-      hasChanged = true
-      model.value.adaptation.items_have_mcq_beside = hasMcqBeside
-    }
-    if (hasMcqBelow !== model.value.adaptation.items_have_mcq_below) {
-      hasChanged = true
-      model.value.adaptation.items_have_mcq_below = hasMcqBelow
-    }
-
-    if (hasChanged) {
-      cleanupModel(model.value)
-    }
-  },
-  {
-    deep: true,
-  },
-)
-
-defineExpose({
-  settings,
 })
 </script>
 
