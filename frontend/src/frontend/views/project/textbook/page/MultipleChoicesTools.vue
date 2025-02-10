@@ -145,6 +145,7 @@ const props = defineProps<{
   textbook: Textbook
   fields: InstanceType<typeof ExerciseFieldsForm>
   settings: Settings
+  hasItems: boolean
 }>()
 
 const model_ = defineModel<Model>({required: true})
@@ -198,8 +199,8 @@ const hasMcqBelowProxy = computed({
   <BButton primary sm @click="model.inProgress = {kind: 'multipleChoicesCreation'}">{{ $t('multipleChoicesButton') }}</BButton>
   <div style="padding-left: 1em; padding-top: 0.5em;">
     <BLabeledCheckbox :label="$t('showArrowBeforeMultipleChoices')" v-model="model.adaptation.show_arrow_before_mcq_fields" />
-    <BLabeledCheckbox :label="$t('multipleChoicesBesideEachItem')" v-model="hasMcqBesideProxy" />
-    <BLabeledCheckbox :label="$t('multipleChoicesBelowEachItem')" v-model="hasMcqBelowProxy" />
+    <BLabeledCheckbox :label="$t('multipleChoicesBesideEachItem')" v-model="hasMcqBesideProxy" :disabled="!hasItems" />
+    <BLabeledCheckbox :label="$t('multipleChoicesBelowEachItem')" v-model="hasMcqBelowProxy" :disabled="!hasItems" />
   </div>
 </template>
 

@@ -46,6 +46,7 @@ import { type Settings } from './ExerciseToolsColumn.vue'
 
 defineProps<{
   settings: Settings
+  disabled: boolean
 }>()
 
 const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
@@ -61,12 +62,12 @@ const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
     backdropCovers2="#gutter-2"
   />
 
-  <BLabeledCheckbox :label="$t('effectsSelectable')" v-model="settings.itemized.effects.isSelectable" />
+  <BLabeledCheckbox :label="$t('effectsSelectable')" v-model="settings.itemized.effects.isSelectable" :disabled />
   <span class="maybe-usable-colors-container">
     <span v-for="i in settings.itemized.effects.selectable.allColors.length" :class="settings.itemized.effects.isSelectable && i - 1 < settings.itemized.effects.selectable.colorsCount ? 'usable-colors-container' : 'unusable-colors-container'">
       <span
         class="usable-colors-button"
-        :style="{backgroundColor: settings.itemized.effects.selectable.allColors[i - 1]}"
+        :style="{backgroundColor: settings.itemized.effects.selectable.allColors[i - 1], cursor: disabled ? 'default' : 'pointer'}"
         :data-cy-colors="i"
         @click="settings.itemized.effects.isSelectable = true; settings.itemized.effects.selectable.colorsCount = i"
         @contextmenu.prevent="(event) => colorPickers[i - 1].show(event.target as HTMLElement)"
@@ -96,6 +97,5 @@ span.usable-colors-button {
   margin: 0.25em;
   width: 1.25em;
   height: 1.25em;
-  cursor: pointer;
 }
 </style>

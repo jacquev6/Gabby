@@ -283,12 +283,17 @@ describe('Gabby', () => {
     cy.get('@button4').click()
     cy.get('@instructions').type(' plain', {delay: 0})
 
+    cy.get(':contains("Words") > input').should('be.checked')
+    cy.get(':contains("Selectable") > input').should('be.checked')
+
     cy.get('sel-blot[data-sel="1"]').should('exist')
     cy.get('sel-blot[data-sel="2"]').should('exist')
     cy.get('sel-blot[data-sel="3"]').should('exist')
     cy.get('sel-blot[data-sel="4"]').should('exist')
 
     cy.get(':contains("Selectable") > input').uncheck()
+    cy.get(':contains("Words") > input').should('be.checked')
+    cy.get(':contains("Selectable") > input').should('not.be.checked')
 
     cy.get('sel-blot[data-sel="1"]').should('not.exist')
     cy.get('sel-blot[data-sel="2"]').should('not.exist')
@@ -296,6 +301,8 @@ describe('Gabby', () => {
     cy.get('sel-blot[data-sel="4"]').should('not.exist')
 
     cy.get(':contains("Selectable") > input').check()
+    cy.get(':contains("Words") > input').should('be.checked')
+    cy.get(':contains("Selectable") > input').should('be.checked')
 
     cy.get('sel-blot[data-sel="1"]').should('not.exist')
     cy.get('sel-blot[data-sel="2"]').should('not.exist')
@@ -306,12 +313,19 @@ describe('Gabby', () => {
   it('removes "sel" blots when "Selectable" is unchecked, on existing exercise', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/exercise-vodhqn')
 
+    cy.get(':contains("Words") > input').should('be.checked')
+    cy.get(':contains("Punctuation") > input').should('be.checked')
+    cy.get(':contains("Selectable") > input').should('be.checked')
+
     cy.get('sel-blot[data-sel="1"]').should('exist')
     cy.get('sel-blot[data-sel="2"]').should('exist')
     cy.get('sel-blot[data-sel="3"]').should('exist')
     cy.get('sel-blot[data-sel="4"]').should('exist')
 
     cy.get(':contains("Selectable") > input').uncheck()
+    cy.get(':contains("Words") > input').should('be.checked')
+    cy.get(':contains("Punctuation") > input').should('be.checked')
+    cy.get(':contains("Selectable") > input').should('not.be.checked')
 
     cy.get('sel-blot[data-sel="1"]').should('not.exist')
     cy.get('sel-blot[data-sel="2"]').should('not.exist')
@@ -319,6 +333,9 @@ describe('Gabby', () => {
     cy.get('sel-blot[data-sel="4"]').should('not.exist')
 
     cy.get(':contains("Selectable") > input').check()
+    cy.get(':contains("Words") > input').should('be.checked')
+    cy.get(':contains("Punctuation") > input').should('be.checked')
+    cy.get(':contains("Selectable") > input').should('be.checked')
 
     cy.get('sel-blot[data-sel="1"]').should('not.exist')
     cy.get('sel-blot[data-sel="2"]').should('not.exist')

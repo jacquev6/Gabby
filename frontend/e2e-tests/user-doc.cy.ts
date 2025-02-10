@@ -130,11 +130,11 @@ describe('Gabby', () => {
     cy.screenshot('project-textbook-page-exercise/tools', {clip: {x: 530, y: 40, width: 270, height: 260}})
 
     cy.get('label:contains("Type d\'adaptation") + select').select('generic')
+    cy.get('label:contains("Mots")').click()
     cy.get('div:contains("Cochable") >input').check()
     notBusy()
     cy.screenshot('project-textbook-page-exercise/project-textbook-page-exercise', {clip: {x: 0, y: 0, width: 1000, height: 330}})  // @todo Stabilize: sometimes the "Cancel" button is enabled and sometimes not
 
-    cy.get('label:contains("Mots")').click()
     cy.get('span[data-cy-colors="3"]').click()
     notBusy()
     cy.get('span.maybe-usable-colors-container').screenshot('project-textbook-page-exercise/select-things-usable-colors')

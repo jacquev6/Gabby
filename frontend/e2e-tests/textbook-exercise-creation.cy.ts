@@ -138,4 +138,49 @@ describe('Gabby', () => {
     cy.get('p.separatorSuggestion:contains("*")').should('exist')
     cy.get('p.separatorSuggestion:contains("/")').should('exist')
   })
+
+  it('unchecks incompatible items', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
+
+    for (const tokens of ['Words', 'Punctuation']) {
+      const items = ['Letters', tokens, 'Sentences', 'Delimited by', 'Manual selection']
+      for (const item1 of items) {
+        for (const item2 of items.slice(items.indexOf(item1) + 1)) {
+          cy.get(`div:contains("${item1}") > input`).should('not.be.checked').check().should('be.checked')
+          cy.get(`div:contains("${item2}") > input`).should('not.be.checked').check().should('be.checked')
+          cy.get(`div:contains("${item1}") > input`).should('not.be.checked').check().should('be.checked')
+          cy.get(`div:contains("${item2}") > input`).should('not.be.checked').check().should('be.checked')
+          cy.get(`div:contains("${item1}") > input`).should('not.be.checked').check().should('be.checked')
+          cy.get(`div:contains("${item2}") > input`).should('not.be.checked')
+          cy.get(`div:contains("${item1}") > input`).should('be.checked').uncheck().should('not.be.checked')
+        }
+      }
+    }
+  })
+
+  it('enables effects when items are selected', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
+
+    cy.get('div:contains("Beside each item") > input').should('be.disabled')
+    cy.get('div:contains("Below each item") > input').should('be.disabled')
+    cy.get('div:contains("Selectable") > input').should('be.disabled')
+    cy.get('div:contains("Boxed") > input').should('be.disabled')
+    cy.get('div:contains("1 item per line") > input').should('be.disabled')
+
+    cy.get('div:contains("Words") > input').check()
+
+    cy.get('div:contains("Beside each item") > input').should('be.enabled')
+    cy.get('div:contains("Below each item") > input').should('be.enabled').check()
+    cy.get('div:contains("Selectable") > input').should('be.enabled').check()
+    cy.get('div:contains("Boxed") > input').should('be.enabled').check()
+    cy.get('div:contains("1 item per line") > input').should('be.enabled').check()
+
+    cy.get('div:contains("Words") > input').uncheck()
+
+    cy.get('div:contains("Beside each item") > input').should('be.disabled').should('not.be.checked')
+    cy.get('div:contains("Below each item") > input').should('be.disabled').should('not.be.checked')
+    cy.get('div:contains("Selectable") > input').should('be.disabled').should('not.be.checked')
+    cy.get('div:contains("Boxed") > input').should('be.disabled').should('not.be.checked')
+    cy.get('div:contains("1 item per line") > input').should('be.disabled') // @todo(NOW) .should('not.be.checked')
+  })
 })

@@ -105,6 +105,24 @@ const settings = reactive<Settings>({
   },
 })
 
+const items = computed(() => {
+  if (settings.itemized.items.isLetters) {
+    return {kind: 'characters' as const, letters: true}
+  } else if (settings.itemized.items.isWords || settings.itemized.items.isPunctuation) {
+    return {kind: 'tokens' as const, words: settings.itemized.items.isWords, punctuation: settings.itemized.items.isPunctuation}
+  } else if (settings.itemized.items.isSentences) {
+    return {kind: 'sentences' as const}
+  } else if (settings.itemized.items.isManual) {
+    return {kind: 'manual' as const}
+  } else if (settings.itemized.items.isSeparated && settings.itemized.items.separator !== '') {
+    return {kind: 'separated' as const, separator: settings.itemized.items.separator}
+  } else {
+    return null
+  }
+})
+
+const hasItems = computed(() => items.value !== null)
+
 const fillWithFreeTextPlaceholder = computed({
   get() {
     if (model.value.adaptation.placeholder_for_fill_with_free_text !== null) {
@@ -122,7 +140,6 @@ const fillWithFreeTextPlaceholder = computed({
   },
 })
 
-
 watch(
   model,
   model => {
@@ -135,13 +152,13 @@ watch(
       settings.itemized.items.isSeparated = false
       settings.itemized.items.separator = ''
     } else if (model.adaptation.items.kind === 'characters') {
-        settings.itemized.items.isLetters = model.adaptation.items.letters
-        settings.itemized.items.isWords = false
-        settings.itemized.items.isPunctuation = false
-        settings.itemized.items.isSentences = false
-        settings.itemized.items.isManual = false
-        settings.itemized.items.isSeparated = false
-        settings.itemized.items.separator = ''
+      settings.itemized.items.isLetters = model.adaptation.items.letters
+      settings.itemized.items.isWords = false
+      settings.itemized.items.isPunctuation = false
+      settings.itemized.items.isSentences = false
+      settings.itemized.items.isManual = false
+      settings.itemized.items.isSeparated = false
+      settings.itemized.items.separator = ''
     } else if (model.adaptation.items.kind === 'tokens') {
       settings.itemized.items.isLetters = false
       settings.itemized.items.isWords = model.adaptation.items.words
@@ -288,7 +305,7 @@ watch(
             <UndoRedoTool v-model="model" :reset="resetUndoRedo" />
           </ExerciseToolsColumnSection>
           <ExerciseToolsColumnSection>
-            <MultipleChoicesTools v-if="fields !== null" v-model="model" :textbook :fields :settings />
+            <MultipleChoicesTools v-if="fields !== null" v-model="model" :textbook :fields :settings :hasItems />
           </ExerciseToolsColumnSection>
           <ExerciseToolsColumnSection>
             <OptionalInput v-model="fillWithFreeTextPlaceholder" :label="$t('placeholderForFreeText')" />
@@ -297,7 +314,7 @@ watch(
             <ItemsTools v-if="fields !== null" v-model="model" :textbook :settings />
           </ExerciseToolsColumnSection>
           <ExerciseToolsColumnSection>
-            <SelectableEffectTools v-if="fields !== null" :settings />
+            <SelectableEffectTools v-if="fields !== null" :settings :disabled="!hasItems" />
           </ExerciseToolsColumnSection>
           <ExerciseToolsColumnSection>
             <template v-if="fields !== null">
@@ -346,8 +363,8 @@ watch(
               </p>
             </template>
 
-            <BLabeledCheckbox v-model="model.adaptation.single_item_per_paragraph" :label="$t('singleItemPerParagraph')" />
-            <BoxedEffectTools v-if="fields !== null" :settings />
+            <BLabeledCheckbox v-model="model.adaptation.single_item_per_paragraph" :label="$t('singleItemPerParagraph')" :disabled="!hasItems" />
+            <BoxedEffectTools v-if="fields !== null" :settings :disabled="!hasItems" />
           </ExerciseToolsColumnSection>
           <ExerciseToolsColumnSection>
             <div class="mb-3">
