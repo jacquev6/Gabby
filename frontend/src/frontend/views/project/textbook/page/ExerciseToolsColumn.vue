@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import AdaptationDetailsFieldsForm1 from './MultipleChoicesTools.vue'
-import AdaptationDetailsFieldsForm2 from './ItemsAndEffectsTools.vue'
+import MultipleChoicesTools from './MultipleChoicesTools.vue'
+import ItemsTools from './ItemsTools.vue'
+import EffectsTools from './EffectsTools.vue'
 import { type Model } from './ExerciseFieldsForm.vue'
 import ExerciseFieldsForm from './ExerciseFieldsForm.vue'
 import type { Textbook } from '$frontend/stores/api'
@@ -20,7 +21,7 @@ defineProps<{
 
 const model = defineModel<Model>({required: true})
 
-const adaptationDetails = ref<InstanceType<typeof AdaptationDetailsFieldsForm1> | null>(null)
+const adaptationDetails = ref<InstanceType<typeof MultipleChoicesTools> | null>(null)
 
   const fillWithFreeTextPlaceholder = computed({
   get() {
@@ -51,13 +52,14 @@ const adaptationDetails = ref<InstanceType<typeof AdaptationDetailsFieldsForm1> 
             <UndoRedoTool v-model="model" :reset="resetUndoRedo" />
           </ExerciseToolsColumnSection>
           <ExerciseToolsColumnSection>
-            <AdaptationDetailsFieldsForm1 ref="adaptationDetails" v-if="fields !== null" v-model="model" :textbook :fields />
+            <MultipleChoicesTools ref="adaptationDetails" v-if="fields !== null" v-model="model" :textbook :fields />
           </ExerciseToolsColumnSection>
           <ExerciseToolsColumnSection>
             <OptionalInput v-model="fillWithFreeTextPlaceholder" :label="$t('placeholderForFreeText')" />
           </ExerciseToolsColumnSection>
           <ExerciseToolsColumnSection>
-            <AdaptationDetailsFieldsForm2 v-if="adaptationDetails !== null && fields !== null" v-model="model" :textbook :fields :settings="adaptationDetails.settings" />
+            <ItemsTools v-if="adaptationDetails !== null && fields !== null" v-model="model" :textbook :settings="adaptationDetails.settings" />
+            <EffectsTools v-if="adaptationDetails !== null && fields !== null" v-model="model" :settings="adaptationDetails.settings" />
           </ExerciseToolsColumnSection>
           <ExerciseToolsColumnSection>
             <template v-if="fields !== null && adaptationDetails !== null">
