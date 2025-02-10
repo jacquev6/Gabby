@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import AdaptationDetailsFieldsForm1 from '$frontend/components/AdaptationDetailsFieldsForm1.vue'
-import AdaptationDetailsFieldsForm2 from '$frontend/components/AdaptationDetailsFieldsForm2.vue'
-import { type Model } from '$frontend/components/ExerciseFieldsForm.vue'
-import ExerciseFieldsForm from '$frontend/components/ExerciseFieldsForm.vue'
+import AdaptationDetailsFieldsForm1 from './MultipleChoicesTools.vue'
+import AdaptationDetailsFieldsForm2 from './ItemsAndEffectsTools.vue'
+import { type Model } from './ExerciseFieldsForm.vue'
+import ExerciseFieldsForm from './ExerciseFieldsForm.vue'
 import type { Textbook } from '$frontend/stores/api'
 import UndoRedoTool from './UndoRedoTool.vue'
 import { BButton, BLabeledCheckbox } from '$frontend/components/opinion/bootstrap'

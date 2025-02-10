@@ -10,7 +10,7 @@ import { makeBoundingRectangle, makeBoundingRectangles } from './RectanglesHighl
 import { useProjectTextbookPageData } from './ProjectTextbookPageLayout.vue'
 import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
 import { useApiStore } from '$frontend/stores/api'
-import { makeModelInTextbook, assignModelFrom, save } from '$frontend/components/ExerciseFieldsForm.vue'
+import { makeModelInTextbook, assignModelFrom, save } from './ExerciseFieldsForm.vue'
 import { useGloballyBusyStore } from '$frontend/stores/globallyBusy'
 import ExerciseColumns from './ExerciseColumns.vue'
 import ExercisePdfOverlay from './ExercisePdfOverlay.vue'

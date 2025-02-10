@@ -2,7 +2,7 @@
 import { useApiStore } from '$frontend/stores/api'
 import type { Project, Textbook, Exercise, InCache, Exists } from '$frontend/stores/api'
 import deepEqual from 'deep-equal'
-import { type Model as Deltas } from './Quill.vue'
+import { type Model as Deltas } from '$frontend/components/Quill.vue'
 import { Delta } from 'quill/core'
 
 
@@ -251,10 +251,10 @@ export function suggestNextNumber(number: string) {
 import { ref, computed } from 'vue'
 import deepCopy from 'deep-copy'
 
-import { BRow, BCol, BLabeledInput, BLabeledNumberInput, BLabeledSelect } from './opinion/bootstrap'
-import WysiwygEditor from './WysiwygEditor.vue'
-import { wysiwygBlots, wysiwygCompatibleFormats, wysiwygContagiousFormats } from './AdaptationDetailsFieldsForm1.vue'
-import OptionalWysiwygEditor from './OptionalWysiwygEditor.vue'
+import { BRow, BCol, BLabeledInput, BLabeledNumberInput, BLabeledSelect } from '../../../../components/opinion/bootstrap'
+import WysiwygEditor from '$frontend/components/WysiwygEditor.vue'
+import { wysiwygBlots, wysiwygCompatibleFormats, wysiwygContagiousFormats } from './MultipleChoicesTools.vue'
+import OptionalWysiwygEditor from '$frontend/components/OptionalWysiwygEditor.vue'
 
 
 defineProps<{

@@ -1,9 +1,9 @@
 <script lang="ts">
 import Quill from 'quill/core'
 
-import { InlineBlot, type Model as Deltas } from './Quill.vue'
-import { basicBlots } from './WysiwygEditor.vue'
-import ContextMenu from './ContextMenu.vue'
+import { InlineBlot, type Model as Deltas } from '$frontend/components/Quill.vue'
+import { basicBlots } from '$frontend/components/WysiwygEditor.vue'
+import ContextMenu from '$frontend/components/ContextMenu.vue'
 
 
 class SelBlot extends InlineBlot {
@@ -211,7 +211,7 @@ export interface Settings {
 import { computed, reactive, ref, watch } from 'vue'
 import deepEqual from 'deep-equal'
 
-import { BRow, BCol, BLabeledInput, BButton, BLabeledCheckbox } from './opinion/bootstrap'
+import { BRow, BCol, BLabeledInput, BButton, BLabeledCheckbox } from '../../../../components/opinion/bootstrap'
 import ExerciseFieldsForm, { type Model, cleanupModel } from './ExerciseFieldsForm.vue'
 import type { Textbook } from '$frontend/stores/api'
 

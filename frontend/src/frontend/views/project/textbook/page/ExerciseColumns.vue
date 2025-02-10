@@ -6,9 +6,9 @@ import deepEqual from 'deep-equal'
 import { BBusy } from '$frontend/components/opinion/bootstrap'
 import TwoResizableColumns from '$frontend/components/TwoResizableColumns.vue'
 import type { Exists, InCache, Textbook, ParsedExercise } from '$frontend/stores/api'
-import { type Model, getParsed } from '$frontend/components/ExerciseFieldsForm.vue'
+import { type Model, getParsed } from './ExerciseFieldsForm.vue'
 import AdaptedExercise from './AdaptedExercise.vue'
-import ExerciseFieldsForm from '$frontend/components/ExerciseFieldsForm.vue'
+import ExerciseFieldsForm from './ExerciseFieldsForm.vue'
 import ExerciseToolsColumn from './ExerciseToolsColumn.vue'
 
 

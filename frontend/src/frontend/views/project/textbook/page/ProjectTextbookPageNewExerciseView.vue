@@ -12,7 +12,7 @@ import { makeBoundingRectangle, makeBoundingRectangles } from './RectanglesHighl
 import { useProjectTextbookPageData } from './ProjectTextbookPageLayout.vue'
 import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
 import { useApiStore } from '$frontend/stores/api'
-import { makeModelInTextbook, resetModelInTextbook, modelIsEmpty, create, suggestNextNumber } from '$frontend/components/ExerciseFieldsForm.vue'
+import { makeModelInTextbook, resetModelInTextbook, modelIsEmpty, create, suggestNextNumber } from './ExerciseFieldsForm.vue'
 import { useGloballyBusyStore } from '$frontend/stores/globallyBusy'
 import ConfirmationModal from '$frontend/components/ConfirmationModal.vue'
 import ExerciseColumns from './ExerciseColumns.vue'

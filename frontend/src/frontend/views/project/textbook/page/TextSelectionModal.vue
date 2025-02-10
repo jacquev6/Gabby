@@ -2,8 +2,8 @@
 import { ref, computed, watch } from 'vue'
 
 import { BLabeledCheckbox, BLabeledTextarea, BButton } from '$/frontend/components/opinion/bootstrap'
-import { textualFieldNames } from '$/frontend/components/ExerciseFieldsForm.vue'
-import type { Model, TextualFieldName } from '$frontend/components/ExerciseFieldsForm.vue'
+import { textualFieldNames } from './ExerciseFieldsForm.vue'
+import type { Model, TextualFieldName } from './ExerciseFieldsForm.vue'
 import { BModal } from '$frontend/components/opinion/bootstrap'
 import type { Point, Rectangle } from './RectanglesHighlighter.vue'
 import type { SelectedText } from './TextPicker.vue'

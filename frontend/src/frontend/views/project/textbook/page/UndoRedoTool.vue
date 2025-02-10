@@ -10,7 +10,7 @@ import deepEqual from 'deep-equal'
 
 
 import { BButton } from '$/frontend/components/opinion/bootstrap'
-import type { Model } from '$/frontend/components/ExerciseFieldsForm.vue'
+import type { Model } from './ExerciseFieldsForm.vue'
 
 
 const props = defineProps<{

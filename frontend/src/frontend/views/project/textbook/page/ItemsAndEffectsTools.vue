@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
-import { BLabeledCheckbox } from './opinion/bootstrap'
+import { BLabeledCheckbox } from '../../../../components/opinion/bootstrap'
 import ExerciseFieldsForm from './ExerciseFieldsForm.vue'
-import FloatingColorPicker from './FloatingColorPicker.vue'
+import FloatingColorPicker from '$frontend/components/FloatingColorPicker.vue'
 import type { Textbook } from '$frontend/stores/api'
-import { allColorsForSelectableEffect, type Settings } from './AdaptationDetailsFieldsForm1.vue'
+import { allColorsForSelectableEffect, type Settings } from './MultipleChoicesTools.vue'
 
 
 const props = defineProps<{
