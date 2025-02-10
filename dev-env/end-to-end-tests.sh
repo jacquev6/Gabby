@@ -16,7 +16,7 @@ do
       shift
       ;;
     --visual)
-      specs_options="--spec e2e-tests/demo.cy.ts,e2e-tests/visual-appearance.cy.ts,e2e-tests/user-doc.cy.ts,e2e-tests/adaptation.cy.ts"
+      specs_options="--spec e2e-tests/demo-a.cy.ts,e2e-tests/demo-b.cy.ts,e2e-tests/visual-appearance.cy.ts,e2e-tests/user-doc.cy.ts,e2e-tests/adaptation.cy.ts"
       shift
       ;;
     *)
