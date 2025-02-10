@@ -116,7 +116,6 @@ const separatorsHovered = ref(false)
     <BLabeledCheckbox v-model="isWordsProxy" :label="$t('itemsWords')" />
     <BLabeledCheckbox v-model="isPunctuationProxy" :label="$t('itemsPunctuation')" />
     <BLabeledCheckbox v-model="isSentencesProxy" :label="$t('itemsSentences')" />
-    <BLabeledCheckbox v-model="isManualProxy" :label="$t('itemsManual')" />
     <BLabeledCheckbox v-model="isSeparatedProxy" :label="$t('itemsSeparated')">
       <span style="position: relative; display: inline-block">
         <input
@@ -142,5 +141,6 @@ const separatorsHovered = ref(false)
         </div>
       </span>
     </BLabeledCheckbox>
+    <BLabeledCheckbox v-model="isManualProxy" :label="$t('itemsManual')" />
   </div>
 </template>

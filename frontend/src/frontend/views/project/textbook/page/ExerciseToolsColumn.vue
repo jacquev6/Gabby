@@ -22,7 +22,7 @@ defineProps<{
 
 const model = defineModel<Model>({required: true})
 
-const adaptationDetails = ref<InstanceType<typeof MultipleChoicesTools> | null>(null)
+const multipleChoicesTools = ref<InstanceType<typeof MultipleChoicesTools> | null>(null)
 
   const fillWithFreeTextPlaceholder = computed({
   get() {
@@ -53,18 +53,19 @@ const adaptationDetails = ref<InstanceType<typeof MultipleChoicesTools> | null>(
             <UndoRedoTool v-model="model" :reset="resetUndoRedo" />
           </ExerciseToolsColumnSection>
           <ExerciseToolsColumnSection>
-            <MultipleChoicesTools ref="adaptationDetails" v-if="fields !== null" v-model="model" :textbook :fields />
+            <MultipleChoicesTools ref="multipleChoicesTools" v-if="fields !== null" v-model="model" :textbook :fields />
           </ExerciseToolsColumnSection>
           <ExerciseToolsColumnSection>
             <OptionalInput v-model="fillWithFreeTextPlaceholder" :label="$t('placeholderForFreeText')" />
           </ExerciseToolsColumnSection>
           <ExerciseToolsColumnSection>
-            <ItemsTools v-if="adaptationDetails !== null && fields !== null" v-model="model" :textbook :settings="adaptationDetails.settings" />
-            <SelectableEffectTools v-if="adaptationDetails !== null && fields !== null" v-model="model" :settings="adaptationDetails.settings" />
-            <BoxedEffectTools v-if="adaptationDetails !== null && fields !== null" v-model="model" :settings="adaptationDetails.settings" />
+            <ItemsTools v-if="multipleChoicesTools !== null && fields !== null" v-model="model" :textbook :settings="multipleChoicesTools.settings" />
           </ExerciseToolsColumnSection>
           <ExerciseToolsColumnSection>
-            <template v-if="fields !== null && adaptationDetails !== null">
+            <SelectableEffectTools v-if="multipleChoicesTools !== null && fields !== null" :settings="multipleChoicesTools.settings" />
+          </ExerciseToolsColumnSection>
+          <ExerciseToolsColumnSection>
+            <template v-if="fields !== null && multipleChoicesTools !== null">
               <p>
                 <BButton
                   sm secondary
@@ -99,7 +100,7 @@ const adaptationDetails = ref<InstanceType<typeof MultipleChoicesTools> | null>(
                 </template>
               </p>
 
-              <p v-if="adaptationDetails !== null && adaptationDetails.settings.itemized.items.isManual">
+              <p v-if="multipleChoicesTools !== null && multipleChoicesTools.settings.itemized.items.isManual">
                 <BButton
                   sm secondary
                   :disabled="fields.focusedWysiwygField !== 'wording'"
@@ -109,16 +110,18 @@ const adaptationDetails = ref<InstanceType<typeof MultipleChoicesTools> | null>(
                 >{{ $t('manualItemButton') }}</BButton>
               </p>
             </template>
+
+            <BLabeledCheckbox v-model="model.adaptation.single_item_per_paragraph" :label="$t('singleItemPerParagraph')" />
+            <BoxedEffectTools v-if="multipleChoicesTools !== null && fields !== null" :settings="multipleChoicesTools.settings" />
           </ExerciseToolsColumnSection>
           <ExerciseToolsColumnSection>
             <div class="mb-3">
               <p class="form-label">{{ $t('exerciseDistribution') }}</p>
               <DistributionToggles v-model="model.adaptation.wording_paragraphs_per_pagelet" />
-              <BLabeledCheckbox v-model="model.adaptation.single_item_per_paragraph" :label="$t('singleItemPerParagraph')" />
             </div>
           </ExerciseToolsColumnSection>
-          <hr />
         </div>
+
         <div
           v-if="model.inProgress.kind === 'multipleChoicesCreation'"
           style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); cursor: initial;"

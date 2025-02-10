@@ -23,7 +23,6 @@ const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
     backdropCovers2="#gutter-2"
   />
 
-  <p>{{ $t('effects') }}</p>
   <BLabeledCheckbox :label="$t('effectsSelectable')" v-model="settings.itemized.effects.isSelectable" />
   <span class="maybe-usable-colors-container">
     <span v-for="i in settings.itemized.effects.selectable.allColors.length" :class="settings.itemized.effects.isSelectable && i - 1 < settings.itemized.effects.selectable.colorsCount ? 'usable-colors-container' : 'unusable-colors-container'">
