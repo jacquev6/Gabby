@@ -261,4 +261,21 @@ describe('Gabby', () => {
     cy.get('span.main').eq(0).click()
     cy.get('span.choice0').should('have.length', 2)
   })
+
+  it('shows a single item per line even when no other effect has been selected', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-5/new-exercise')
+
+    cy.get('label:contains("Number") + input').click().type('single')
+    cy.get('label:contains("Wording") + .ql-container > .ql-editor').click().type('alpha bravo charlie delta', {delay: 0})
+    cy.get('div:contains("Words") > input').check()
+    cy.get('div:contains("1 item per line") > input').check()
+    screenshot('single-item-per-line-1')
+    cy.get('button:contains("Save then back to list")').click()
+    notBusy()
+    cy.get('a:contains("Edit")').click()
+    notBusy()
+    cy.get('div:contains("Words") > input').should('be.checked')
+    cy.get('div:contains("1 item per line") > input').scrollIntoView().should('be.checked')
+    screenshot('single-item-per-line-2')
+  })
 })
