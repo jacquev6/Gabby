@@ -96,7 +96,7 @@ describe('Gabby', () => {
     notBusy()
 
     cy.focused().blur()
-    screenshot('select-letters', 'edit-1')
+    screenshot('select-letters', 'edit-1')  // @todo Stabilize: the "highlight" button is sometimes enabled, sometimes disabled
 
     cy.get('button:contains("Save then back")').click()
     visit('/project-xkopqm')
