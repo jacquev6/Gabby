@@ -1,21 +1,6 @@
 <script lang="ts">
 import { InlineBlot } from '$frontend/components/Quill.vue'
-
-// Colors provided by the client, in display order
-export const allColorsForSelectableEffect = [
-  '#ffff00',  // yellow
-  '#ffcf4c',  // orange
-  '#ff8084',  // red
-  '#ffc0cb',  // pink
-  '#d49cff',  // purple
-  '#8177ff',  // dark blue
-  '#bbbbff',  // light blue
-  '#bbffbb',  // light green
-  '#68e495',  // dark green
-  '#632f2b',  // brown
-  '#bbbbbb',  // grey
-  '#000000',  // black
-]
+import { allColorsForSelectableEffect, cleanupModel } from './ExerciseFieldsForm.vue'
 
 
 export class SelBlot extends InlineBlot {
@@ -37,39 +22,50 @@ export class SelBlot extends InlineBlot {
 </script>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 import { BLabeledCheckbox } from '../../../../components/opinion/bootstrap'
 import FloatingColorPicker from '$frontend/components/FloatingColorPicker.vue'
-import { type Settings } from './ExerciseToolsColumn.vue'
+import type { Model } from './ExerciseFieldsForm.vue'
 
 
 defineProps<{
-  settings: Settings
   disabled: boolean
 }>()
 
+const model = defineModel<Model>({required: true})
+
 const colorPickers = ref<InstanceType<typeof FloatingColorPicker>[]>([])
+
+watch(
+  [
+    () => model.value.adaptationSettings.itemized.effects.isSelectable,
+    () => model.value.adaptationSettings.itemized.effects.selectable.colorsCount,
+  ],
+  () => {
+    cleanupModel(model.value)
+  },
+)
 </script>
 
 <template>
   <FloatingColorPicker
-    v-for="i in settings.itemized.effects.selectable.allColors.length"
+    v-for="i in model.adaptationSettings.itemized.effects.selectable.allColors.length"
     ref="colorPickers"
-    v-model="settings.itemized.effects.selectable.allColors[i - 1]"
+    v-model="model.adaptationSettings.itemized.effects.selectable.allColors[i - 1]"
     :colors="allColorsForSelectableEffect"
     backdropCovers1="#left-col-2"
     backdropCovers2="#gutter-2"
   />
 
-  <BLabeledCheckbox :label="$t('effectsSelectable')" v-model="settings.itemized.effects.isSelectable" :disabled />
+  <BLabeledCheckbox :label="$t('effectsSelectable')" v-model="model.adaptationSettings.itemized.effects.isSelectable" :disabled />
   <span class="maybe-usable-colors-container">
-    <span v-for="i in settings.itemized.effects.selectable.allColors.length" :class="settings.itemized.effects.isSelectable && i - 1 < settings.itemized.effects.selectable.colorsCount ? 'usable-colors-container' : 'unusable-colors-container'">
+    <span v-for="i in model.adaptationSettings.itemized.effects.selectable.allColors.length" :class="model.adaptationSettings.itemized.effects.isSelectable && i - 1 < model.adaptationSettings.itemized.effects.selectable.colorsCount ? 'usable-colors-container' : 'unusable-colors-container'">
       <span
         class="usable-colors-button"
-        :style="{backgroundColor: settings.itemized.effects.selectable.allColors[i - 1], cursor: disabled ? 'default' : 'pointer'}"
+        :style="{backgroundColor: model.adaptationSettings.itemized.effects.selectable.allColors[i - 1], cursor: disabled ? 'default' : 'pointer'}"
         :data-cy-colors="i"
-        @click="settings.itemized.effects.isSelectable = true; settings.itemized.effects.selectable.colorsCount = i"
+        @click="model.adaptationSettings.itemized.effects.isSelectable = true; model.adaptationSettings.itemized.effects.selectable.colorsCount = i"
         @contextmenu.prevent="(event) => colorPickers[i - 1].show(event.target as HTMLElement)"
       ></span>
     </span>

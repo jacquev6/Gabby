@@ -181,6 +181,6 @@ describe('Gabby', () => {
     cy.get('div:contains("Below each item") > input').should('be.disabled').should('not.be.checked')
     cy.get('div:contains("Selectable") > input').should('be.disabled').should('not.be.checked')
     cy.get('div:contains("Boxed") > input').should('be.disabled').should('not.be.checked')
-    cy.get('div:contains("1 item per line") > input').should('be.disabled') // @todo(NOW) .should('not.be.checked')
+    cy.get('div:contains("1 item per line") > input').should('be.disabled').should('not.be.checked')
   })
 })

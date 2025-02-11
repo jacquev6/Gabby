@@ -26,6 +26,9 @@ type MakeModelOptions  = {
   textbookPage: null
 }
 
+// This model contains all things visible on the exercise form, including:
+// - anything in progress
+// - its addendum in the "Tools" column
 export type Model = MakeModelOptions & {
   number: string
   instructions: Deltas
@@ -34,7 +37,35 @@ export type Model = MakeModelOptions & {
   clue: Deltas
   textReference: Deltas
   rectangles: PdfRectangle[]
-  adaptation: Adaptation
+  adaptationSettings: {
+    kind: Adaptation['kind']
+    wording_paragraphs_per_pagelet: number | null
+    single_item_per_paragraph: boolean
+    placeholder_for_fill_with_free_text: string | null  // @todo Remove null: translate '' to null in makeAdaptation
+    show_arrow_before_mcq_fields: boolean
+    show_mcq_choices_by_default: boolean
+    itemized: {
+      items: {
+        isLetters: boolean
+        isWords: boolean
+        isPunctuation: boolean
+        isSentences: boolean
+        isManual: boolean
+        isSeparated: boolean
+        separator: string
+      }
+      effects: {
+        isSelectable: boolean
+        selectable: {
+          colorsCount: number
+          allColors: string[]
+        }
+        isBoxed: boolean
+        hasMcqBeside: boolean
+        hasMcqBelow: boolean
+      }
+    }
+  }
   inProgress:
     {
       kind: 'nothing'
@@ -56,6 +87,58 @@ export type Model = MakeModelOptions & {
     }
 }
 
+// Colors provided by the client, in display order
+export const allColorsForSelectableEffect = [
+  '#ffff00',  // yellow
+  '#ffcf4c',  // orange
+  '#ff8084',  // red
+  '#ffc0cb',  // pink
+  '#d49cff',  // purple
+  '#8177ff',  // dark blue
+  '#bbbbff',  // light blue
+  '#bbffbb',  // light green
+  '#68e495',  // dark green
+  '#632f2b',  // brown
+  '#bbbbbb',  // grey
+  '#000000',  // black
+]
+
+const defaultAdaptationSettings: Model["adaptationSettings"] = {
+  kind: 'generic',
+  wording_paragraphs_per_pagelet: null,
+  single_item_per_paragraph: false,
+  placeholder_for_fill_with_free_text: null,
+  show_arrow_before_mcq_fields: false,
+  show_mcq_choices_by_default: false,
+  itemized: {
+    items: {
+      isLetters: false,
+      isWords: false,
+      isPunctuation: false,
+      isSentences: false,
+      isManual: false,
+      isSeparated: false,
+      separator: '',
+    },
+    effects: {
+      isSelectable: false,
+      selectable: {
+        colorsCount: 2,
+        allColors: [
+          allColorsForSelectableEffect[0],
+          allColorsForSelectableEffect[3],
+          allColorsForSelectableEffect[6],
+          allColorsForSelectableEffect[7],
+          allColorsForSelectableEffect[10],
+        ],
+      },
+      isBoxed: false,
+      hasMcqBeside: false,
+      hasMcqBelow: false,
+    },
+  },
+}
+
 function makeModel(options: MakeModelOptions): Model {
   return {
     ...options,
@@ -66,19 +149,7 @@ function makeModel(options: MakeModelOptions): Model {
     clue: [{insert: '\n', attributes: {}}],
     textReference: [{insert: '\n', attributes: {}}],
     rectangles: [],
-    adaptation: {
-      kind: 'generic',
-      wording_paragraphs_per_pagelet: null,
-      single_item_per_paragraph: false,
-      placeholder_for_fill_with_free_text: null,
-      items: null,
-      items_are_selectable: null,
-      items_are_boxed: false,
-      items_have_mcq_beside: false,
-      items_have_mcq_below: false,
-      show_arrow_before_mcq_fields: false,
-      show_mcq_choices_by_default: false,
-    },
+    adaptationSettings: deepCopy(defaultAdaptationSettings),
     inProgress: {
       kind: 'nothing',
     },
@@ -94,14 +165,16 @@ export function makeModelNotInTextbook(): Model {
 }
 
 export function assignModelFrom(model: Model, exercise: Exercise & InCache & Exists) {
+  model.inTextbook = exercise.attributes.textbookPage !== null
+  model.textbookPage = exercise.attributes.textbookPage
   model.number = exercise.attributes.number
-  model.instructions = exercise.attributes.instructions
+  model.instructions = deepCopy(exercise.attributes.instructions)
   model.wording = deepCopy(exercise.attributes.wording)
   model.example = deepCopy(exercise.attributes.example)
   model.clue = deepCopy(exercise.attributes.clue)
   model.textReference = deepCopy(exercise.attributes.textReference)
-  model.adaptation = deepCopy(exercise.attributes.adaptation)
   model.rectangles = deepCopy(exercise.attributes.rectangles)
+  model.adaptationSettings = makeAdaptationSettings(exercise.attributes.adaptation, defaultAdaptationSettings),
   model.inProgress = {
     kind: 'nothing',
   }
@@ -120,42 +193,25 @@ export function resetModelNotInTextbook(model: Model) {
 }
 
 export function modelIsEmpty(model: Model) {
-  return deepEqual(model.instructions, emptyDeltas)
+  return true
+    // model.number can be set, model is still considered empty
+    && deepEqual(model.instructions, emptyDeltas)
     && deepEqual(model.wording, emptyDeltas)
     && deepEqual(model.example, emptyDeltas)
     && deepEqual(model.clue, emptyDeltas)
     && deepEqual(model.textReference, emptyDeltas)
-    && deepEqual(
-      model.adaptation,
-      ((a: Adaptation) => a)({  // I don't know how to annotate expressions in TypeScript. This simply ensures the literal is indeed and Adaptation.
-        kind: 'generic',
-        wording_paragraphs_per_pagelet: null,
-        single_item_per_paragraph: false,
-        placeholder_for_fill_with_free_text: null,
-        items: null,
-        items_are_selectable: null,
-        items_are_boxed: false,
-        items_have_mcq_beside: false,
-        items_have_mcq_below: false,
-        show_arrow_before_mcq_fields: false,
-        show_mcq_choices_by_default: false,
-      }),
-    )
+    // model.rectangles are set only when setting another field. If they are set then the field is emptied, we do want to consider the model empty
+    && deepEqual(model.adaptationSettings, defaultAdaptationSettings)
+    // model.inProgress also doesn't count
 }
 
 export function cleanupModel(model: Model) {
-  let usableColorsCount = 0
-  let hasManualItems = false
-  if (model.adaptation.items !== null) {
-    if (model.adaptation.items_are_selectable !== null) {
-      usableColorsCount = model.adaptation.items_are_selectable.colors.length
-    }
-    hasManualItems = model.adaptation.items.kind === 'manual'
-  }
+  const hasManualItems = model.adaptationSettings.itemized.items.isManual
+  const colorsCount = model.adaptationSettings.itemized.effects.isSelectable ? model.adaptationSettings.itemized.effects.selectable.colorsCount : 0
   for (const fieldName of ['instructions', 'wording', 'example'] as const) {
     const newOps = new Delta()
     for (const delta of downgradeDeltas(model[fieldName])) {
-      if ('sel' in delta.attributes && (delta.attributes.sel as number) > usableColorsCount) {
+      if ('sel' in delta.attributes && (delta.attributes.sel as number) > colorsCount) {
         newOps.insert(delta.insert, {})
       } else if ('manual-item' in delta.attributes && !hasManualItems) {
         newOps.insert(delta.insert, {})
@@ -178,6 +234,111 @@ function downgradeDeltas(deltas: Deltas) {
   })
 }
 
+export function disableItemizedEffects(model: Model) {
+  model.adaptationSettings.itemized.effects.isSelectable = false
+  model.adaptationSettings.itemized.effects.isBoxed = false
+  model.adaptationSettings.itemized.effects.hasMcqBeside = false
+  model.adaptationSettings.itemized.effects.hasMcqBelow = false
+  model.adaptationSettings.single_item_per_paragraph = false
+}
+
+export function makeItems(adaptationSettings: Model["adaptationSettings"]): Adaptation["items"] {
+  const items = adaptationSettings.itemized.items
+  if (items.isLetters) {
+    return {kind: 'characters', letters: true}
+  } else if (items.isWords || items.isPunctuation) {
+    return {kind: 'tokens', words: items.isWords, punctuation: items.isPunctuation}
+  } else if (items.isSentences) {
+    return {kind: 'sentences'}
+  } else if (items.isManual) {
+    return {kind: 'manual'}
+  } else if (items.isSeparated && items.separator !== '') {
+    return {kind: 'separated', separator: items.separator}
+  } else {
+    return null
+  }
+}
+
+function makeAdaptation(model: Model): Adaptation {
+  const adaptationSettings = model.adaptationSettings
+
+  const items = makeItems(adaptationSettings)
+  const items_are_selectable = adaptationSettings.itemized.effects.isSelectable ? {
+    colors: adaptationSettings.itemized.effects.selectable.allColors.slice(0, adaptationSettings.itemized.effects.selectable.colorsCount),
+  } : null
+
+  const adaptation = {
+    kind: adaptationSettings.kind,
+    wording_paragraphs_per_pagelet: adaptationSettings.wording_paragraphs_per_pagelet,
+    single_item_per_paragraph: adaptationSettings.single_item_per_paragraph,
+    placeholder_for_fill_with_free_text: adaptationSettings.placeholder_for_fill_with_free_text,
+    items,
+    items_are_selectable,
+    items_are_boxed: adaptationSettings.itemized.effects.isBoxed,
+    items_have_mcq_beside: adaptationSettings.itemized.effects.hasMcqBeside,
+    items_have_mcq_below: adaptationSettings.itemized.effects.hasMcqBelow,
+    show_arrow_before_mcq_fields: adaptationSettings.show_arrow_before_mcq_fields,
+    show_mcq_choices_by_default: adaptationSettings.show_mcq_choices_by_default,
+  }
+
+  const remadeAdaptationSettings = makeAdaptationSettings(adaptation, adaptationSettings)
+  if (!deepEqual(remadeAdaptationSettings, adaptationSettings)) {
+    throw new Error(`Adaptation settings are not equal: from adaptation settings '${JSON.stringify(adaptationSettings)}', we got adaptation '${JSON.stringify(adaptation)}', but got back different adaptation settings '${JSON.stringify(remadeAdaptationSettings)}'`)
+  }
+
+  return adaptation
+}
+
+function makeAdaptationSettings(adaptation: Adaptation, baseAdaptationSettings: Model["adaptationSettings"]): Model["adaptationSettings"] {
+  const allColors = deepCopy(defaultAdaptationSettings.itemized.effects.selectable.allColors)
+  if (adaptation.items_are_selectable !== null) {
+    allColors.splice(0, adaptation.items_are_selectable.colors.length, ...adaptation.items_are_selectable.colors)
+  }
+
+  const adaptationSettings = {
+    kind: adaptation.kind,
+    wording_paragraphs_per_pagelet: adaptation.wording_paragraphs_per_pagelet,
+    single_item_per_paragraph: adaptation.single_item_per_paragraph,
+    placeholder_for_fill_with_free_text: adaptation.placeholder_for_fill_with_free_text,
+    show_arrow_before_mcq_fields: adaptation.show_arrow_before_mcq_fields,
+    show_mcq_choices_by_default: adaptation.show_mcq_choices_by_default,
+    itemized: {
+      items: {
+        isLetters: adaptation.items !== null && adaptation.items.kind === 'characters' && adaptation.items.letters,
+        isWords: adaptation.items !== null && adaptation.items.kind === 'tokens' && adaptation.items.words,
+        isPunctuation: adaptation.items !== null && adaptation.items.kind === 'tokens' && adaptation.items.punctuation,
+        isSentences: adaptation.items !== null && adaptation.items.kind === 'sentences',
+        isManual: adaptation.items !== null && adaptation.items.kind === 'manual',
+        isSeparated: adaptation.items !== null && adaptation.items.kind === 'separated',
+        separator: adaptation.items !== null && adaptation.items.kind === 'separated' ? adaptation.items.separator : '',
+      },
+      effects: {
+        isSelectable: adaptation.items_are_selectable !== null,
+        selectable: {
+          colorsCount: adaptation.items_are_selectable !== null ? adaptation.items_are_selectable.colors.length : defaultAdaptationSettings.itemized.effects.selectable.colorsCount,
+          allColors,
+        },
+        isBoxed: adaptation.items_are_boxed,
+        hasMcqBeside: adaptation.items_have_mcq_beside,
+        hasMcqBelow: adaptation.items_have_mcq_below,
+      }
+    }
+  }
+
+  // Fix attributes that are absent (on purpose) from the adaptation
+  adaptationSettings.itemized.items.isSeparated = baseAdaptationSettings.itemized.items.isSeparated
+  adaptationSettings.itemized.effects.selectable.allColors.splice(
+    adaptationSettings.itemized.effects.selectable.colorsCount,
+    adaptationSettings.itemized.effects.selectable.allColors.length - adaptationSettings.itemized.effects.selectable.colorsCount,
+    ...baseAdaptationSettings.itemized.effects.selectable.allColors.slice(adaptationSettings.itemized.effects.selectable.colorsCount),
+  )
+  if (!adaptationSettings.itemized.effects.isSelectable) {
+    adaptationSettings.itemized.effects.selectable.colorsCount = baseAdaptationSettings.itemized.effects.selectable.colorsCount
+  }
+
+  return adaptationSettings
+}
+
 export async function getParsed(model: Model) {
   const parsed = await api.client.createOne(
     'parsedExercise', {
@@ -187,7 +348,7 @@ export async function getParsed(model: Model) {
       example: downgradeDeltas(model.example),
       clue: downgradeDeltas(model.clue),
       textReference: downgradeDeltas(model.textReference),
-      adaptation: model.adaptation,
+      adaptation: makeAdaptation(model),
     },
     {},
   )
@@ -206,7 +367,7 @@ export async function create(project: Project, textbook: Textbook | null, model:
       example: downgradeDeltas(model.example),
       clue: downgradeDeltas(model.clue),
       textReference: downgradeDeltas(model.textReference),
-      adaptation: model.adaptation,
+      adaptation: makeAdaptation(model),
       rectangles: model.rectangles,
     },
     {
@@ -227,7 +388,7 @@ export async function save(exercise: Exercise & InCache & Exists, model: Model) 
       example: downgradeDeltas(model.example),
       clue: downgradeDeltas(model.clue),
       textReference: downgradeDeltas(model.textReference),
-      adaptation: model.adaptation,
+      adaptation: makeAdaptation(model),
       rectangles: model.rectangles,
     },
     {},
@@ -332,11 +493,7 @@ const currentWysiwygFormat = computed(() => {
 
 
 const selBlotColors = computed(() => {
-  if (model.value.adaptation.items === null || model.value.adaptation.items_are_selectable === null) {
-    return {}
-  } else {
-    return Object.fromEntries(model.value.adaptation.items_are_selectable.colors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
-  }
+  return Object.fromEntries(model.value.adaptationSettings.itemized.effects.selectable.allColors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
 })
 
 function selectionChangeInInstructionsOrWording(fieldName: 'instructions' | 'wording', range: {index: number, length: number}) {
@@ -418,7 +575,7 @@ defineExpose({
   </div>
   <div :style="{position: 'relative', ...selBlotColors}">
     <BLabeledSelect
-      :label="$t('adaptationType')" v-model="model.adaptation.kind"
+      :label="$t('adaptationType')" v-model="model.adaptationSettings.kind"
       :options="adaptationKinds.map(kind => ({value: kind, label: $t(kind)}))"
     />
     <WysiwygEditor

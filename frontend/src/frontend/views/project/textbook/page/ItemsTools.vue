@@ -3,104 +3,120 @@ import { computed, ref } from 'vue'
 
 import { BLabeledCheckbox } from '../../../../components/opinion/bootstrap'
 import type { Textbook } from '$frontend/stores/api'
-import type { Settings } from './ExerciseToolsColumn.vue'
+import { type Model, cleanupModel, disableItemizedEffects } from './ExerciseFieldsForm.vue'
 
 
-const props = defineProps<{
+defineProps<{
   textbook: Textbook
-  settings: Settings
 }>()
 
-const isLettersProxy = computed({
+const model = defineModel<Model>({required: true})
+
+const isLetters = computed({
   get() {
-    return props.settings.itemized.items.isLetters
+    return model.value.adaptationSettings.itemized.items.isLetters
   },
   set(value: boolean) {
-    props.settings.itemized.items.isLetters = value
+    model.value.adaptationSettings.itemized.items.isLetters = value
     if (value) {
-      props.settings.itemized.items.isWords = false
-      props.settings.itemized.items.isPunctuation = false
-      props.settings.itemized.items.isSentences = false
-      props.settings.itemized.items.isManual = false
-      props.settings.itemized.items.isSeparated = false
+      model.value.adaptationSettings.itemized.items.isWords = false
+      model.value.adaptationSettings.itemized.items.isPunctuation = false
+      model.value.adaptationSettings.itemized.items.isSentences = false
+      model.value.adaptationSettings.itemized.items.isManual = false
+      model.value.adaptationSettings.itemized.items.isSeparated = false
+    } else {
+      disableItemizedEffects(model.value)
     }
   },
 })
 
-const isWordsProxy = computed({
+const isWords = computed({
   get() {
-    return props.settings.itemized.items.isWords
+    return model.value.adaptationSettings.itemized.items.isWords
   },
   set(value: boolean) {
-    props.settings.itemized.items.isWords = value
+    model.value.adaptationSettings.itemized.items.isWords = value
     if (value) {
-      props.settings.itemized.items.isLetters = false
-      props.settings.itemized.items.isSentences = false
-      props.settings.itemized.items.isManual = false
-      props.settings.itemized.items.isSeparated = false
+      model.value.adaptationSettings.itemized.items.isLetters = false
+      // Keep model.value.adaptationSettings.itemized.items.isPunctuation unchanged
+      model.value.adaptationSettings.itemized.items.isSentences = false
+      model.value.adaptationSettings.itemized.items.isManual = false
+      model.value.adaptationSettings.itemized.items.isSeparated = false
+    } else if (!model.value.adaptationSettings.itemized.items.isPunctuation) {
+      disableItemizedEffects(model.value)
     }
   },
 })
 
-const isPunctuationProxy = computed({
+const isPunctuation = computed({
   get() {
-    return props.settings.itemized.items.isPunctuation
+    return model.value.adaptationSettings.itemized.items.isPunctuation
   },
   set(value: boolean) {
-    props.settings.itemized.items.isPunctuation = value
+    model.value.adaptationSettings.itemized.items.isPunctuation = value
     if (value) {
-      props.settings.itemized.items.isLetters = false
-      props.settings.itemized.items.isSentences = false
-      props.settings.itemized.items.isManual = false
-      props.settings.itemized.items.isSeparated = false
+      model.value.adaptationSettings.itemized.items.isLetters = false
+      // Keep model.value.adaptationSettings.itemized.items.isWords unchanged
+      model.value.adaptationSettings.itemized.items.isSentences = false
+      model.value.adaptationSettings.itemized.items.isManual = false
+      model.value.adaptationSettings.itemized.items.isSeparated = false
+    } else if (!model.value.adaptationSettings.itemized.items.isWords) {
+      disableItemizedEffects(model.value)
     }
   },
 })
 
-const isSentencesProxy = computed({
+const isSentences = computed({
   get() {
-    return props.settings.itemized.items.isSentences
+    return model.value.adaptationSettings.itemized.items.isSentences
   },
   set(value: boolean) {
-    props.settings.itemized.items.isSentences = value
+    model.value.adaptationSettings.itemized.items.isSentences = value
     if (value) {
-      props.settings.itemized.items.isLetters = false
-      props.settings.itemized.items.isWords = false
-      props.settings.itemized.items.isPunctuation = false
-      props.settings.itemized.items.isManual = false
-      props.settings.itemized.items.isSeparated = false
+      model.value.adaptationSettings.itemized.items.isLetters = false
+      model.value.adaptationSettings.itemized.items.isWords = false
+      model.value.adaptationSettings.itemized.items.isPunctuation = false
+      model.value.adaptationSettings.itemized.items.isManual = false
+      model.value.adaptationSettings.itemized.items.isSeparated = false
+    } else {
+      disableItemizedEffects(model.value)
     }
   },
 })
 
-const isManualProxy = computed({
+const isManual = computed({
   get() {
-    return props.settings.itemized.items.isManual
+    return model.value.adaptationSettings.itemized.items.isManual
   },
   set(value: boolean) {
-    props.settings.itemized.items.isManual = value
+    model.value.adaptationSettings.itemized.items.isManual = value
     if (value) {
-      props.settings.itemized.items.isLetters = false
-      props.settings.itemized.items.isWords = false
-      props.settings.itemized.items.isPunctuation = false
-      props.settings.itemized.items.isSentences = false
-      props.settings.itemized.items.isSeparated = false
+      model.value.adaptationSettings.itemized.items.isLetters = false
+      model.value.adaptationSettings.itemized.items.isWords = false
+      model.value.adaptationSettings.itemized.items.isPunctuation = false
+      model.value.adaptationSettings.itemized.items.isSentences = false
+      model.value.adaptationSettings.itemized.items.isSeparated = false
+    } else {
+      disableItemizedEffects(model.value)
+      cleanupModel(model.value)
     }
   },
 })
 
-const isSeparatedProxy = computed({
+const isSeparated = computed({
   get() {
-    return props.settings.itemized.items.isSeparated
+    return model.value.adaptationSettings.itemized.items.isSeparated
   },
   set(value: boolean) {
-    props.settings.itemized.items.isSeparated = value
+    model.value.adaptationSettings.itemized.items.isSeparated = value
     if (value) {
-      props.settings.itemized.items.isLetters = false
-      props.settings.itemized.items.isWords = false
-      props.settings.itemized.items.isPunctuation = false
-      props.settings.itemized.items.isSentences = false
-      props.settings.itemized.items.isManual = false
+      model.value.adaptationSettings.itemized.items.isLetters = false
+      model.value.adaptationSettings.itemized.items.isWords = false
+      model.value.adaptationSettings.itemized.items.isPunctuation = false
+      model.value.adaptationSettings.itemized.items.isSentences = false
+      model.value.adaptationSettings.itemized.items.isManual = false
+    } else {
+      disableItemizedEffects(model.value)
     }
   },
 })
@@ -112,17 +128,17 @@ const separatorsHovered = ref(false)
 <template>
   <div class="mb-3">
     <p class="form-label">{{ $t('items') }}</p>
-    <BLabeledCheckbox v-model="isLettersProxy" :label="$t('itemsLetters')" />
-    <BLabeledCheckbox v-model="isWordsProxy" :label="$t('itemsWords')" />
-    <BLabeledCheckbox v-model="isPunctuationProxy" :label="$t('itemsPunctuation')" />
-    <BLabeledCheckbox v-model="isSentencesProxy" :label="$t('itemsSentences')" />
-    <BLabeledCheckbox v-model="isSeparatedProxy" :label="$t('itemsSeparated')">
+    <BLabeledCheckbox v-model="isLetters" :label="$t('itemsLetters')" />
+    <BLabeledCheckbox v-model="isWords" :label="$t('itemsWords')" />
+    <BLabeledCheckbox v-model="isPunctuation" :label="$t('itemsPunctuation')" />
+    <BLabeledCheckbox v-model="isSentences" :label="$t('itemsSentences')" />
+    <BLabeledCheckbox v-model="isSeparated" :label="$t('itemsSeparated')">
       <span style="position: relative; display: inline-block">
         <input
-          v-model="settings.itemized.items.separator"
+          v-model="model.adaptationSettings.itemized.items.separator"
           style="width: 2em"
           @focus="separatorFocused = true"
-          @click="isSeparatedProxy = true"
+          @click="isSeparated = true"
           @blur="separatorFocused = false"
         />
         <div
@@ -134,13 +150,13 @@ const separatorsHovered = ref(false)
           <p
             v-for="value in textbook.attributes.suggestedItemsSeparators"
             class="separatorSuggestion"
-            @click="settings.itemized.items.separator = value; separatorsHovered = false"
+            @click="model.adaptationSettings.itemized.items.separator = value; separatorsHovered = false"
           >
             {{ value }}
           </p>
         </div>
       </span>
     </BLabeledCheckbox>
-    <BLabeledCheckbox v-model="isManualProxy" :label="$t('itemsManual')" />
+    <BLabeledCheckbox v-model="isManual" :label="$t('itemsManual')" />
   </div>
 </template>

@@ -138,13 +138,11 @@ import { computed, ref, watch } from 'vue'
 import { BRow, BCol, BLabeledInput, BButton, BLabeledCheckbox } from '../../../../components/opinion/bootstrap'
 import ExerciseFieldsForm, { type Model } from './ExerciseFieldsForm.vue'
 import type { Textbook } from '$frontend/stores/api'
-import type { Settings } from './ExerciseToolsColumn.vue'
 
 
-const props = defineProps<{
+defineProps<{
   textbook: Textbook
   fields: InstanceType<typeof ExerciseFieldsForm>
-  settings: Settings
   hasItems: boolean
 }>()
 
@@ -153,24 +151,24 @@ model = model_
 
 const hasMcqBesideProxy = computed({
   get() {
-    return props.settings.itemized.effects.hasMcqBeside
+    return model.value.adaptationSettings.itemized.effects.hasMcqBeside
   },
   set(value: boolean) {
-    props.settings.itemized.effects.hasMcqBeside = value
+    model.value.adaptationSettings.itemized.effects.hasMcqBeside = value
     if (value) {
-      props.settings.itemized.effects.hasMcqBelow = false
+      model.value.adaptationSettings.itemized.effects.hasMcqBelow = false
     }
   },
 })
 
 const hasMcqBelowProxy = computed({
   get() {
-    return props.settings.itemized.effects.hasMcqBelow
+    return model.value.adaptationSettings.itemized.effects.hasMcqBelow
   },
   set(value: boolean) {
-    props.settings.itemized.effects.hasMcqBelow = value
+    model.value.adaptationSettings.itemized.effects.hasMcqBelow = value
     if (value) {
-      props.settings.itemized.effects.hasMcqBeside = false
+      model.value.adaptationSettings.itemized.effects.hasMcqBeside = false
     }
   },
 })
@@ -195,10 +193,10 @@ const hasMcqBelowProxy = computed({
     </template>
   </ContextMenu>
 
-  <BLabeledCheckbox :label="$t('alwaysShowMultipleChoices')" v-model="model.adaptation.show_mcq_choices_by_default" />
+  <BLabeledCheckbox :label="$t('alwaysShowMultipleChoices')" v-model="model.adaptationSettings.show_mcq_choices_by_default" />
   <BButton primary sm @click="model.inProgress = {kind: 'multipleChoicesCreation'}">{{ $t('multipleChoicesButton') }}</BButton>
   <div style="padding-left: 1em; padding-top: 0.5em;">
-    <BLabeledCheckbox :label="$t('showArrowBeforeMultipleChoices')" v-model="model.adaptation.show_arrow_before_mcq_fields" />
+    <BLabeledCheckbox :label="$t('showArrowBeforeMultipleChoices')" v-model="model.adaptationSettings.show_arrow_before_mcq_fields" />
     <BLabeledCheckbox :label="$t('multipleChoicesBesideEachItem')" v-model="hasMcqBesideProxy" :disabled="!hasItems" />
     <BLabeledCheckbox :label="$t('multipleChoicesBelowEachItem')" v-model="hasMcqBelowProxy" :disabled="!hasItems" />
   </div>

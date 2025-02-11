@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import { BLabeledCheckbox } from '../../../../components/opinion/bootstrap'
-import type { Settings } from './ExerciseToolsColumn.vue'
+import type { Model } from './ExerciseFieldsForm.vue'
 
-
-defineProps<{
-  settings: Settings
-}>()
+const model = defineModel<Model>({required: true})
 </script>
 
 <template>
-  <BLabeledCheckbox :label="$t('effectsBoxed')" v-model="settings.itemized.effects.isBoxed" />
+  <BLabeledCheckbox :label="$t('effectsBoxed')" v-model="model.adaptationSettings.itemized.effects.isBoxed" />
 </template>
