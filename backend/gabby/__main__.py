@@ -226,7 +226,7 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
         yield "from .. import exercises as e"
         yield "from .. import renderable as r"
         yield "from ..adaptation import AdaptationTestCase"
-        yield "from ..api_models import Adaptation, CharactersItems, TokensItems, SentencesItems, ManualItems, Selectable"
+        yield "from ..api_models import Adaptation, CharactersItems, TokensItems, SentencesItems, ManualItems, Selectable, PredefinedMcq"
         yield "from ..deltas import InsertOp"
         yield ""
         yield ""

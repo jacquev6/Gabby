@@ -131,6 +131,10 @@ class Selectable(PydanticBase):
 
 Items = CharactersItems | TokensItems | SentencesItems | ManualItems | SeparatedItems
 
+class PredefinedMcq(PydanticBase):
+    grammatical_gender: bool
+    grammatical_number: bool
+
 class Adaptation(PydanticBase):
     kind: Literal["generic", "fill-with-free-text", "multiple-choices"]
     wording_paragraphs_per_pagelet: int | None
@@ -141,6 +145,7 @@ class Adaptation(PydanticBase):
     items_are_boxed: bool
     items_have_mcq_beside: bool
     items_have_mcq_below: bool
+    items_have_predefined_mcq: PredefinedMcq
     show_arrow_before_mcq_fields: bool
     show_mcq_choices_by_default: bool
 
@@ -160,7 +165,7 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
 
     rectangles: list[PdfRectangle] = []
 
-    adaptation: Adaptation = Adaptation(
+    adaptation: Adaptation = Adaptation(  # @todo Remove default value: no exercise shall be missing its adaptation
         kind="generic",
         wording_paragraphs_per_pagelet=None,
         single_item_per_paragraph=False,
@@ -170,6 +175,10 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
         items_are_boxed=False,
         items_have_mcq_beside=False,
         items_have_mcq_below=False,
+        items_have_predefined_mcq=PredefinedMcq(
+            grammatical_gender=False,
+            grammatical_number=False,
+        ),
         show_arrow_before_mcq_fields=False,
         show_mcq_choices_by_default=False,
     )

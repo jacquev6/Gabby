@@ -162,6 +162,7 @@ export interface components {
       items_have_mcq_below: boolean;
       /** Items Have Mcq Beside */
       items_have_mcq_beside: boolean;
+      items_have_predefined_mcq: components["schemas"]["PredefinedMcq"];
       /**
        * Kind
        * @enum {string}
@@ -367,6 +368,13 @@ export interface components {
       /** Y */
       y: number;
     };
+    /** PredefinedMcq */
+    PredefinedMcq: {
+      /** Grammatical Gender */
+      grammatical_gender: boolean;
+      /** Grammatical Number */
+      grammatical_number: boolean;
+    };
     /** Section */
     Section: {
       /** Paragraphs */
@@ -481,6 +489,10 @@ export interface components {
        *   "items_are_boxed": false,
        *   "items_have_mcq_below": false,
        *   "items_have_mcq_beside": false,
+       *   "items_have_predefined_mcq": {
+       *     "grammatical_gender": false,
+       *     "grammatical_number": false
+       *   },
        *   "kind": "generic",
        *   "show_arrow_before_mcq_fields": false,
        *   "show_mcq_choices_by_default": false,

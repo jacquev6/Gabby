@@ -149,9 +149,20 @@ defineProps<{
 const model_ = defineModel<Model>({required: true})
 model = model_
 
-const hasMcqBesideProxy = computed({
+const hasPredefinedMcq = computed(() => model.value.adaptationSettings.itemized.effects.hasGenderMcq || model.value.adaptationSettings.itemized.effects.hasNumberMcq)
+
+const showArrowBeforeMcqFields = computed({
   get() {
-    return model.value.adaptationSettings.itemized.effects.hasMcqBeside
+    return model.value.adaptationSettings.show_arrow_before_mcq_fields || hasPredefinedMcq.value
+  },
+  set(value: boolean) {
+    model.value.adaptationSettings.show_arrow_before_mcq_fields = value
+  },
+})
+
+const hasMcqBeside = computed({
+  get() {
+    return model.value.adaptationSettings.itemized.effects.hasMcqBeside || hasPredefinedMcq.value
   },
   set(value: boolean) {
     model.value.adaptationSettings.itemized.effects.hasMcqBeside = value
@@ -161,7 +172,7 @@ const hasMcqBesideProxy = computed({
   },
 })
 
-const hasMcqBelowProxy = computed({
+const hasMcqBelow = computed({
   get() {
     return model.value.adaptationSettings.itemized.effects.hasMcqBelow
   },
@@ -196,9 +207,11 @@ const hasMcqBelowProxy = computed({
   <BLabeledCheckbox :label="$t('alwaysShowMultipleChoices')" v-model="model.adaptationSettings.show_mcq_choices_by_default" />
   <BButton primary sm @click="model.inProgress = {kind: 'multipleChoicesCreation'}">{{ $t('multipleChoicesButton') }}</BButton>
   <div style="padding-left: 1em; padding-top: 0.5em;">
-    <BLabeledCheckbox :label="$t('showArrowBeforeMultipleChoices')" v-model="model.adaptationSettings.show_arrow_before_mcq_fields" />
-    <BLabeledCheckbox :label="$t('multipleChoicesBesideEachItem')" v-model="hasMcqBesideProxy" :disabled="!hasItems" />
-    <BLabeledCheckbox :label="$t('multipleChoicesBelowEachItem')" v-model="hasMcqBelowProxy" :disabled="!hasItems" />
+    <BLabeledCheckbox :label="$t('showArrowBeforeMultipleChoices')" v-model="showArrowBeforeMcqFields" :disabled="hasPredefinedMcq" />
+    <BLabeledCheckbox :label="$t('multipleChoicesBesideEachItem')" v-model="hasMcqBeside" :disabled="!hasItems || hasPredefinedMcq" />
+    <BLabeledCheckbox :label="$t('multipleChoicesBelowEachItem')" v-model="hasMcqBelow" :disabled="!hasItems || hasPredefinedMcq" />
+    <BLabeledCheckbox :label="$t('multipleChoicesGender')" v-model="model.adaptationSettings.itemized.effects.hasGenderMcq" :disabled="!hasItems" />
+    <BLabeledCheckbox :label="$t('multipleChoicesNumber')" v-model="model.adaptationSettings.itemized.effects.hasNumberMcq" :disabled="!hasItems" />
   </div>
 </template>
 

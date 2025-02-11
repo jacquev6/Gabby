@@ -49,6 +49,9 @@
             "title": "Items Have Mcq Beside",
             "type": "boolean"
           },
+          "items_have_predefined_mcq": {
+            "$ref": "#/components/schemas/PredefinedMcq"
+          },
           "kind": {
             "enum": [
               "generic",
@@ -103,6 +106,7 @@
           "items_are_boxed",
           "items_have_mcq_beside",
           "items_have_mcq_below",
+          "items_have_predefined_mcq",
           "show_arrow_before_mcq_fields",
           "show_mcq_choices_by_default"
         ],
@@ -668,6 +672,25 @@
         "title": "Point",
         "type": "object"
       },
+      "PredefinedMcq": {
+        "additionalProperties": false,
+        "properties": {
+          "grammatical_gender": {
+            "title": "Grammatical Gender",
+            "type": "boolean"
+          },
+          "grammatical_number": {
+            "title": "Grammatical Number",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "grammatical_gender",
+          "grammatical_number"
+        ],
+        "title": "PredefinedMcq",
+        "type": "object"
+      },
       "Section": {
         "additionalProperties": false,
         "properties": {
@@ -941,6 +964,10 @@
               "items_are_boxed": false,
               "items_have_mcq_below": false,
               "items_have_mcq_beside": false,
+              "items_have_predefined_mcq": {
+                "grammatical_gender": false,
+                "grammatical_number": false
+              },
               "kind": "generic",
               "show_arrow_before_mcq_fields": false,
               "show_mcq_choices_by_default": false,

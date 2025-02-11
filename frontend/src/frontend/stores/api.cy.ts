@@ -1671,6 +1671,10 @@ describe('ApiStore - Application - 2', () => {
           items_are_boxed: false,
           items_have_mcq_beside: false,
           items_have_mcq_below: false,
+          items_have_predefined_mcq: {
+            grammatical_gender: false,
+            grammatical_number: false,
+          },
           show_arrow_before_mcq_fields: false,
           show_mcq_choices_by_default: false,
         },

@@ -14,7 +14,7 @@ from . import exercises
 from . import exercises as e
 from . import renderable
 from . import renderable as r
-from .api_models import Adaptation, TokensItems, Selectable
+from .api_models import Adaptation, TokensItems, Selectable, PredefinedMcq
 
 
 def adapt(exercise: exercises.Exercise) -> renderable.Exercise | None:
@@ -43,6 +43,8 @@ class _Adapter:
         self.mcq_beside_items = None
         self.items_have_mcq_below = exercise.adaptation.items_have_mcq_below
         self.mcq_below_items = None
+        self.items_have_gender_mcq_beside = exercise.adaptation.items_have_predefined_mcq.grammatical_gender
+        self.items_have_number_mcq_beside = exercise.adaptation.items_have_predefined_mcq.grammatical_number
 
         if exercise.adaptation.placeholder_for_fill_with_free_text is not None:
             self.global_placeholders.append((exercise.adaptation.placeholder_for_fill_with_free_text, renderable.FreeTextInput(kind="freeTextInput")))
@@ -381,6 +383,22 @@ class _Adapter:
             if self.mcq_beside_items is not None:
                 yield renderable.Whitespace(kind="whitespace")
                 yield self.mcq_beside_items
+            if self.items_have_gender_mcq_beside:
+                yield renderable.Whitespace(kind="whitespace")
+                yield renderable.MultipleChoicesInput(
+                    kind="multipleChoicesInput",
+                    show_arrow_before=True,
+                    choices=[[renderable.Text(kind="text", text="féminin")], [renderable.Text(kind="text", text="masculin")]],  # @todo Support exercises in English?
+                    show_choices_by_default=self.show_mcq_choices_by_default,
+                )
+            if self.items_have_number_mcq_beside:
+                yield renderable.Whitespace(kind="whitespace")
+                yield renderable.MultipleChoicesInput(
+                    kind="multipleChoicesInput",
+                    show_arrow_before=not self.items_have_gender_mcq_beside,
+                    choices=[[renderable.Text(kind="text", text="singulier")], [renderable.Text(kind="text", text="pluriel")]],  # @todo Support exercises in English?
+                    show_choices_by_default=self.show_mcq_choices_by_default,
+                )
         else:
             yield renderable.AnySequence(
                 kind="sequence",
@@ -646,6 +664,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -672,6 +691,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -706,6 +726,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -747,6 +768,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -807,6 +829,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -857,6 +880,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -920,6 +944,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -996,6 +1021,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1045,6 +1071,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1109,6 +1136,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1170,6 +1198,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1253,6 +1282,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1321,6 +1351,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1385,6 +1416,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1436,6 +1468,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1485,6 +1518,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1556,6 +1590,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1619,6 +1654,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1662,6 +1698,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1748,6 +1785,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1811,6 +1849,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1862,6 +1901,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1925,6 +1965,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -1980,6 +2021,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=True,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -2039,6 +2081,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -2133,6 +2176,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -2227,6 +2271,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -2323,6 +2368,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=True,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -2439,6 +2485,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -2496,6 +2543,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=True,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -2553,6 +2601,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=True,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -2615,6 +2664,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -2681,6 +2731,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=True,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -2791,6 +2842,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=True,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -2906,6 +2958,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=True,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -3041,6 +3094,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=True,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -3141,6 +3195,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=True,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -3302,6 +3357,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=True,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -3397,6 +3453,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=True,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -3527,6 +3584,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=True,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -3662,6 +3720,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=True,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -3827,6 +3886,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=True,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -3937,6 +3997,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=True,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -4161,6 +4222,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=True,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -4268,6 +4330,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=True,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -4447,6 +4510,306 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             ),
         )
 
+    def test_gender_mcq(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.InsertOp(insert="alpha bravo charlie\n", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                adaptation=Adaptation(
+                    kind="generic",
+                    wording_paragraphs_per_pagelet=3,
+                    single_item_per_paragraph=False,
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "tokens", "words": True, "punctuation": False},
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=True,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=True, grammatical_number=False),
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="alpha"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            show_arrow_before=True,
+                                            choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="bravo"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            show_arrow_before=True,
+                                            choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="charlie"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            show_arrow_before=True,
+                                            choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
+            ),
+        )
+
+    def test_number_mcq(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.InsertOp(insert="alpha bravo charlie\n", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                adaptation=Adaptation(
+                    kind="generic",
+                    wording_paragraphs_per_pagelet=3,
+                    single_item_per_paragraph=False,
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "tokens", "words": True, "punctuation": False},
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=True,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=True),
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="alpha"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            show_arrow_before=True,
+                                            choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="bravo"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            show_arrow_before=True,
+                                            choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="charlie"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            show_arrow_before=True,
+                                            choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
+            ),
+        )
+
+    def test_gender_and_number_mcq(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.InsertOp(insert="alpha bravo charlie\n", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                adaptation=Adaptation(
+                    kind="generic",
+                    wording_paragraphs_per_pagelet=3,
+                    single_item_per_paragraph=False,
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "tokens", "words": True, "punctuation": True},
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=True,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=True, grammatical_number=True),
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="alpha"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            show_arrow_before=True,
+                                            choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="bravo"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            show_arrow_before=True,
+                                            choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="charlie"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            show_arrow_before=True,
+                                            choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
+            ),
+        )
+
+    def test_gender_and_number_mcq__single_item_per_paragraph(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.InsertOp(insert="alpha bravo charlie\n", attributes={})],
+                example=[d.InsertOp(insert="\n", attributes={})],
+                clue=[d.InsertOp(insert="\n", attributes={})],
+                adaptation=Adaptation(
+                    kind="generic",
+                    wording_paragraphs_per_pagelet=3,
+                    single_item_per_paragraph=True,
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "tokens", "words": True, "punctuation": True},
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=True,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=True, grammatical_number=True),
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="alpha"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            show_arrow_before=True,
+                                            choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                        ),
+                                    ]
+                                ),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="bravo"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            show_arrow_before=True,
+                                            choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                        ),
+                                    ]
+                                ),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="charlie"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            show_arrow_before=True,
+                                            choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
+            ),
+        )
+
 
 class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
     def test_simple(self):
@@ -4474,6 +4837,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -4556,6 +4920,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -4682,6 +5047,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -4760,6 +5126,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -4832,6 +5199,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -4928,6 +5296,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -5024,6 +5393,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -5107,6 +5477,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -5187,6 +5558,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -5289,6 +5661,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -5377,6 +5750,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -5463,6 +5837,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -5541,6 +5916,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -5619,6 +5995,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -5697,6 +6074,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -5773,6 +6151,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -5851,6 +6230,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -5929,6 +6309,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -6010,6 +6391,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -6091,6 +6473,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -6198,6 +6581,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -6306,6 +6690,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -6417,6 +6802,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -6501,6 +6887,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -6572,6 +6959,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -6636,6 +7024,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -6681,6 +7070,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -6736,6 +7126,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -6793,6 +7184,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -6856,6 +7248,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -6903,6 +7296,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -6986,6 +7380,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -7053,6 +7448,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -7140,6 +7536,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -7225,6 +7622,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -7310,6 +7708,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=True,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -7397,6 +7796,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=True,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -7482,6 +7882,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     items_are_boxed=True,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -7583,6 +7984,7 @@ class LenientParagraphTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -7694,6 +8096,7 @@ class LenientParagraphTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -7775,6 +8178,7 @@ class LenientParagraphTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -7856,6 +8260,7 @@ class LenientParagraphTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -7943,6 +8348,7 @@ class LenientParagraphTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -8055,6 +8461,7 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -8145,6 +8552,7 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),
@@ -8242,6 +8650,7 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                     items_are_boxed=True,
                     items_have_mcq_beside=False,
                     items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     show_arrow_before_mcq_fields=False,
                     show_mcq_choices_by_default=False,
                 ),

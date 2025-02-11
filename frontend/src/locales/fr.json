@@ -155,6 +155,8 @@
   "showArrowBeforeMultipleChoices": "Précédé d'une flèche",
   "multipleChoicesBesideEachItem": "À coté de chaque item",
   "multipleChoicesBelowEachItem": "En dessous de chaque item",
+  "multipleChoicesGender": "Genre",
+  "multipleChoicesNumber": "Nombre",
   "multipleChoicesInstructions": "Sélectionnez un ensemble de choix dans le champ \"Consigne\" ou \"Énoncé\" de la colonne \"Édition\". Incluez les caractère de début, fin et séparation.",
   "choicesSettingsSeparators": "Séparateurs",
   "choicesSettingsStart": "Début",

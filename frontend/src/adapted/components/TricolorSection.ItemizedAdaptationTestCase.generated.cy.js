@@ -25,6 +25,36 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
     cy.screenshot('gabby.adaptation.ItemizedAdaptationTestCase.test_boxed_words.0.wording')
   })
 
+  it('renders gabby.adaptation.ItemizedAdaptationTestCase.test_gender_and_number_mcq pagelet 0 wording', () => {
+    cy.mount(TricolorSection, {
+      props: {
+        paragraphs: [{"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "alpha"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": true, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "f\u00e9minin"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "masculin"}]], "show_choices_by_default": false}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "singulier"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "pluriel"}]], "show_choices_by_default": false}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "bravo"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": true, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "f\u00e9minin"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "masculin"}]], "show_choices_by_default": false}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "singulier"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "pluriel"}]], "show_choices_by_default": false}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "charlie"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": true, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "f\u00e9minin"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "masculin"}]], "show_choices_by_default": false}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "singulier"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "pluriel"}]], "show_choices_by_default": false}]}],
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.ItemizedAdaptationTestCase.test_gender_and_number_mcq.0.wording')
+  })
+
+  it('renders gabby.adaptation.ItemizedAdaptationTestCase.test_gender_and_number_mcq__single_item_per_paragraph pagelet 0 wording', () => {
+    cy.mount(TricolorSection, {
+      props: {
+        paragraphs: [{"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "alpha"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": true, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "f\u00e9minin"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "masculin"}]], "show_choices_by_default": false}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "singulier"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "pluriel"}]], "show_choices_by_default": false}]}, {"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "bravo"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": true, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "f\u00e9minin"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "masculin"}]], "show_choices_by_default": false}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "singulier"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "pluriel"}]], "show_choices_by_default": false}]}, {"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "charlie"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": true, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "f\u00e9minin"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "masculin"}]], "show_choices_by_default": false}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "singulier"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "pluriel"}]], "show_choices_by_default": false}]}],
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.ItemizedAdaptationTestCase.test_gender_and_number_mcq__single_item_per_paragraph.0.wording')
+  })
+
+  it('renders gabby.adaptation.ItemizedAdaptationTestCase.test_gender_mcq pagelet 0 wording', () => {
+    cy.mount(TricolorSection, {
+      props: {
+        paragraphs: [{"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "alpha"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": true, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "f\u00e9minin"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "masculin"}]], "show_choices_by_default": false}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "bravo"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": true, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "f\u00e9minin"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "masculin"}]], "show_choices_by_default": false}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "charlie"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": true, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "f\u00e9minin"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "masculin"}]], "show_choices_by_default": false}]}],
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.ItemizedAdaptationTestCase.test_gender_mcq.0.wording')
+  })
+
   it('renders gabby.adaptation.ItemizedAdaptationTestCase.test_mcq_below_letters pagelet 0 instructions', () => {
     cy.mount(TricolorSection, {
       props: {
@@ -173,6 +203,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
       },
     })
     cy.screenshot('gabby.adaptation.ItemizedAdaptationTestCase.test_mcq_beside_words_and_punctuation.0.wording')
+  })
+
+  it('renders gabby.adaptation.ItemizedAdaptationTestCase.test_number_mcq pagelet 0 wording', () => {
+    cy.mount(TricolorSection, {
+      props: {
+        paragraphs: [{"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "alpha"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": true, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "singulier"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "pluriel"}]], "show_choices_by_default": false}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "bravo"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": true, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "singulier"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "pluriel"}]], "show_choices_by_default": false}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "charlie"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": true, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "singulier"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "pluriel"}]], "show_choices_by_default": false}]}],
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.ItemizedAdaptationTestCase.test_number_mcq.0.wording')
   })
 
   it('renders gabby.adaptation.ItemizedAdaptationTestCase.test_sel_tags pagelet 0 instructions', () => {

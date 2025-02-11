@@ -63,6 +63,8 @@ export type Model = MakeModelOptions & {
         isBoxed: boolean
         hasMcqBeside: boolean
         hasMcqBelow: boolean
+        hasGenderMcq: boolean
+        hasNumberMcq: boolean
       }
     }
   }
@@ -135,6 +137,8 @@ const defaultAdaptationSettings: Model["adaptationSettings"] = {
       isBoxed: false,
       hasMcqBeside: false,
       hasMcqBelow: false,
+      hasGenderMcq: false,
+      hasNumberMcq: false,
     },
   },
 }
@@ -277,6 +281,10 @@ function makeAdaptation(model: Model): Adaptation {
     items_are_boxed: adaptationSettings.itemized.effects.isBoxed,
     items_have_mcq_beside: adaptationSettings.itemized.effects.hasMcqBeside,
     items_have_mcq_below: adaptationSettings.itemized.effects.hasMcqBelow,
+    items_have_predefined_mcq: {
+      grammatical_gender: adaptationSettings.itemized.effects.hasGenderMcq,
+      grammatical_number: adaptationSettings.itemized.effects.hasNumberMcq,
+    },
     show_arrow_before_mcq_fields: adaptationSettings.show_arrow_before_mcq_fields,
     show_mcq_choices_by_default: adaptationSettings.show_mcq_choices_by_default,
   }
@@ -321,6 +329,8 @@ function makeAdaptationSettings(adaptation: Adaptation, baseAdaptationSettings: 
         isBoxed: adaptation.items_are_boxed,
         hasMcqBeside: adaptation.items_have_mcq_beside,
         hasMcqBelow: adaptation.items_have_mcq_below,
+        hasGenderMcq: adaptation.items_have_predefined_mcq.grammatical_gender,
+        hasNumberMcq: adaptation.items_have_predefined_mcq.grammatical_number,
       }
     }
   }

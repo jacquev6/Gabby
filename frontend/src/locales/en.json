@@ -155,6 +155,8 @@
   "showArrowBeforeMultipleChoices": "Preceded by an arrow",
   "multipleChoicesBesideEachItem": "Beside each item",
   "multipleChoicesBelowEachItem": "Below each item",
+  "multipleChoicesGender": "Gender",
+  "multipleChoicesNumber": "Number",
   "multipleChoicesInstructions": "Select a set of choices in the \"Instructions\" or \"Wording\" fields in the \"Edition\" column. Include start, stop and separator characters.",
   "choicesSettingsSeparators": "Separators",
   "choicesSettingsStart": "Start",

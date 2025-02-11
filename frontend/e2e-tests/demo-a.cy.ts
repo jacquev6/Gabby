@@ -850,4 +850,40 @@ describe('Gabby', () => {
       screenshot('multiple-choices-below-separated-items', 'export-3')
     })
   })
+
+  it('create a "Multiple choices" with predefined "Gender" and "Number" choices', () => {
+    cy.viewport(1300, 1300)
+    visit('/project-xkopqm/textbook-klxufv/page-15/new-exercise', {pdf: 'demo'})
+    setupAliases()
+
+    cy.get('@number').type('1')
+
+    cy.get('@adaptationType').select('multiple-choices')
+
+    traceRectangle('@canvas', 8, 5, 61, 9)
+    cy.get('button:contains("Instructions")').click()
+    notBusy()
+    traceRectangle('@canvas', 7, 9.25, 51, 12)
+    cy.get('button:contains("Wording")').click()
+    notBusy()
+
+    cy.get('div:contains("Delimited by") > span > input').click().type('▪')
+    cy.get('div:contains("1 item per line") > input').check()
+    cy.get('div:contains("Gender") > input').check()
+    screenshot('multiple-choices-gender-number', 'edit-1')
+    cy.get('div:contains("Number") > input[type="checkbox"]').check()
+    screenshot('multiple-choices-gender-number', 'edit-2')
+
+    cy.get('button:contains("Save then back")').click()
+    visit('/project-xkopqm')
+    cy.get('a:contains("the exported HTML")').should('have.attr', 'href').then(url => {
+      cy.visit(url + '&download=false')
+      cy.get('a').click()
+      screenshot('multiple-choices-gender-number', 'export-1')
+      cy.get('span.main').eq(1).click()
+      screenshot('multiple-choices-gender-number', 'export-2')
+      cy.get('span.choice0').click()
+      screenshot('multiple-choices-gender-number', 'export-3')
+    })
+  })
 })
