@@ -51,17 +51,17 @@ const hasItems = computed(() => items.value !== null)
 
 const fillWithFreeTextPlaceholder = computed({
   get() {
-    if (model.value.adaptationSettings.placeholder_for_fill_with_free_text !== null) {
-      return model.value.adaptationSettings.placeholder_for_fill_with_free_text
+    if (model.value.adaptationSettings.placeholderForFillWithFreeText !== null) {
+      return model.value.adaptationSettings.placeholderForFillWithFreeText
     } else {
       return ''
     }
   },
   set(value: string) {
     if (value === '') {
-      model.value.adaptationSettings.placeholder_for_fill_with_free_text = null
+      model.value.adaptationSettings.placeholderForFillWithFreeText = null
     } else {
-      model.value.adaptationSettings.placeholder_for_fill_with_free_text = value
+      model.value.adaptationSettings.placeholderForFillWithFreeText = value
     }
   },
 })
@@ -138,13 +138,13 @@ const selfRef = ref<HTMLDivElement | null>(null)
               </p>
             </template>
 
-            <BLabeledCheckbox v-model="model.adaptationSettings.single_item_per_paragraph" :label="$t('singleItemPerParagraph')" :disabled="!hasItems" />
+            <BLabeledCheckbox v-model="model.adaptationSettings.singleItemPerParagraph" :label="$t('singleItemPerParagraph')" :disabled="!hasItems" />
             <BoxedEffectTools v-if="fields !== null" v-model="model" :disabled="!hasItems" />
           </ExerciseToolsColumnSection>
           <ExerciseToolsColumnSection>
             <div class="mb-3">
               <p class="form-label">{{ $t('exerciseDistribution') }}</p>
-              <DistributionToggles v-model="model.adaptationSettings.wording_paragraphs_per_pagelet" />
+              <DistributionToggles v-model="model.adaptationSettings.wordingParagraphsPerPagelet" />
             </div>
           </ExerciseToolsColumnSection>
         </div>

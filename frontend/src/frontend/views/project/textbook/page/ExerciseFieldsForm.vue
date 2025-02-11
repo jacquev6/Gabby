@@ -39,11 +39,11 @@ export type Model = MakeModelOptions & {
   rectangles: PdfRectangle[]
   adaptationSettings: {
     kind: Adaptation['kind']
-    wording_paragraphs_per_pagelet: number | null
-    single_item_per_paragraph: boolean
-    placeholder_for_fill_with_free_text: string | null  // @todo Remove null: translate '' to null in makeAdaptation
-    show_arrow_before_mcq_fields: boolean
-    show_mcq_choices_by_default: boolean
+    wordingParagraphsPerPagelet: number | null
+    singleItemPerParagraph: boolean
+    placeholderForFillWithFreeText: string | null  // @todo Remove null: translate '' to null in makeAdaptation
+    showArrowBeforeMcqFields: boolean
+    showMcqChoicesByDefault: boolean
     itemized: {
       items: {
         isLetters: boolean
@@ -107,11 +107,11 @@ export const allColorsForSelectableEffect = [
 
 const defaultAdaptationSettings: Model["adaptationSettings"] = {
   kind: 'generic',
-  wording_paragraphs_per_pagelet: null,
-  single_item_per_paragraph: false,
-  placeholder_for_fill_with_free_text: null,
-  show_arrow_before_mcq_fields: false,
-  show_mcq_choices_by_default: false,
+  wordingParagraphsPerPagelet: null,
+  singleItemPerParagraph: false,
+  placeholderForFillWithFreeText: null,
+  showArrowBeforeMcqFields: false,
+  showMcqChoicesByDefault: false,
   itemized: {
     items: {
       isLetters: false,
@@ -245,7 +245,7 @@ export function disableItemizedEffects(model: Model) {
   model.adaptationSettings.itemized.effects.hasMcqBelow = false
   model.adaptationSettings.itemized.effects.hasGenderMcq = false
   model.adaptationSettings.itemized.effects.hasNumberMcq = false
-  model.adaptationSettings.single_item_per_paragraph = false
+  model.adaptationSettings.singleItemPerParagraph = false
 }
 
 export function makeItems(adaptationSettings: Model["adaptationSettings"]): Adaptation["items"] {
@@ -275,9 +275,9 @@ function makeAdaptation(model: Model): Adaptation {
 
   const adaptation = {
     kind: adaptationSettings.kind,
-    wording_paragraphs_per_pagelet: adaptationSettings.wording_paragraphs_per_pagelet,
-    single_item_per_paragraph: adaptationSettings.single_item_per_paragraph,
-    placeholder_for_fill_with_free_text: adaptationSettings.placeholder_for_fill_with_free_text,
+    wording_paragraphs_per_pagelet: adaptationSettings.wordingParagraphsPerPagelet,
+    single_item_per_paragraph: adaptationSettings.singleItemPerParagraph,
+    placeholder_for_fill_with_free_text: adaptationSettings.placeholderForFillWithFreeText,
     items,
     items_are_selectable,
     items_are_boxed: adaptationSettings.itemized.effects.isBoxed,
@@ -287,8 +287,8 @@ function makeAdaptation(model: Model): Adaptation {
       grammatical_gender: adaptationSettings.itemized.effects.hasGenderMcq,
       grammatical_number: adaptationSettings.itemized.effects.hasNumberMcq,
     },
-    show_arrow_before_mcq_fields: adaptationSettings.show_arrow_before_mcq_fields,
-    show_mcq_choices_by_default: adaptationSettings.show_mcq_choices_by_default,
+    show_arrow_before_mcq_fields: adaptationSettings.showArrowBeforeMcqFields,
+    show_mcq_choices_by_default: adaptationSettings.showMcqChoicesByDefault,
   }
 
   const remadeAdaptationSettings = makeAdaptationSettings(adaptation, adaptationSettings)
@@ -307,11 +307,11 @@ function makeAdaptationSettings(adaptation: Adaptation, baseAdaptationSettings: 
 
   const adaptationSettings = {
     kind: adaptation.kind,
-    wording_paragraphs_per_pagelet: adaptation.wording_paragraphs_per_pagelet,
-    single_item_per_paragraph: adaptation.single_item_per_paragraph,
-    placeholder_for_fill_with_free_text: adaptation.placeholder_for_fill_with_free_text,
-    show_arrow_before_mcq_fields: adaptation.show_arrow_before_mcq_fields,
-    show_mcq_choices_by_default: adaptation.show_mcq_choices_by_default,
+    wordingParagraphsPerPagelet: adaptation.wording_paragraphs_per_pagelet,
+    singleItemPerParagraph: adaptation.single_item_per_paragraph,
+    placeholderForFillWithFreeText: adaptation.placeholder_for_fill_with_free_text,
+    showArrowBeforeMcqFields: adaptation.show_arrow_before_mcq_fields,
+    showMcqChoicesByDefault: adaptation.show_mcq_choices_by_default,
     itemized: {
       items: {
         isLetters: adaptation.items !== null && adaptation.items.kind === 'characters' && adaptation.items.letters,

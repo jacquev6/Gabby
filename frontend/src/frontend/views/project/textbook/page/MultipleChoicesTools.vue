@@ -153,10 +153,10 @@ const hasPredefinedMcq = computed(() => model.value.adaptationSettings.itemized.
 
 const showArrowBeforeMcqFields = computed({
   get() {
-    return model.value.adaptationSettings.show_arrow_before_mcq_fields || hasPredefinedMcq.value
+    return model.value.adaptationSettings.showArrowBeforeMcqFields || hasPredefinedMcq.value
   },
   set(value: boolean) {
-    model.value.adaptationSettings.show_arrow_before_mcq_fields = value
+    model.value.adaptationSettings.showArrowBeforeMcqFields = value
   },
 })
 
@@ -204,7 +204,7 @@ const hasMcqBelow = computed({
     </template>
   </ContextMenu>
 
-  <BLabeledCheckbox :label="$t('alwaysShowMultipleChoices')" v-model="model.adaptationSettings.show_mcq_choices_by_default" />
+  <BLabeledCheckbox :label="$t('alwaysShowMultipleChoices')" v-model="model.adaptationSettings.showMcqChoicesByDefault" />
   <BButton primary sm @click="model.inProgress = {kind: 'multipleChoicesCreation'}">{{ $t('multipleChoicesButton') }}</BButton>
   <div style="padding-left: 1em; padding-top: 0.5em;">
     <BLabeledCheckbox :label="$t('showArrowBeforeMultipleChoices')" v-model="showArrowBeforeMcqFields" :disabled="hasPredefinedMcq" />
