@@ -243,6 +243,8 @@ export function disableItemizedEffects(model: Model) {
   model.adaptationSettings.itemized.effects.isBoxed = false
   model.adaptationSettings.itemized.effects.hasMcqBeside = false
   model.adaptationSettings.itemized.effects.hasMcqBelow = false
+  model.adaptationSettings.itemized.effects.hasGenderMcq = false
+  model.adaptationSettings.itemized.effects.hasNumberMcq = false
   model.adaptationSettings.single_item_per_paragraph = false
 }
 
