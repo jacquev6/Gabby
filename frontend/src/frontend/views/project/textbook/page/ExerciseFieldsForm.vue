@@ -305,7 +305,7 @@ function makeAdaptationSettings(adaptation: Adaptation, baseAdaptationSettings: 
     allColors.splice(0, adaptation.items_are_selectable.colors.length, ...adaptation.items_are_selectable.colors)
   }
 
-  const adaptationSettings = {
+  const adaptationSettings: Model["adaptationSettings"] = {
     kind: adaptation.kind,
     wordingParagraphsPerPagelet: adaptation.wording_paragraphs_per_pagelet,
     singleItemPerParagraph: adaptation.single_item_per_paragraph,
@@ -338,7 +338,10 @@ function makeAdaptationSettings(adaptation: Adaptation, baseAdaptationSettings: 
   }
 
   // Fix attributes that are absent (on purpose) from the adaptation
-  adaptationSettings.itemized.items.isSeparated = baseAdaptationSettings.itemized.items.isSeparated
+  if (adaptation.items === null) {
+    adaptationSettings.itemized.items.isSeparated = baseAdaptationSettings.itemized.items.isSeparated
+    adaptationSettings.itemized.items.separator = baseAdaptationSettings.itemized.items.separator
+  }
   adaptationSettings.itemized.effects.selectable.allColors.splice(
     adaptationSettings.itemized.effects.selectable.colorsCount,
     adaptationSettings.itemized.effects.selectable.allColors.length - adaptationSettings.itemized.effects.selectable.colorsCount,
