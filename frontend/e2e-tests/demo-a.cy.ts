@@ -886,4 +886,70 @@ describe('Gabby', () => {
       screenshot('multiple-choices-gender-number', 'export-3')
     })
   })
+
+  it('creates a "Double: word → MCQ" exercise', () => {
+    cy.viewport(1300, 1300)
+    visit('/project-xkopqm/textbook-klxufv/page-16/new-exercise', {pdf: 'demo'})
+    setupAliases()
+
+    cy.get('@number').type('1')
+
+    cy.get('@adaptationType').select('multiple-choices')
+
+    traceRectangle('@canvas', 8, 5, 91, 11)
+    cy.get('button:contains("Instructions")').click()
+    notBusy()
+    traceRectangle('@canvas', 7, 11, 35, 20)
+    cy.get('button:contains("Wording")').click()
+    notBusy()
+
+    cy.get('div:contains("Double: word → MCQ") > input').check()
+    cy.get('div:contains("Sentences") > input').should('be.checked')
+
+    cy.get('button:contains("Multiple choices")').click()
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 79, node, 104)
+    })
+    cy.get('button:contains("OK")').should('exist')
+    cy.get('label:contains("Start") + input').should('have.value', '')
+    cy.get('label:contains("Stop") + input').should('have.value', '')
+    cy.get('label:contains("Separators") + input').should('have.value', ',')
+    cy.get('input[data-cy="second-mcq-separator"]').should('have.value', '')
+    cy.get('label:contains("Placeholder") + input').should('have.value', '')
+    cy.get('button:contains("OK")').click()
+
+    cy.get('@wording').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 20, node, 28)
+    })
+    cy.get('button[data-cy="format-mcq-placeholder"]').click()
+    cy.get('@wording').find('p').then($el => {
+      const node = $el[1].firstChild
+      console.assert(node !== null)
+      selectRange(node, 21, node, 25)
+    })
+    cy.get('button[data-cy="format-mcq-placeholder"]').click()
+    cy.get('@wording').find('p').then($el => {
+      const node = $el[2].firstChild
+      console.assert(node !== null)
+      selectRange(node, 15, node, 19)
+    })
+    cy.get('button[data-cy="format-mcq-placeholder"]').click()
+    screenshot('double--word-to-mcq', 'edit-1')
+
+    cy.get('button:contains("Save then back")').click()
+    visit('/project-xkopqm')
+    cy.get('a:contains("the exported HTML")').should('have.attr', 'href').then(url => {
+      cy.visit(url + '&download=false')
+      cy.get('a').click()
+      screenshot('double--word-to-mcq', 'export-1')
+      // cy.get('span.main').eq(1).click()
+      screenshot('double--word-to-mcq', 'export-2')
+      // cy.get('span.choice0').click()
+      screenshot('double--word-to-mcq', 'export-3')
+    })
+  })
 })

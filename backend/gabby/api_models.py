@@ -146,6 +146,7 @@ class Adaptation(PydanticBase):
     items_have_mcq_beside: bool
     items_have_mcq_below: bool
     items_have_predefined_mcq: PredefinedMcq
+    items_are_repeated_with_mcq: bool
     show_arrow_before_mcq_fields: bool
     show_mcq_choices_by_default: bool
 
@@ -179,6 +180,7 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
             grammatical_gender=False,
             grammatical_number=False,
         ),
+        items_are_repeated_with_mcq=False,
         show_arrow_before_mcq_fields=False,
         show_mcq_choices_by_default=False,
     )

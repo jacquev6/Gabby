@@ -95,3 +95,26 @@ span.usable-colors-button {
   height: 1.25em;
 }
 </style>
+
+<style>
+/* Keep this section consistent with the length of 'defaultColors' array in 'defaultAdaptationSettings' */
+div.ql-editor sel-blot[data-sel="1"] {
+  background: var(--sel-blot-color-1);
+}
+
+div.ql-editor sel-blot[data-sel="2"] {
+  background: var(--sel-blot-color-2);
+}
+
+div.ql-editor sel-blot[data-sel="3"] {
+  background: var(--sel-blot-color-3);
+}
+
+div.ql-editor sel-blot[data-sel="4"] {
+  background: var(--sel-blot-color-4);
+}
+
+div.ql-editor sel-blot[data-sel="5"] {
+  background: var(--sel-blot-color-5);
+}
+</style>

@@ -157,6 +157,8 @@ export interface components {
       items: components["schemas"]["CharactersItems"] | components["schemas"]["TokensItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"] | components["schemas"]["SeparatedItems"] | null;
       /** Items Are Boxed */
       items_are_boxed: boolean;
+      /** Items Are Repeated With Mcq */
+      items_are_repeated_with_mcq: boolean;
       items_are_selectable: components["schemas"]["Selectable"] | null;
       /** Items Have Mcq Below */
       items_have_mcq_below: boolean;
@@ -487,6 +489,7 @@ export interface components {
       /**
        * @default {
        *   "items_are_boxed": false,
+       *   "items_are_repeated_with_mcq": false,
        *   "items_have_mcq_below": false,
        *   "items_have_mcq_beside": false,
        *   "items_have_predefined_mcq": {

@@ -157,6 +157,8 @@
   "multipleChoicesBelowEachItem": "Below each item",
   "multipleChoicesGender": "Gender",
   "multipleChoicesNumber": "Number",
+  "multipleChoicesRepeatedWithMcq": "Double: word → MCQ",
+  "mcqPlaceholderItemButton": "Word → MCQ",
   "multipleChoicesInstructions": "Select a set of choices in the \"Instructions\" or \"Wording\" fields in the \"Edition\" column. Include start, stop and separator characters.",
   "choicesSettingsSeparators": "Separators",
   "choicesSettingsStart": "Start",

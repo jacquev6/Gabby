@@ -10,11 +10,17 @@ class ManualItemBlot extends InlineBlot {
   static override tagName = 'manual-item-blot'
 }
 
+class McqPlaceholderBlot extends InlineBlot {
+  static override blotName = 'mcq-placeholder'
+  static override tagName = 'mcq-placeholder-blot'
+}
+
 export const wysiwygBlots = [
   ...basicBlots,
   SelBlot,
   Choices2Blot,
   ManualItemBlot,
+  McqPlaceholderBlot,
 ]
 
 export const wysiwygContagiousFormats = ['choices2']
@@ -136,6 +142,16 @@ const selfRef = ref<HTMLDivElement | null>(null)
                   data-cy="format-manual-item"
                 >{{ $t('manualItemButton') }}</BButton>
               </p>
+
+              <p v-if="model.adaptationSettings.itemized.effects.repeatedWithMcq">
+                <BButton
+                  sm secondary
+                  :disabled="fields.focusedWysiwygField !== 'wording'"
+                  :class="{active: fields.currentWysiwygFormat['mcq-placeholder']}"
+                  @click="fields.toggle('mcq-placeholder')"
+                  data-cy="format-mcq-placeholder"
+                >{{ $t('mcqPlaceholderItemButton') }}</BButton>
+              </p>
             </template>
 
             <BLabeledCheckbox v-model="model.adaptationSettings.singleItemPerParagraph" :label="$t('singleItemPerParagraph')" :disabled="!hasItems" />
@@ -172,5 +188,17 @@ button.format-color > span {
   width: 1.25em;
   height: 1.25em;
   cursor: pointer;
+}
+</style>
+
+<style>
+div.ql-editor manual-item-blot {
+  margin: 0;
+  padding: 0 0.4em;
+  border: 2px dotted black;
+}
+
+div.ql-editor mcq-placeholder-blot {
+  background-color: #ffff00;
 }
 </style>

@@ -35,6 +35,7 @@ def upgrade():
                 "grammatical_gender": False,
                 "grammatical_number": False,
             })
+            adaptation["settings"].setdefault("items_are_repeated_with_mcq", False)
             adaptation["settings"].setdefault("show_arrow_before_mcq_fields", False)
             adaptation["settings"].setdefault("show_mcq_choices_by_default", False)
 

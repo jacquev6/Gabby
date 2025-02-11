@@ -3,6 +3,7 @@ import Quill from 'quill/core'
 
 import { InlineBlot, type Model as Deltas } from '$frontend/components/Quill.vue'
 import ContextMenu from '$frontend/components/ContextMenu.vue'
+import deepCopy from 'deep-copy'
 
 
 let model = ref<Model>(null as any/* OK: 'model' is assigned a value in "script setup" below */ as Model)
@@ -136,7 +137,7 @@ function doneEditingChoices2() {
 import { computed, ref, watch } from 'vue'
 
 import { BRow, BCol, BLabeledInput, BButton, BLabeledCheckbox } from '../../../../components/opinion/bootstrap'
-import ExerciseFieldsForm, { type Model } from './ExerciseFieldsForm.vue'
+import ExerciseFieldsForm, { defaultAdaptationSettings, makeItems, type Model } from './ExerciseFieldsForm.vue'
 import type { Textbook } from '$frontend/stores/api'
 
 
@@ -183,6 +184,19 @@ const hasMcqBelow = computed({
     }
   },
 })
+
+const repeatedWithMcq = computed({
+  get() {
+    return model.value.adaptationSettings.itemized.effects.repeatedWithMcq
+  },
+  set(value: boolean) {
+    model.value.adaptationSettings.itemized.effects.repeatedWithMcq = value
+    if (value && makeItems(model.value.adaptationSettings) === null) {
+      model.value.adaptationSettings.itemized.items = deepCopy(defaultAdaptationSettings.itemized.items)
+      model.value.adaptationSettings.itemized.items.isSentences = true
+    }
+  },
+})
 </script>
 
 <template>
@@ -212,6 +226,7 @@ const hasMcqBelow = computed({
     <BLabeledCheckbox :label="$t('multipleChoicesBelowEachItem')" v-model="hasMcqBelow" :disabled="!hasItems || hasPredefinedMcq" />
     <BLabeledCheckbox :label="$t('multipleChoicesGender')" v-model="model.adaptationSettings.itemized.effects.hasGenderMcq" :disabled="!hasItems" />
     <BLabeledCheckbox :label="$t('multipleChoicesNumber')" v-model="model.adaptationSettings.itemized.effects.hasNumberMcq" :disabled="!hasItems" />
+    <BLabeledCheckbox :label="$t('multipleChoicesRepeatedWithMcq')" v-model="repeatedWithMcq" />
   </div>
 </template>
 
@@ -220,34 +235,6 @@ div.ql-editor choice-blot {
   margin: 0;
   padding: 0 0.4em;
   border: 2px solid black;
-}
-
-div.ql-editor manual-item-blot {
-  margin: 0;
-  padding: 0 0.4em;
-  border: 2px dotted black;
-}
-
-/* Keep this section consistent with the length of 'defaultColors' array above */
-/* @todo Could I generate this section? I've not found how Vue could let me do that. */
-div.ql-editor sel-blot[data-sel="1"] {
-  background: var(--sel-blot-color-1);
-}
-
-div.ql-editor sel-blot[data-sel="2"] {
-  background: var(--sel-blot-color-2);
-}
-
-div.ql-editor sel-blot[data-sel="3"] {
-  background: var(--sel-blot-color-3);
-}
-
-div.ql-editor sel-blot[data-sel="4"] {
-  background: var(--sel-blot-color-4);
-}
-
-div.ql-editor sel-blot[data-sel="5"] {
-  background: var(--sel-blot-color-5);
 }
 
 div.ql-editor choices2-blot {

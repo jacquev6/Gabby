@@ -1675,6 +1675,7 @@ describe('ApiStore - Application - 2', () => {
             grammatical_gender: false,
             grammatical_number: false,
           },
+          items_are_repeated_with_mcq: false,
           show_arrow_before_mcq_fields: false,
           show_mcq_choices_by_default: false,
         },

@@ -65,6 +65,7 @@ export type Model = MakeModelOptions & {
         hasMcqBelow: boolean
         hasGenderMcq: boolean
         hasNumberMcq: boolean
+        repeatedWithMcq: boolean
       }
     }
   }
@@ -105,7 +106,7 @@ export const allColorsForSelectableEffect = [
   '#000000',  // black
 ]
 
-const defaultAdaptationSettings: Model["adaptationSettings"] = {
+export const defaultAdaptationSettings: Model["adaptationSettings"] = {
   kind: 'generic',
   wordingParagraphsPerPagelet: null,
   singleItemPerParagraph: false,
@@ -139,6 +140,7 @@ const defaultAdaptationSettings: Model["adaptationSettings"] = {
       hasMcqBelow: false,
       hasGenderMcq: false,
       hasNumberMcq: false,
+      repeatedWithMcq: false,
     },
   },
 }
@@ -245,6 +247,7 @@ export function disableItemizedEffects(model: Model) {
   model.adaptationSettings.itemized.effects.hasMcqBelow = false
   model.adaptationSettings.itemized.effects.hasGenderMcq = false
   model.adaptationSettings.itemized.effects.hasNumberMcq = false
+  model.adaptationSettings.itemized.effects.repeatedWithMcq = false
   model.adaptationSettings.singleItemPerParagraph = false
 }
 
@@ -287,6 +290,7 @@ function makeAdaptation(model: Model): Adaptation {
       grammatical_gender: adaptationSettings.itemized.effects.hasGenderMcq,
       grammatical_number: adaptationSettings.itemized.effects.hasNumberMcq,
     },
+    items_are_repeated_with_mcq: adaptationSettings.itemized.effects.repeatedWithMcq,
     show_arrow_before_mcq_fields: adaptationSettings.showArrowBeforeMcqFields,
     show_mcq_choices_by_default: adaptationSettings.showMcqChoicesByDefault,
   }
@@ -333,6 +337,7 @@ function makeAdaptationSettings(adaptation: Adaptation, baseAdaptationSettings: 
         hasMcqBelow: adaptation.items_have_mcq_below,
         hasGenderMcq: adaptation.items_have_predefined_mcq.grammatical_gender,
         hasNumberMcq: adaptation.items_have_predefined_mcq.grammatical_number,
+        repeatedWithMcq: adaptation.items_are_repeated_with_mcq,
       }
     }
   }
