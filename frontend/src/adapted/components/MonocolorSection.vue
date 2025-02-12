@@ -32,7 +32,7 @@ const style = computed(() => ({
 
 <template>
   <p v-for="(paragraph, paragraphIndex) in paragraphs" :style :class="{first: first && paragraphIndex === 0}">
-    <Renderable v-for="(node, nodeIndex) in paragraph.contents" :node="node" v-model="models" :modelKey="[paragraphIndex, nodeIndex]" :tricolorable="true" />
+    <Renderable v-for="(node, nodeIndex) in paragraph.contents" :node="node" v-model="models" :modelKey="[paragraphIndex, nodeIndex]" />
   </p>
 </template>
 

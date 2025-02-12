@@ -9,11 +9,13 @@ import Renderable from './Renderable.vue'
 import SelectableText from './SelectableText.vue'
 
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   node: Paragraph['contents'][number]
   modelKey: number[]
-  tricolorable: boolean
-}>()
+  inStack?: boolean
+}>(), {
+  inStack: false,
+})
 
 const models = defineModel<Record<string, any/* @todo Type */>>({
   required: true,
@@ -34,7 +36,8 @@ function downgradePassiveList(contents: (Paragraph['contents'][number] & {kind: 
   </template>
   <template v-else-if="node.kind === 'text'">
     <span
-      :class="{tricolorable, bold: node.bold, italic: node.italic}"
+      class="tricolorable"
+      :class="{bold: node.bold, italic: node.italic}"
       :style="node.highlighted !== null ? {background: node.highlighted} : {}"
     >
       {{ node.text }}
@@ -42,15 +45,15 @@ function downgradePassiveList(contents: (Paragraph['contents'][number] & {kind: 
   </template>
   <template v-else-if="node.kind === 'passiveSequence'">
     <span :class="{boxed: node.boxed}">
-      <Renderable v-for="(sub, index) in node.contents" :node="sub" v-model="models" :modelKey="[...props.modelKey, index]" :tricolorable />
+      <Renderable v-for="(sub, index) in node.contents" :node="sub" v-model="models" :modelKey="[...props.modelKey, index]" />
     </span>
   </template>
   <template v-else-if="node.kind === 'freeTextInput'">
-    <FreeTextInput :class="{tricolorable}" v-model="models[modelKey]" />
+    <FreeTextInput class="tricolorable" v-model="models[modelKey]" />
   </template>
   <template v-else-if="node.kind === 'multipleChoicesInput'">
     <MultipleChoicesInput
-      :class="{tricolorable}"
+      :class="{tricolorable: !inStack}"
       v-model="models[modelKey]"
       :choices="node.choices.map(downgradePassiveList)"
       placeholder="...."
@@ -64,17 +67,17 @@ function downgradePassiveList(contents: (Paragraph['contents'][number] & {kind: 
       :boxed="!!node.boxed"
       :colors="node.colors"
     >
-      <Renderable v-for="(sub, index) in node.contents" :node="sub" v-model="models" :modelKey="[...props.modelKey, index]" :tricolorable />
+      <Renderable v-for="(sub, index) in node.contents" :node="sub" v-model="models" :modelKey="[...props.modelKey, index]" />
     </SelectableText>
   </template>
   <template v-else-if="node.kind === 'sequence'">
     <template v-if="node.vertical">
       <span style="display: inline-block; vertical-align: top;">
-        <p v-for="(sub, index) in node.contents"><Renderable :node="sub" v-model="models" :modelKey="[...props.modelKey, index]" :tricolorable="tricolorable && index === 0" /></p>
+        <p v-for="(sub, index) in node.contents"><Renderable :node="sub" v-model="models" :modelKey="[...props.modelKey, index]" :inStack="true" /></p>
       </span>
     </template>
     <template v-else>
-      <Renderable v-for="(sub, index) in node.contents" :node="sub" v-model="models" :modelKey="[...props.modelKey, index]" :tricolorable />
+      <Renderable v-for="(sub, index) in node.contents" :node="sub" v-model="models" :modelKey="[...props.modelKey, index]" />
     </template>
   </template>
   <template v-else>
