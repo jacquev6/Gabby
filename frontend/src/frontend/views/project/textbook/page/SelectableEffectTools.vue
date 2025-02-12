@@ -65,7 +65,7 @@ watch(
         class="usable-colors-button"
         :style="{backgroundColor: model.adaptationSettings.itemized.effects.selectable.allColors[i - 1], cursor: disabled ? 'default' : 'pointer'}"
         :data-cy-colors="i"
-        @click="model.adaptationSettings.itemized.effects.isSelectable = true; model.adaptationSettings.itemized.effects.selectable.colorsCount = i"
+        @click="if (!disabled) { model.adaptationSettings.itemized.effects.isSelectable = true; model.adaptationSettings.itemized.effects.selectable.colorsCount = i }"
         @contextmenu.prevent="(event) => colorPickers[i - 1].show(event.target as HTMLElement)"
       ></span>
     </span>
