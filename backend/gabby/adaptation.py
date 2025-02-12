@@ -365,18 +365,22 @@ class _Adapter:
 
     def decorate_item(self, contents):
         if self.items_are_selectable:
-            contents = [renderable.SelectableInput(
-                kind="selectableInput",
-                contents=contents,
-                colors=self.colors_for_selectable_items,
-                boxed=self.items_are_boxed,
-            )]
+            contents = [
+                renderable.SelectableInput(
+                    kind="selectableInput",
+                    contents=contents,
+                    colors=self.colors_for_selectable_items,
+                    boxed=self.items_are_boxed,
+                )
+            ]
         elif self.items_are_boxed:
-            contents = [renderable.PassiveSequence(
-                kind="passiveSequence",
-                contents=contents,
-                boxed=True,
-            )]
+            contents = [
+                renderable.PassiveSequence(
+                    kind="passiveSequence",
+                    contents=contents,
+                    boxed=True,
+                )
+            ]
         else:
             pass
         if self.mcq_below_items is None:
@@ -389,7 +393,11 @@ class _Adapter:
                 yield renderable.MultipleChoicesInput(
                     kind="multipleChoicesInput",
                     show_arrow_before=True,
-                    choices=[[renderable.Text(kind="text", text="féminin")], [renderable.Text(kind="text", text="masculin")]],  # @todo Support exercises in English?
+                    choices=[
+                        # @todo Support exercises in English?
+                        [renderable.Text(kind="text", text="féminin")],
+                        [renderable.Text(kind="text", text="masculin")],
+                    ],
                     show_choices_by_default=self.show_mcq_choices_by_default,
                 )
             if self.items_have_number_mcq_beside:
@@ -397,7 +405,11 @@ class _Adapter:
                 yield renderable.MultipleChoicesInput(
                     kind="multipleChoicesInput",
                     show_arrow_before=not self.items_have_gender_mcq_beside,
-                    choices=[[renderable.Text(kind="text", text="singulier")], [renderable.Text(kind="text", text="pluriel")]],  # @todo Support exercises in English?
+                    choices=[
+                        # @todo Support exercises in English?
+                        [renderable.Text(kind="text", text="singulier")],
+                        [renderable.Text(kind="text", text="pluriel")],
+                    ],
                     show_choices_by_default=self.show_mcq_choices_by_default,
                 )
         else:
@@ -573,7 +585,7 @@ class AdaptationTestCase(unittest.TestCase):
             yield "    cy.viewport(1000, 100)"
             yield "  })"
             seen_paragraphs = set()
-            for (test_id, adapted) in cls.tests_to_generate:
+            for test_id, adapted in cls.tests_to_generate:
                 for pagelet_index, pagelet in enumerate(adapted.pagelets):
                     for section_name in ["instructions", "wording"]:
                         paragraphs = json.dumps(getattr(pagelet, section_name).model_dump()["paragraphs"])
@@ -2594,9 +2606,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                                         r.SelectableInput(
                                             kind="selectableInput", colors=["red", "blue"], boxed=True, contents=[r.Text(kind="text", text="is")]
                                         ),
-                                        r.SelectableInput(
-                                            kind="selectableInput", colors=["red", "blue"], boxed=True, contents=[r.Text(kind="text", text=",")]
-                                        ),
+                                        r.SelectableInput(kind="selectableInput", colors=["red", "blue"], boxed=True, contents=[r.Text(kind="text", text=",")]),
                                         r.Whitespace(kind="whitespace"),
                                         r.SelectableInput(
                                             kind="selectableInput", colors=["red", "blue"], boxed=True, contents=[r.Text(kind="text", text="the")]
@@ -4852,7 +4862,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                                             choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
                                         ),
                                     ]
-                                )
+                                ),
                             ]
                         ),
                     )
@@ -8007,7 +8017,9 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                                         r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="belle")], boxed=True),
                                         r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text=".")], boxed=True),
                                         r.Whitespace(kind="whitespace"),
-                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="L"), r.Text(kind="text", text="'")], boxed=True),
+                                        r.PassiveSequence(
+                                            kind="passiveSequence", contents=[r.Text(kind="text", text="L"), r.Text(kind="text", text="'")], boxed=True
+                                        ),
                                         r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="école")], boxed=True),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="est")], boxed=True),
@@ -8015,7 +8027,9 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                                         r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="fermée")], boxed=True),
                                         r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text=".")], boxed=True),
                                         r.Whitespace(kind="whitespace"),
-                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="L"), r.Text(kind="text", text="’")], boxed=True),
+                                        r.PassiveSequence(
+                                            kind="passiveSequence", contents=[r.Text(kind="text", text="L"), r.Text(kind="text", text="’")], boxed=True
+                                        ),
                                         r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="automobile")], boxed=True),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="est")], boxed=True),
