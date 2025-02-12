@@ -46,6 +46,9 @@ class _Adapter:
         self.items_have_gender_mcq_beside = exercise.adaptation.items_have_predefined_mcq.grammatical_gender
         self.items_have_number_mcq_beside = exercise.adaptation.items_have_predefined_mcq.grammatical_number
         self.items_are_repeated_with_mcq = exercise.adaptation.items_are_repeated_with_mcq
+        if self.items_are_repeated_with_mcq:
+            assert exercise.adaptation.items is None
+            self.sentences_are_items = True
         self.mcq_for_placeholders = None
 
         if exercise.adaptation.placeholder_for_fill_with_free_text is not None:
@@ -1404,7 +1407,7 @@ class WordToMcqAdaptationTestCase(AdaptationTestCase):
                     wording_paragraphs_per_pagelet=None,
                     single_item_per_paragraph=False,
                     placeholder_for_fill_with_free_text=None,
-                    items={"kind": "sentences"},
+                    items=None,  # {"kind": "sentences"} is implied by items_are_repeated_with_mcq (for now?)
                     items_are_selectable=None,
                     items_are_boxed=False,
                     items_have_mcq_beside=False,

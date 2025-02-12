@@ -68,7 +68,7 @@ const isPunctuation = computed({
 
 const isSentences = computed({
   get() {
-    return model.value.adaptationSettings.itemized.items.isSentences
+    return model.value.adaptationSettings.itemized.items.isSentences || model.value.adaptationSettings.itemized.effects.repeatedWithMcq
   },
   set(value: boolean) {
     model.value.adaptationSettings.itemized.items.isSentences = value
@@ -128,11 +128,11 @@ const separatorsHovered = ref(false)
 <template>
   <div class="mb-3">
     <p class="form-label">{{ $t('items') }}</p>
-    <BLabeledCheckbox v-model="isLetters" :label="$t('itemsLetters')" />
-    <BLabeledCheckbox v-model="isWords" :label="$t('itemsWords')" />
-    <BLabeledCheckbox v-model="isPunctuation" :label="$t('itemsPunctuation')" />
-    <BLabeledCheckbox v-model="isSentences" :label="$t('itemsSentences')" />
-    <BLabeledCheckbox v-model="isSeparated" :label="$t('itemsSeparated')">
+    <BLabeledCheckbox v-model="isLetters" :label="$t('itemsLetters')" :disabled="model.adaptationSettings.itemized.effects.repeatedWithMcq" />
+    <BLabeledCheckbox v-model="isWords" :label="$t('itemsWords')" :disabled="model.adaptationSettings.itemized.effects.repeatedWithMcq" />
+    <BLabeledCheckbox v-model="isPunctuation" :label="$t('itemsPunctuation')" :disabled="model.adaptationSettings.itemized.effects.repeatedWithMcq" />
+    <BLabeledCheckbox v-model="isSentences" :label="$t('itemsSentences')" :disabled="model.adaptationSettings.itemized.effects.repeatedWithMcq" />
+    <BLabeledCheckbox v-model="isSeparated" :label="$t('itemsSeparated')" :disabled="model.adaptationSettings.itemized.effects.repeatedWithMcq">
       <span style="position: relative; display: inline-block">
         <input
           v-model="model.adaptationSettings.itemized.items.separator"
@@ -140,6 +140,7 @@ const separatorsHovered = ref(false)
           @focus="separatorFocused = true"
           @click="isSeparated = true"
           @blur="separatorFocused = false"
+          :disabled="model.adaptationSettings.itemized.effects.repeatedWithMcq"
         />
         <div
           v-if="(separatorFocused || separatorsHovered) && textbook.inCache && textbook.exists"
@@ -157,6 +158,6 @@ const separatorsHovered = ref(false)
         </div>
       </span>
     </BLabeledCheckbox>
-    <BLabeledCheckbox v-model="isManual" :label="$t('itemsManual')" />
+    <BLabeledCheckbox v-model="isManual" :label="$t('itemsManual')" :disabled="model.adaptationSettings.itemized.effects.repeatedWithMcq" />
   </div>
 </template>

@@ -137,7 +137,7 @@ function doneEditingChoices2() {
 import { computed, ref, watch } from 'vue'
 
 import { BRow, BCol, BLabeledInput, BButton, BLabeledCheckbox } from '../../../../components/opinion/bootstrap'
-import ExerciseFieldsForm, { defaultAdaptationSettings, makeItems, type Model } from './ExerciseFieldsForm.vue'
+import ExerciseFieldsForm, { defaultAdaptationSettings, type Model } from './ExerciseFieldsForm.vue'
 import type { Textbook } from '$frontend/stores/api'
 
 
@@ -191,9 +191,8 @@ const repeatedWithMcq = computed({
   },
   set(value: boolean) {
     model.value.adaptationSettings.itemized.effects.repeatedWithMcq = value
-    if (value && makeItems(model.value.adaptationSettings) === null) {
+    if (value) {
       model.value.adaptationSettings.itemized.items = deepCopy(defaultAdaptationSettings.itemized.items)
-      model.value.adaptationSettings.itemized.items.isSentences = true
     }
   },
 })
