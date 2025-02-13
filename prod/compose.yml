@@ -95,7 +95,7 @@ services:
       - ../tests:/app/tests
       - ../pdf-examples:/app/pdf-examples
     working_dir: /app/frontend
-    command: ["npx", "cypress", "run", "--e2e", "--env", "IS_PROD_PREVIEW=true", "--config", "baseUrl=http://fanout:8090/"]
+    command: ["npx", "cypress", "run", "--e2e", "--config", "baseUrl=http://fanout:8090/"]
     depends_on:
       migrator:
         condition: service_completed_successfully

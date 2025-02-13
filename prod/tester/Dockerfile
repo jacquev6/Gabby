@@ -17,15 +17,16 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     set -x \
  && apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends \
-    fonts-noto-color-emoji \
-    libasound2 \
-    libgbm-dev \
-    libgtk-3-0 \
-    libgtk2.0-0 \
-    libnotify-dev \
-    libnss3 \
-    libxss1 \
-    libxtst6 \
-    xauth \
-    xvfb \
+      libasound2 \
+      libgbm-dev \
+      libgtk-3-0 \
+      libgtk2.0-0 \
+      libnotify-dev \
+      libnss3 \
+      libxss1 \
+      libxtst6 \
+      xauth \
+      xvfb \
+ && DEBIAN_FRONTEND=noninteractive apt-get install --yes \
+      fonts-noto \
  && true

@@ -19,5 +19,4 @@ docker compose exec \
   tester-shell \
     npx cypress open \
       --e2e \
-      --env IS_PROD_PREVIEW=true \
       --config baseUrl=http://fanout:8090/
