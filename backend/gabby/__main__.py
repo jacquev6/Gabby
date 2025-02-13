@@ -1,3 +1,5 @@
+import itertools
+import time
 from urllib.parse import urlparse
 import datetime
 import io
@@ -15,11 +17,11 @@ import sqlalchemy_data_model_visualizer
 import sqlalchemy_utils.functions
 
 from . import database_utils
+from . import deltas
+from . import exercises
 from . import orm_models
 from . import settings
 from .fixtures import load as load_fixtures
-from . import renderable
-from . import deltas
 
 
 @click.group()
@@ -150,7 +152,17 @@ def restore_database(backup_url, yes, patch_according_to_settings):
 
 
 @main.command()
-def dump_database_as_unit_tests():
+@click.argument("output-module")
+@click.option("--tests-per-file", type=int, default=10)
+@click.option("--limit", type=int, default=None)
+@click.option("--format/--no-format", is_flag=True, default=True)
+def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
+    def limit_query(x):
+        if limit is None:
+            return x.all()
+        else:
+            return x.limit(limit)
+
     # Waste data to avoid issues with copyrighted material (extracted from textbooks)
     def waste_char(c):
         return {
@@ -165,26 +177,6 @@ def dump_database_as_unit_tests():
     def waste_string(s):
         return "".join(waste_char(c) for c in s)
 
-    def waste_renderable(section):
-        def waste_token(token):
-            return {
-                "boxedText": lambda: renderable.BoxedText(text=waste_string(token.text)),
-                "freeTextInput": lambda: renderable.FreeTextInput(),
-                "multipleChoicesInput": lambda: renderable.MultipleChoicesInput(choices=[waste_string(choice) for choice in token.choices]),
-                "plainText": lambda: renderable.PlainText(text=waste_string(token.text)),
-                "selectableText": lambda: renderable.SelectableText(text=waste_string(token.text), colors=token.colors, boxed=token.boxed),
-                "selectedText": lambda: renderable.SelectedText(text=waste_string(token.text), color=token.color),
-                "whitespace": lambda: renderable.Whitespace(),
-            }[token.type]()
-
-        def waste_paragraph(paragraph):
-            return renderable.Paragraph(tokens=[waste_token(token) for token in paragraph.tokens])
-
-        def waste_section(section):
-            return renderable.Section(paragraphs=[waste_paragraph(paragraph) for paragraph in section.paragraphs])
-
-        return waste_section(section)
-
     def waste_delta(delta):
         attributes = delta.attributes
         if "choices2" in attributes:
@@ -194,7 +186,7 @@ def dump_database_as_unit_tests():
                     for k, v in attributes["choices2"].items()
                 }
             }
-        return deltas.InsertOp(
+        return deltas.TextInsertOp(
             insert=waste_string(delta.insert),
             attributes=attributes,
         )
@@ -202,59 +194,93 @@ def dump_database_as_unit_tests():
     def waste_deltas(deltas):
         return [waste_delta(delta) for delta in deltas]
 
-    def gen():
+    def waste_exercise(exercise):
+        return exercises.Exercise(
+            number=waste_string(exercise.number),
+            textbook_page=exercise.textbook_page,
+            instructions=waste_deltas(exercise.instructions),
+            wording=waste_deltas(exercise.wording),
+            example=waste_deltas(exercise.example),
+            clue=waste_deltas(exercise.clue),
+            text_reference=waste_deltas(exercise.text_reference),
+            adaptation=exercise.adaptation,
+        )
+
+    def renderable_repr(section):
+        return (
+            repr(section)
+            .replace("Paragraph(", "r.Paragraph(")
+            .replace("Section(", "r.Section(")
+            .replace("Pagelet(", "r.Pagelet(")
+            .replace("Text(", "r.Text(")
+            .replace("Whitespace(", "r.Whitespace(")
+            .replace("FreeTextInput(", "r.FreeTextInput(")
+            .replace("MultipleChoicesInput(", "r.MultipleChoicesInput(")
+            .replace("SelectableInput(", "r.SelectableInput(")
+            .replace("PassiveSequence(", "r.PassiveSequence(")
+        )
+
+    def gen(batch_index, exercises_batch):
         yield "# WARNING: this file is generated (from database content). Manual changes will be lost."
         yield ""
-        yield "from . import exercises as e"
-        yield "from . import renderable as r"
-        yield "from .adaptation import AdaptationTestCase"
-        yield "from .api_models import AdaptationV2, FillWithFreeTextAdaptationEffect, ItemizedAdaptationEffect"
-        yield "from .deltas import InsertOp"
-        yield "from .renderable import Section, Paragraph, _PlainText, _Whitespace, _FreeTextInput, _SelectableText, _BoxedText, _MultipleChoicesInput, _SelectedText"
+        yield "from .. import exercises as e"
+        yield "from .. import renderable as r"
+        yield "from ..adaptation import AdaptationTestCase"
+        yield "from ..api_models import Adaptation, CharactersItems, TokensItems, SentencesItems, ManualItems, Selectable, PredefinedMcq"
+        yield "from ..deltas import TextInsertOp"
         yield ""
         yield ""
-        yield "TokensItems = ItemizedAdaptationEffect.TokensItems"
-        yield "ManualItems = ItemizedAdaptationEffect.ManualItems"
-        yield "Effects = ItemizedAdaptationEffect.Effects"
-        yield "Selectable = ItemizedAdaptationEffect.Effects.Selectable"
+        yield f"class DatabaseAsUnitTests{batch_index:04}(AdaptationTestCase):"
+        yield "    generate_frontend_tests = False"  # Ideally we would generate frontend tests, but they take too long to run. I ran them once, OK.
         yield ""
-        yield ""
-        yield "class DatabaseAsUnitTests(AdaptationTestCase):"
 
-        database_engine = database_utils.create_engine(settings.DATABASE_URL)
-        with orm.Session(database_engine) as session:
-            for exercise in session.query(orm_models.Exercise).order_by(orm_models.Exercise.id).all():
-                adapted = exercise.make_adapted()
+        for exercise in exercises_batch:
+            yield f"    def test_exercise_{exercise.id:04}(self):"
 
-                yield f"    def test_exercise_{exercise.id}(self):"
-                yield f"        self.do_test("
-                yield f"            e.Exercise("
-                yield f"                number={repr(waste_string(exercise.number))},"
-                yield f"                textbook_page={repr(exercise.textbook_page)},"
-                yield f"                instructions={repr(waste_deltas(exercise.instructions))},"
-                yield f"                wording={repr(waste_deltas(exercise.wording))},"
-                yield f"                example={repr(waste_deltas(exercise.example))},"
-                yield f"                clue={repr(waste_deltas(exercise.clue))},"
-                yield f"                wording_paragraphs_per_pagelet={repr(exercise.wording_paragraphs_per_pagelet)},"
-                yield f"                adaptation={repr(exercise.adaptation)},"
-                yield f"            ),"
-                yield f"            r.Exercise("
-                yield f"                number={repr(waste_string(exercise.number))},"
-                yield f"                textbook_page={repr(exercise.textbook_page)},"
-                yield f"                pagelets=["
-                for pagelet in adapted.pagelets:
-                    yield f"                    r.Pagelet("
-                    yield f"                        instructions={repr(waste_renderable(pagelet.instructions))},"
-                    yield f"                        wording={repr(waste_renderable(pagelet.wording))},"
-                    yield f"                    ),"
-                yield f"                ],"
-                yield f"            ),"
-                yield f"        )"
-                yield f""
+            exercise = waste_exercise(exercise)
+            adapted = exercise.make_adapted()
 
-    # Black does not have a Python API, so use it as a command-line tool.
-    # https://black.readthedocs.io/en/stable/faq.html#does-black-have-an-api
-    subprocess.run(["black", "--line-length", "120", "-"], universal_newlines=True, input="\n".join(gen()), check=True)
+            yield f"        self.do_test("
+            yield f"            e.Exercise("
+            yield f"                number={repr(exercise.number)},"
+            yield f"                textbook_page={repr(exercise.textbook_page)},"
+            yield f"                instructions={repr(exercise.instructions)},"
+            yield f"                wording={repr(exercise.wording)},"
+            yield f"                example={repr(exercise.example)},"
+            yield f"                clue={repr(exercise.clue)},"
+            yield f"                text_reference={repr(exercise.text_reference)},"
+            yield f"                adaptation={repr(exercise.adaptation)},"
+            yield f"            ),"
+            yield f"            r.Exercise("
+            yield f"                number={repr(exercise.number)},"
+            yield f"                textbook_page={repr(exercise.textbook_page)},"
+            yield f"                pagelets=["
+            for pagelet in adapted.pagelets:
+                yield f"                    r.Pagelet("
+                yield f"                        instructions={renderable_repr(pagelet.instructions)},"
+                yield f"                        wording={renderable_repr(pagelet.wording)},"
+                yield f"                    ),"
+            yield f"                ],"
+            yield f"            ),"
+            yield f"        )"
+            yield f""
+
+    database_engine = database_utils.create_engine(settings.DATABASE_URL)
+
+    with orm.Session(database_engine) as session:
+        for batch_index, exercises_batch in enumerate(itertools.batched(limit_query(session.query(orm_models.Exercise).order_by(orm_models.Exercise.id)), tests_per_file)):
+            test = "\n".join(gen(batch_index, exercises_batch))
+            if format:
+                # Black does not have a Python API, so use it as a command-line tool.
+                # https://black.readthedocs.io/en/stable/faq.html#does-black-have-an-api
+                t0 = time.perf_counter()
+                test = subprocess.run(["black", "--line-length", "120", "-"], universal_newlines=True, input=test, check=True, capture_output=True).stdout
+                print(f"Formatted batch {batch_index} in {time.perf_counter() - t0:.2f}s", file=sys.stderr)
+            with open(f"gabby/{output_module}/tests_{batch_index:04}.py", "w") as f:
+                f.write(test)
+
+    with open(f"gabby/{output_module}/__init__.py", "w") as f:
+        pass
 
 
 @main.command(name="load-fixtures")

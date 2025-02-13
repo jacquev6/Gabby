@@ -10,7 +10,7 @@ import { makeBoundingRectangle, makeBoundingRectangles } from './RectanglesHighl
 import { useProjectTextbookPageData } from './ProjectTextbookPageLayout.vue'
 import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
 import { useApiStore } from '$frontend/stores/api'
-import { makeModelInTextbook, assignModelFrom, save } from '$frontend/components/ExerciseFieldsForm.vue'
+import { makeModelInTextbook, assignModelFrom, save } from './ExerciseFieldsForm.vue'
 import { useGloballyBusyStore } from '$frontend/stores/globallyBusy'
 import ExerciseColumns from './ExerciseColumns.vue'
 import ExercisePdfOverlay from './ExercisePdfOverlay.vue'
@@ -187,7 +187,7 @@ const parsedExercise = computed(() => {
 
     <template # v-if="exercise.inCache">
       <template v-if="exercise.exists && exerciseBelongsToTextbookPage">
-        <ExerciseColumns ref="exerciseColumns" mode="edit" :projectId :displayedPage :busy v-model="model">
+        <ExerciseColumns ref="exerciseColumns" mode="edit" :projectId :textbook :displayedPage :busy v-model="model">
           <template #exerciseFieldsButtons>
             <template v-if="exerciseCreationHistory.current === null">
               <p>

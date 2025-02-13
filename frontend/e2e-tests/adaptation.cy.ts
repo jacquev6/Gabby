@@ -102,7 +102,7 @@ describe('Gabby', () => {
       selectRange(node, 0, node, 21)
     })
     cy.get('label:contains("Separators") + input').should('have.value', ',')
-    cy.get('label + input').eq(4).should('have.value', '')  // Very fragile selector; sorry, future me!
+    cy.get('input[data-cy="second-mcq-separator"').should('have.value', '')
   })
 
   it('detects "◆" as the only MCQ separator', () => {
@@ -119,7 +119,7 @@ describe('Gabby', () => {
       selectRange(node, 0, node, 23)
     })
     cy.get('label:contains("Separators") + input').should('have.value', '◆')
-    cy.get('label + input').eq(4).should('have.value', '')  // Very fragile selector; sorry, future me!
+    cy.get('input[data-cy="second-mcq-separator"').should('have.value', '')
   })
 
   it('detects "ou" as the only MCQ separator', () => {
@@ -136,7 +136,7 @@ describe('Gabby', () => {
       selectRange(node, 0, node, 14)
     })
     cy.get('label:contains("Separators") + input').should('have.value', 'ou')
-    cy.get('label + input').eq(4).should('have.value', '')  // Very fragile selector; sorry, future me!
+    cy.get('input[data-cy="second-mcq-separator"').should('have.value', '')
   })
 
   it('detects comma and "ou" as a MCQ separators', () => {
@@ -153,7 +153,7 @@ describe('Gabby', () => {
       selectRange(node, 0, node, 23)
     })
     cy.get('label:contains("Separators") + input').should('have.value', ',')
-    cy.get('label + input').eq(4).should('have.value', 'ou')  // Very fragile selector; sorry, future me!
+    cy.get('input[data-cy="second-mcq-separator"').should('have.value', 'ou')
   })
 
   it('does not detect "or" as a MCQ separator', () => {
@@ -170,7 +170,7 @@ describe('Gabby', () => {
       selectRange(node, 0, node, 14)
     })
     cy.get('label:contains("Separators") + input').should('have.value', '')
-    cy.get('label + input').eq(4).should('have.value', '')  // Very fragile selector; sorry, future me!
+    cy.get('input[data-cy="second-mcq-separator"').should('have.value', '')
   })
 
   it('detects similar MCQs automatically', () => {
@@ -188,7 +188,7 @@ describe('Gabby', () => {
       selectRange(node, 10, node, 25)
     })
     cy.get('label:contains("Separators") + input').should('have.value', '–')
-    cy.get('label + input').eq(4).should('have.value', '')  // Very fragile selector; sorry, future me!
+    cy.get('input[data-cy="second-mcq-separator"').should('have.value', '')
     cy.get('label:contains("Start") + input').should('have.value', '(')
     cy.get('label:contains("Stop") + input').should('have.value', ')')
     cy.get('label:contains("Placeholder") + input').click().type('…')
@@ -198,5 +198,84 @@ describe('Gabby', () => {
     screenshot('similar-mcqs-1')
     cy.get('span.main').eq(2).click()
     screenshot('similar-mcqs-2')
+  })
+
+  it('shows MCQ choices by default - on two pagelets', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+
+    cy.get('label:contains("Instructions") + .ql-container > .ql-editor').as('instructions')
+    cy.get('label:contains("Wording") + .ql-container > .ql-editor').as('wording')
+
+    cy.get('@instructions').click().type('{selectAll}vrai ou faux', {delay: 0})
+    cy.get('@wording').click().type('{selectAll}a. blah ...\nb. bleh ...\nc. blih ...\nd. bloh ...', {delay: 0})
+
+    cy.get('button:contains("Multiple choices")').click()
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 0, node, 12)
+    })
+    cy.get('label:contains("Separators") + input').should('have.value', 'ou')
+    cy.get('label:contains("Placeholder") + input').click().type('...')
+    cy.get('button:contains("OK")').click()
+    cy.get('div:contains("Show choices by default") > input').click()
+    cy.get('span[title="2 lines per page"]').click()
+    cy.get('button:contains("Full screen")').click()
+
+    cy.get('span.choice0').eq(0).should('be.visible')
+    cy.get('span.choice0').eq(1).should('be.visible')
+    cy.get('span.choice0').eq(0).click()
+    cy.get('span.choice0').should('have.length', 1)
+
+    cy.get('div.arrow').eq(1).click()
+    cy.get('span.choice0').should('have.length', 2)
+    cy.get('div.arrow').eq(0).click()
+    cy.get('span.choice0').should('have.length', 1)
+  })
+
+  it('shows MCQ choices by default - second guessing initial answer', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+
+    cy.get('label:contains("Instructions") + .ql-container > .ql-editor').as('instructions')
+    cy.get('label:contains("Wording") + .ql-container > .ql-editor').as('wording')
+
+    cy.get('@instructions').click().type('{selectAll}vrai ou faux', {delay: 0})
+    cy.get('@wording').click().type('{selectAll}a. blah ...\nb. bleh ...', {delay: 0})
+
+    cy.get('button:contains("Multiple choices")').click()
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 0, node, 12)
+    })
+    cy.get('label:contains("Separators") + input').should('have.value', 'ou')
+    cy.get('label:contains("Placeholder") + input').click().type('...')
+    cy.get('button:contains("OK")').click()
+    cy.get('div:contains("Show choices by default") > input').click()
+    cy.get('span[title="2 lines per page"]').click()
+    cy.get('button:contains("Full screen")').click()
+
+    cy.get('span.choice0').should('have.length', 2)
+    cy.get('span.choice0').eq(0).click()
+    cy.get('span.choice0').should('have.length', 1)
+    cy.get('span.main').eq(0).click()
+    cy.get('span.choice0').should('have.length', 2)
+  })
+
+  it('shows a single item per line even when no other effect has been selected', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-5/new-exercise')
+
+    cy.get('label:contains("Number") + input').click().type('single')
+    cy.get('label:contains("Wording") + .ql-container > .ql-editor').click().type('alpha bravo charlie delta', {delay: 0})
+    cy.get('div:contains("Words") > input').check()
+    cy.get('div:contains("1 item per line") > input').check()
+    screenshot('single-item-per-line-1')
+    cy.get('button:contains("Save then back to list")').click()
+    notBusy()
+    cy.get('a:contains("Edit")').click()
+    notBusy()
+    cy.get('div:contains("Words") > input').should('be.checked')
+    cy.get('div:contains("1 item per line") > input').scrollIntoView().should('be.checked')
+    screenshot('single-item-per-line-2')
   })
 })

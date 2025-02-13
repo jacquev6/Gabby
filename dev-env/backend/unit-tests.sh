@@ -32,6 +32,8 @@ rm -f ../../backend/.coverage
   backend-shell \
     rm -rf /app/dev-env/backend/unit-tests-coverage
 
+rm -f ../../frontend/src/adapted/components/*.generated.cy.*
+
 ../docker-compose.sh exec \
   --env GABBY_UNITTESTING=true \
   backend-shell \

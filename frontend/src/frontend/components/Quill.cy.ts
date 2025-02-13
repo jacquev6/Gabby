@@ -45,6 +45,7 @@ describe('Quill', () => {
   it('renders its model', () => {
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue: [
         {insert: '1-plain', attributes: {}},
@@ -70,6 +71,7 @@ describe('Quill', () => {
     let modelValue: Model = []
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
@@ -94,6 +96,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abcdefghi', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
@@ -119,6 +122,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abcdefghi', attributes: {bold: true}}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
@@ -145,6 +149,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abcdefghi', attributes: {bold: true}}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
@@ -167,10 +172,38 @@ describe('Quill', () => {
       })
   })
 
+  it('does not remove a compatible boolean format from the selection before adding another', () => {
+    let modelValue: Model = [{insert: 'abcdefghi', attributes: {bold: true}}]
+    cy.mount(Quill, {props: {
+      blots: [BoldBlot, ItalicBlot],
+      compatibleFormats: [['bold', 'italic']],
+      contagiousFormats: [],
+      modelValue,
+      'onUpdate:modelValue': (m: Model) => { modelValue = m },
+    }})
+    cy.get('div.ql-editor').focus()
+    cy.get('div.ql-editor > p > bold-blot').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 3, node, 6)
+    })
+    cy.vue<typeof Quill>()
+      .then(w => w.componentVM.toggle('italic'))
+      .then(() => {
+        expect(modelValue).to.deep.equal([
+          {insert: 'abc', attributes: {bold: true}},
+          {insert: 'def', attributes: {bold: true, italic: true}},
+          {insert: 'ghi', attributes: {bold: true}},
+          {insert: '\n', attributes: {}},
+        ])
+      })
+  })
+
   it('removes a boolean format from a part of the selection before adding another', () => {
     let modelValue: Model = [{insert: 'abcd', attributes: {}}, {insert: 'e', attributes: {bold: true}}, {insert: 'fghi', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
@@ -190,10 +223,37 @@ describe('Quill', () => {
       })
   })
 
+  it('does not remove a compatible boolean format from a part of the selection before adding another', () => {
+    let modelValue: Model = [{insert: 'abcd', attributes: {}}, {insert: 'e', attributes: {bold: true}}, {insert: 'fghi', attributes: {}}]
+    cy.mount(Quill, {props: {
+      blots: [BoldBlot, ItalicBlot],
+      compatibleFormats: [['bold', 'italic']],
+      contagiousFormats: [],
+      modelValue,
+      'onUpdate:modelValue': (m: Model) => { modelValue = m },
+    }})
+    cy.get('div.ql-editor > p').then($el => {
+      selectRange($el[0].firstChild!, 3, $el[0].firstChild!.nextSibling!.nextSibling!, 1)
+    })
+    cy.wait(200)  // I've not investigated why this is needed
+    cy.vue<typeof Quill>()
+      .then(w => w.componentVM.toggle('italic'))
+      .then(() => {
+        expect(modelValue).to.deep.equal([
+          {insert: 'abc', attributes: {}},
+          {insert: 'd', attributes: {italic: true}},
+          {insert: 'e', attributes: {bold: true, italic: true}},
+          {insert: 'f', attributes: {italic: true}},
+          {insert: 'ghi\n', attributes: {}},
+        ])
+      })
+  })
+
   it('adds, changes and removes a boolean format to/from the caret', () => {
     let modelValue: Model = [{insert: 'abc', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot, ItalicBlot],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
@@ -219,6 +279,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abcdefghi', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [StrBlot],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
@@ -244,6 +305,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abcdefghi', attributes: {string: 'A'}}]
     cy.mount(Quill, {props: {
       blots: [StrBlot],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
@@ -270,6 +332,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abcdefghi', attributes: {string: 'A'}}]
     cy.mount(Quill, {props: {
       blots: [StrBlot],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
@@ -296,6 +359,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abc', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [StrBlot],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
@@ -318,7 +382,7 @@ describe('Quill', () => {
   })
 
   it('reacts to model changes', () => {
-    cy.mount(Quill, {props: {blots: [BoldBlot, ItalicBlot], contagiousFormats: [], modelValue: [{insert: 'initial', attributes: {}}]}})
+    cy.mount(Quill, {props: {blots: [BoldBlot, ItalicBlot], compatibleFormats: [], contagiousFormats: [], modelValue: [{insert: 'initial', attributes: {}}]}})
     cy.get(':contains("initial")').should('exist')
     cy.vue<typeof Quill>().then(w => {w.setProps({modelValue: [{insert: 'changed'}]})})
     cy.get(':contains("initial")').should('not.exist')
@@ -326,7 +390,7 @@ describe('Quill', () => {
   })
 
   it("reacts to 'props.blots' changes", () => {
-    cy.mount(Quill, {props: {blots: [BoldBlot], contagiousFormats: [], modelValue: [{insert: 'bold', attributes: {bold: true}}]}})
+    cy.mount(Quill, {props: {blots: [BoldBlot], compatibleFormats: [], contagiousFormats: [], modelValue: [{insert: 'bold', attributes: {bold: true}}]}})
     cy.get(':contains("bold")').last().should('have.css', 'font-weight', '700')
     cy.vue<typeof Quill>().then(w => {w.setProps({blots: []})})
     cy.get(':contains("bold")').last().should('have.css', 'font-weight', '400')
@@ -338,6 +402,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'a\n', attributes: {}}, {insert: {divider: true}}, {insert: 'b\n', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [StrBlot, DividerBlot],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
@@ -355,6 +420,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'a', attributes: {}}, {insert: {'inl-emb': {color: 'green'}}}, {insert: 'b\n', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [StrBlot, InlEmbBlot],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
@@ -369,7 +435,7 @@ describe('Quill', () => {
   })
 
   it('allows adding an insert operation with the same attributes', () => {
-    cy.mount(Quill, {props: {blots: [StrBlot], contagiousFormats: [], modelValue: [{insert: 'abc', attributes: {}}]}})
+    cy.mount(Quill, {props: {blots: [StrBlot], compatibleFormats: [], contagiousFormats: [], modelValue: [{insert: 'abc', attributes: {}}]}})
     cy.vue<typeof Quill>().then(w => {w.setProps({modelValue: [{insert: 'abc', attributes: {}}, {insert: 'def', attributes: {}}]})})
     cy.get(':contains("abcdef")').should('exist')
   })
@@ -378,6 +444,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abc', attributes: {bold: true}}, {insert: '\n', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot],
+      compatibleFormats: [],
       contagiousFormats: ['bold'],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
@@ -392,6 +459,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abc ', attributes: {}}, {insert: 'def', attributes: {bold: true}}, {insert: '\n', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot],
+      compatibleFormats: [],
       contagiousFormats: ['bold'],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
@@ -406,6 +474,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abc ', attributes: {}}, {insert: 'def', attributes: {bold: true}}, {insert: '\n', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot],
+      compatibleFormats: [],
       contagiousFormats: ['bold'],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
@@ -420,6 +489,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abc', attributes: {bold: true}}, {insert: ' def\n', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot],
+      compatibleFormats: [],
       contagiousFormats: ['bold'],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
@@ -434,6 +504,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abc', attributes: {bold: true}}, {insert: ' def\n', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot],
+      compatibleFormats: [],
       contagiousFormats: ['bold'],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
@@ -449,6 +520,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abc', attributes: {bold: true}}, {insert: '\n', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
@@ -465,6 +537,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abc ', attributes: {}}, {insert: 'def', attributes: {bold: true}}, {insert: '\n', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
@@ -479,6 +552,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abc ', attributes: {}}, {insert: 'def', attributes: {bold: true}}, {insert: '\n', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
@@ -495,6 +569,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abc', attributes: {bold: true}}, {insert: ' def\n', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },
@@ -509,6 +584,7 @@ describe('Quill', () => {
     let modelValue: Model = [{insert: 'abc', attributes: {bold: true}}, {insert: ' def\n', attributes: {}}]
     cy.mount(Quill, {props: {
       blots: [BoldBlot],
+      compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
       'onUpdate:modelValue': (m: Model) => { modelValue = m },

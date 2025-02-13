@@ -37,7 +37,7 @@ describe('Gabby', () => {
 
     const canvas = cy.get('canvas[style="position: absolute; top: 0px; left: 0px;"]').last()
 
-    cy.screenshot('project-textbook-page-exercise/create-exercise', {clip: {x: 0, y: 50, width: 575, height: 740}})
+    cy.screenshot('project-textbook-page-exercise/create-exercise', {clip: {x: 0, y: 50, width: 545, height: 740}})
 
     canvas.trigger('pointermove', 5, 5)
     canvas.trigger('pointerdown', 20, 20, { pointerId: 1 })
@@ -115,7 +115,7 @@ describe('Gabby', () => {
   })
 
   it('modifies existing exercise', () => {
-    cy.viewport(1000, 1000)
+    cy.viewport(1000, 1200)
 
     loadFixtures('test-exercises')
     login()
@@ -125,21 +125,22 @@ describe('Gabby', () => {
     cy.get('label:contains("Type d\'adaptation") + select').select('-')
     cy.get('label:contains("Énoncé") + div.ql-container > div.ql-editor').type('{selectAll}... vide\n... vident')
     notBusy()
-    cy.screenshot('project-textbook-page-exercise/modify-exercise', {clip: {x: 0, y: 50, width: 575, height: 800}})
+    cy.screenshot('project-textbook-page-exercise/modify-exercise', {clip: {x: 0, y: 50, width: 545, height: 800}})
 
-    cy.screenshot('project-textbook-page-exercise/tools', {clip: {x: 560, y: 40, width: 210, height: 260}})
+    cy.screenshot('project-textbook-page-exercise/tools', {clip: {x: 530, y: 40, width: 270, height: 260}})
 
     cy.get('label:contains("Type d\'adaptation") + select').select('generic')
+    cy.get('label:contains("Mots")').click()
     cy.get('div:contains("Cochable") >input').check()
     notBusy()
-    cy.screenshot('project-textbook-page-exercise/project-textbook-page-exercise', {clip: {x: 0, y: 0, width: 1000, height: 330}})
+    cy.screenshot('project-textbook-page-exercise/project-textbook-page-exercise', {clip: {x: 0, y: 0, width: 1000, height: 330}})  // @todo Stabilize: sometimes the "Cancel" button is enabled and sometimes not
 
     cy.get('span[data-cy-colors="3"]').click()
     notBusy()
     cy.get('span.maybe-usable-colors-container').screenshot('project-textbook-page-exercise/select-things-usable-colors')
     cy.get('label:contains("Consigne") + div.ql-container > div.ql-editor').click()
-    cy.screenshot('project-textbook-page-exercise/select-things-color-formatting-button', {clip: {x: 560, y: 660, width: 140, height: 100}})
+    cy.screenshot('project-textbook-page-exercise/select-things-color-formatting-button', {clip: {x: 530, y: 888, width: 140, height: 100}})
     cy.get('span[data-cy-colors="2"]').rightclick()
-    cy.screenshot('project-textbook-page-exercise/select-things-color-customization', {clip: {x: 430, y: 600, width: 380, height: 100}})
+    cy.screenshot('project-textbook-page-exercise/select-things-color-customization', {clip: {x: 400, y: 841, width: 380, height: 100}})
   })
 })

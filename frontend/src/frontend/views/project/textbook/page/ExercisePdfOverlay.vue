@@ -7,9 +7,9 @@ import RectanglesHighlighter, { type Rectangle } from './RectanglesHighlighter.v
 import TextPicker, { type SelectedText } from './TextPicker.vue'
 import type { PdfFile, ParsedExercise, InCache, Exists } from '$frontend/stores/api'
 import TextSelectionModal from './TextSelectionModal.vue'
-import { type Model } from '$frontend/components/ExerciseFieldsForm.vue'
-import type { TextualFieldName } from '$frontend/components/ExerciseFieldsForm.vue'
-import type ExerciseFieldsForm from '$frontend/components/ExerciseFieldsForm.vue'
+import { type Model } from './ExerciseFieldsForm.vue'
+import type { TextualFieldName } from './ExerciseFieldsForm.vue'
+import type ExerciseFieldsForm from './ExerciseFieldsForm.vue'
 
 
 const textSelectionModal = ref<InstanceType<typeof TextSelectionModal> | null>(null)

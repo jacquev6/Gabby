@@ -12,6 +12,7 @@ import Quill, { type Model, type SelectionRange } from './Quill.vue'
 defineProps<{
   label: string
   blots: (typeof BoldBlot)[]
+  compatibleFormats: string[][]
   contagiousFormats: string[]
 }>()
 
@@ -36,8 +37,16 @@ watch(
   {immediate: true, deep: true},
 )
 
+const quill_ = computed(() => {
+  if (quill.value === null) {
+    return null
+  } else {
+    return quill.value.quill
+  }
+})
+
 defineExpose({
-  // Could we automate these? They all forward to 'quill.value'.
+  quill: quill_,
   toggle(format: string, value: unknown = true) {
     console.assert(quill.value !== null)
     quill.value.toggle(format, value)
@@ -46,8 +55,6 @@ defineExpose({
     console.assert(quill.value !== null)
     quill.value.focus()
   },
-  // Warning, these two functions should translate from Wysiwyg selection range to Quill selection range.
-  // It just so happens that their errors compensate each other and that they are currently always used together.
   setSelection(index: number, length: number) {
     console.assert(quill.value !== null)
     quill.value.setSelection(index, length)
@@ -68,6 +75,7 @@ defineExpose({
       ref="quill"
       v-model="model"
       :blots
+      :compatibleFormats
       :contagiousFormats
       @focus="emit('focus')"
       @blur="emit('blur')"

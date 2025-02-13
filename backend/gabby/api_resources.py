@@ -2,7 +2,7 @@ from fastapi import HTTPException
 from starlette import status
 
 from . import deltas
-from .api_models import PdfRectangle, Point, SyntheticError, AdaptationV2, FillWithFreeTextAdaptationEffect
+from .api_models import PdfRectangle, Point, SyntheticError, Adaptation, PredefinedMcq
 from .exercises import Exercise, ExercisesResource
 from .parsed_exercises import ParsedExercisesResource
 from .pdfs import PdfFile, PdfFileNaming, PdfFilesResource, PdfFileNamingsResource
@@ -282,6 +282,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "publisher": None, "year": None, "isbn": None,
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
+                    "suggestedItemsSeparators": [],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -331,6 +332,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "isbn": "9783161484100",
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
+                    "suggestedItemsSeparators": [],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -391,6 +393,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "isbn": "9783161484100",
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
+                    "suggestedItemsSeparators": [],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -427,6 +430,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "isbn": "9783161484100",
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
+                    "suggestedItemsSeparators": [],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -455,8 +459,21 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
                         "textReference": [{"insert": "\n", "attributes": {}}],
-                        "wordingParagraphsPerPagelet": None,
-                        "adaptation": {"kind": "generic", "effects": []},
+                        "adaptation": {
+                            "kind": "generic",
+                            "wording_paragraphs_per_pagelet": None,
+                            "single_item_per_paragraph": False,
+                            "placeholder_for_fill_with_free_text": None,
+                            "items": None,
+                            "items_are_selectable": None,
+                            "items_are_boxed": False,
+                            "items_have_mcq_beside": False,
+                            "items_have_mcq_below": False,
+                            "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                            "items_are_repeated_with_mcq": False,
+                            "show_arrow_before_mcq_fields": False,
+                            "show_mcq_choices_by_default": False,
+                        },
                         "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
                     },
@@ -479,8 +496,21 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
                         "textReference": [{"insert": "\n", "attributes": {}}],
-                        "wordingParagraphsPerPagelet": None,
-                        "adaptation": {"kind": "generic", "effects": []},
+                        "adaptation": {
+                            "kind": "generic",
+                            "wording_paragraphs_per_pagelet": None,
+                            "single_item_per_paragraph": False,
+                            "placeholder_for_fill_with_free_text": None,
+                            "items": None,
+                            "items_are_selectable": None,
+                            "items_are_boxed": False,
+                            "items_have_mcq_beside": False,
+                            "items_have_mcq_below": False,
+                            "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                            "items_are_repeated_with_mcq": False,
+                            "show_arrow_before_mcq_fields": False,
+                            "show_mcq_choices_by_default": False,
+                        },
                         "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][1]["attributes"]["updatedAt"],
                     },
@@ -522,6 +552,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "isbn": "9783161484100",
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
+                        "suggestedItemsSeparators": [],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -542,6 +573,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "isbn": "9783161484101",
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
+                        "suggestedItemsSeparators": [],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -576,6 +608,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "isbn": "9783161484102",
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
+                        "suggestedItemsSeparators": [],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -630,6 +663,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "isbn": "9783161484100",
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
+                        "suggestedItemsSeparators": [],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -650,6 +684,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "isbn": "9783161484101",
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
+                        "suggestedItemsSeparators": [],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -672,8 +707,21 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
                         "textReference": [{"insert": "\n", "attributes": {}}],
-                        "wordingParagraphsPerPagelet": None,
-                        "adaptation": {"kind": "generic", "effects": []},
+                        "adaptation": {
+                            "kind": "generic",
+                            "wording_paragraphs_per_pagelet": None,
+                            "single_item_per_paragraph": False,
+                            "placeholder_for_fill_with_free_text": None,
+                            "items": None,
+                            "items_are_selectable": None,
+                            "items_are_boxed": False,
+                            "items_have_mcq_beside": False,
+                            "items_have_mcq_below": False,
+                            "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                            "items_are_repeated_with_mcq": False,
+                            "show_arrow_before_mcq_fields": False,
+                            "show_mcq_choices_by_default": False,
+                        },
                         "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
                     },
@@ -696,8 +744,21 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
                         "textReference": [{"insert": "\n", "attributes": {}}],
-                        "wordingParagraphsPerPagelet": None,
-                        "adaptation": {"kind": "generic", "effects": []},
+                        "adaptation": {
+                            "kind": "generic",
+                            "wording_paragraphs_per_pagelet": None,
+                            "single_item_per_paragraph": False,
+                            "placeholder_for_fill_with_free_text": None,
+                            "items": None,
+                            "items_are_selectable": None,
+                            "items_are_boxed": False,
+                            "items_have_mcq_beside": False,
+                            "items_have_mcq_below": False,
+                            "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                            "items_are_repeated_with_mcq": False,
+                            "show_arrow_before_mcq_fields": False,
+                            "show_mcq_choices_by_default": False,
+                        },
                         "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][1]["attributes"]["updatedAt"],
                     },
@@ -720,8 +781,21 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
                         "textReference": [{"insert": "\n", "attributes": {}}],
-                        "wordingParagraphsPerPagelet": None,
-                        "adaptation": {"kind": "generic", "effects": []},
+                        "adaptation": {
+                            "kind": "generic",
+                            "wording_paragraphs_per_pagelet": None,
+                            "single_item_per_paragraph": False,
+                            "placeholder_for_fill_with_free_text": None,
+                            "items": None,
+                            "items_are_selectable": None,
+                            "items_are_boxed": False,
+                            "items_have_mcq_beside": False,
+                            "items_have_mcq_below": False,
+                            "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                            "items_are_repeated_with_mcq": False,
+                            "show_arrow_before_mcq_fields": False,
+                            "show_mcq_choices_by_default": False,
+                        },
                         "createdAt": response.json()["included"][2]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][2]["attributes"]["updatedAt"],
                     },
@@ -758,6 +832,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "isbn": "9783161484102",
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
+                        "suggestedItemsSeparators": [],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -788,8 +863,21 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
                         "textReference": [{"insert": "\n", "attributes": {}}],
-                        "wordingParagraphsPerPagelet": None,
-                        "adaptation": {"kind": "generic", "effects": []},
+                        "adaptation": {
+                            "kind": "generic",
+                            "wording_paragraphs_per_pagelet": None,
+                            "single_item_per_paragraph": False,
+                            "placeholder_for_fill_with_free_text": None,
+                            "items": None,
+                            "items_are_selectable": None,
+                            "items_are_boxed": False,
+                            "items_have_mcq_beside": False,
+                            "items_have_mcq_below": False,
+                            "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                            "items_are_repeated_with_mcq": False,
+                            "show_arrow_before_mcq_fields": False,
+                            "show_mcq_choices_by_default": False,
+                        },
                         "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
                     },
@@ -812,8 +900,21 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
                         "textReference": [{"insert": "\n", "attributes": {}}],
-                        "wordingParagraphsPerPagelet": None,
-                        "adaptation": {"kind": "generic", "effects": []},
+                        "adaptation": {
+                            "kind": "generic",
+                            "wording_paragraphs_per_pagelet": None,
+                            "single_item_per_paragraph": False,
+                            "placeholder_for_fill_with_free_text": None,
+                            "items": None,
+                            "items_are_selectable": None,
+                            "items_are_boxed": False,
+                            "items_have_mcq_beside": False,
+                            "items_have_mcq_below": False,
+                            "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                            "items_are_repeated_with_mcq": False,
+                            "show_arrow_before_mcq_fields": False,
+                            "show_mcq_choices_by_default": False,
+                        },
                         "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][1]["attributes"]["updatedAt"],
                     },
@@ -836,8 +937,21 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
                         "textReference": [{"insert": "\n", "attributes": {}}],
-                        "wordingParagraphsPerPagelet": None,
-                        "adaptation": {"kind": "generic", "effects": []},
+                        "adaptation": {
+                            "kind": "generic",
+                            "wording_paragraphs_per_pagelet": None,
+                            "single_item_per_paragraph": False,
+                            "placeholder_for_fill_with_free_text": None,
+                            "items": None,
+                            "items_are_selectable": None,
+                            "items_are_boxed": False,
+                            "items_have_mcq_beside": False,
+                            "items_have_mcq_below": False,
+                            "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                            "items_are_repeated_with_mcq": False,
+                            "show_arrow_before_mcq_fields": False,
+                            "show_mcq_choices_by_default": False,
+                        },
                         "createdAt": response.json()["included"][2]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][2]["attributes"]["updatedAt"],
                     },
@@ -887,6 +1001,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "isbn": "9783161484101",
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
+                    "suggestedItemsSeparators": [],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -933,6 +1048,7 @@ class TextbooksApiTestCase(LoggedInApiTestCase):
                     "isbn": "9783161484100",
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
+                    "suggestedItemsSeparators": [],
                 },
                 "relationships": {
                     "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -1037,8 +1153,21 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "clue": [{"insert": "\n", "attributes": {}}],
                     "wording": [{"insert": "\n", "attributes": {}}],
                     "textReference": [{"insert": "\n", "attributes": {}}],
-                    "wordingParagraphsPerPagelet": None,
-                    "adaptation": {"kind": "generic", "effects": []},
+                    "adaptation": {
+                        "kind": "generic",
+                        "wording_paragraphs_per_pagelet": None,
+                        "single_item_per_paragraph": False,
+                        "placeholder_for_fill_with_free_text": None,
+                        "items": None,
+                        "items_are_selectable": None,
+                        "items_are_boxed": False,
+                        "items_have_mcq_beside": False,
+                        "items_have_mcq_below": False,
+                        "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                        "items_are_repeated_with_mcq": False,
+                        "show_arrow_before_mcq_fields": False,
+                        "show_mcq_choices_by_default": False,
+                    },
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
@@ -1058,10 +1187,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertIsNone(exercise.textbook)
         self.assertIsNone(exercise.textbook_page)
         self.assertEqual(exercise.number, "42")
-        self.assertEqual(exercise.instructions, [deltas.InsertOp(insert="\n", attributes={})])
-        self.assertEqual(exercise.example, [deltas.InsertOp(insert="\n", attributes={})])
-        self.assertEqual(exercise.clue, [deltas.InsertOp(insert="\n", attributes={})])
-        self.assertEqual(exercise.wording, [deltas.InsertOp(insert="\n", attributes={})])
+        self.assertEqual(exercise.instructions, [deltas.TextInsertOp(insert="\n", attributes={})])
+        self.assertEqual(exercise.example, [deltas.TextInsertOp(insert="\n", attributes={})])
+        self.assertEqual(exercise.clue, [deltas.TextInsertOp(insert="\n", attributes={})])
+        self.assertEqual(exercise.wording, [deltas.TextInsertOp(insert="\n", attributes={})])
 
     def test_create__minimal_in_textbook(self):
         payload = {
@@ -1092,8 +1221,21 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "clue": [{"insert": "\n", "attributes": {}}],
                     "wording": [{"insert": "\n", "attributes": {}}],
                     "textReference": [{"insert": "\n", "attributes": {}}],
-                    "wordingParagraphsPerPagelet": None,
-                    "adaptation": {"kind": "generic", "effects": []},
+                    "adaptation": {
+                        "kind": "generic",
+                        "wording_paragraphs_per_pagelet": None,
+                        "single_item_per_paragraph": False,
+                        "placeholder_for_fill_with_free_text": None,
+                        "items": None,
+                        "items_are_selectable": None,
+                        "items_are_boxed": False,
+                        "items_have_mcq_beside": False,
+                        "items_have_mcq_below": False,
+                        "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                        "items_are_repeated_with_mcq": False,
+                        "show_arrow_before_mcq_fields": False,
+                        "show_mcq_choices_by_default": False,
+                    },
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
@@ -1113,10 +1255,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 12)
         self.assertEqual(exercise.number, "42")
-        self.assertEqual(exercise.instructions, [deltas.InsertOp(insert="\n", attributes={})])
-        self.assertEqual(exercise.example, [deltas.InsertOp(insert="\n", attributes={})])
-        self.assertEqual(exercise.clue, [deltas.InsertOp(insert="\n", attributes={})])
-        self.assertEqual(exercise.wording, [deltas.InsertOp(insert="\n", attributes={})])
+        self.assertEqual(exercise.instructions, [deltas.TextInsertOp(insert="\n", attributes={})])
+        self.assertEqual(exercise.example, [deltas.TextInsertOp(insert="\n", attributes={})])
+        self.assertEqual(exercise.clue, [deltas.TextInsertOp(insert="\n", attributes={})])
+        self.assertEqual(exercise.wording, [deltas.TextInsertOp(insert="\n", attributes={})])
 
     def test_create__full(self):
         payload = {
@@ -1129,7 +1271,21 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "clue": [{"insert": "clue\n", "attributes": {}}],
                     "wording": [{"insert": "wording\n", "attributes": {}}],
                     "textReference": [{"insert": "\n", "attributes": {}}],
-                    "wordingParagraphsPerPagelet": 2,
+                    "adaptation": {
+                        "kind": "generic",
+                        "wording_paragraphs_per_pagelet": 2,
+                        "single_item_per_paragraph": False,
+                        "placeholder_for_fill_with_free_text": None,
+                        "items": None,
+                        "items_are_selectable": None,
+                        "items_are_boxed": False,
+                        "items_have_mcq_beside": False,
+                        "items_have_mcq_below": False,
+                        "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                        "items_are_repeated_with_mcq": False,
+                        "show_arrow_before_mcq_fields": False,
+                        "show_mcq_choices_by_default": False,
+                    },
                     "rectangles": [
                         {
                             "pdf_sha256": "sha256",
@@ -1162,8 +1318,21 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "clue": [{"insert": "clue\n", "attributes": {}}],
                     "wording": [{"insert": "wording\n", "attributes": {}}],
                     "textReference": [{"insert": "\n", "attributes": {}}],
-                    "wordingParagraphsPerPagelet": 2,
-                    "adaptation": {"kind": "generic", "effects": []},
+                    "adaptation": {
+                        "kind": "generic",
+                        "wording_paragraphs_per_pagelet": 2,
+                        "single_item_per_paragraph": False,
+                        "placeholder_for_fill_with_free_text": None,
+                        "items": None,
+                        "items_are_selectable": None,
+                        "items_are_boxed": False,
+                        "items_have_mcq_beside": False,
+                        "items_have_mcq_below": False,
+                        "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                        "items_are_repeated_with_mcq": False,
+                        "show_arrow_before_mcq_fields": False,
+                        "show_mcq_choices_by_default": False,
+                    },
                     "rectangles": [
                         {
                             "pdf_sha256": "sha256",  # @todo Rename to 'pdfSha256'
@@ -1194,10 +1363,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 14)
         self.assertEqual(exercise.number, "1")
-        self.assertEqual(exercise.instructions, [deltas.InsertOp(insert="instructions\n", attributes={})])
-        self.assertEqual(exercise.example, [deltas.InsertOp(insert="example\n", attributes={})])
-        self.assertEqual(exercise.clue, [deltas.InsertOp(insert="clue\n", attributes={})])
-        self.assertEqual(exercise.wording, [deltas.InsertOp(insert="wording\n", attributes={})])
+        self.assertEqual(exercise.instructions, [deltas.TextInsertOp(insert="instructions\n", attributes={})])
+        self.assertEqual(exercise.example, [deltas.TextInsertOp(insert="example\n", attributes={})])
+        self.assertEqual(exercise.clue, [deltas.TextInsertOp(insert="clue\n", attributes={})])
+        self.assertEqual(exercise.wording, [deltas.TextInsertOp(insert="wording\n", attributes={})])
         self.assertEqual(
             exercise.rectangles,
             [
@@ -1220,10 +1389,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions=[deltas.InsertOp(insert="instructions\n", attributes={})],
-            example=[deltas.InsertOp(insert="example\n", attributes={})],
-            clue=[deltas.InsertOp(insert="clue\n", attributes={})],
-            wording=[deltas.InsertOp(insert="wording\n", attributes={})],
+            instructions=[deltas.TextInsertOp(insert="instructions\n", attributes={})],
+            example=[deltas.TextInsertOp(insert="example\n", attributes={})],
+            clue=[deltas.TextInsertOp(insert="clue\n", attributes={})],
+            wording=[deltas.TextInsertOp(insert="wording\n", attributes={})],
         )
 
         response = self.get("http://server/exercises/wbqloc")
@@ -1241,8 +1410,21 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "clue": [{"insert": "clue\n", "attributes": {}}],
                     "wording": [{"insert": "wording\n", "attributes": {}}],
                     "textReference": [{"insert": "\n", "attributes": {}}],
-                    "wordingParagraphsPerPagelet": None,
-                    "adaptation": {"kind": "generic", "effects": []},
+                    "adaptation": {
+                        "kind": "generic",
+                        "wording_paragraphs_per_pagelet": None,
+                        "single_item_per_paragraph": False,
+                        "placeholder_for_fill_with_free_text": None,
+                        "items": None,
+                        "items_are_selectable": None,
+                        "items_are_boxed": False,
+                        "items_have_mcq_beside": False,
+                        "items_have_mcq_below": False,
+                        "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                        "items_are_repeated_with_mcq": False,
+                        "show_arrow_before_mcq_fields": False,
+                        "show_mcq_choices_by_default": False,
+                    },
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
@@ -1262,10 +1444,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions=[deltas.InsertOp(insert="instructions\n", attributes={})],
-            example=[deltas.InsertOp(insert="example\n", attributes={})],
-            clue=[deltas.InsertOp(insert="clue\n", attributes={})],
-            wording=[deltas.InsertOp(insert="wording\n", attributes={})],
+            instructions=[deltas.TextInsertOp(insert="instructions\n", attributes={})],
+            example=[deltas.TextInsertOp(insert="example\n", attributes={})],
+            clue=[deltas.TextInsertOp(insert="clue\n", attributes={})],
+            wording=[deltas.TextInsertOp(insert="wording\n", attributes={})],
         )
 
         response = self.get("http://server/exercises/wbqloc?include=textbook")
@@ -1283,8 +1465,21 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "clue": [{"insert": "clue\n", "attributes": {}}],
                     "wording": [{"insert": "wording\n", "attributes": {}}],
                     "textReference": [{"insert": "\n", "attributes": {}}],
-                    "wordingParagraphsPerPagelet": None,
-                    "adaptation": {"kind": "generic", "effects": []},
+                    "adaptation": {
+                        "kind": "generic",
+                        "wording_paragraphs_per_pagelet": None,
+                        "single_item_per_paragraph": False,
+                        "placeholder_for_fill_with_free_text": None,
+                        "items": None,
+                        "items_are_selectable": None,
+                        "items_are_boxed": False,
+                        "items_have_mcq_beside": False,
+                        "items_have_mcq_below": False,
+                        "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                        "items_are_repeated_with_mcq": False,
+                        "show_arrow_before_mcq_fields": False,
+                        "show_mcq_choices_by_default": False,
+                    },
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
@@ -1305,6 +1500,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "publisher": None, "year": None, "isbn": None,
                         "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
+                        "suggestedItemsSeparators": [],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -1324,13 +1520,24 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions=[deltas.InsertOp(insert="instructions\n", attributes={})],
-            example=[deltas.InsertOp(insert="example\n", attributes={})],
-            clue=[deltas.InsertOp(insert="clue\n", attributes={})],
-            wording=[deltas.InsertOp(insert="wording\n", attributes={})],
-            adaptation=AdaptationV2(
+            instructions=[deltas.TextInsertOp(insert="instructions\n", attributes={})],
+            example=[deltas.TextInsertOp(insert="example\n", attributes={})],
+            clue=[deltas.TextInsertOp(insert="clue\n", attributes={})],
+            wording=[deltas.TextInsertOp(insert="wording\n", attributes={})],
+            adaptation=Adaptation(
                 kind="fill-with-free-text",
-                effects=[FillWithFreeTextAdaptationEffect(kind="fill-with-free-text", placeholder="...")],
+                wording_paragraphs_per_pagelet=None,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text="...",
+                items=None,
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                items_are_repeated_with_mcq=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
             ),
         )
 
@@ -1349,8 +1556,21 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "clue": [{"insert": "clue\n", "attributes": {}}],
                     "wording": [{"insert": "wording\n", "attributes": {}}],
                     "textReference": [{"insert": "\n", "attributes": {}}],
-                    "wordingParagraphsPerPagelet": None,
-                    "adaptation": {"kind": "fill-with-free-text", "effects": [{"kind": "fill-with-free-text", "placeholder": "..."}]},
+                    "adaptation": {
+                        "kind": "fill-with-free-text",
+                        "wording_paragraphs_per_pagelet": None,
+                        "single_item_per_paragraph": False,
+                        "placeholder_for_fill_with_free_text": "...",
+                        "items": None,
+                        "items_are_selectable": None,
+                        "items_are_boxed": False,
+                        "items_have_mcq_beside": False,
+                        "items_have_mcq_below": False,
+                        "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                        "items_are_repeated_with_mcq": False,
+                        "show_arrow_before_mcq_fields": False,
+                        "show_mcq_choices_by_default": False,
+                    },
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
@@ -1389,8 +1609,21 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
                         "textReference": [{"insert": "\n", "attributes": {}}],
-                        "wordingParagraphsPerPagelet": None,
-                        "adaptation": {"kind": "generic", "effects": []},
+                        "adaptation": {
+                            "kind": "generic",
+                            "wording_paragraphs_per_pagelet": None,
+                            "single_item_per_paragraph": False,
+                            "placeholder_for_fill_with_free_text": None,
+                            "items": None,
+                            "items_are_selectable": None,
+                            "items_are_boxed": False,
+                            "items_have_mcq_beside": False,
+                            "items_have_mcq_below": False,
+                            "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                            "items_are_repeated_with_mcq": False,
+                            "show_arrow_before_mcq_fields": False,
+                            "show_mcq_choices_by_default": False,
+                        },
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
@@ -1413,8 +1646,21 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
                         "textReference": [{"insert": "\n", "attributes": {}}],
-                        "wordingParagraphsPerPagelet": None,
-                        "adaptation": {"kind": "generic", "effects": []},
+                        "adaptation": {
+                            "kind": "generic",
+                            "wording_paragraphs_per_pagelet": None,
+                            "single_item_per_paragraph": False,
+                            "placeholder_for_fill_with_free_text": None,
+                            "items": None,
+                            "items_are_selectable": None,
+                            "items_are_boxed": False,
+                            "items_have_mcq_beside": False,
+                            "items_have_mcq_below": False,
+                            "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                            "items_are_repeated_with_mcq": False,
+                            "show_arrow_before_mcq_fields": False,
+                            "show_mcq_choices_by_default": False,
+                        },
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
                     },
@@ -1451,8 +1697,21 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
                         "textReference": [{"insert": "\n", "attributes": {}}],
-                        "wordingParagraphsPerPagelet": None,
-                        "adaptation": {"kind": "generic", "effects": []},
+                        "adaptation": {
+                            "kind": "generic",
+                            "wording_paragraphs_per_pagelet": None,
+                            "single_item_per_paragraph": False,
+                            "placeholder_for_fill_with_free_text": None,
+                            "items": None,
+                            "items_are_selectable": None,
+                            "items_are_boxed": False,
+                            "items_have_mcq_beside": False,
+                            "items_have_mcq_below": False,
+                            "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                            "items_are_repeated_with_mcq": False,
+                            "show_arrow_before_mcq_fields": False,
+                            "show_mcq_choices_by_default": False,
+                        },
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
@@ -1496,8 +1755,21 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
                         "textReference": [{"insert": "\n", "attributes": {}}],
-                        "wordingParagraphsPerPagelet": None,
-                        "adaptation": {"kind": "generic", "effects": []},
+                        "adaptation": {
+                            "kind": "generic",
+                            "wording_paragraphs_per_pagelet": None,
+                            "single_item_per_paragraph": False,
+                            "placeholder_for_fill_with_free_text": None,
+                            "items": None,
+                            "items_are_selectable": None,
+                            "items_are_boxed": False,
+                            "items_have_mcq_beside": False,
+                            "items_have_mcq_below": False,
+                            "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                            "items_are_repeated_with_mcq": False,
+                            "show_arrow_before_mcq_fields": False,
+                            "show_mcq_choices_by_default": False,
+                        },
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
@@ -1520,8 +1792,21 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
                         "textReference": [{"insert": "\n", "attributes": {}}],
-                        "wordingParagraphsPerPagelet": None,
-                        "adaptation": {"kind": "generic", "effects": []},
+                        "adaptation": {
+                            "kind": "generic",
+                            "wording_paragraphs_per_pagelet": None,
+                            "single_item_per_paragraph": False,
+                            "placeholder_for_fill_with_free_text": None,
+                            "items": None,
+                            "items_are_selectable": None,
+                            "items_are_boxed": False,
+                            "items_have_mcq_beside": False,
+                            "items_have_mcq_below": False,
+                            "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                            "items_are_repeated_with_mcq": False,
+                            "show_arrow_before_mcq_fields": False,
+                            "show_mcq_choices_by_default": False,
+                        },
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
                     },
@@ -1558,8 +1843,21 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
                         "textReference": [{"insert": "\n", "attributes": {}}],
-                        "wordingParagraphsPerPagelet": None,
-                        "adaptation": {"kind": "generic", "effects": []},
+                        "adaptation": {
+                            "kind": "generic",
+                            "wording_paragraphs_per_pagelet": None,
+                            "single_item_per_paragraph": False,
+                            "placeholder_for_fill_with_free_text": None,
+                            "items": None,
+                            "items_are_selectable": None,
+                            "items_are_boxed": False,
+                            "items_have_mcq_beside": False,
+                            "items_have_mcq_below": False,
+                            "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                            "items_are_repeated_with_mcq": False,
+                            "show_arrow_before_mcq_fields": False,
+                            "show_mcq_choices_by_default": False,
+                        },
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
@@ -1605,8 +1903,21 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
                         "textReference": [{"insert": "\n", "attributes": {}}],
-                        "wordingParagraphsPerPagelet": None,
-                        "adaptation": {"kind": "generic", "effects": []},
+                        "adaptation": {
+                            "kind": "generic",
+                            "wording_paragraphs_per_pagelet": None,
+                            "single_item_per_paragraph": False,
+                            "placeholder_for_fill_with_free_text": None,
+                            "items": None,
+                            "items_are_selectable": None,
+                            "items_are_boxed": False,
+                            "items_have_mcq_beside": False,
+                            "items_have_mcq_below": False,
+                            "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                            "items_are_repeated_with_mcq": False,
+                            "show_arrow_before_mcq_fields": False,
+                            "show_mcq_choices_by_default": False,
+                        },
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
@@ -1629,8 +1940,21 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
                         "textReference": [{"insert": "\n", "attributes": {}}],
-                        "wordingParagraphsPerPagelet": None,
-                        "adaptation": {"kind": "generic", "effects": []},
+                        "adaptation": {
+                            "kind": "generic",
+                            "wording_paragraphs_per_pagelet": None,
+                            "single_item_per_paragraph": False,
+                            "placeholder_for_fill_with_free_text": None,
+                            "items": None,
+                            "items_are_selectable": None,
+                            "items_are_boxed": False,
+                            "items_have_mcq_beside": False,
+                            "items_have_mcq_below": False,
+                            "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                            "items_are_repeated_with_mcq": False,
+                            "show_arrow_before_mcq_fields": False,
+                            "show_mcq_choices_by_default": False,
+                        },
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
                     },
@@ -1652,6 +1976,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "publisher": None, "year": None, "isbn": None,
                         "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
+                        "suggestedItemsSeparators": [],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -1694,8 +2019,21 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
                         "textReference": [{"insert": "\n", "attributes": {}}],
-                        "wordingParagraphsPerPagelet": None,
-                        "adaptation": {"kind": "generic", "effects": []},
+                        "adaptation": {
+                            "kind": "generic",
+                            "wording_paragraphs_per_pagelet": None,
+                            "single_item_per_paragraph": False,
+                            "placeholder_for_fill_with_free_text": None,
+                            "items": None,
+                            "items_are_selectable": None,
+                            "items_are_boxed": False,
+                            "items_have_mcq_beside": False,
+                            "items_have_mcq_below": False,
+                            "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                            "items_are_repeated_with_mcq": False,
+                            "show_arrow_before_mcq_fields": False,
+                            "show_mcq_choices_by_default": False,
+                        },
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
@@ -1718,8 +2056,21 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
                         "textReference": [{"insert": "\n", "attributes": {}}],
-                        "wordingParagraphsPerPagelet": None,
-                        "adaptation": {"kind": "generic", "effects": []},
+                        "adaptation": {
+                            "kind": "generic",
+                            "wording_paragraphs_per_pagelet": None,
+                            "single_item_per_paragraph": False,
+                            "placeholder_for_fill_with_free_text": None,
+                            "items": None,
+                            "items_are_selectable": None,
+                            "items_are_boxed": False,
+                            "items_have_mcq_beside": False,
+                            "items_have_mcq_below": False,
+                            "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                            "items_are_repeated_with_mcq": False,
+                            "show_arrow_before_mcq_fields": False,
+                            "show_mcq_choices_by_default": False,
+                        },
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
                     },
@@ -1741,6 +2092,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "publisher": None, "year": None, "isbn": None,
                         "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
+                        "suggestedItemsSeparators": [],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -1766,6 +2118,7 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "publisher": None, "year": None, "isbn": None,
                         "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["included"][1]["attributes"]["updatedAt"],
+                        "suggestedItemsSeparators": [],
                     },
                     "relationships": {
                         "project": {"data": {"type": "project", "id": "xkopqm"}},
@@ -1815,8 +2168,21 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
                         "textReference": [{"insert": "\n", "attributes": {}}],
-                        "wordingParagraphsPerPagelet": None,
-                        "adaptation": {"kind": "generic", "effects": []},
+                        "adaptation": {
+                            "kind": "generic",
+                            "wording_paragraphs_per_pagelet": None,
+                            "single_item_per_paragraph": False,
+                            "placeholder_for_fill_with_free_text": None,
+                            "items": None,
+                            "items_are_selectable": None,
+                            "items_are_boxed": False,
+                            "items_have_mcq_beside": False,
+                            "items_have_mcq_below": False,
+                            "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                            "items_are_repeated_with_mcq": False,
+                            "show_arrow_before_mcq_fields": False,
+                            "show_mcq_choices_by_default": False,
+                        },
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
@@ -1839,8 +2205,21 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
                         "textReference": [{"insert": "\n", "attributes": {}}],
-                        "wordingParagraphsPerPagelet": None,
-                        "adaptation": {"kind": "generic", "effects": []},
+                        "adaptation": {
+                            "kind": "generic",
+                            "wording_paragraphs_per_pagelet": None,
+                            "single_item_per_paragraph": False,
+                            "placeholder_for_fill_with_free_text": None,
+                            "items": None,
+                            "items_are_selectable": None,
+                            "items_are_boxed": False,
+                            "items_have_mcq_beside": False,
+                            "items_have_mcq_below": False,
+                            "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                            "items_are_repeated_with_mcq": False,
+                            "show_arrow_before_mcq_fields": False,
+                            "show_mcq_choices_by_default": False,
+                        },
                         "createdAt": response.json()["data"][1]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][1]["attributes"]["updatedAt"],
                     },
@@ -1877,8 +2256,21 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                         "clue": [{"insert": "\n", "attributes": {}}],
                         "wording": [{"insert": "\n", "attributes": {}}],
                         "textReference": [{"insert": "\n", "attributes": {}}],
-                        "wordingParagraphsPerPagelet": None,
-                        "adaptation": {"kind": "generic", "effects": []},
+                        "adaptation": {
+                            "kind": "generic",
+                            "wording_paragraphs_per_pagelet": None,
+                            "single_item_per_paragraph": False,
+                            "placeholder_for_fill_with_free_text": None,
+                            "items": None,
+                            "items_are_selectable": None,
+                            "items_are_boxed": False,
+                            "items_have_mcq_beside": False,
+                            "items_have_mcq_below": False,
+                            "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                            "items_are_repeated_with_mcq": False,
+                            "show_arrow_before_mcq_fields": False,
+                            "show_mcq_choices_by_default": False,
+                        },
                         "createdAt": response.json()["data"][0]["attributes"]["createdAt"],
                         "updatedAt": response.json()["data"][0]["attributes"]["updatedAt"],
                     },
@@ -1906,11 +2298,11 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions=[deltas.InsertOp(insert="instructions\n", attributes={})],
-            example=[deltas.InsertOp(insert="example\n", attributes={})],
-            clue=[deltas.InsertOp(insert="clue\n", attributes={})],
-            wording=[deltas.InsertOp(insert="wording\n", attributes={})],
-            text_reference=[deltas.InsertOp(insert="reference\n", attributes={})],
+            instructions=[deltas.TextInsertOp(insert="instructions\n", attributes={})],
+            example=[deltas.TextInsertOp(insert="example\n", attributes={})],
+            clue=[deltas.TextInsertOp(insert="clue\n", attributes={})],
+            wording=[deltas.TextInsertOp(insert="wording\n", attributes={})],
+            text_reference=[deltas.TextInsertOp(insert="reference\n", attributes={})],
             rectangles=[PdfRectangle(
                 pdf_sha256="sha256",
                 pdf_page=42,
@@ -1927,11 +2319,11 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 16)
         self.assertEqual(exercise.number, "11")
-        self.assertEqual(exercise.instructions, [deltas.InsertOp(insert="instructions\n", attributes={})])
-        self.assertEqual(exercise.example, [deltas.InsertOp(insert="example\n", attributes={})])
-        self.assertEqual(exercise.clue, [deltas.InsertOp(insert="clue\n", attributes={})])
-        self.assertEqual(exercise.wording, [deltas.InsertOp(insert="wording\n", attributes={})])
-        self.assertEqual(exercise.text_reference, [deltas.InsertOp(insert="reference\n", attributes={})])
+        self.assertEqual(exercise.instructions, [deltas.TextInsertOp(insert="instructions\n", attributes={})])
+        self.assertEqual(exercise.example, [deltas.TextInsertOp(insert="example\n", attributes={})])
+        self.assertEqual(exercise.clue, [deltas.TextInsertOp(insert="clue\n", attributes={})])
+        self.assertEqual(exercise.wording, [deltas.TextInsertOp(insert="wording\n", attributes={})])
+        self.assertEqual(exercise.text_reference, [deltas.TextInsertOp(insert="reference\n", attributes={})])
         self.assertEqual(
             exercise.rectangles,
             [
@@ -1994,8 +2386,21 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "clue": [{"insert": "CLUE\n", "attributes": {}}],
                     "wording": [{"insert": "WORDING\n", "attributes": {}}],
                     "textReference": [{"insert": "REFERENCE\n", "attributes": {}}],
-                    "wordingParagraphsPerPagelet": None,
-                    "adaptation": {"kind": "generic", "effects": []},
+                    "adaptation": {
+                        "kind": "generic",
+                        "wording_paragraphs_per_pagelet": None,
+                        "single_item_per_paragraph": False,
+                        "placeholder_for_fill_with_free_text": None,
+                        "items": None,
+                        "items_are_selectable": None,
+                        "items_are_boxed": False,
+                        "items_have_mcq_beside": False,
+                        "items_have_mcq_below": False,
+                        "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                        "items_are_repeated_with_mcq": False,
+                        "show_arrow_before_mcq_fields": False,
+                        "show_mcq_choices_by_default": False,
+                    },
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                     "rectangles": [
@@ -2035,11 +2440,11 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 16)
         self.assertEqual(exercise.number, "11")
-        self.assertEqual(exercise.instructions, [deltas.InsertOp(insert="INSTRUCTIONS\n", attributes={})])
-        self.assertEqual(exercise.example, [deltas.InsertOp(insert="EXAMPLE\n", attributes={})])
-        self.assertEqual(exercise.clue, [deltas.InsertOp(insert="CLUE\n", attributes={})])
-        self.assertEqual(exercise.wording, [deltas.InsertOp(insert="WORDING\n", attributes={})])
-        self.assertEqual(exercise.text_reference, [deltas.InsertOp(insert="REFERENCE\n", attributes={})])
+        self.assertEqual(exercise.instructions, [deltas.TextInsertOp(insert="INSTRUCTIONS\n", attributes={})])
+        self.assertEqual(exercise.example, [deltas.TextInsertOp(insert="EXAMPLE\n", attributes={})])
+        self.assertEqual(exercise.clue, [deltas.TextInsertOp(insert="CLUE\n", attributes={})])
+        self.assertEqual(exercise.wording, [deltas.TextInsertOp(insert="WORDING\n", attributes={})])
+        self.assertEqual(exercise.text_reference, [deltas.TextInsertOp(insert="REFERENCE\n", attributes={})])
         self.assertEqual(
             exercise.rectangles,
             [
@@ -2071,11 +2476,11 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions=[deltas.InsertOp(insert="instructions\n", attributes={})],
-            example=[deltas.InsertOp(insert="example\n", attributes={})],
-            clue=[deltas.InsertOp(insert="clue\n", attributes={})],
-            wording=[deltas.InsertOp(insert="wording\n", attributes={})],
-            text_reference=[deltas.InsertOp(insert="reference\n", attributes={})],
+            instructions=[deltas.TextInsertOp(insert="instructions\n", attributes={})],
+            example=[deltas.TextInsertOp(insert="example\n", attributes={})],
+            clue=[deltas.TextInsertOp(insert="clue\n", attributes={})],
+            wording=[deltas.TextInsertOp(insert="wording\n", attributes={})],
+            text_reference=[deltas.TextInsertOp(insert="reference\n", attributes={})],
         )
 
         payload = {
@@ -2102,8 +2507,21 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
                     "clue": [{"insert": "clue\n", "attributes": {}}],
                     "wording": [{"insert": "wording\n", "attributes": {}}],
                     "textReference": [{"insert": "reference\n", "attributes": {}}],
-                    "wordingParagraphsPerPagelet": None,
-                    "adaptation": {"kind": "generic", "effects": []},
+                    "adaptation": {
+                        "kind": "generic",
+                        "wording_paragraphs_per_pagelet": None,
+                        "single_item_per_paragraph": False,
+                        "placeholder_for_fill_with_free_text": None,
+                        "items": None,
+                        "items_are_selectable": None,
+                        "items_are_boxed": False,
+                        "items_have_mcq_beside": False,
+                        "items_have_mcq_below": False,
+                        "items_have_predefined_mcq": {"grammatical_gender": False, "grammatical_number": False},
+                        "items_are_repeated_with_mcq": False,
+                        "show_arrow_before_mcq_fields": False,
+                        "show_mcq_choices_by_default": False,
+                    },
                     "createdAt": response.json()["data"]["attributes"]["createdAt"],
                     "updatedAt": response.json()["data"]["attributes"]["updatedAt"],
                 },
@@ -2123,11 +2541,11 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 16)
         self.assertEqual(exercise.number, "11")
-        self.assertEqual(exercise.instructions, [deltas.InsertOp(insert="INSTRUCTIONS\n", attributes={})])
-        self.assertEqual(exercise.example, [deltas.InsertOp(insert="example\n", attributes={})])
-        self.assertEqual(exercise.clue, [deltas.InsertOp(insert="clue\n", attributes={})])
-        self.assertEqual(exercise.wording, [deltas.InsertOp(insert="wording\n", attributes={})])
-        self.assertEqual(exercise.text_reference, [deltas.InsertOp(insert="reference\n", attributes={})])
+        self.assertEqual(exercise.instructions, [deltas.TextInsertOp(insert="INSTRUCTIONS\n", attributes={})])
+        self.assertEqual(exercise.example, [deltas.TextInsertOp(insert="example\n", attributes={})])
+        self.assertEqual(exercise.clue, [deltas.TextInsertOp(insert="clue\n", attributes={})])
+        self.assertEqual(exercise.wording, [deltas.TextInsertOp(insert="wording\n", attributes={})])
+        self.assertEqual(exercise.text_reference, [deltas.TextInsertOp(insert="reference\n", attributes={})])
 
     def test_patch__read_only_project(self):
         self.create_model(
@@ -2136,10 +2554,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions=[deltas.InsertOp(insert="instructions\n", attributes={})],
-            example=[deltas.InsertOp(insert="example\n", attributes={})],
-            clue=[deltas.InsertOp(insert="clue\n", attributes={})],
-            wording=[deltas.InsertOp(insert="wording\n", attributes={})],
+            instructions=[deltas.TextInsertOp(insert="instructions\n", attributes={})],
+            example=[deltas.TextInsertOp(insert="example\n", attributes={})],
+            clue=[deltas.TextInsertOp(insert="clue\n", attributes={})],
+            wording=[deltas.TextInsertOp(insert="wording\n", attributes={})],
         )
 
         payload = {
@@ -2167,10 +2585,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 16)
         self.assertEqual(exercise.number, "11")
-        self.assertEqual(exercise.instructions, [deltas.InsertOp(insert="instructions\n", attributes={})])
-        self.assertEqual(exercise.example, [deltas.InsertOp(insert="example\n", attributes={})])
-        self.assertEqual(exercise.clue, [deltas.InsertOp(insert="clue\n", attributes={})])
-        self.assertEqual(exercise.wording, [deltas.InsertOp(insert="wording\n", attributes={})])
+        self.assertEqual(exercise.instructions, [deltas.TextInsertOp(insert="instructions\n", attributes={})])
+        self.assertEqual(exercise.example, [deltas.TextInsertOp(insert="example\n", attributes={})])
+        self.assertEqual(exercise.clue, [deltas.TextInsertOp(insert="clue\n", attributes={})])
+        self.assertEqual(exercise.wording, [deltas.TextInsertOp(insert="wording\n", attributes={})])
 
     def test_patch__read_only_textbook(self):
         self.create_model(
@@ -2179,10 +2597,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions=[deltas.InsertOp(insert="instructions\n", attributes={})],
-            example=[deltas.InsertOp(insert="example\n", attributes={})],
-            clue=[deltas.InsertOp(insert="clue\n", attributes={})],
-            wording=[deltas.InsertOp(insert="wording\n", attributes={})],
+            instructions=[deltas.TextInsertOp(insert="instructions\n", attributes={})],
+            example=[deltas.TextInsertOp(insert="example\n", attributes={})],
+            clue=[deltas.TextInsertOp(insert="clue\n", attributes={})],
+            wording=[deltas.TextInsertOp(insert="wording\n", attributes={})],
         )
         self.create_model(Textbook, project=self.project, title="Another textbook")
 
@@ -2211,10 +2629,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 16)
         self.assertEqual(exercise.number, "11")
-        self.assertEqual(exercise.instructions, [deltas.InsertOp(insert="instructions\n", attributes={})])
-        self.assertEqual(exercise.example, [deltas.InsertOp(insert="example\n", attributes={})])
-        self.assertEqual(exercise.clue, [deltas.InsertOp(insert="clue\n", attributes={})])
-        self.assertEqual(exercise.wording, [deltas.InsertOp(insert="wording\n", attributes={})])
+        self.assertEqual(exercise.instructions, [deltas.TextInsertOp(insert="instructions\n", attributes={})])
+        self.assertEqual(exercise.example, [deltas.TextInsertOp(insert="example\n", attributes={})])
+        self.assertEqual(exercise.clue, [deltas.TextInsertOp(insert="clue\n", attributes={})])
+        self.assertEqual(exercise.wording, [deltas.TextInsertOp(insert="wording\n", attributes={})])
 
     def test_patch__read_only_page(self):
         self.create_model(
@@ -2223,10 +2641,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions=[deltas.InsertOp(insert="instructions\n", attributes={})],
-            example=[deltas.InsertOp(insert="example\n", attributes={})],
-            clue=[deltas.InsertOp(insert="clue\n", attributes={})],
-            wording=[deltas.InsertOp(insert="wording\n", attributes={})],
+            instructions=[deltas.TextInsertOp(insert="instructions\n", attributes={})],
+            example=[deltas.TextInsertOp(insert="example\n", attributes={})],
+            clue=[deltas.TextInsertOp(insert="clue\n", attributes={})],
+            wording=[deltas.TextInsertOp(insert="wording\n", attributes={})],
         )
 
         payload = {
@@ -2254,10 +2672,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 16)
         self.assertEqual(exercise.number, "11")
-        self.assertEqual(exercise.instructions, [deltas.InsertOp(insert="instructions\n", attributes={})])
-        self.assertEqual(exercise.example, [deltas.InsertOp(insert="example\n", attributes={})])
-        self.assertEqual(exercise.clue, [deltas.InsertOp(insert="clue\n", attributes={})])
-        self.assertEqual(exercise.wording, [deltas.InsertOp(insert="wording\n", attributes={})])
+        self.assertEqual(exercise.instructions, [deltas.TextInsertOp(insert="instructions\n", attributes={})])
+        self.assertEqual(exercise.example, [deltas.TextInsertOp(insert="example\n", attributes={})])
+        self.assertEqual(exercise.clue, [deltas.TextInsertOp(insert="clue\n", attributes={})])
+        self.assertEqual(exercise.wording, [deltas.TextInsertOp(insert="wording\n", attributes={})])
 
     def test_patch__read_only_number(self):
         self.create_model(
@@ -2266,10 +2684,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions=[deltas.InsertOp(insert="instructions\n", attributes={})],
-            example=[deltas.InsertOp(insert="example\n", attributes={})],
-            clue=[deltas.InsertOp(insert="clue\n", attributes={})],
-            wording=[deltas.InsertOp(insert="wording\n", attributes={})],
+            instructions=[deltas.TextInsertOp(insert="instructions\n", attributes={})],
+            example=[deltas.TextInsertOp(insert="example\n", attributes={})],
+            clue=[deltas.TextInsertOp(insert="clue\n", attributes={})],
+            wording=[deltas.TextInsertOp(insert="wording\n", attributes={})],
         )
 
         payload = {
@@ -2297,10 +2715,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 16)
         self.assertEqual(exercise.number, "11")
-        self.assertEqual(exercise.instructions, [deltas.InsertOp(insert="instructions\n", attributes={})])
-        self.assertEqual(exercise.example, [deltas.InsertOp(insert="example\n", attributes={})])
-        self.assertEqual(exercise.clue, [deltas.InsertOp(insert="clue\n", attributes={})])
-        self.assertEqual(exercise.wording, [deltas.InsertOp(insert="wording\n", attributes={})])
+        self.assertEqual(exercise.instructions, [deltas.TextInsertOp(insert="instructions\n", attributes={})])
+        self.assertEqual(exercise.example, [deltas.TextInsertOp(insert="example\n", attributes={})])
+        self.assertEqual(exercise.clue, [deltas.TextInsertOp(insert="clue\n", attributes={})])
+        self.assertEqual(exercise.wording, [deltas.TextInsertOp(insert="wording\n", attributes={})])
 
     def test_delete(self):
         self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=16, number="11", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)

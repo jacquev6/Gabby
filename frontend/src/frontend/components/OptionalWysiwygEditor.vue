@@ -10,6 +10,7 @@ import deepEqual from 'deep-equal'
 defineProps<{
   label: string,
   blots: (typeof BoldBlot)[]
+  compatibleFormats: string[][]
   contagiousFormats: string[]
 }>()
 
@@ -54,6 +55,7 @@ defineExpose({
     ref="editor"
     :label
     :blots
+    :compatibleFormats
     :contagiousFormats
     v-model="model"
     @focus="force"

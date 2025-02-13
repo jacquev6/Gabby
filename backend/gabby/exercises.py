@@ -48,7 +48,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     def instructions(self) -> deltas.Deltas:
         if self._instructions is None:  # Before the first flush to DB if not set in constructor.
             self._instructions = deltas.empty_as_list
-        return [deltas.InsertOp(**delta) for delta in self._instructions]
+        return deltas.make(self._instructions)
 
     @instructions.setter
     def instructions(self, instructions: deltas.Deltas):
@@ -60,7 +60,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     def wording(self) -> deltas.Deltas:
         if self._wording is None:  # Before the first flush to DB if not set in constructor.
             self._wording = deltas.empty_as_list
-        return [deltas.InsertOp(**delta) for delta in self._wording]
+        return deltas.make(self._wording)
 
     @wording.setter
     def wording(self, wording: deltas.Deltas):
@@ -72,7 +72,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     def example(self) -> deltas.Deltas:
         if self._example is None:  # Before the first flush to DB if not set in constructor.
             self._example = deltas.empty_as_list
-        return [deltas.InsertOp(**delta) for delta in self._example]
+        return deltas.make(self._example)
 
     @example.setter
     def example(self, example: str | deltas.Deltas):
@@ -84,7 +84,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     def clue(self) -> deltas.Deltas:
         if self._clue is None:  # Before the first flush to DB if not set in constructor.
             self._clue = deltas.empty_as_list
-        return [deltas.InsertOp(**delta) for delta in self._clue]
+        return deltas.make(self._clue)
 
     @clue.setter
     def clue(self, clue: deltas.Deltas):
@@ -96,13 +96,14 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     def text_reference(self) -> deltas.Deltas:
         if self._text_reference is None:  # Before the first flush to DB if not set in constructor.
             self._text_reference = deltas.empty_as_list
-        return [deltas.InsertOp(**delta) for delta in self._text_reference]
+        return deltas.make(self._text_reference)
 
     @text_reference.setter
     def text_reference(self, text_reference: deltas.Deltas):
         self._text_reference = [delta.model_dump() for delta in text_reference]
 
-    wording_paragraphs_per_pagelet: orm.Mapped[int | None] = orm.mapped_column(nullable=True)
+    # @todo(After migration dd7b7de68daa is applied) Remove the following field
+    _old_wording_paragraphs_per_pagelet: orm.Mapped[int | None] = orm.mapped_column(name="wording_paragraphs_per_pagelet", nullable=True)
 
     _rectangles: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="rectangles", default=[], server_default="[]")
 
@@ -117,20 +118,37 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     _adaptation: orm.Mapped[dict] = orm.mapped_column(sql.JSON, name="adaptation", default={"format": 0}, server_default="{\"format\": 0}")
 
     @property
-    def adaptation(self) -> api_models.AdaptationV2:
+    def adaptation(self) -> api_models.Adaptation:
         if self._adaptation is None:  # Before the first flush to DB if not set in constructor.
             self._adaptation = {"format": 0}
 
         match self._adaptation["format"]:
             case 0:
-                return api_models.AdaptationV2(kind="generic", effects=[])
+                return api_models.Adaptation(
+                    kind="generic",
+                    wording_paragraphs_per_pagelet=None,
+                    single_item_per_paragraph=False,
+                    placeholder_for_fill_with_free_text=None,
+                    items=None,
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=api_models.PredefinedMcq(
+                        grammatical_gender=False,
+                        grammatical_number=False,
+                    ),
+                    items_are_repeated_with_mcq=False,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                )
             case 2:
-                return api_models.AdaptationV2(**self._adaptation["settings"])
+                return api_models.Adaptation(**self._adaptation["settings"])
             case format:
                 raise ValueError(f"Unknown adaptation format {format}")
 
     @adaptation.setter
-    def adaptation(self, adaptation: api_models.AdaptationV2):
+    def adaptation(self, adaptation: api_models.Adaptation):
         self._adaptation = {
             "format": 2,
             "settings": adaptation.model_dump(),
@@ -306,7 +324,6 @@ class ExercisesResource:
         example,
         clue,
         text_reference,
-        wording_paragraphs_per_pagelet,
         rectangles,
         adaptation,
         session: SessionDependable,
@@ -324,7 +341,6 @@ class ExercisesResource:
             example=example,
             clue=clue,
             text_reference=text_reference,
-            wording_paragraphs_per_pagelet=wording_paragraphs_per_pagelet,
             rectangles=rectangles,
             adaptation=adaptation,
             created_by=authenticated_user,
@@ -382,3 +398,328 @@ class ExercisesResource:
 
 
 set_wrapper(Exercise, orm_wrapper_with_sqids(ExercisesResource.sqids))
+
+
+class SuggestedItemsSeparatorsTestCase(TransactionTestCase):
+    def setUp(self):
+        super().setUp()
+        self.project = self.create_model(Project, title="Project", description="")
+        self.textbook = self.create_model(Textbook, project=self.project, title="Textbook")
+
+    def assert_separators_equal(self, expected):
+        self.assertEqual(self.get_model(Textbook, self.textbook.id).suggested_items_separators, expected)
+
+    def test_empty_textbook(self):
+        self.assert_separators_equal([])
+
+    def test_textbook_with_irrelevant_exercises(self):
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="5",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items=None,
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                items_have_predefined_mcq=api_models.PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                items_are_repeated_with_mcq=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="6",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "manual"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                items_have_predefined_mcq=api_models.PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                items_are_repeated_with_mcq=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="7",
+        )
+        self.assert_separators_equal([])
+
+    def test_exercise_relevant_in_other_textbook(self):
+        other_textbook = self.create_model(Textbook, project=self.project, title="Other textbook")
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=other_textbook,
+            textbook_page=5,
+            number="5",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "separated", "separator": "#"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                items_have_predefined_mcq=api_models.PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                items_are_repeated_with_mcq=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.assert_separators_equal([])
+
+    def test_textbook_with_one_relevant_exercise(self):
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="5",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "separated", "separator": "#"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                items_have_predefined_mcq=api_models.PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                items_are_repeated_with_mcq=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.assert_separators_equal(["#"])
+
+    def test_textbook_with_several_relevant_exercises_with_identical_separator(self):
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="5",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "separated", "separator": "#"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                items_have_predefined_mcq=api_models.PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                items_are_repeated_with_mcq=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="6",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "separated", "separator": "#"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                items_have_predefined_mcq=api_models.PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                items_are_repeated_with_mcq=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="7",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "separated", "separator": "#"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                items_have_predefined_mcq=api_models.PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                items_are_repeated_with_mcq=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.assert_separators_equal(["#"])
+
+    def test_textbook_with_several_relevant_exercises_with_different_separators(self):
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="5",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "separated", "separator": "#"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                items_have_predefined_mcq=api_models.PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                items_are_repeated_with_mcq=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="6",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "separated", "separator": "|"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                items_have_predefined_mcq=api_models.PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                items_are_repeated_with_mcq=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="7",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "separated", "separator": "*"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                items_have_predefined_mcq=api_models.PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                items_are_repeated_with_mcq=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.assert_separators_equal(["#", "*", "|"])
+
+    def test_textbook_with_several_relevant_exercises_with_different_separators__in_other_order(self):
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="5",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "separated", "separator": "*"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                items_have_predefined_mcq=api_models.PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                items_are_repeated_with_mcq=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="6",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "separated", "separator": "|"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                items_have_predefined_mcq=api_models.PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                items_are_repeated_with_mcq=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.create_model(
+            Exercise,
+            project=self.project,
+            textbook=self.textbook,
+            textbook_page=5,
+            number="7",
+            adaptation=api_models.Adaptation(
+                kind="generic",
+                wording_paragraphs_per_pagelet=1,
+                single_item_per_paragraph=False,
+                placeholder_for_fill_with_free_text=None,
+                items={"kind": "separated", "separator": "#"},
+                items_are_selectable=None,
+                items_are_boxed=False,
+                items_have_mcq_beside=False,
+                items_have_mcq_below=False,
+                items_have_predefined_mcq=api_models.PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                items_are_repeated_with_mcq=False,
+                show_arrow_before_mcq_fields=False,
+                show_mcq_choices_by_default=False,
+            ),
+        )
+        self.assert_separators_equal(["#", "*", "|"])

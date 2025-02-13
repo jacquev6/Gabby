@@ -1,113 +1,66 @@
+from __future__ import annotations
+
 from typing import Literal
 
 from mydantic import PydanticBase
 
 
-class _PlainText(PydanticBase):
-    type: Literal["plainText"]
+class Whitespace(PydanticBase):
+    kind: Literal["whitespace"]
+
+
+class Text(PydanticBase):
+    kind: Literal["text"]
+    bold: bool = False
+    italic: bool = False
+    highlighted: str | None = None
     text: str
 
-def PlainText(text: str):
-    assert text.__class__ == str, text.__class__
-    return _PlainText(type="plainText", text=text)
+
+PassiveLeafRenderable = Whitespace | Text
 
 
-class _BoxedText(PydanticBase):
-    type: Literal["boxedText"]
-    text: str
-
-def BoxedText(text: str):
-    assert text.__class__ == str, text.__class__
-    return _BoxedText(type="boxedText", text=text)
+class PassiveSequence(PydanticBase):
+    kind: Literal["passiveSequence"]
+    contents: list[PassiveLeafRenderable]
+    boxed: bool = False
 
 
-class _BoldText(PydanticBase):
-    type: Literal["boldText"]
-    text: str
-
-def BoldText(text: str):
-    assert text.__class__ == str, text.__class__
-    return _BoldText(type="boldText", text=text)
+PassiveRenderable = PassiveLeafRenderable | PassiveSequence
 
 
-class _ItalicText(PydanticBase):
-    type: Literal["italicText"]
-    text: str
-
-def ItalicText(text: str):
-    assert text.__class__ == str, text.__class__
-    return _ItalicText(type="italicText", text=text)
+class FreeTextInput(PydanticBase):
+    kind: Literal["freeTextInput"]
 
 
-class _SelectableText(PydanticBase):
-    type: Literal["selectableText"]
-    text: str
+class MultipleChoicesInput(PydanticBase):
+    kind: Literal["multipleChoicesInput"]
+    show_arrow_before: bool = False
+    choices: list[list[PassiveRenderable]]
+    show_choices_by_default: bool = False
+
+
+class SelectableInput(PydanticBase):
+    kind: Literal["selectableInput"]
     colors: list[str]
-    boxed: bool
-
-def SelectableText(text: str, colors: list[str], boxed: bool):
-    assert text.__class__ == str, text.__class__
-    return _SelectableText(type="selectableText", text=text, colors=colors, boxed=boxed)
+    boxed: bool = False
+    contents: list[PassiveRenderable]
 
 
-class _SelectedText(PydanticBase):
-    type: Literal["selectedText"]
-    text: str
-    color: str
-
-def SelectedText(text: str, color: str):
-    assert text.__class__ == str, text.__class__
-    return _SelectedText(type="selectedText", text=text, color=color)
+AlmostAnyRenderable = PassiveRenderable | FreeTextInput | MultipleChoicesInput | SelectableInput
 
 
-class _FreeTextInput(PydanticBase):
-    type: Literal["freeTextInput"]
-
-def FreeTextInput():
-    return _FreeTextInput(type="freeTextInput")
-
-
-class _MultipleChoicesInput(PydanticBase):
-    type: Literal["multipleChoicesInput"]
-    choices: list[str]
-
-def MultipleChoicesInput(choices: list[str]):
-    return _MultipleChoicesInput(type="multipleChoicesInput", choices=choices)
+class AnySequence(PydanticBase):
+    kind: Literal["sequence"]
+    contents: list[AlmostAnyRenderable | AnySequence]
+    vertical: bool = False
 
 
-class _Whitespace(PydanticBase):
-    type: Literal["whitespace"]
-
-def Whitespace():
-    return _Whitespace(type="whitespace")
-
-
-LeafToken = _PlainText | _BoxedText | _BoldText | _ItalicText | _SelectedText | _FreeTextInput | _MultipleChoicesInput | _Whitespace
-
-
-class _Selectable(PydanticBase):
-    type: Literal["selectable"]
-    contents: list[LeafToken]
-    colors: list[str]
-    boxed: bool
-
-def Selectable(contents: list[LeafToken], colors: list[str], boxed: bool):
-    return _Selectable(type="selectable", contents=contents, colors=colors, boxed=boxed)
-
-
-class _Boxed(PydanticBase):
-    type: Literal["boxed"]
-    contents: list[LeafToken]
-
-def Boxed(contents: list[LeafToken]):
-    return _Boxed(type="boxed", contents=contents)
-
-
-SentenceToken = LeafToken | _Selectable | _Boxed | _SelectableText
+AnyRenderable = AlmostAnyRenderable | AnySequence
 
 
 class Paragraph(PydanticBase):
-    tokens: list[SentenceToken]
+    contents: list[AnyRenderable]
 
 
 class Section(PydanticBase):

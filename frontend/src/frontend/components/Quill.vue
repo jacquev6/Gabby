@@ -22,9 +22,9 @@ delete Keyboard.DEFAULTS.bindings.italic
 // but slightly more fragile in the unlikely case quill-delta changes its interface. OK.
 export type Model = ({
   insert: string
-  attributes: Record<string, unknown>
+  attributes: Record<string, any>
 } | {
-  insert: Record<string, unknown>
+  insert: Record<string, any>
 })[]
 
 function makeMinimalRegistry() {
@@ -77,6 +77,7 @@ import deepEqual from 'deep-equal'
 
 const props = defineProps<{
   blots: Blot[]
+  compatibleFormats: string[][]
   contagiousFormats: string[]
 }>()
 
@@ -187,21 +188,49 @@ watch([quill, model], ([quill, model]) => {
   }
 }, {deep: true})
 
+const compatibleFormats = computed(() => {
+  const result: Record<string, string[]> = {}
+
+  for (const formats of props.compatibleFormats) {
+    for (const format of formats) {
+      result[format] = []
+    }
+  }
+
+  for (const formats of props.compatibleFormats) {
+    for (const format of formats) {
+      result[format].push(...formats.filter(f => f !== format))
+    }
+  }
+
+  console.log('Compatible formats', result)
+  return result
+})
+
 function toggle(formatting: string, value: unknown = true) {
   console.assert(quill.value !== null)
 
   currentFormat.value = {}
 
-  // Clear formatting of the caret, in case selection is empty.
+  // Clear incompatible formatting of the caret, in case selection is empty.
   // Incidentally, this also clears the formatting of the selected range in whole.
   const previousFormat = quill.value.getFormat()
   for (const f of Object.keys(previousFormat)) {
-    quill.value.format(f, false, 'user')
+    if (!(compatibleFormats.value[f] !== undefined && compatibleFormats.value[f].includes(formatting))) {
+      quill.value.format(f, false, 'user')
+    }
   }
 
-  // Clear any formatting of (any part of) the selected range.
+  // Clear any incompatible formatting of (any part of) the selected range.
   const {index, length} = quill.value.getSelection(true)
-  quill.value.removeFormat(index, length)
+  for (let i = index; i < index + length; ++i) {
+    const previousSelectionFormat = quill.value.getFormat(i, 1)
+    for (const f of Object.keys(previousSelectionFormat)) {
+      if (!(compatibleFormats.value[f] !== undefined && compatibleFormats.value[f].includes(formatting))) {
+        quill.value.formatText(i, 1, f, false, 'user')
+      }
+    }
+  }
 
   // Toggle the requested formatting, either for the caret, or for the selected range.
   if (previousFormat[formatting] !== value) {
@@ -211,6 +240,7 @@ function toggle(formatting: string, value: unknown = true) {
 }
 
 defineExpose({
+  quill,
   toggle,
   hasFocus,
   currentFormat,

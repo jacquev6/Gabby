@@ -151,25 +151,50 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
-    /** AdaptationV2 */
-    "AdaptationV2-Input": {
-      /** Effects */
-      effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["ItemizedAdaptationEffect-Input"])[];
+    /** Adaptation */
+    Adaptation: {
+      /** Items */
+      items: components["schemas"]["CharactersItems"] | components["schemas"]["TokensItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"] | components["schemas"]["SeparatedItems"] | null;
+      /** Items Are Boxed */
+      items_are_boxed: boolean;
+      /** Items Are Repeated With Mcq */
+      items_are_repeated_with_mcq: boolean;
+      items_are_selectable: components["schemas"]["Selectable"] | null;
+      /** Items Have Mcq Below */
+      items_have_mcq_below: boolean;
+      /** Items Have Mcq Beside */
+      items_have_mcq_beside: boolean;
+      items_have_predefined_mcq: components["schemas"]["PredefinedMcq"];
       /**
        * Kind
        * @enum {string}
        */
       kind: "generic" | "fill-with-free-text" | "multiple-choices";
+      /** Placeholder For Fill With Free Text */
+      placeholder_for_fill_with_free_text: string | null;
+      /** Show Arrow Before Mcq Fields */
+      show_arrow_before_mcq_fields: boolean;
+      /** Show Mcq Choices By Default */
+      show_mcq_choices_by_default: boolean;
+      /** Single Item Per Paragraph */
+      single_item_per_paragraph: boolean;
+      /** Wording Paragraphs Per Pagelet */
+      wording_paragraphs_per_pagelet: number | null;
     };
-    /** AdaptationV2 */
-    "AdaptationV2-Output": {
-      /** Effects */
-      effects: (components["schemas"]["FillWithFreeTextAdaptationEffect"] | components["schemas"]["ItemizedAdaptationEffect-Output"])[];
+    /** AnySequence */
+    AnySequence: {
+      /** Contents */
+      contents: (components["schemas"]["Whitespace"] | components["schemas"]["Text"] | components["schemas"]["PassiveSequence"] | components["schemas"]["FreeTextInput"] | components["schemas"]["MultipleChoicesInput"] | components["schemas"]["SelectableInput"] | components["schemas"]["AnySequence"])[];
       /**
        * Kind
-       * @enum {string}
+       * @constant
        */
-      kind: "generic" | "fill-with-free-text" | "multiple-choices";
+      kind: "sequence";
+      /**
+       * Vertical
+       * @default false
+       */
+      vertical?: boolean;
     };
     /** Body_login_api_token_post */
     Body_login_api_token_post: {
@@ -201,11 +226,10 @@ export interface components {
       /** Letters */
       letters: boolean;
     };
-    /** Effects */
-    Effects: {
-      /** Boxed */
-      boxed: boolean;
-      selectable: components["schemas"]["Selectable"] | null;
+    /** EmbedInsertOp */
+    EmbedInsertOp: {
+      /** Insert */
+      insert: Record<string, unknown>;
     };
     /** Exercise */
     Exercise: {
@@ -216,54 +240,23 @@ export interface components {
       /** Textbook Page */
       textbook_page: number | null;
     };
-    /** FillWithFreeTextAdaptationEffect */
-    FillWithFreeTextAdaptationEffect: {
+    /** FreeTextInput */
+    FreeTextInput: {
       /**
        * Kind
        * @constant
        */
-      kind: "fill-with-free-text";
-      /** Placeholder */
-      placeholder: string;
+      kind: "freeTextInput";
     };
     /** HTTPValidationError */
     HTTPValidationError: {
       /** Detail */
       detail?: components["schemas"]["ValidationError"][];
     };
-    /** InsertOp */
-    InsertOp: {
-      /** Attributes */
-      attributes: Record<string, unknown>;
-      /** Insert */
-      insert: string;
-    };
     /** ItemLinks */
     ItemLinks: {
       /** Self */
       self: string;
-    };
-    /** ItemizedAdaptationEffect */
-    "ItemizedAdaptationEffect-Input": {
-      effects: components["schemas"]["Effects"];
-      /** Items */
-      items: components["schemas"]["CharactersItems"] | components["schemas"]["TokensItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
-      /**
-       * Kind
-       * @constant
-       */
-      kind: "itemized";
-    };
-    /** ItemizedAdaptationEffect */
-    "ItemizedAdaptationEffect-Output": {
-      effects: components["schemas"]["Effects"];
-      /** Items */
-      items: components["schemas"]["CharactersItems"] | components["schemas"]["TokensItems"] | components["schemas"]["SentencesItems"] | components["schemas"]["ManualItems"];
-      /**
-       * Kind
-       * @constant
-       */
-      kind: "itemized";
     };
     /** ManualItems */
     ManualItems: {
@@ -272,6 +265,26 @@ export interface components {
        * @constant
        */
       kind: "manual";
+    };
+    /** MultipleChoicesInput */
+    MultipleChoicesInput: {
+      /** Choices */
+      choices: ((components["schemas"]["Whitespace"] | components["schemas"]["Text"] | components["schemas"]["PassiveSequence"])[])[];
+      /**
+       * Kind
+       * @constant
+       */
+      kind: "multipleChoicesInput";
+      /**
+       * Show Arrow Before
+       * @default false
+       */
+      show_arrow_before?: boolean;
+      /**
+       * Show Choices By Default
+       * @default false
+       */
+      show_choices_by_default?: boolean;
     };
     /** OutputListRelationShipMeta */
     OutputListRelationShipMeta: {
@@ -309,8 +322,23 @@ export interface components {
     };
     /** Paragraph */
     Paragraph: {
-      /** Tokens */
-      tokens: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_BoldText"] | components["schemas"]["_ItalicText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"] | components["schemas"]["_Selectable"] | components["schemas"]["_Boxed"] | components["schemas"]["_SelectableText"])[];
+      /** Contents */
+      contents: (components["schemas"]["Whitespace"] | components["schemas"]["Text"] | components["schemas"]["PassiveSequence"] | components["schemas"]["FreeTextInput"] | components["schemas"]["MultipleChoicesInput"] | components["schemas"]["SelectableInput"] | components["schemas"]["AnySequence"])[];
+    };
+    /** PassiveSequence */
+    PassiveSequence: {
+      /**
+       * Boxed
+       * @default false
+       */
+      boxed?: boolean;
+      /** Contents */
+      contents: (components["schemas"]["Whitespace"] | components["schemas"]["Text"])[];
+      /**
+       * Kind
+       * @constant
+       */
+      kind: "passiveSequence";
     };
     /** PdfRectangle */
     PdfRectangle: {
@@ -340,6 +368,13 @@ export interface components {
       /** Y */
       y: number;
     };
+    /** PredefinedMcq */
+    PredefinedMcq: {
+      /** Grammatical Gender */
+      grammatical_gender: boolean;
+      /** Grammatical Number */
+      grammatical_number: boolean;
+    };
     /** Section */
     Section: {
       /** Paragraphs */
@@ -350,6 +385,23 @@ export interface components {
       /** Colors */
       colors: string[];
     };
+    /** SelectableInput */
+    SelectableInput: {
+      /**
+       * Boxed
+       * @default false
+       */
+      boxed?: boolean;
+      /** Colors */
+      colors: string[];
+      /** Contents */
+      contents: (components["schemas"]["Whitespace"] | components["schemas"]["Text"] | components["schemas"]["PassiveSequence"])[];
+      /**
+       * Kind
+       * @constant
+       */
+      kind: "selectableInput";
+    };
     /** SentencesItems */
     SentencesItems: {
       /**
@@ -357,6 +409,45 @@ export interface components {
        * @constant
        */
       kind: "sentences";
+    };
+    /** SeparatedItems */
+    SeparatedItems: {
+      /**
+       * Kind
+       * @constant
+       */
+      kind: "separated";
+      /** Separator */
+      separator: string;
+    };
+    /** Text */
+    Text: {
+      /**
+       * Bold
+       * @default false
+       */
+      bold?: boolean;
+      /** Highlighted */
+      highlighted?: string | null;
+      /**
+       * Italic
+       * @default false
+       */
+      italic?: boolean;
+      /**
+       * Kind
+       * @constant
+       */
+      kind: "text";
+      /** Text */
+      text: string;
+    };
+    /** TextInsertOp */
+    TextInsertOp: {
+      /** Attributes */
+      attributes: Record<string, unknown>;
+      /** Insert */
+      insert: string;
     };
     /** TokensItems */
     TokensItems: {
@@ -379,121 +470,13 @@ export interface components {
       /** Error Type */
       type: string;
     };
-    /** _BoldText */
-    _BoldText: {
-      /** Text */
-      text: string;
+    /** Whitespace */
+    Whitespace: {
       /**
-       * Type
+       * Kind
        * @constant
        */
-      type: "boldText";
-    };
-    /** _Boxed */
-    _Boxed: {
-      /** Contents */
-      contents: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_BoldText"] | components["schemas"]["_ItalicText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
-      /**
-       * Type
-       * @constant
-       */
-      type: "boxed";
-    };
-    /** _BoxedText */
-    _BoxedText: {
-      /** Text */
-      text: string;
-      /**
-       * Type
-       * @constant
-       */
-      type: "boxedText";
-    };
-    /** _FreeTextInput */
-    _FreeTextInput: {
-      /**
-       * Type
-       * @constant
-       */
-      type: "freeTextInput";
-    };
-    /** _ItalicText */
-    _ItalicText: {
-      /** Text */
-      text: string;
-      /**
-       * Type
-       * @constant
-       */
-      type: "italicText";
-    };
-    /** _MultipleChoicesInput */
-    _MultipleChoicesInput: {
-      /** Choices */
-      choices: string[];
-      /**
-       * Type
-       * @constant
-       */
-      type: "multipleChoicesInput";
-    };
-    /** _PlainText */
-    _PlainText: {
-      /** Text */
-      text: string;
-      /**
-       * Type
-       * @constant
-       */
-      type: "plainText";
-    };
-    /** _Selectable */
-    _Selectable: {
-      /** Boxed */
-      boxed: boolean;
-      /** Colors */
-      colors: string[];
-      /** Contents */
-      contents: (components["schemas"]["_PlainText"] | components["schemas"]["_BoxedText"] | components["schemas"]["_BoldText"] | components["schemas"]["_ItalicText"] | components["schemas"]["_SelectedText"] | components["schemas"]["_FreeTextInput"] | components["schemas"]["_MultipleChoicesInput"] | components["schemas"]["_Whitespace"])[];
-      /**
-       * Type
-       * @constant
-       */
-      type: "selectable";
-    };
-    /** _SelectableText */
-    _SelectableText: {
-      /** Boxed */
-      boxed: boolean;
-      /** Colors */
-      colors: string[];
-      /** Text */
-      text: string;
-      /**
-       * Type
-       * @constant
-       */
-      type: "selectableText";
-    };
-    /** _SelectedText */
-    _SelectedText: {
-      /** Color */
-      color: string;
-      /** Text */
-      text: string;
-      /**
-       * Type
-       * @constant
-       */
-      type: "selectedText";
-    };
-    /** _Whitespace */
-    _Whitespace: {
-      /**
-       * Type
-       * @constant
-       */
-      type: "whitespace";
+      kind: "whitespace";
     };
     /** exerciseCreateInput */
     exerciseCreateInput: {
@@ -510,11 +493,21 @@ export interface components {
     exerciseCreateInputDataAttributes: {
       /**
        * @default {
-       *   "effects": [],
-       *   "kind": "generic"
+       *   "items_are_boxed": false,
+       *   "items_are_repeated_with_mcq": false,
+       *   "items_have_mcq_below": false,
+       *   "items_have_mcq_beside": false,
+       *   "items_have_predefined_mcq": {
+       *     "grammatical_gender": false,
+       *     "grammatical_number": false
+       *   },
+       *   "kind": "generic",
+       *   "show_arrow_before_mcq_fields": false,
+       *   "show_mcq_choices_by_default": false,
+       *   "single_item_per_paragraph": false
        * }
        */
-      adaptation?: components["schemas"]["AdaptationV2-Input"];
+      adaptation?: components["schemas"]["Adaptation"];
       /**
        * Clue
        * @default [
@@ -524,7 +517,7 @@ export interface components {
        *   }
        * ]
        */
-      clue?: components["schemas"]["InsertOp"][];
+      clue?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /**
        * Example
        * @default [
@@ -534,7 +527,7 @@ export interface components {
        *   }
        * ]
        */
-      example?: components["schemas"]["InsertOp"][];
+      example?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /**
        * Instructions
        * @default [
@@ -544,7 +537,7 @@ export interface components {
        *   }
        * ]
        */
-      instructions?: components["schemas"]["InsertOp"][];
+      instructions?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Number */
       number: string;
       /**
@@ -561,7 +554,7 @@ export interface components {
        *   }
        * ]
        */
-      textReference?: components["schemas"]["InsertOp"][];
+      textReference?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Textbookpage */
       textbookPage?: number | null;
       /**
@@ -573,9 +566,7 @@ export interface components {
        *   }
        * ]
        */
-      wording?: components["schemas"]["InsertOp"][];
-      /** Wordingparagraphsperpagelet */
-      wordingParagraphsPerPagelet?: number | null;
+      wording?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
     };
     /** exerciseCreateInputDataRelationships */
     exerciseCreateInputDataRelationships: {
@@ -601,24 +592,24 @@ export interface components {
     };
     /** exerciseOutputItemAttributes */
     exerciseOutputItemAttributes: {
-      adaptation: components["schemas"]["AdaptationV2-Output"];
+      adaptation: components["schemas"]["Adaptation"];
       /** Clue */
-      clue: components["schemas"]["InsertOp"][];
+      clue: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /**
        * Createdat
        * Format: date-time
        */
       createdAt: string;
       /** Example */
-      example: components["schemas"]["InsertOp"][];
+      example: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Instructions */
-      instructions: components["schemas"]["InsertOp"][];
+      instructions: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Number */
       number: string;
       /** Rectangles */
       rectangles: components["schemas"]["PdfRectangle"][];
       /** Textreference */
-      textReference: components["schemas"]["InsertOp"][];
+      textReference: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Textbookpage */
       textbookPage: number | null;
       /**
@@ -627,9 +618,7 @@ export interface components {
        */
       updatedAt: string;
       /** Wording */
-      wording: components["schemas"]["InsertOp"][];
-      /** Wordingparagraphsperpagelet */
-      wordingParagraphsPerPagelet: number | null;
+      wording: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
     };
     /** exerciseOutputItemRelationships */
     exerciseOutputItemRelationships: {
@@ -664,21 +653,19 @@ export interface components {
     };
     /** exerciseUpdateInputDataAttributes */
     exerciseUpdateInputDataAttributes: {
-      adaptation?: components["schemas"]["AdaptationV2-Input"];
+      adaptation?: components["schemas"]["Adaptation"];
       /** Clue */
-      clue?: components["schemas"]["InsertOp"][];
+      clue?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Example */
-      example?: components["schemas"]["InsertOp"][];
+      example?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Instructions */
-      instructions?: components["schemas"]["InsertOp"][];
+      instructions?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Rectangles */
       rectangles?: components["schemas"]["PdfRectangle"][];
       /** Textreference */
-      textReference?: components["schemas"]["InsertOp"][];
+      textReference?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Wording */
-      wording?: components["schemas"]["InsertOp"][];
-      /** Wordingparagraphsperpagelet */
-      wordingParagraphsPerPagelet?: number | null;
+      wording?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
     };
     /** exerciseUpdateInputDataRelationships */
     exerciseUpdateInputDataRelationships: Record<string, never>;
@@ -752,21 +739,19 @@ export interface components {
     };
     /** parsedExerciseCreateInputDataAttributes */
     parsedExerciseCreateInputDataAttributes: {
-      adaptation: components["schemas"]["AdaptationV2-Input"];
+      adaptation: components["schemas"]["Adaptation"];
       /** Clue */
-      clue: components["schemas"]["InsertOp"][];
+      clue: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Example */
-      example: components["schemas"]["InsertOp"][];
+      example: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Instructions */
-      instructions: components["schemas"]["InsertOp"][];
+      instructions: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Number */
       number: string;
       /** Textreference */
-      textReference: components["schemas"]["InsertOp"][];
+      textReference: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Wording */
-      wording: components["schemas"]["InsertOp"][];
-      /** Wordingparagraphsperpagelet */
-      wordingParagraphsPerPagelet: number | null;
+      wording: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
     };
     /** parsedExerciseCreateInputDataRelationships */
     parsedExerciseCreateInputDataRelationships: Record<string, never>;
@@ -1627,6 +1612,8 @@ export interface components {
       isbn: string | null;
       /** Publisher */
       publisher: string | null;
+      /** Suggesteditemsseparators */
+      suggestedItemsSeparators: string[];
       /** Title */
       title: string;
       /**

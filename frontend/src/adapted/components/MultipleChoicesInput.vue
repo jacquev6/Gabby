@@ -1,19 +1,18 @@
 <script setup lang="ts">
-import { ref, computed, inject } from 'vue'
-import { useFloating, shift } from '@floating-ui/vue'
+import { ref, computed, inject, watch } from 'vue'
+import { useFloating, shift, autoUpdate } from '@floating-ui/vue'
 
 
 defineOptions({
   inheritAttrs: false
 })
 
-const props = withDefaults(defineProps<{
-  choices: string[],
-  placeholder?: string,
-  // @todo alwaysShowChoices?: boolean = false
-}>(), {
-  placeholder: '....',
-})
+const props = defineProps<{
+  showArrowBefore: boolean
+  choices: string[]
+  placeholder: string
+  showChoicesByDefault: boolean
+}>()
 
 const model = defineModel<string | undefined>({
   required: true,
@@ -21,9 +20,23 @@ const model = defineModel<string | undefined>({
 
 const showChoices = ref(false)
 
+const showBackdrop = computed(() => !props.showChoicesByDefault)
+
+watch(
+  [() => props.showChoicesByDefault, model],
+  ([showChoicesByDefault, model]) => {
+    if (model === undefined) {
+      showChoices.value = showChoicesByDefault
+    } else {
+      showChoices.value = false
+    }
+  },
+  {immediate: true}
+)
+
 const value = computed(() => model.value || props.placeholder)
 
-function set(choice: string | undefined) {
+function set(choice: string) {
   model.value = choice
   showChoices.value = false
 }
@@ -36,6 +49,7 @@ const { floatingStyles } = useFloating(
   {
     placement: 'bottom',
     middleware: [shift({crossAxis: true})],
+    whileElementsMounted: autoUpdate,
   },
 );
 
@@ -52,7 +66,8 @@ const backdropCovers = inject<string>('adaptedExerciseBackdropCovers', 'body')
 
 <template>
   <span v-bind="$attrs" style="display: inline flow-root; vertical-align: top">
-    <span ref="reference" class="main" :class="{open: showChoices}" @click="showChoices = true">{{ value }}</span>
+    <template v-if="showArrowBefore">⮕</template>
+    <span ref="reference" class="main" :class="{open: showChoices}" @click="showChoices = !showChoices">{{ value }}</span>
     <!-- Insert hidden nodes in the DOM to ensure the floating choices does not cover any text. -->
     <span class="choices" style="display: block; margin-top: -24px; max-width: 0; overflow: hidden; visibility: hidden;">
       <span class="choicesColumn" style="display: block;">
@@ -61,9 +76,11 @@ const backdropCovers = inject<string>('adaptedExerciseBackdropCovers', 'body')
       </span>
     </span>
     <template v-if="showChoices">
-      <Teleport :to="backdropCovers">
-        <div class="backdrop" @click="showChoices = false"></div>
-      </Teleport>
+      <template v-if="showBackdrop">
+        <Teleport :to="backdropCovers">
+          <div class="backdrop" @click="showChoices = false"></div>
+        </Teleport>
+      </template>
       <div ref="floating" class="choices" :style="floatingStyles">
         <div class="choicesColumn">
           <p v-for="choicesLine in choicesLines" class="choicesLine">

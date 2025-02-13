@@ -12,7 +12,7 @@ import { makeBoundingRectangle, makeBoundingRectangles } from './RectanglesHighl
 import { useProjectTextbookPageData } from './ProjectTextbookPageLayout.vue'
 import { useExerciseCreationHistoryStore } from './ExerciseCreationHistoryStore'
 import { useApiStore } from '$frontend/stores/api'
-import { makeModelInTextbook, resetModelInTextbook, modelIsEmpty, create, suggestNextNumber } from '$frontend/components/ExerciseFieldsForm.vue'
+import { makeModelInTextbook, resetModelInTextbook, modelIsEmpty, create, suggestNextNumber } from './ExerciseFieldsForm.vue'
 import { useGloballyBusyStore } from '$frontend/stores/globallyBusy'
 import ConfirmationModal from '$frontend/components/ConfirmationModal.vue'
 import ExerciseColumns from './ExerciseColumns.vue'
@@ -216,7 +216,7 @@ const parsedExercise = computed(() => {
     </template>
 
     <template #>
-      <ExerciseColumns ref="exerciseColumns" mode="create" :projectId :displayedPage :busy v-model="model">
+      <ExerciseColumns ref="exerciseColumns" mode="create" :projectId :textbook :displayedPage :busy v-model="model">
         <template #exerciseFieldsOverlay>
           <div v-if="alreadyExists" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8);" class="text-center">
             <div style="position: absolute; left: 25%; top: 25%; width: 50%; height: 50%; background-color: white">

@@ -1,8 +1,6 @@
 import { visit, login, loadFixtures, traceRectangle, notBusy } from './utils'
 
 
-const isProdPreview = Cypress.env('IS_PROD_PREVIEW')
-
 describe('Gabby', () => {
   before(console.clear)
 
@@ -30,9 +28,9 @@ describe('Gabby', () => {
     cy.get('button:contains("Instructions")').click()
     expectRectangles('@highlighter', 'surrounded', [{
       'left': 56.26098090252517,
-      'top': isProdPreview ? 726.5359457228192 : 725.8392892267519,
+      'top': 725.8392892267519,
       'width': 226.18785085087657,
-      'height': isProdPreview ? 63.072900326865806 : 64.16036412560493,
+      'height': 64.16036412560493,
     }])
 
     traceRectangle('@canvas', 6, 13, 44, 15.5)
@@ -40,9 +38,9 @@ describe('Gabby', () => {
     cy.get('button:contains("Wording")').click()
     expectRectangles('@highlighter', 'surrounded', [{
       'left': 56.26098090252517,
-      'top': isProdPreview ? 698.2618869556034 : 698.6526942582752,
+      'top': 698.6526942582752,
       'width': 226.18785085087657,
-      'height': isProdPreview ? 91.34695909408163 : 91.34695909408163,
+      'height': 91.34695909408163,
     }])
 
     traceRectangle('@canvas', 6, 15, 38, 17.5)
@@ -50,9 +48,9 @@ describe('Gabby', () => {
     cy.get('button:contains("Wording")').click()
     expectRectangles('@highlighter', 'surrounded', [{
       'left': 56.26098090252517,
-      'top': isProdPreview ? 683.0373937732564 : 682.3407372771892,
+      'top': 682.3407372771892,
       'width': 226.18785085087657,
-      'height': isProdPreview ? 106.57145227642854 : 107.65891607516767,
+      'height': 107.65891607516767,
     }])
 
     traceRectangle('@canvas', 6, 17, 35, 19.5)
@@ -60,9 +58,9 @@ describe('Gabby', () => {
     cy.get('button:contains("Example")').click()
     expectRectangles('@highlighter', 'surrounded', [{
       'left': 56.26098090252517,
-      'top': isProdPreview ? 666.7254367921705 : 667.1162440948424,
+      'top': 667.1162440948424,
       'width': 226.18785085087657,
-      'height': isProdPreview ? 122.88340925751447 : 122.88340925751447,
+      'height': 122.88340925751447,
     }])
 
     traceRectangle('@canvas', 6, 19, 37, 21.5)
@@ -70,9 +68,9 @@ describe('Gabby', () => {
     cy.get('button:contains("Clue")').click()
     expectRectangles('@highlighter', 'surrounded', [{
       'left': 56.26098090252517,
-      'top': isProdPreview ? 651.5009436098235 : 650.8042871137563,
+      'top': 650.8042871137563,
       'width': 226.18785085087657,
-      'height': isProdPreview ? 138.1079024398615 : 139.1953662386005,
+      'height': 139.1953662386005,
     }])
 
     notBusy()
@@ -92,11 +90,11 @@ describe('Gabby', () => {
         'coordinates': 'pdfjs',
         'start': {
           'x': 56.26098090252517,
-          'y': isProdPreview ? 789.608846049685 : 789.9996533523569
+          'y': 789.9996533523569
         },
         'stop': {
           'x': 282.44883175340175,
-          'y': isProdPreview ? 726.5359457228192 : 725.8392892267519
+          'y': 725.8392892267519
         },
         'text': 'Recopie les mots suivants, puis entoure les pronoms personnels. Indique la classe des autres mots.\n',
         'role': 'instructions',
@@ -107,11 +105,11 @@ describe('Gabby', () => {
         'coordinates': 'pdfjs',
         'start': {
           'x': 62.78563044630046,
-          'y': isProdPreview ? 717.8362353329067 : 718.2270426355784
+          'y': 718.2270426355784
         },
         'stop': {
           'x': 277.0116238002557,
-          'y': isProdPreview ? 698.2618869556034 : 698.6526942582752
+          'y': 698.6526942582752
         },
         'text': 'b. vous ◆ un ◆ arbre ◆ ce\n',
         'role': 'wording',
@@ -122,11 +120,11 @@ describe('Gabby', () => {
         'coordinates': 'pdfjs',
         'start': {
           'x': 62.78563044630046,
-          'y': isProdPreview ? 702.6117421505596 : 703.0025494532315
+          'y': 703.0025494532315
         },
         'stop': {
           'x': 243.30093449075005,
-          'y': isProdPreview ? 683.0373937732564 : 682.3407372771892
+          'y': 682.3407372771892
         },
         'text': 'c. ils ◆ des ◆ grandir ◆ port\n',
         'role': 'wording',
@@ -137,11 +135,11 @@ describe('Gabby', () => {
         'coordinates': 'pdfjs',
         'start': {
           'x': 62.78563044630046,
-          'y': isProdPreview ? 686.2997851694737 : 686.6905924721455
+          'y': 686.6905924721455
         },
         'stop': {
           'x': 225.9018690406826,
-          'y': isProdPreview ? 666.7254367921705 : 667.1162440948424
+          'y': 667.1162440948424
         },
         'text': 'd. dessin ◆ tu ◆ aller ◆ mon\n',
         'role': 'example',
@@ -152,11 +150,11 @@ describe('Gabby', () => {
         'coordinates': 'pdfjs',
         'start': {
           'x': 62.78563044630046,
-          'y': isProdPreview ? 671.0752919871268 : 671.4660992897986
+          'y': 671.4660992897986
         },
         'stop': {
           'x': 237.86372653760395,
-          'y': isProdPreview ? 651.5009436098235 : 650.8042871137563
+          'y': 650.8042871137563
         },
         'text': 'e. elle ◆ gomme ◆ peindre ◆ ces\n',
         'role': 'clue',
@@ -168,9 +166,9 @@ describe('Gabby', () => {
     cy.get('button:contains("Wording")').click()
     expectRectangles('@highlighter', 'surrounded', [{
       'left': 56.26098090252517,
-      'top': isProdPreview ? 635.1889866287376 : 635.5797939314094,
+      'top': 635.5797939314094,
       'width': 226.18785085087657,
-      'height': isProdPreview ? 154.41985942094743 : 154.41985942094743,
+      'height': 154.41985942094743,
     }])
 
     cy.get('button:contains("Save then back to list")').click()
@@ -186,11 +184,11 @@ describe('Gabby', () => {
         'coordinates': 'pdfjs',
         'start': {
           'x': 56.26098090252517,
-          'y': isProdPreview ? 789.608846049685 : 789.9996533523569
+          'y': 789.9996533523569
         },
         'stop': {
           'x': 282.44883175340175,
-          'y': isProdPreview ? 726.5359457228192 : 725.8392892267519
+          'y': 725.8392892267519
         },
         'text': 'Recopie les mots suivants, puis entoure les pronoms personnels. Indique la classe des autres mots.\n',
         'role': 'instructions',
@@ -201,11 +199,11 @@ describe('Gabby', () => {
         'coordinates': 'pdfjs',
         'start': {
           'x': 62.78563044630046,
-          'y': isProdPreview ? 717.8362353329067 : 718.2270426355784
+          'y': 718.2270426355784
         },
         'stop': {
           'x': 277.0116238002557,
-          'y': isProdPreview ? 698.2618869556034 : 698.6526942582752
+          'y': 698.6526942582752
         },
         'text': 'b. vous ◆ un ◆ arbre ◆ ce\n',
         'role': 'wording',
@@ -216,11 +214,11 @@ describe('Gabby', () => {
         'coordinates': 'pdfjs',
         'start': {
           'x': 62.78563044630046,
-          'y': isProdPreview ? 702.6117421505596 : 703.0025494532315
+          'y': 703.0025494532315
         },
         'stop': {
           'x': 243.30093449075005,
-          'y': isProdPreview ? 683.0373937732564 : 682.3407372771892
+          'y': 682.3407372771892
         },
         'text': 'c. ils ◆ des ◆ grandir ◆ port\n',
         'role': 'wording',
@@ -231,11 +229,11 @@ describe('Gabby', () => {
         'coordinates': 'pdfjs',
         'start': {
           'x': 62.78563044630046,
-          'y': isProdPreview ? 686.2997851694737 : 686.6905924721455
+          'y': 686.6905924721455
         },
         'stop': {
           'x': 225.9018690406826,
-          'y': isProdPreview ? 666.7254367921705 : 667.1162440948424
+          'y': 667.1162440948424
         },
         'text': 'd. dessin ◆ tu ◆ aller ◆ mon\n',
         'role': 'example',
@@ -246,11 +244,11 @@ describe('Gabby', () => {
         'coordinates': 'pdfjs',
         'start': {
           'x': 62.78563044630046,
-          'y': isProdPreview ? 671.0752919871268 : 671.4660992897986
+          'y': 671.4660992897986
         },
         'stop': {
           'x': 237.86372653760395,
-          'y': isProdPreview ? 651.5009436098235 : 650.8042871137563
+          'y': 650.8042871137563
         },
         'text': 'e. elle ◆ gomme ◆ peindre ◆ ces\n',
         'role': 'clue',
@@ -261,11 +259,11 @@ describe('Gabby', () => {
         'coordinates': 'pdfjs',
         'start': {
             'x': 62.78563044630046,
-            'y': isProdPreview ? 654.7633350060407 : 655.1541423087126
+            'y': 655.1541423087126
         },
         'stop': {
             'x': 237.86372653760395,
-            'y': isProdPreview ? 635.1889866287376 : 635.5797939314094
+            'y': 635.5797939314094
         },
         'text': 'f. histoire ◆ nous ◆ gentil ◆ la\n',
         'role': 'wording',

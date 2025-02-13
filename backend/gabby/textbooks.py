@@ -40,6 +40,15 @@ class Textbook(OrmBase, CreatedUpdatedByAtMixin):
         order_by="[Exercise.textbook_page, Exercise.number]",
     )
 
+    @property
+    def suggested_items_separators(self):
+        # Filtering in memory exercises are already loaded
+        return sorted(set(
+            exercise.adaptation.items.separator
+            for exercise in self.exercises
+            if exercise.adaptation.items is not None and exercise.adaptation.items.kind == "separated"
+        ))
+
 
 class TextbooksResource:
     singular_name = "textbook"

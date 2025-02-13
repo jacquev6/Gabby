@@ -1,9 +1,8 @@
 from __future__ import annotations
-from typing import Annotated, ClassVar, Literal
+from typing import Annotated, Literal
 import datetime
 
 from fastjsonapi import Constant, Computed, Secret, WriteOnly
-import pydantic
 
 from . import deltas
 from . import renderable
@@ -77,6 +76,7 @@ class Textbook(PydanticBase, CreatedUpdatedByAtMixin):
     project: Annotated[Project, Constant()]
     exercises: Annotated[list[Exercise], Computed()] = []
     sections: Annotated[list[Section], Computed()] = []
+    suggested_items_separators: Annotated[list[str], Computed()] = []
 
 
 class Section(PydanticBase, CreatedUpdatedByAtMixin):
@@ -105,51 +105,50 @@ class PdfRectangle(PydanticBase):
     role: Literal["bounding", "instructions", "wording", "example", "clue", "textReference"]
 
 
-class FillWithFreeTextAdaptationEffect(PydanticBase):
-    kind: Literal["fill-with-free-text"]
+# To implement #47, this could have been simply 'LettersItems', but 'CharactersItems' is homogeneous with 'TokensItems' below,
+# and future-proof for when we need to support spacing and punctuation items (as characters).
+class CharactersItems(PydanticBase):
+    kind: Literal["characters"]
+    letters: bool
 
-    placeholder: str
+class TokensItems(PydanticBase):
+    kind: Literal["tokens"]
+    words: bool
+    punctuation: bool
 
-class ItemizedAdaptationEffect(PydanticBase):
-    kind: Literal["itemized"]
+class SentencesItems(PydanticBase):
+    kind: Literal["sentences"]
 
-    # To implement #47, this could have been simply 'LettersItems', but 'CharactersItems' is homogeneous with 'TokensItems' below,
-    # and future-proof for when we need to support spacing and punctuation items (as characters).
-    class CharactersItems(PydanticBase):
-        kind: Literal["characters"]
-        letters: bool
+class ManualItems(PydanticBase):
+    kind: Literal["manual"]
 
-    class TokensItems(PydanticBase):
-        kind: Literal["tokens"]
-        words: bool
-        punctuation: bool
+class SeparatedItems(PydanticBase):
+    kind: Literal["separated"]
+    separator: str
 
-    class SentencesItems(PydanticBase):
-        kind: Literal["sentences"]
+class Selectable(PydanticBase):
+    colors: list[str]
 
-    class ManualItems(PydanticBase):
-        kind: Literal["manual"]
+Items = CharactersItems | TokensItems | SentencesItems | ManualItems | SeparatedItems
 
-    Items: ClassVar = CharactersItems | TokensItems | SentencesItems | ManualItems
+class PredefinedMcq(PydanticBase):
+    grammatical_gender: bool
+    grammatical_number: bool
 
-    class Effects(PydanticBase):
-        class Selectable(PydanticBase):
-            colors: list[str]
-
-        selectable: Selectable | None
-        boxed: bool
-
-    items: Items
-    effects: Effects
-
-AdaptationEffect = Annotated[
-    FillWithFreeTextAdaptationEffect | ItemizedAdaptationEffect,
-    pydantic.Field(discriminator="kind"),
-]
-
-class AdaptationV2(PydanticBase):
+class Adaptation(PydanticBase):
     kind: Literal["generic", "fill-with-free-text", "multiple-choices"]
-    effects: list[AdaptationEffect]
+    wording_paragraphs_per_pagelet: int | None
+    single_item_per_paragraph: bool
+    placeholder_for_fill_with_free_text: str | None
+    items: Items | None
+    items_are_selectable: Selectable | None
+    items_are_boxed: bool
+    items_have_mcq_beside: bool
+    items_have_mcq_below: bool
+    items_have_predefined_mcq: PredefinedMcq
+    items_are_repeated_with_mcq: bool
+    show_arrow_before_mcq_fields: bool
+    show_mcq_choices_by_default: bool
 
 class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
     project: Annotated[Project, Constant()]
@@ -165,11 +164,26 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
     clue: deltas.Deltas = deltas.empty
     text_reference: deltas.Deltas = deltas.empty
 
-    wording_paragraphs_per_pagelet: int | None = None
-
     rectangles: list[PdfRectangle] = []
 
-    adaptation: AdaptationV2 = AdaptationV2(kind="generic", effects=[])
+    adaptation: Adaptation = Adaptation(  # @todo Remove default value: no exercise shall be missing its adaptation
+        kind="generic",
+        wording_paragraphs_per_pagelet=None,
+        single_item_per_paragraph=False,
+        placeholder_for_fill_with_free_text=None,
+        items=None,
+        items_are_selectable=None,
+        items_are_boxed=False,
+        items_have_mcq_beside=False,
+        items_have_mcq_below=False,
+        items_have_predefined_mcq=PredefinedMcq(
+            grammatical_gender=False,
+            grammatical_number=False,
+        ),
+        items_are_repeated_with_mcq=False,
+        show_arrow_before_mcq_fields=False,
+        show_mcq_choices_by_default=False,
+    )
 
 class ParsedExercise(PydanticBase):
     number: Annotated[str, WriteOnly()]
@@ -178,8 +192,7 @@ class ParsedExercise(PydanticBase):
     example: Annotated[deltas.Deltas, WriteOnly()]
     clue: Annotated[deltas.Deltas, WriteOnly()]
     text_reference: Annotated[deltas.Deltas, WriteOnly()]
-    wording_paragraphs_per_pagelet: Annotated[int | None, WriteOnly()]
-    adaptation: Annotated[AdaptationV2, WriteOnly()]
+    adaptation: Annotated[Adaptation, WriteOnly()]
     adapted: Annotated[renderable.Exercise, Computed()]
 
 
