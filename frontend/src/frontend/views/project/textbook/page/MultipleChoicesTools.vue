@@ -1,7 +1,7 @@
 <script lang="ts">
 import Quill from 'quill/core'
 
-import { InlineBlot, type Model as Deltas } from '$frontend/components/Quill.vue'
+import { InlineBlot, InlineEmbed, type Model as Deltas } from '$frontend/components/Quill.vue'
 import ContextMenu from '$frontend/components/ContextMenu.vue'
 import deepCopy from 'deep-copy'
 
@@ -86,43 +86,45 @@ function doneEditingChoices2() {
     && model.value.inProgress.settings.start !== ''
     && model.value.inProgress.settings.separator1 !== ''
     && model.value.inProgress.settings.stop !== ''
+    && model.value.inProgress.settings.mcqFieldUid === null
     // @todo Don't replicate if current selection doesn't match start separator and stop
   if (needsReplication) {
     console.log('Replicating choices')
     const newWording: Deltas = []
     for (const operation of model.value.wording) {
-      console.assert(typeof operation.insert === 'string')
-      console.assert('attributes' in operation)
-      if (Object.keys(operation.attributes).length === 0) {
-        let lastProcessedIndex = -1
-        let newInsert = ''
-        while (true) {
-          const startIndex = operation.insert.indexOf(model.value.inProgress.settings.start, lastProcessedIndex + 1)
-          if (startIndex === -1) {
-            break
-          }
-          newInsert += operation.insert.slice(lastProcessedIndex + 1, startIndex)
-          if (operation.insert[startIndex - 1] === '|') {
-            newInsert += model.value.inProgress.settings.start
-            lastProcessedIndex = startIndex + model.value.inProgress.settings.start.length - 1
-          } else {
-            const stopIndex = operation.insert.indexOf(model.value.inProgress.settings.stop, startIndex + model.value.inProgress.settings.start.length)
-            const separatorIndex = operation.insert.indexOf(model.value.inProgress.settings.separator1, startIndex + model.value.inProgress.settings.start.length)
-            if (stopIndex !== -1 && separatorIndex !== -1 && separatorIndex < stopIndex) {
-              console.log('Replicating choices: found choice:', '#' + operation.insert.slice(startIndex, stopIndex + model.value.inProgress.settings.stop.length) + '#')
+      if (typeof operation.insert === 'string') {
+        console.assert('attributes' in operation)
+        if (Object.keys(operation.attributes).length === 0) {
+          let lastProcessedIndex = -1
+          let newInsert = ''
+          while (true) {
+            const startIndex = operation.insert.indexOf(model.value.inProgress.settings.start, lastProcessedIndex + 1)
+            if (startIndex === -1) {
+              break
             }
-            newWording.push({insert: newInsert, attributes: operation.attributes})
-            newWording.push({insert: operation.insert.slice(startIndex, stopIndex + model.value.inProgress.settings.stop.length), attributes: {choices2: model.value.inProgress.settings}})
-            newInsert = ''
-            lastProcessedIndex = stopIndex + model.value.inProgress.settings.stop.length - 1
+            newInsert += operation.insert.slice(lastProcessedIndex + 1, startIndex)
+            if (operation.insert[startIndex - 1] === '|') {
+              newInsert += model.value.inProgress.settings.start
+              lastProcessedIndex = startIndex + model.value.inProgress.settings.start.length - 1
+            } else {
+              const stopIndex = operation.insert.indexOf(model.value.inProgress.settings.stop, startIndex + model.value.inProgress.settings.start.length)
+              const separatorIndex = operation.insert.indexOf(model.value.inProgress.settings.separator1, startIndex + model.value.inProgress.settings.start.length)
+              if (stopIndex !== -1 && separatorIndex !== -1 && separatorIndex < stopIndex) {
+                console.log('Replicating choices: found choice:', '#' + operation.insert.slice(startIndex, stopIndex + model.value.inProgress.settings.stop.length) + '#')
+              }
+              newWording.push({insert: newInsert, attributes: operation.attributes})
+              newWording.push({insert: operation.insert.slice(startIndex, stopIndex + model.value.inProgress.settings.stop.length), attributes: {choices2: model.value.inProgress.settings}})
+              newInsert = ''
+              lastProcessedIndex = stopIndex + model.value.inProgress.settings.stop.length - 1
+            }
           }
+          newInsert += operation.insert.slice(lastProcessedIndex + 1)
+          if (newInsert !== '') {
+            newWording.push({insert: newInsert, attributes: operation.attributes})
+          }
+        } else {
+          newWording.push(operation)
         }
-        newInsert += operation.insert.slice(lastProcessedIndex + 1)
-        if (newInsert !== '') {
-          newWording.push({insert: newInsert, attributes: operation.attributes})
-        }
-      } else {
-        newWording.push(operation)
       }
     }
     console.log('Replicating choices: previous wording:', model.value.wording)
@@ -130,6 +132,23 @@ function doneEditingChoices2() {
     console.log('Replicating choices: new wording:', newWording)
   }
   model.value.inProgress = {kind: 'nothing'}
+}
+
+export class McqField extends InlineEmbed {
+  static override blotName = 'mcq-field'
+  static override tagName = 'mcq-field-blot'
+
+  static override create(settings: {uid: string}) {
+    let node = super.create()
+    node.setAttribute('data-gabby-settings', JSON.stringify(settings))
+    return node
+  }
+
+  static value(node: HTMLElement) {
+    const settings = node.getAttribute('data-gabby-settings')
+    console.assert(settings !== null)
+    return JSON.parse(settings)
+  }
 }
 </script>
 
@@ -210,7 +229,7 @@ const repeatedWithMcq = computed({
           <BCol><BLabeledInput :label="$t('choicesSettingsStart')" style="width: 8em" v-model="model.inProgress.settings.start" /></BCol>
           <BCol><BLabeledInput :label="$t('choicesSettingsStop')" style="width: 8em" v-model="model.inProgress.settings.stop" /></BCol>
         </BRow>
-        <BLabeledInput :label="$t('choicesSettingsPlaceholder')" v-model="model.inProgress.settings.placeholder" />
+        <BLabeledInput v-if="model.inProgress.settings.mcqFieldUid === null" :label="$t('choicesSettingsPlaceholder')" v-model="model.inProgress.settings.placeholder" />
         <BButton sm secondary @click="() => {console.assert(model.inProgress.kind === 'multipleChoicesEdition'); model.inProgress.delete()}">{{ $t(model.inProgress.initial ? 'choicesSettingsCancel' : 'choicesSettingsDelete') }}</BButton>
         <BButton sm primary v-if="choices2ContextMenu !== null" @click="choices2ContextMenu.hide()">OK</BButton>
       </div>
@@ -227,6 +246,7 @@ const repeatedWithMcq = computed({
     <BLabeledCheckbox :label="$t('multipleChoicesNumber')" v-model="model.adaptationSettings.itemized.effects.hasNumberMcq" :disabled="!hasItems" />
     <BLabeledCheckbox :label="$t('multipleChoicesRepeatedWithMcq')" v-model="repeatedWithMcq" />
   </div>
+  <BButton primary sm @click="model.inProgress = {kind: 'newMcqField', uid: `mcq-${ Math.floor(Math.random() * 4000000000) }`}">{{ $t('newMcqFieldButton') }}</BButton>
 </template>
 
 <style>
@@ -242,6 +262,17 @@ div.ql-editor choices2-blot {
   border-top: 2px solid black;
   border-bottom: 2px solid black;
   background-color: lightgray;
+}
+
+div.ql-editor mcq-field-blot {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  outline: 2px solid black;
+}
+
+div.ql-editor mcq-field-blot::after {
+  content: '....';
 }
 
 p.separatorSuggestion {

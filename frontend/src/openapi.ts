@@ -226,6 +226,11 @@ export interface components {
       /** Letters */
       letters: boolean;
     };
+    /** EmbedInsertOp */
+    EmbedInsertOp: {
+      /** Insert */
+      insert: Record<string, unknown>;
+    };
     /** Exercise */
     Exercise: {
       /** Number */
@@ -247,13 +252,6 @@ export interface components {
     HTTPValidationError: {
       /** Detail */
       detail?: components["schemas"]["ValidationError"][];
-    };
-    /** InsertOp */
-    InsertOp: {
-      /** Attributes */
-      attributes: Record<string, unknown>;
-      /** Insert */
-      insert: string;
     };
     /** ItemLinks */
     ItemLinks: {
@@ -444,6 +442,13 @@ export interface components {
       /** Text */
       text: string;
     };
+    /** TextInsertOp */
+    TextInsertOp: {
+      /** Attributes */
+      attributes: Record<string, unknown>;
+      /** Insert */
+      insert: string;
+    };
     /** TokensItems */
     TokensItems: {
       /**
@@ -512,7 +517,7 @@ export interface components {
        *   }
        * ]
        */
-      clue?: components["schemas"]["InsertOp"][];
+      clue?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /**
        * Example
        * @default [
@@ -522,7 +527,7 @@ export interface components {
        *   }
        * ]
        */
-      example?: components["schemas"]["InsertOp"][];
+      example?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /**
        * Instructions
        * @default [
@@ -532,7 +537,7 @@ export interface components {
        *   }
        * ]
        */
-      instructions?: components["schemas"]["InsertOp"][];
+      instructions?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Number */
       number: string;
       /**
@@ -549,7 +554,7 @@ export interface components {
        *   }
        * ]
        */
-      textReference?: components["schemas"]["InsertOp"][];
+      textReference?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Textbookpage */
       textbookPage?: number | null;
       /**
@@ -561,7 +566,7 @@ export interface components {
        *   }
        * ]
        */
-      wording?: components["schemas"]["InsertOp"][];
+      wording?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
     };
     /** exerciseCreateInputDataRelationships */
     exerciseCreateInputDataRelationships: {
@@ -589,22 +594,22 @@ export interface components {
     exerciseOutputItemAttributes: {
       adaptation: components["schemas"]["Adaptation"];
       /** Clue */
-      clue: components["schemas"]["InsertOp"][];
+      clue: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /**
        * Createdat
        * Format: date-time
        */
       createdAt: string;
       /** Example */
-      example: components["schemas"]["InsertOp"][];
+      example: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Instructions */
-      instructions: components["schemas"]["InsertOp"][];
+      instructions: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Number */
       number: string;
       /** Rectangles */
       rectangles: components["schemas"]["PdfRectangle"][];
       /** Textreference */
-      textReference: components["schemas"]["InsertOp"][];
+      textReference: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Textbookpage */
       textbookPage: number | null;
       /**
@@ -613,7 +618,7 @@ export interface components {
        */
       updatedAt: string;
       /** Wording */
-      wording: components["schemas"]["InsertOp"][];
+      wording: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
     };
     /** exerciseOutputItemRelationships */
     exerciseOutputItemRelationships: {
@@ -650,17 +655,17 @@ export interface components {
     exerciseUpdateInputDataAttributes: {
       adaptation?: components["schemas"]["Adaptation"];
       /** Clue */
-      clue?: components["schemas"]["InsertOp"][];
+      clue?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Example */
-      example?: components["schemas"]["InsertOp"][];
+      example?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Instructions */
-      instructions?: components["schemas"]["InsertOp"][];
+      instructions?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Rectangles */
       rectangles?: components["schemas"]["PdfRectangle"][];
       /** Textreference */
-      textReference?: components["schemas"]["InsertOp"][];
+      textReference?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Wording */
-      wording?: components["schemas"]["InsertOp"][];
+      wording?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
     };
     /** exerciseUpdateInputDataRelationships */
     exerciseUpdateInputDataRelationships: Record<string, never>;
@@ -736,17 +741,17 @@ export interface components {
     parsedExerciseCreateInputDataAttributes: {
       adaptation: components["schemas"]["Adaptation"];
       /** Clue */
-      clue: components["schemas"]["InsertOp"][];
+      clue: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Example */
-      example: components["schemas"]["InsertOp"][];
+      example: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Instructions */
-      instructions: components["schemas"]["InsertOp"][];
+      instructions: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Number */
       number: string;
       /** Textreference */
-      textReference: components["schemas"]["InsertOp"][];
+      textReference: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
       /** Wording */
-      wording: components["schemas"]["InsertOp"][];
+      wording: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
     };
     /** parsedExerciseCreateInputDataRelationships */
     parsedExerciseCreateInputDataRelationships: Record<string, never>;

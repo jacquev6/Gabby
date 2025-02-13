@@ -174,7 +174,7 @@ describe('Gabby', () => {
     cy.get('@instructions').find('p').then($el => {
       const node = $el[0].firstChild
       console.assert(node !== null)
-      selectRange(node, 80, node, 119)
+      selectRange(node, 80, node, 118)
     })
     cy.get('button[data-cy="format-color-2"]').click()
     cy.get('@instructions').find('p').then($el => {
@@ -278,7 +278,7 @@ describe('Gabby', () => {
     cy.get('@instructions').find('p').then($el => {
       const node = $el[0].firstChild
       console.assert(node !== null)
-      selectRange(node, 52, node, 73)
+      selectRange(node, 52, node, 74)
     })
     cy.get('button[data-cy="format-color-2"]').click()
     cy.get('@instructions').find('p').then($el => {
@@ -732,7 +732,7 @@ describe('Gabby', () => {
     cy.get('@instructions').find('p').then($el => {
       const node = $el[0].firstChild
       console.assert(node !== null)
-      selectRange(node, 33, node, 73)
+      selectRange(node, 33, node, 74)
     })
     cy.get('button:contains("OK")').should('exist')
     cy.get('label:contains("Start") + input').should('have.value', '')
@@ -778,7 +778,7 @@ describe('Gabby', () => {
     cy.get('@instructions').find('p').then($el => {
       const node = $el[0].firstChild
       console.assert(node !== null)
-      selectRange(node, 33, node, 73)
+      selectRange(node, 33, node, 74)
     })
     cy.get('button:contains("OK")').should('exist')
     cy.get('label:contains("Start") + input').should('have.value', '')
@@ -950,6 +950,92 @@ describe('Gabby', () => {
       screenshot('double--word-to-mcq', 'export-2')
       cy.get('span.choice2').click()
       screenshot('double--word-to-mcq', 'export-3')
+    })
+  })
+
+  it('creates a multiple choices exercise with manual fields', () => {
+    cy.viewport(1300, 1300)
+    visit('/project-xkopqm/textbook-klxufv/page-17/new-exercise', {pdf: 'demo'})
+    setupAliases()
+
+    cy.get('@number').type('1')
+
+    cy.get('@adaptationType').select('multiple-choices')
+
+    traceRectangle('@canvas', 8, 5, 81, 9)
+    cy.get('button:contains("Instructions")').click()
+    notBusy()
+    traceRectangle('@canvas', 7, 9.25, 40, 15)
+    cy.get('button:contains("Wording")').click()
+    notBusy()
+
+    cy.get('button:contains("Add an MCQ field")').click()
+    screenshot('manual-mcq-fields', 'edit-1')
+
+    cy.get('@wording').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 29, node, 29)
+    })
+    cy.wait(100)
+    cy.get('@wording').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 18, node, 18)
+    })
+    cy.wait(100)
+    cy.get('@wording').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 11, node, 11)
+    })
+    cy.wait(100)
+
+    cy.get('@wording').find('p').then($el => {
+      const node = $el[1].firstChild
+      console.assert(node !== null)
+      selectRange(node, 31, node, 31)
+    })
+    cy.wait(100)
+    cy.get('@wording').find('p').then($el => {
+      const node = $el[1].firstChild
+      console.assert(node !== null)
+      selectRange(node, 21, node, 21)
+    })
+    cy.wait(100)
+    cy.get('@wording').find('p').then($el => {
+      const node = $el[1].firstChild
+      console.assert(node !== null)
+      selectRange(node, 14, node, 14)
+    })
+    cy.wait(100)
+    screenshot('manual-mcq-fields', 'edit-2')
+
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 40, node, 84)
+    })
+    cy.get('button:contains("OK")').should('exist')
+    cy.get('label:contains("Start") + input').should('have.value', '(')
+    cy.get('label:contains("Stop") + input').should('have.value', ')')
+    cy.get('label:contains("Separators") + input').should('have.value', ',')
+    cy.get('input[data-cy="second-mcq-separator"]').should('have.value', '')
+    cy.get('label:contains("Placeholder")').should('not.exist')
+    screenshot('manual-mcq-fields', 'edit-3')
+    cy.get('button:contains("OK")').click()
+    screenshot('manual-mcq-fields', 'edit-4')
+
+    cy.get('button:contains("Save then back")').click()
+    visit('/project-xkopqm')
+    cy.get('a:contains("the exported HTML")').should('have.attr', 'href').then(url => {
+      cy.visit(url + '&download=false')
+      cy.get('a').click()
+      screenshot('manual-mcq-fields', 'export-1')
+      cy.get('span.main').eq(1).click()
+      screenshot('manual-mcq-fields', 'export-2')
+      cy.get('span.choice1').click()
+      screenshot('manual-mcq-fields', 'export-3')
     })
   })
 })

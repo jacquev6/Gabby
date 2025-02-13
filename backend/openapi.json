@@ -256,6 +256,20 @@
         "title": "CharactersItems",
         "type": "object"
       },
+      "EmbedInsertOp": {
+        "additionalProperties": false,
+        "properties": {
+          "insert": {
+            "title": "Insert",
+            "type": "object"
+          }
+        },
+        "required": [
+          "insert"
+        ],
+        "title": "EmbedInsertOp",
+        "type": "object"
+      },
       "Exercise": {
         "additionalProperties": false,
         "properties": {
@@ -316,25 +330,6 @@
           }
         },
         "title": "HTTPValidationError",
-        "type": "object"
-      },
-      "InsertOp": {
-        "additionalProperties": false,
-        "properties": {
-          "attributes": {
-            "title": "Attributes",
-            "type": "object"
-          },
-          "insert": {
-            "title": "Insert",
-            "type": "string"
-          }
-        },
-        "required": [
-          "insert",
-          "attributes"
-        ],
-        "title": "InsertOp",
         "type": "object"
       },
       "ItemLinks": {
@@ -852,6 +847,25 @@
         "title": "Text",
         "type": "object"
       },
+      "TextInsertOp": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "title": "Attributes",
+            "type": "object"
+          },
+          "insert": {
+            "title": "Insert",
+            "type": "string"
+          }
+        },
+        "required": [
+          "insert",
+          "attributes"
+        ],
+        "title": "TextInsertOp",
+        "type": "object"
+      },
       "TokensItems": {
         "additionalProperties": false,
         "properties": {
@@ -988,7 +1002,14 @@
               }
             ],
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Clue",
             "type": "array"
@@ -1001,7 +1022,14 @@
               }
             ],
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Example",
             "type": "array"
@@ -1014,7 +1042,14 @@
               }
             ],
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Instructions",
             "type": "array"
@@ -1039,7 +1074,14 @@
               }
             ],
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Textreference",
             "type": "array"
@@ -1063,7 +1105,14 @@
               }
             ],
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Wording",
             "type": "array"
@@ -1149,7 +1198,14 @@
           },
           "clue": {
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Clue",
             "type": "array"
@@ -1161,14 +1217,28 @@
           },
           "example": {
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Example",
             "type": "array"
           },
           "instructions": {
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Instructions",
             "type": "array"
@@ -1186,7 +1256,14 @@
           },
           "textReference": {
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Textreference",
             "type": "array"
@@ -1209,7 +1286,14 @@
           },
           "wording": {
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Wording",
             "type": "array"
@@ -1334,21 +1418,42 @@
           },
           "clue": {
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Clue",
             "type": "array"
           },
           "example": {
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Example",
             "type": "array"
           },
           "instructions": {
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Instructions",
             "type": "array"
@@ -1362,14 +1467,28 @@
           },
           "textReference": {
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Textreference",
             "type": "array"
           },
           "wording": {
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Wording",
             "type": "array"
@@ -1566,21 +1685,42 @@
           },
           "clue": {
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Clue",
             "type": "array"
           },
           "example": {
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Example",
             "type": "array"
           },
           "instructions": {
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Instructions",
             "type": "array"
@@ -1591,14 +1731,28 @@
           },
           "textReference": {
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Textreference",
             "type": "array"
           },
           "wording": {
             "items": {
-              "$ref": "#/components/schemas/InsertOp"
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TextInsertOp"
+                },
+                {
+                  "$ref": "#/components/schemas/EmbedInsertOp"
+                }
+              ]
             },
             "title": "Wording",
             "type": "array"

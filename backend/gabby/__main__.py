@@ -186,7 +186,7 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
                     for k, v in attributes["choices2"].items()
                 }
             }
-        return deltas.InsertOp(
+        return deltas.TextInsertOp(
             insert=waste_string(delta.insert),
             attributes=attributes,
         )
@@ -227,7 +227,7 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
         yield "from .. import renderable as r"
         yield "from ..adaptation import AdaptationTestCase"
         yield "from ..api_models import Adaptation, CharactersItems, TokensItems, SentencesItems, ManualItems, Selectable, PredefinedMcq"
-        yield "from ..deltas import InsertOp"
+        yield "from ..deltas import TextInsertOp"
         yield ""
         yield ""
         yield f"class DatabaseAsUnitTests{batch_index:04}(AdaptationTestCase):"

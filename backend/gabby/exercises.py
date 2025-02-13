@@ -48,7 +48,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     def instructions(self) -> deltas.Deltas:
         if self._instructions is None:  # Before the first flush to DB if not set in constructor.
             self._instructions = deltas.empty_as_list
-        return [deltas.InsertOp(**delta) for delta in self._instructions]
+        return deltas.make(self._instructions)
 
     @instructions.setter
     def instructions(self, instructions: deltas.Deltas):
@@ -60,7 +60,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     def wording(self) -> deltas.Deltas:
         if self._wording is None:  # Before the first flush to DB if not set in constructor.
             self._wording = deltas.empty_as_list
-        return [deltas.InsertOp(**delta) for delta in self._wording]
+        return deltas.make(self._wording)
 
     @wording.setter
     def wording(self, wording: deltas.Deltas):
@@ -72,7 +72,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     def example(self) -> deltas.Deltas:
         if self._example is None:  # Before the first flush to DB if not set in constructor.
             self._example = deltas.empty_as_list
-        return [deltas.InsertOp(**delta) for delta in self._example]
+        return deltas.make(self._example)
 
     @example.setter
     def example(self, example: str | deltas.Deltas):
@@ -84,7 +84,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     def clue(self) -> deltas.Deltas:
         if self._clue is None:  # Before the first flush to DB if not set in constructor.
             self._clue = deltas.empty_as_list
-        return [deltas.InsertOp(**delta) for delta in self._clue]
+        return deltas.make(self._clue)
 
     @clue.setter
     def clue(self, clue: deltas.Deltas):
@@ -96,7 +96,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     def text_reference(self) -> deltas.Deltas:
         if self._text_reference is None:  # Before the first flush to DB if not set in constructor.
             self._text_reference = deltas.empty_as_list
-        return [deltas.InsertOp(**delta) for delta in self._text_reference]
+        return deltas.make(self._text_reference)
 
     @text_reference.setter
     def text_reference(self, text_reference: deltas.Deltas):

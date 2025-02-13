@@ -1,7 +1,7 @@
 <script lang="ts">
 import { InlineBlot } from '$frontend/components/Quill.vue'
 import { basicBlots } from '$frontend/components/WysiwygEditor.vue'
-import { Choices2Blot } from './MultipleChoicesTools.vue'
+import { Choices2Blot, McqField } from './MultipleChoicesTools.vue'
 import { SelBlot } from './SelectableEffectTools.vue'
 
 
@@ -19,6 +19,7 @@ export const wysiwygBlots = [
   ...basicBlots,
   SelBlot,
   Choices2Blot,
+  McqField,
   ManualItemBlot,
   McqPlaceholderBlot,
 ]
@@ -172,6 +173,17 @@ const selfRef = ref<HTMLDivElement | null>(null)
         >
           <div style="position: absolute; top: 50px; left: 10%; width: 80%; background-color: white; padding: 1em;">
             {{ $t('multipleChoicesInstructions') }}
+            <BButton secondary sm @click="model.inProgress = {kind: 'nothing'}">{{ $t('choicesSettingsCancel') }}</BButton>
+          </div>
+        </div>
+
+        <div
+          v-if="model.inProgress.kind === 'newMcqField'"
+          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); cursor: initial;"
+          @mousedown="e => e.stopPropagation()" @touchstart="e => e.stopPropagation()"
+        >
+          <div style="position: absolute; top: 50px; left: 10%; width: 80%; background-color: white; padding: 1em;">
+            {{ $t('newMcqFieldInstructions') }}
             <BButton secondary sm @click="model.inProgress = {kind: 'nothing'}">{{ $t('choicesSettingsCancel') }}</BButton>
           </div>
         </div>

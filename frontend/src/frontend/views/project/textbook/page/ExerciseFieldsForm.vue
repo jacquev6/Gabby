@@ -86,7 +86,11 @@ export type Model = MakeModelOptions & {
         separator1: string
         separator2: string
         placeholder: string
+        mcqFieldUid: string | null
       }
+    } | {
+      kind: 'newMcqField'
+      uid: string
     }
 }
 
@@ -216,13 +220,18 @@ export function cleanupModel(model: Model) {
   const colorsCount = model.adaptationSettings.itemized.effects.isSelectable ? model.adaptationSettings.itemized.effects.selectable.colorsCount : 0
   for (const fieldName of ['instructions', 'wording', 'example'] as const) {
     const newOps = new Delta()
-    for (const delta of downgradeDeltas(model[fieldName])) {
-      if ('sel' in delta.attributes && (delta.attributes.sel as number) > colorsCount) {
-        newOps.insert(delta.insert, {})
-      } else if ('manual-item' in delta.attributes && !hasManualItems) {
-        newOps.insert(delta.insert, {})
+    for (const delta of model[fieldName]) {
+      if (typeof delta.insert === 'string') {
+        console.assert('attributes' in delta)
+        if ('sel' in delta.attributes && (delta.attributes.sel as number) > colorsCount) {
+          newOps.insert(delta.insert, {})
+        } else if ('manual-item' in delta.attributes && !hasManualItems) {
+          newOps.insert(delta.insert, {})
+        } else {
+          newOps.insert(delta.insert, delta.attributes)
+        }
       } else {
-        newOps.insert(delta.insert, delta.attributes)
+        newOps.insert(delta.insert)
       }
     }
     model[fieldName] = newOps.ops.map(op => {
@@ -230,14 +239,6 @@ export function cleanupModel(model: Model) {
       return {insert: op.insert, attributes: op.attributes ?? {}}
     })
   }
-}
-
-function downgradeDeltas(deltas: Deltas) {
-  return deltas.map(operation => {
-    console.assert(typeof operation.insert === 'string')
-    console.assert('attributes' in operation)
-    return operation
-  })
 }
 
 export function disableItemizedEffects(model: Model) {
@@ -363,11 +364,11 @@ export async function getParsed(model: Model) {
   const parsed = await api.client.createOne(
     'parsedExercise', {
       number: model.number,
-      instructions: downgradeDeltas(model.instructions),
-      wording: downgradeDeltas(model.wording),
-      example: downgradeDeltas(model.example),
-      clue: downgradeDeltas(model.clue),
-      textReference: downgradeDeltas(model.textReference),
+      instructions: model.instructions,
+      wording: model.wording,
+      example: model.example,
+      clue: model.clue,
+      textReference: model.textReference,
       adaptation: makeAdaptation(model),
     },
     {},
@@ -382,11 +383,11 @@ export async function create(project: Project, textbook: Textbook | null, model:
     {
       number: model.number,
       textbookPage: model.textbookPage,
-      instructions: downgradeDeltas(model.instructions),
-      wording: downgradeDeltas(model.wording),
-      example: downgradeDeltas(model.example),
-      clue: downgradeDeltas(model.clue),
-      textReference: downgradeDeltas(model.textReference),
+      instructions: model.instructions,
+      wording: model.wording,
+      example: model.example,
+      clue: model.clue,
+      textReference: model.textReference,
       adaptation: makeAdaptation(model),
       rectangles: model.rectangles,
     },
@@ -403,11 +404,11 @@ export async function create(project: Project, textbook: Textbook | null, model:
 export async function save(exercise: Exercise & InCache & Exists, model: Model) {
   await exercise.patch(
     {
-      instructions: downgradeDeltas(model.instructions),
-      wording: downgradeDeltas(model.wording),
-      example: downgradeDeltas(model.example),
-      clue: downgradeDeltas(model.clue),
-      textReference: downgradeDeltas(model.textReference),
+      instructions: model.instructions,
+      wording: model.wording,
+      example: model.example,
+      clue: model.clue,
+      textReference: model.textReference,
       adaptation: makeAdaptation(model),
       rectangles: model.rectangles,
     },
@@ -517,8 +518,13 @@ const selBlotColors = computed(() => {
 })
 
 function selectionChangeInInstructionsOrWording(fieldName: 'instructions' | 'wording', range: {index: number, length: number}) {
-  if (model.value.inProgress.kind === 'multipleChoicesCreation') {
-    const selected = downgradeDeltas(model.value[fieldName]).map(delta => delta.insert).join('').slice(range.index, range.index + range.length)
+  console.assert(wordingEditor.value !== null)
+  console.assert(wordingEditor.value.quill !== null)
+  console.assert(instructionsEditor.value !== null)
+  console.assert(instructionsEditor.value.quill !== null)
+
+  function guessSettings(deltas: Deltas, baseSettings: {mcqFieldUid: string | null}) {
+    const selected = deltas.map(delta => delta.insert).join('').slice(range.index, range.index + range.length)
 
     const [start, stop] = (() => {
       for (const [start, stop] of [['(', ')'], ['[', ']']]) {
@@ -552,16 +558,35 @@ function selectionChangeInInstructionsOrWording(fieldName: 'instructions' | 'wor
       return ''
     })()
 
-    const settings = {
+    return {
       start,
       stop,
       separator1,
       separator2,
       placeholder: '',
       justCreated: true,
+      ...baseSettings,
     }
+  }
 
-    toggle('choices2', settings)
+  if (model.value.inProgress.kind === 'multipleChoicesCreation') {
+    toggle('choices2', guessSettings(model.value[fieldName], {mcqFieldUid: null}))
+  } else if (model.value.inProgress.kind === 'newMcqField') {
+    if (fieldName === 'wording' && range.length === 0) {
+      // Add space after?
+      if (![' ', '\n'].includes(wordingEditor.value.quill.getText(range.index, 1))) {
+        wordingEditor.value.quill.insertText(range.index, ' ', 'user')
+      }
+      // wordingEditor.value.quill.insertText(range.index, model.value.inProgress.uid/*, 'mcq-placeholder', true*/, 'user')
+      wordingEditor.value.quill.insertEmbed(range.index, 'mcq-field', model.value.inProgress.uid, 'user')
+      // Add space before?
+      if (range.index !== 0 && ![' ', '\n'].includes(wordingEditor.value.quill.getText(range.index - 1, 1))) {
+        wordingEditor.value.quill.insertText(range.index, ' ', 'user')
+        wordingEditor.value.quill.setSelection(range.index + 1, 0, 'silent')
+      }
+    } else if (fieldName === 'instructions' && range.length !== 0) {
+      instructionsEditor.value.toggle('choices2', guessSettings(model.value[fieldName], {mcqFieldUid: model.value.inProgress.uid}))
+    }
   }
 }
 

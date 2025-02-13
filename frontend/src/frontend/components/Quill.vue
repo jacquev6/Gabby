@@ -22,9 +22,9 @@ delete Keyboard.DEFAULTS.bindings.italic
 // but slightly more fragile in the unlikely case quill-delta changes its interface. OK.
 export type Model = ({
   insert: string
-  attributes: Record<string, unknown>
+  attributes: Record<string, any>
 } | {
-  insert: Record<string, unknown>
+  insert: Record<string, any>
 })[]
 
 function makeMinimalRegistry() {
@@ -240,6 +240,7 @@ function toggle(formatting: string, value: unknown = true) {
 }
 
 defineExpose({
+  quill,
   toggle,
   hasFocus,
   currentFormat,

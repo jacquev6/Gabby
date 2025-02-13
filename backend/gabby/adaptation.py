@@ -8,6 +8,8 @@ import re
 import traceback
 import unittest
 
+import mydantic
+
 from . import deltas
 from . import deltas as d
 from . import exercises
@@ -19,6 +21,16 @@ from .api_models import Adaptation, TokensItems, Selectable, PredefinedMcq
 
 def adapt(exercise: exercises.Exercise) -> renderable.Exercise | None:
     return _Adapter(exercise).adapted
+
+
+class McqDefinition(mydantic.PydanticBase):
+    start: str | None
+    separator1: str | None
+    separator2: str | None
+    stop: str | None
+    placeholder: str | None = None
+    mcq_field_uid: str | None = None
+    text: str
 
 
 class _Adapter:
@@ -50,6 +62,7 @@ class _Adapter:
             assert exercise.adaptation.items is None
             self.sentences_are_items = True
         self.mcq_for_placeholders = None
+        self.mcqs_by_uid = {}
 
         if exercise.adaptation.placeholder_for_fill_with_free_text is not None:
             self.global_placeholders.append((exercise.adaptation.placeholder_for_fill_with_free_text, renderable.FreeTextInput(kind="freeTextInput")))
@@ -66,32 +79,26 @@ class _Adapter:
                 self.items_are_selectable = True
                 self.colors_for_selectable_items = exercise.adaptation.items_are_selectable.colors
 
-        for start, separator1, separator2, stop, placeholder, text in self.gather_choices(exercise.instructions):
-            if placeholder == "":
-                mcq = renderable.MultipleChoicesInput(
-                    kind="multipleChoicesInput",
-                    show_arrow_before=self.show_arrow_before_mcq_fields,
-                    choices=self.separate_choices(start, separator1, separator2, stop, placeholder, text),
-                    show_choices_by_default=self.show_mcq_choices_by_default,
-                )
-                if self.items_have_mcq_beside:
-                    self.mcq_beside_items = mcq
-                elif self.items_have_mcq_below:
-                    self.mcq_below_items = mcq
-                elif self.items_are_repeated_with_mcq:
-                    self.mcq_for_placeholders = mcq
+        for mcq_definition in self.gather_choices(exercise.instructions):
+            mcq = renderable.MultipleChoicesInput(
+                kind="multipleChoicesInput",
+                show_arrow_before=self.show_arrow_before_mcq_fields,
+                choices=self.separate_choices(mcq_definition),
+                show_choices_by_default=self.show_mcq_choices_by_default,
+            )
+
+            if mcq_definition.placeholder == "":
+                if mcq_definition.mcq_field_uid is None:
+                    if self.items_have_mcq_beside:
+                        self.mcq_beside_items = mcq
+                    elif self.items_have_mcq_below:
+                        self.mcq_below_items = mcq
+                    elif self.items_are_repeated_with_mcq:
+                        self.mcq_for_placeholders = mcq
+                else:
+                    self.mcqs_by_uid[mcq_definition.mcq_field_uid] = mcq
             else:
-                self.global_placeholders.append(
-                    (
-                        placeholder,
-                        renderable.MultipleChoicesInput(
-                            kind="multipleChoicesInput",
-                            show_arrow_before=self.show_arrow_before_mcq_fields,
-                            choices=self.separate_choices(start, separator1, separator2, stop, placeholder, text),
-                            show_choices_by_default=self.show_mcq_choices_by_default,
-                        ),
-                    ),
-                )
+                self.global_placeholders.append((mcq_definition.placeholder, mcq))
 
         instructions = self.postprocess_section(
             renderable.Section(
@@ -152,14 +159,16 @@ class _Adapter:
             elif "choices2" in delta.attributes:
                 assert delta.attributes == {"choices2": delta.attributes["choices2"]}
 
-                start = delta.attributes["choices2"]["start"] or None
-                separator1 = delta.attributes["choices2"]["separator1"] or None
-                separator2 = delta.attributes["choices2"]["separator2"] or None
-                stop = delta.attributes["choices2"]["stop"] or None
-                placeholder = delta.attributes["choices2"]["placeholder"] or None
-                text = delta.insert
+                mcq_definition = McqDefinition(
+                    start=delta.attributes["choices2"]["start"] or None,
+                    separator1=delta.attributes["choices2"]["separator1"] or None,
+                    separator2=delta.attributes["choices2"]["separator2"] or None,
+                    stop=delta.attributes["choices2"]["stop"] or None,
+                    placeholder=delta.attributes["choices2"]["placeholder"] or None,
+                    text=delta.insert,
+                )
 
-                choices = self.separate_choices(start, separator1, separator2, stop, placeholder, text)
+                choices = self.separate_choices(mcq_definition)
                 # Always format choices the same way in instructions: https://github.com/jacquev6/Gabby/issues/74
                 yield renderable.PassiveSequence(kind="passiveSequence", contents=choices[0], boxed=True)
                 for choice in choices[1:-1]:
@@ -205,7 +214,7 @@ class _Adapter:
 
     def adapt_wording_pagelet(self, pagelet_deltas: deltas.Deltas) -> Iterable[renderable.Paragraph]:
         for delta in pagelet_deltas:
-            if delta.attributes == {}:
+            if isinstance(delta, deltas.TextInsertOp) and delta.attributes == {}:
                 for index, (placeholder, _token) in enumerate(self.global_placeholders):
                     delta.insert = delta.insert.replace(placeholder, f"ph{index}hp")
 
@@ -221,31 +230,24 @@ class _Adapter:
     def adapt_wording_paragraph(self, paragraph_deltas: deltas.Deltas):
         sentence_specific_placeholders = []
 
-        for (
-            start,
-            separator1,
-            separator2,
-            stop,
-            placeholder,
-            text,
-        ) in self.gather_choices(paragraph_deltas):
-            if placeholder != "":
+        for mcq_definition in self.gather_choices(paragraph_deltas):
+            if mcq_definition.placeholder != "":
                 sentence_specific_placeholders.append(
                     (
-                        placeholder,
+                        mcq_definition.placeholder,
                         renderable.MultipleChoicesInput(
                             kind="multipleChoicesInput",
                             show_arrow_before=self.show_arrow_before_mcq_fields,
-                            choices=self.separate_choices(start, separator1, separator2, stop, placeholder, text),
+                            choices=self.separate_choices(mcq_definition),
                             show_choices_by_default=self.show_mcq_choices_by_default,
                         ),
                     ),
                 )
 
         for delta in paragraph_deltas:
-            if delta.attributes == {}:
-                for index, (placeholder, _token) in enumerate(sentence_specific_placeholders):
-                    delta.insert = delta.insert.replace(placeholder, f"ph{len(self.global_placeholders) + index}hp")
+            if isinstance(delta, deltas.TextInsertOp) and delta.attributes == {}:
+                for index, (mcq_definition.placeholder, _token) in enumerate(sentence_specific_placeholders):
+                    delta.insert = delta.insert.replace(mcq_definition.placeholder, f"ph{len(self.global_placeholders) + index}hp")
 
         sentence_placeholders = list(itertools.chain(self.global_placeholders, sentence_specific_placeholders))
 
@@ -310,89 +312,90 @@ class _Adapter:
         make_mcq_placeholder_replacement: renderable.AnyRenderable | None = None,
     ):
         for delta in sentence_deltas:
-            if make_mcq_placeholder_replacement is None:
-                delta.attributes.pop("mcq-placeholder", None)
-            if delta.attributes == {}:
-                for i, text in enumerate(re.split(r"(\.\.\.|\s+|\W|ph\d+hp)", delta.insert)):
-                    if text != "":
-                        if i % 2 == 1:
-                            # Separator: punctuation, spacing, placeholders
+            if isinstance(delta, deltas.TextInsertOp):
+                if make_mcq_placeholder_replacement is None:
+                    delta.attributes.pop("mcq-placeholder", None)
+                if delta.attributes == {}:
+                    for i, text in enumerate(re.split(r"(\.\.\.|\s+|\W|ph\d+hp)", delta.insert)):
+                        if text != "":
+                            if i % 2 == 1:
+                                # Separator: punctuation, spacing, placeholders
+                                if text.strip() == "":
+                                    yield renderable.Whitespace(kind="whitespace")
+                                elif text.startswith("ph") and text.endswith("hp"):
+                                    index = int(text[2:-2])
+                                    yield sentence_placeholders[index][1]
+                                else:
+                                    item = renderable.Text(kind="text", text=text)
+                                    if self.punctuation_is_items:
+                                        yield from self.decorate_item([item])
+                                    else:
+                                        yield item
+                            else:
+                                # Separated: words
+                                if self.letters_are_items:
+                                    for letter in text:
+                                        yield from self.decorate_item([renderable.Text(kind="text", text=letter)])
+                                elif self.words_are_items:
+                                    yield from self.decorate_item([renderable.Text(kind="text", text=text)])
+                                else:
+                                    yield renderable.Text(kind="text", text=text)
+
+                elif "mcq-placeholder" in delta.attributes:
+                    assert delta.attributes == {"mcq-placeholder": delta.attributes["mcq-placeholder"]}
+
+                    yield make_mcq_placeholder_replacement(delta)
+
+                elif "manual-item" in delta.attributes:
+                    assert delta.attributes == {"manual-item": delta.attributes["manual-item"]}
+
+                    for text in re.split(r"(\.\.\.|\s+|\W)", delta.insert):
+                        if text != "":
                             if text.strip() == "":
                                 yield renderable.Whitespace(kind="whitespace")
-                            elif text.startswith("ph") and text.endswith("hp"):
-                                index = int(text[2:-2])
-                                yield sentence_placeholders[index][1]
                             else:
                                 item = renderable.Text(kind="text", text=text)
-                                if self.punctuation_is_items:
+                                if self.manual_items_are_items:
                                     yield from self.decorate_item([item])
                                 else:
                                     yield item
-                        else:
-                            # Separated: words
-                            if self.letters_are_items:
-                                for letter in text:
-                                    yield from self.decorate_item([renderable.Text(kind="text", text=letter)])
-                            elif self.words_are_items:
-                                yield from self.decorate_item([renderable.Text(kind="text", text=text)])
-                            else:
-                                yield renderable.Text(kind="text", text=text)
 
-            elif "mcq-placeholder" in delta.attributes:
-                assert delta.attributes == {"mcq-placeholder": delta.attributes["mcq-placeholder"]}
+                elif "bold" in delta.attributes or "italic" in delta.attributes:
+                    assert set(delta.attributes.keys()) <= {"bold", "italic"}
 
-                yield make_mcq_placeholder_replacement(delta)
-
-            elif "manual-item" in delta.attributes:
-                assert delta.attributes == {"manual-item": delta.attributes["manual-item"]}
-
-                for text in re.split(r"(\.\.\.|\s+|\W)", delta.insert):
-                    if text != "":
-                        if text.strip() == "":
-                            yield renderable.Whitespace(kind="whitespace")
-                        else:
-                            item = renderable.Text(kind="text", text=text)
-                            if self.manual_items_are_items:
-                                yield from self.decorate_item([item])
-                            else:
-                                yield item
-
-            elif "bold" in delta.attributes or "italic" in delta.attributes:
-                assert set(delta.attributes.keys()) <= {"bold", "italic"}
-
-                yield renderable.Text(
-                    kind="text",
-                    text=delta.insert,
-                    bold=delta.attributes.get("bold", False),
-                    italic=delta.attributes.get("italic", False),
-                )
-
-            elif "choices2" in delta.attributes:
-                assert delta.attributes == {"choices2": delta.attributes["choices2"]}
-
-                choices_settings = delta.attributes["choices2"]
-                placeholder = choices_settings["placeholder"] or None
-                if placeholder is None:
-                    start = choices_settings["start"] or None
-                    separator1 = choices_settings["separator1"] or None
-                    separator2 = choices_settings["separator2"] or None
-                    stop = choices_settings["stop"] or None
-                    yield renderable.MultipleChoicesInput(
-                        kind="multipleChoicesInput",
-                        show_arrow_before=self.show_arrow_before_mcq_fields,
-                        choices=self.separate_choices(
-                            start,
-                            separator1,
-                            separator2,
-                            stop,
-                            placeholder,
-                            delta.insert,
-                        ),
-                        show_choices_by_default=self.show_mcq_choices_by_default,
+                    yield renderable.Text(
+                        kind="text",
+                        text=delta.insert,
+                        bold=delta.attributes.get("bold", False),
+                        italic=delta.attributes.get("italic", False),
                     )
 
+                elif "choices2" in delta.attributes:
+                    assert delta.attributes == {"choices2": delta.attributes["choices2"]}
+
+                    choices_settings = delta.attributes["choices2"]
+                    placeholder = choices_settings["placeholder"] or None
+                    if placeholder is None:
+                        mcq_definition = McqDefinition(
+                            start = choices_settings["start"] or None,
+                            separator1 = choices_settings["separator1"] or None,
+                            separator2 = choices_settings["separator2"] or None,
+                            stop = choices_settings["stop"] or None,
+                            text=delta.insert,
+                        )
+                        yield renderable.MultipleChoicesInput(
+                            kind="multipleChoicesInput",
+                            show_arrow_before=self.show_arrow_before_mcq_fields,
+                            choices=self.separate_choices(mcq_definition),
+                            show_choices_by_default=self.show_mcq_choices_by_default,
+                        )
+
+                else:
+                    assert False, f"Unknown attributes: {delta}"
             else:
-                assert False, f"Unknown attributes: {delta.attributes}"
+                assert "mcq-field" in delta.insert
+                assert delta.insert == {"mcq-field": delta.insert["mcq-field"]}
+                yield self.mcqs_by_uid.get(delta.insert["mcq-field"], renderable.MultipleChoicesInput(kind="multipleChoicesInput", choices=[]))
 
     def decorate_item(self, contents):
         if self.items_are_selectable:
@@ -455,20 +458,25 @@ class _Adapter:
     def split_deltas(self, section_deltas: deltas.Deltas, separator_pattern: str) -> Iterable[deltas.Deltas]:
         section_deltas = copy.deepcopy(section_deltas)
         assert len(section_deltas) > 0
-        section_deltas[0].insert = section_deltas[0].insert.lstrip()
-        section_deltas[-1].insert = section_deltas[-1].insert.rstrip()
+        if isinstance(section_deltas[0], deltas.TextInsertOp):
+            section_deltas[0].insert = section_deltas[0].insert.lstrip()
+        if isinstance(section_deltas[-1], deltas.TextInsertOp):
+            section_deltas[-1].insert = section_deltas[-1].insert.rstrip()
 
         current_paragraph = []
         for delta in section_deltas:
-            if "choices2" in delta.attributes:
-                current_paragraph.append(delta)
+            if isinstance(delta, deltas.TextInsertOp):
+                if "choices2" in delta.attributes:
+                    current_paragraph.append(delta)
+                else:
+                    for i, paragraph_part in enumerate(re.split(separator_pattern, delta.insert)):
+                        if i > 0:
+                            yield current_paragraph
+                            current_paragraph = []
+                        if paragraph_part != "":
+                            current_paragraph.append(d.TextInsertOp(insert=paragraph_part, attributes=delta.attributes))
             else:
-                for i, paragraph_part in enumerate(re.split(separator_pattern, delta.insert)):
-                    if i > 0:
-                        yield current_paragraph
-                        current_paragraph = []
-                    if paragraph_part != "":
-                        current_paragraph.append(d.InsertOp(insert=paragraph_part, attributes=delta.attributes))
+                current_paragraph.append(delta)
         yield current_paragraph
 
     def split_deltas_into_sentences(self, paragraph_deltas: deltas.Deltas) -> Iterable[deltas.Deltas]:
@@ -482,12 +490,12 @@ class _Adapter:
                         if i % 2 == 0 and i > 1:
                             yield current_sentence
                             current_sentence = []
-                        current_sentence.append(d.InsertOp(insert=sentence_part, attributes=delta.attributes))
+                        current_sentence.append(d.TextInsertOp(insert=sentence_part, attributes=delta.attributes))
         yield current_sentence
 
     def split_list_header(self, paragraph_deltas: deltas.Deltas) -> tuple[deltas.Deltas, deltas.Deltas]:
-        if len(paragraph_deltas) == 0:
-            return ([], [])
+        if len(paragraph_deltas) == 0 or not isinstance(paragraph_deltas[0], deltas.TextInsertOp):
+            return ([], paragraph_deltas)
         else:
             # WARNING: keep the list formats supported here consistent with what's supported in 'listFormats' in 'TextPicker.vue'
             list_header_deltas = []
@@ -500,7 +508,7 @@ class _Adapter:
             if number_prefix is not None and len(paragraph_deltas[0].insert) > len(number_prefix) and paragraph_deltas[0].insert[len(number_prefix)] in ").":
                 # "1. 2. 3.", "1) 2) 3)", etc.
                 list_header_deltas.append(
-                    deltas.InsertOp(
+                    deltas.TextInsertOp(
                         insert=paragraph_deltas[0].insert[: len(number_prefix) + 1],
                         attributes=paragraph_deltas[0].attributes,
                     )
@@ -513,7 +521,7 @@ class _Adapter:
             ):
                 # "a. b. c.", "A) B) C)", etc.
                 list_header_deltas.append(
-                    deltas.InsertOp(
+                    deltas.TextInsertOp(
                         insert=paragraph_deltas[0].insert[:2],
                         attributes=paragraph_deltas[0].attributes,
                     )
@@ -522,7 +530,7 @@ class _Adapter:
             elif len(paragraph_deltas[0].insert) > 0 and paragraph_deltas[0].insert[0] in "◆■":
                 # "◆", "■", etc.
                 list_header_deltas.append(
-                    deltas.InsertOp(
+                    deltas.TextInsertOp(
                         insert=paragraph_deltas[0].insert[0],
                         attributes=paragraph_deltas[0].attributes,
                     )
@@ -571,29 +579,30 @@ class _Adapter:
         section.paragraphs = list(filter(lambda p: len(p.contents) > 0, section.paragraphs))
         return section
 
-    def gather_choices(self, deltas):
-        for delta in deltas:
-            if "choices2" in delta.attributes:
+    def gather_choices(self, deltas_):
+        for delta in deltas_:
+            if isinstance(delta, deltas.TextInsertOp) and "choices2" in delta.attributes:
                 choices_settings = delta.attributes["choices2"]
-                yield (
-                    choices_settings["start"] or None,
-                    choices_settings["separator1"] or None,
-                    choices_settings["separator2"] or None,
-                    choices_settings["stop"] or None,
-                    choices_settings["placeholder"],
-                    delta.insert,
+                yield McqDefinition(
+                    start=choices_settings["start"] or None,
+                    separator1=choices_settings["separator1"] or None,
+                    separator2=choices_settings["separator2"] or None,
+                    stop=choices_settings["stop"] or None,
+                    placeholder=choices_settings["placeholder"],
+                    mcq_field_uid=choices_settings.get("mcqFieldUid"),
+                    text=delta.insert,
                 )
 
-    def separate_choices(self, start, separator1, separator2, stop, placeholder, text):
-        text = text.strip()
-        if start is not None and stop is not None and text.startswith(start) and text.endswith(stop):
-            text = text[len(start) : -len(stop)]
-        if separator1 is None:
+    def separate_choices(self, definition: McqDefinition):
+        text = definition.text.strip()
+        if definition.start is not None and definition.stop is not None and text.startswith(definition.start) and text.endswith(definition.stop):
+            text = text[len(definition.start) : -len(definition.stop)]
+        if definition.separator1 is None:
             choices = [text]
         else:
-            choices = text.split(separator1)
-        if separator2 is not None:
-            choices[-1:] = choices[-1].split(separator2)
+            choices = text.split(definition.separator1)
+        if definition.separator2 is not None:
+            choices[-1:] = choices[-1].split(definition.separator2)
         return list([renderable.Text(kind="text", text=text)] for text in filter(lambda c: c != "", [choice.strip() for choice in choices]))
 
 
@@ -694,10 +703,10 @@ class WordingPaginationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[d.InsertOp(insert="\n", attributes={})],
-                wording=[d.InsertOp(insert="\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="\n", attributes={})],
+                wording=[d.TextInsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -722,10 +731,10 @@ class WordingPaginationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[d.InsertOp(insert="\n", attributes={})],
-                wording=[d.InsertOp(insert="wording\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="\n", attributes={})],
+                wording=[d.TextInsertOp(insert="wording\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -758,10 +767,10 @@ class WordingPaginationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[d.InsertOp(insert="\n", attributes={})],
-                wording=[d.InsertOp(insert="wording 1\nwording 2\nwording 3\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="\n", attributes={})],
+                wording=[d.TextInsertOp(insert="wording 1\nwording 2\nwording 3\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -801,10 +810,10 @@ class WordingPaginationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[d.InsertOp(insert="instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="wording 1\nwording 2\nwording 3\n", attributes={})],
-                example=[d.InsertOp(insert="example\n", attributes={})],
-                clue=[d.InsertOp(insert="clue\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="wording 1\nwording 2\nwording 3\n", attributes={})],
+                example=[d.TextInsertOp(insert="example\n", attributes={})],
+                clue=[d.TextInsertOp(insert="clue\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=2,
@@ -863,10 +872,10 @@ class WordingPaginationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[d.InsertOp(insert="instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="wording 1\nwording 2\nwording 3\nwording 4\nwording 5\nwording 6\n", attributes={})],
-                example=[d.InsertOp(insert="example\n", attributes={})],
-                clue=[d.InsertOp(insert="clue\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="wording 1\nwording 2\nwording 3\nwording 4\nwording 5\nwording 6\n", attributes={})],
+                example=[d.TextInsertOp(insert="example\n", attributes={})],
+                clue=[d.TextInsertOp(insert="clue\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=None,
@@ -915,10 +924,10 @@ class WordingPaginationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[d.InsertOp(insert="instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="wording 1\n\nwording 2\n\n\nwording 3\n\nwording 4\n\nwording 5\n\nwording 6\n\n", attributes={})],
-                example=[d.InsertOp(insert="example\n", attributes={})],
-                clue=[d.InsertOp(insert="clue\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="wording 1\n\nwording 2\n\n\nwording 3\n\nwording 4\n\nwording 5\n\nwording 6\n\n", attributes={})],
+                example=[d.TextInsertOp(insert="example\n", attributes={})],
+                clue=[d.TextInsertOp(insert="clue\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=None,
@@ -980,10 +989,10 @@ class WordingPaginationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[d.InsertOp(insert="instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="wording 1\n\nwording 2\n\n\nwording 3\n\nwording 4\n\nwording 5\n\nwording 6\n\n", attributes={})],
-                example=[d.InsertOp(insert="example\n", attributes={})],
-                clue=[d.InsertOp(insert="clue\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="wording 1\n\nwording 2\n\n\nwording 3\n\nwording 4\n\nwording 5\n\nwording 6\n\n", attributes={})],
+                example=[d.TextInsertOp(insert="example\n", attributes={})],
+                clue=[d.TextInsertOp(insert="clue\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -1058,10 +1067,10 @@ class WordingPaginationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[d.InsertOp(insert="instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="a b c d\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="a b c d\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -1109,10 +1118,10 @@ class WordingPaginationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[d.InsertOp(insert="instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="a. worda wordb\nb. wordc wordd\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="a. worda wordb\nb. wordc wordd\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -1175,10 +1184,10 @@ class WordingPaginationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[d.InsertOp(insert="instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="a. word, word\nb. word! word\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="a. word, word\nb. word! word\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -1238,10 +1247,10 @@ class WordingPaginationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[d.InsertOp(insert="instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="Il fait beau. Il fait chaud. Il ne pleut pas.\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="Il fait beau. Il fait chaud. Il ne pleut pas.\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=2,
@@ -1317,16 +1326,16 @@ class WordingPaginationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="Instructions\n", attributes={})],
                 wording=[
-                    d.InsertOp(insert="This ", attributes={}),
-                    d.InsertOp(insert="is", attributes={"manual-item": True}),
-                    d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="the", attributes={"manual-item": True}),
-                    d.InsertOp(insert=" wording.\n", attributes={}),
+                    d.TextInsertOp(insert="This ", attributes={}),
+                    d.TextInsertOp(insert="is", attributes={"manual-item": True}),
+                    d.TextInsertOp(insert=" ", attributes={}),
+                    d.TextInsertOp(insert="the", attributes={"manual-item": True}),
+                    d.TextInsertOp(insert=" wording.\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=None,
@@ -1384,24 +1393,24 @@ class WordToMcqAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="Instructions ", attributes={}),
+                    d.TextInsertOp(
                         insert="alpha, bravo ou charlie",
                         attributes={"choices2": {"start": "", "separator1": ",", "separator2": "ou", "stop": "", "placeholder": ""}},
                     ),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="a. Firsta ", attributes={}),
-                    d.InsertOp(insert="firstb", attributes={"mcq-placeholder": True}),
-                    d.InsertOp(insert=" firstc\nb. ", attributes={}),
-                    d.InsertOp(insert="Seconda", attributes={"mcq-placeholder": True}),
-                    d.InsertOp(insert=" secondb secondc\nc. Thirda thirdb ", attributes={}),
-                    d.InsertOp(insert="thirdc", attributes={"mcq-placeholder": True}),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="a. Firsta ", attributes={}),
+                    d.TextInsertOp(insert="firstb", attributes={"mcq-placeholder": True}),
+                    d.TextInsertOp(insert=" firstc\nb. ", attributes={}),
+                    d.TextInsertOp(insert="Seconda", attributes={"mcq-placeholder": True}),
+                    d.TextInsertOp(insert=" secondb secondc\nc. Thirda thirdb ", attributes={}),
+                    d.TextInsertOp(insert="thirdc", attributes={"mcq-placeholder": True}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=None,
@@ -1571,6 +1580,84 @@ class WordToMcqAdaptationTestCase(AdaptationTestCase):
         )
 
 
+class ManualMcqFieldsAdaptationTestCase(AdaptationTestCase):
+    def test_simplest(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[
+                    d.TextInsertOp(
+                        insert="alpha, bravo ou charlie",
+                        attributes={"choices2": {"start": "", "separator1": ",", "separator2": "ou", "stop": "", "placeholder": "", "mcqFieldUid": "f34d6"}},
+                    ),
+                    d.TextInsertOp(insert="\n", attributes={}),
+                ],
+                wording=[
+                    d.EmbedInsertOp(insert={"mcq-field": "f34d6"}),
+                    d.TextInsertOp(insert="\n", attributes={}),
+                ],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
+                adaptation=Adaptation(
+                    kind="generic",
+                    wording_paragraphs_per_pagelet=None,
+                    single_item_per_paragraph=False,
+                    placeholder_for_fill_with_free_text=None,
+                    items=None,
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                    items_are_repeated_with_mcq=False,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
+                                        r.Text(kind="text", text=","),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="charlie")], boxed=True),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.MultipleChoicesInput(
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [r.Text(kind="text", text="alpha")],
+                                                [r.Text(kind="text", text="bravo")],
+                                                [r.Text(kind="text", text="charlie")],
+                                            ],
+                                        )
+                                    ],
+                                ),
+                            ]
+                        ),
+                    )
+                ],
+            ),
+        )
+
+
 # Tests below this line follow a legacy organization, based on classes that have been deleted.
 # There is some duplication because tests have been kept through refactoring.
 # Tests above focus on specific features of the adaptation process.
@@ -1584,13 +1671,13 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="instructions\n", attributes={}),
+                    d.TextInsertOp(insert="instructions\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="The wording of this ... is a ... sentence.\n", attributes={}),
+                    d.TextInsertOp(insert="The wording of this ... is a ... sentence.\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="fill-with-free-text",
                     wording_paragraphs_per_pagelet=3,
@@ -1650,13 +1737,13 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 instructions=[
-                    d.InsertOp(insert="instructions\n", attributes={}),
+                    d.TextInsertOp(insert="instructions\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="@ a @\n", attributes={}),
+                    d.TextInsertOp(insert="@ a @\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="fill-with-free-text",
                     wording_paragraphs_per_pagelet=3,
@@ -1703,13 +1790,13 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="instructions\nare\n\non\n\nmultiple\nlines\n", attributes={}),
+                    d.TextInsertOp(insert="instructions\nare\n\non\n\nmultiple\nlines\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="wording\n", attributes={}),
+                    d.TextInsertOp(insert="wording\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="fill-with-free-text",
                     wording_paragraphs_per_pagelet=3,
@@ -1754,13 +1841,13 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="instructions\n", attributes={}),
+                    d.TextInsertOp(insert="instructions\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="foo toto : ...\n\nbar : ...\n\nbaz : ...\n", attributes={}),
+                    d.TextInsertOp(insert="foo toto : ...\n\nbar : ...\n\nbaz : ...\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="fill-with-free-text",
                     wording_paragraphs_per_pagelet=3,
@@ -1827,13 +1914,13 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="{tag|abc}\n", attributes={}),
+                    d.TextInsertOp(insert="{tag|abc}\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="{tag|def}\n", attributes={}),
+                    d.TextInsertOp(insert="{tag|def}\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="fill-with-free-text",
                     wording_paragraphs_per_pagelet=3,
@@ -1892,13 +1979,13 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="   abc   \n", attributes={}),
+                    d.TextInsertOp(insert="   abc   \n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="   def   \n", attributes={}),
+                    d.TextInsertOp(insert="   def   \n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="fill-with-free-text",
                     wording_paragraphs_per_pagelet=3,
@@ -1933,16 +2020,16 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="instructions\n", attributes={}),
+                    d.TextInsertOp(insert="instructions\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="This @ is the wording.\n", attributes={}),
+                    d.TextInsertOp(insert="This @ is the wording.\n", attributes={}),
                 ],
                 example=[
-                    d.InsertOp(insert="This @ is the example.\n", attributes={}),
+                    d.TextInsertOp(insert="This @ is the example.\n", attributes={}),
                 ],
                 clue=[
-                    d.InsertOp(insert="This @ is the clue.\n", attributes={}),
+                    d.TextInsertOp(insert="This @ is the clue.\n", attributes={}),
                 ],
                 adaptation=Adaptation(
                     kind="fill-with-free-text",
@@ -2028,10 +2115,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -2093,10 +2180,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -2146,10 +2233,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -2211,10 +2298,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -2268,10 +2355,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -2329,10 +2416,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="a. First list element.\nb. Second element, still in list.\nc. Third element. The last one!", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="a. First list element.\nb. Second element, still in list.\nc. Third element. The last one!", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=2,
@@ -2425,10 +2512,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="1) First list element.\n2) Second element, still in list.\n3) Third element. The last one!", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="1) First list element.\n2) Second element, still in list.\n3) Third element. The last one!", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=2,
@@ -2521,10 +2608,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="◆ First list element.\n◆ Second element, still in list.\n◆ Third element. The last one!", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="◆ First list element.\n◆ Second element, still in list.\n◆ Third element. The last one!", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=2,
@@ -2614,15 +2701,15 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="Instructions\n", attributes={})],
                 wording=[
-                    d.InsertOp(
+                    d.TextInsertOp(
                         insert="Affirmative sentence. Exclamative sentence! Phrase exclamative ! Interrogative sentence? Phrase interrogative ? Suspens...\n",
                         attributes={},
                     )
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -2731,16 +2818,16 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="Instructions\n", attributes={})],
                 wording=[
-                    d.InsertOp(insert="This ", attributes={}),
-                    d.InsertOp(insert="is,", attributes={"manual-item": True}),
-                    d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="the", attributes={"manual-item": True}),
-                    d.InsertOp(insert=" wording.\n", attributes={}),
+                    d.TextInsertOp(insert="This ", attributes={}),
+                    d.TextInsertOp(insert="is,", attributes={"manual-item": True}),
+                    d.TextInsertOp(insert=" ", attributes={}),
+                    d.TextInsertOp(insert="the", attributes={"manual-item": True}),
+                    d.TextInsertOp(insert=" wording.\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -2790,16 +2877,16 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="Instructions\n", attributes={})],
                 wording=[
-                    d.InsertOp(insert="This ", attributes={}),
-                    d.InsertOp(insert="is,", attributes={"manual-item": True}),
-                    d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="the", attributes={"manual-item": True}),
-                    d.InsertOp(insert=" wording.\n", attributes={}),
+                    d.TextInsertOp(insert="This ", attributes={}),
+                    d.TextInsertOp(insert="is,", attributes={"manual-item": True}),
+                    d.TextInsertOp(insert=" ", attributes={}),
+                    d.TextInsertOp(insert="the", attributes={"manual-item": True}),
+                    d.TextInsertOp(insert=" wording.\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -2853,10 +2940,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -2907,20 +2994,20 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 instructions=[
-                    d.InsertOp(insert="abc", attributes={"sel": 1}),
-                    d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="def", attributes={"sel": 2}),
-                    d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="ghi", attributes={"sel": 3}),
-                    d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="jkl", attributes={"sel": 4}),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="abc", attributes={"sel": 1}),
+                    d.TextInsertOp(insert=" ", attributes={}),
+                    d.TextInsertOp(insert="def", attributes={"sel": 2}),
+                    d.TextInsertOp(insert=" ", attributes={}),
+                    d.TextInsertOp(insert="ghi", attributes={"sel": 3}),
+                    d.TextInsertOp(insert=" ", attributes={}),
+                    d.TextInsertOp(insert="jkl", attributes={"sel": 4}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="wording\n", attributes={}),
+                    d.TextInsertOp(insert="wording\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -2979,16 +3066,16 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="Instructions ", attributes={}),
+                    d.TextInsertOp(
                         insert="alpha, bravo, charlie",
                         attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
                     ),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
-                wording=[d.InsertOp(insert="Abcd\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording=[d.TextInsertOp(insert="Abcd\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -3091,16 +3178,16 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="Instructions ", attributes={}),
+                    d.TextInsertOp(
                         insert="alpha, bravo, charlie",
                         attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
                     ),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
-                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording=[d.TextInsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -3208,16 +3295,16 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="Instructions ", attributes={}),
+                    d.TextInsertOp(
                         insert="alpha, bravo, charlie",
                         attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
                     ),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
-                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording=[d.TextInsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -3345,16 +3432,16 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="Instructions ", attributes={}),
+                    d.TextInsertOp(
                         insert="alpha, bravo, charlie",
                         attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
                     ),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
-                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording=[d.TextInsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -3442,21 +3529,21 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="Instructions ", attributes={}),
+                    d.TextInsertOp(
                         insert="alpha, bravo, charlie",
                         attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
                     ),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(
+                    d.TextInsertOp(
                         insert="Affirmative sentence. Exclamative sentence! Phrase exclamative ! Interrogative sentence? Phrase interrogative ? Suspens...\n",
                         attributes={},
                     )
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -3604,22 +3691,22 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="Instructions ", attributes={}),
+                    d.TextInsertOp(
                         insert="alpha, bravo, charlie",
                         attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
                     ),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="This ", attributes={}),
-                    d.InsertOp(insert="is", attributes={"manual-item": True}),
-                    d.InsertOp(insert=", ", attributes={}),
-                    d.InsertOp(insert="the", attributes={"manual-item": True}),
-                    d.InsertOp(insert=" wording.\n", attributes={}),
+                    d.TextInsertOp(insert="This ", attributes={}),
+                    d.TextInsertOp(insert="is", attributes={"manual-item": True}),
+                    d.TextInsertOp(insert=", ", attributes={}),
+                    d.TextInsertOp(insert="the", attributes={"manual-item": True}),
+                    d.TextInsertOp(insert=" wording.\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -3707,16 +3794,16 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="Instructions ", attributes={}),
+                    d.TextInsertOp(
                         insert="alpha, bravo, charlie",
                         attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
                     ),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
-                wording=[d.InsertOp(insert="Abcd\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording=[d.TextInsertOp(insert="Abcd\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -3839,16 +3926,16 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="Instructions ", attributes={}),
+                    d.TextInsertOp(
                         insert="alpha, bravo, charlie",
                         attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
                     ),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
-                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording=[d.TextInsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -3976,16 +4063,16 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="Instructions ", attributes={}),
+                    d.TextInsertOp(
                         insert="alpha, bravo, charlie",
                         attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
                     ),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
-                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording=[d.TextInsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -4143,16 +4230,16 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="Instructions ", attributes={}),
+                    d.TextInsertOp(
                         insert="alpha, bravo, charlie",
                         attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
                     ),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
-                wording=[d.InsertOp(insert="This is, the wording.\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                wording=[d.TextInsertOp(insert="This is, the wording.\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -4250,21 +4337,21 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="Instructions ", attributes={}),
+                    d.TextInsertOp(
                         insert="alpha, bravo, charlie",
                         attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
                     ),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(
+                    d.TextInsertOp(
                         insert="Affirmative sentence. Exclamative sentence! Phrase exclamative ! Interrogative sentence? Phrase interrogative ? Suspens...\n",
                         attributes={},
                     )
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -4475,22 +4562,22 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Instructions ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="Instructions ", attributes={}),
+                    d.TextInsertOp(
                         insert="alpha, bravo, charlie",
                         attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": ""}},
                     ),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="This ", attributes={}),
-                    d.InsertOp(insert="is", attributes={"manual-item": True}),
-                    d.InsertOp(insert=", ", attributes={}),
-                    d.InsertOp(insert="the", attributes={"manual-item": True}),
-                    d.InsertOp(insert=" wording.\n", attributes={}),
+                    d.TextInsertOp(insert="This ", attributes={}),
+                    d.TextInsertOp(insert="is", attributes={"manual-item": True}),
+                    d.TextInsertOp(insert=", ", attributes={}),
+                    d.TextInsertOp(insert="the", attributes={"manual-item": True}),
+                    d.TextInsertOp(insert=" wording.\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -4588,18 +4675,18 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Indique le genre de chacun de ces groupes nominaux (", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="Indique le genre de chacun de ces groupes nominaux (", attributes={}),
+                    d.TextInsertOp(
                         insert="singulier ou pluriel",
                         attributes={"choices2": {"start": "", "separator1": "ou", "separator2": "", "stop": "", "placeholder": ""}},
                     ),
-                    d.InsertOp(insert=")\n", attributes={}),
+                    d.TextInsertOp(insert=")\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="a. les tables / les chaises / les fauteuils\nb. les enfants / les personnes âgées / les adultes\n", attributes={}),
+                    d.TextInsertOp(insert="a. les tables / les chaises / les fauteuils\nb. les enfants / les personnes âgées / les adultes\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -4796,10 +4883,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="alpha bravo charlie\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="alpha bravo charlie\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -4863,10 +4950,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="alpha bravo charlie\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="alpha bravo charlie\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -4930,10 +5017,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="alpha bravo charlie\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="alpha bravo charlie\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -5012,10 +5099,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[d.InsertOp(insert="Instructions\n", attributes={})],
-                wording=[d.InsertOp(insert="alpha bravo charlie\n", attributes={})],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                instructions=[d.TextInsertOp(insert="Instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="alpha bravo charlie\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -5103,15 +5190,15 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Choose ", attributes={}),
-                    d.InsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "..."}}),
-                    d.InsertOp(insert=".\n", attributes={}),
+                    d.TextInsertOp(insert="Choose ", attributes={}),
+                    d.TextInsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "..."}}),
+                    d.TextInsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="A ... B ...\n", attributes={}),
+                    d.TextInsertOp(insert="A ... B ...\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="multiple-choices",
                     wording_paragraphs_per_pagelet=3,
@@ -5183,18 +5270,18 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Choose ", attributes={}),
-                    d.InsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "@"}}),
-                    d.InsertOp(insert=".\n", attributes={}),
+                    d.TextInsertOp(insert="Choose ", attributes={}),
+                    d.TextInsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "@"}}),
+                    d.TextInsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="A @ B @\n", attributes={}),
+                    d.TextInsertOp(insert="A @ B @\n", attributes={}),
                 ],
                 example=[
-                    d.InsertOp(insert="This {choices2||/||||is} the @ example.\n", attributes={}),
+                    d.TextInsertOp(insert="This {choices2||/||||is} the @ example.\n", attributes={}),
                 ],
                 clue=[
-                    d.InsertOp(insert="This is {choices2||/||||the} @ clue.\n", attributes={}),
+                    d.TextInsertOp(insert="This is {choices2||/||||the} @ clue.\n", attributes={}),
                 ],
                 adaptation=Adaptation(
                     kind="multiple-choices",
@@ -5315,15 +5402,15 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Choose ", attributes={}),
-                    d.InsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "..."}}),
-                    d.InsertOp(insert=".\n", attributes={}),
+                    d.TextInsertOp(insert="Choose ", attributes={}),
+                    d.TextInsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "..."}}),
+                    d.TextInsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="A ... B ...\n", attributes={}),
+                    d.TextInsertOp(insert="A ... B ...\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="multiple-choices",
                     wording_paragraphs_per_pagelet=3,
@@ -5395,15 +5482,15 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Choose ", attributes={}),
-                    d.InsertOp(insert="a b", attributes={"choices2": {"start": "", "separator1": "", "separator2": "", "stop": "", "placeholder": "..."}}),
-                    d.InsertOp(insert=".\n", attributes={}),
+                    d.TextInsertOp(insert="Choose ", attributes={}),
+                    d.TextInsertOp(insert="a b", attributes={"choices2": {"start": "", "separator1": "", "separator2": "", "stop": "", "placeholder": "..."}}),
+                    d.TextInsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="A ... B ...\n", attributes={}),
+                    d.TextInsertOp(insert="A ... B ...\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="multiple-choices",
                     wording_paragraphs_per_pagelet=3,
@@ -5467,17 +5554,17 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Choose ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="Choose ", attributes={}),
+                    d.TextInsertOp(
                         insert="a, b, c or d", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "or", "stop": "", "placeholder": "..."}}
                     ),
-                    d.InsertOp(insert=".\n", attributes={}),
+                    d.TextInsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="A ... B ...\n", attributes={}),
+                    d.TextInsertOp(insert="A ... B ...\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="multiple-choices",
                     wording_paragraphs_per_pagelet=3,
@@ -5565,17 +5652,17 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Choose ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="Choose ", attributes={}),
+                    d.TextInsertOp(
                         insert="a, b, c, or d", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "or", "stop": "", "placeholder": "..."}}
                     ),
-                    d.InsertOp(insert=".\n", attributes={}),
+                    d.TextInsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="A ... B ...\n", attributes={}),
+                    d.TextInsertOp(insert="A ... B ...\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="multiple-choices",
                     wording_paragraphs_per_pagelet=3,
@@ -5663,17 +5750,17 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Choose ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="Choose ", attributes={}),
+                    d.TextInsertOp(
                         insert="a / b // c", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "..."}}
                     ),
-                    d.InsertOp(insert=".\n", attributes={}),
+                    d.TextInsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="A ... B ...\n", attributes={}),
+                    d.TextInsertOp(insert="A ... B ...\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="multiple-choices",
                     wording_paragraphs_per_pagelet=3,
@@ -5748,17 +5835,17 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Choose ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="Choose ", attributes={}),
+                    d.TextInsertOp(
                         insert="(a or b)", attributes={"choices2": {"start": "(", "separator1": "or", "separator2": "", "stop": ")", "placeholder": "..."}}
                     ),
-                    d.InsertOp(insert=".\n", attributes={}),
+                    d.TextInsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="A ... B ...\n", attributes={}),
+                    d.TextInsertOp(insert="A ... B ...\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="multiple-choices",
                     wording_paragraphs_per_pagelet=3,
@@ -5830,17 +5917,17 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Choose ", attributes={}),
-                    d.InsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "..."}}),
-                    d.InsertOp(insert=" and ", attributes={}),
-                    d.InsertOp(insert="c or d", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "@@@"}}),
-                    d.InsertOp(insert=".\n", attributes={}),
+                    d.TextInsertOp(insert="Choose ", attributes={}),
+                    d.TextInsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "..."}}),
+                    d.TextInsertOp(insert=" and ", attributes={}),
+                    d.TextInsertOp(insert="c or d", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "@@@"}}),
+                    d.TextInsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="A ... @@@\nB ... @@@\n", attributes={}),
+                    d.TextInsertOp(insert="A ... @@@\nB ... @@@\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="multiple-choices",
                     wording_paragraphs_per_pagelet=3,
@@ -5936,15 +6023,15 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Complète les mots avec ", attributes={}),
-                    d.InsertOp(insert="m ou n", attributes={"choices2": {"start": "", "separator1": "ou", "separator2": "", "stop": "", "placeholder": "..."}}),
-                    d.InsertOp(insert=".\n", attributes={}),
+                    d.TextInsertOp(insert="Complète les mots avec ", attributes={}),
+                    d.TextInsertOp(insert="m ou n", attributes={"choices2": {"start": "", "separator1": "ou", "separator2": "", "stop": "", "placeholder": "..."}}),
+                    d.TextInsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="i...mense i...juste\n", attributes={}),
+                    d.TextInsertOp(insert="i...mense i...juste\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="multiple-choices",
                     wording_paragraphs_per_pagelet=3,
@@ -6024,17 +6111,17 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Choose wisely.\n", attributes={}),
+                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="A ", attributes={}),
-                    d.InsertOp(insert="a/b/c", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": ""}}),
-                    d.InsertOp(insert=" B ", attributes={}),
-                    d.InsertOp(insert="d#e", attributes={"choices2": {"start": "", "separator1": "#", "separator2": "", "stop": "", "placeholder": ""}}),
-                    d.InsertOp(insert=".\n", attributes={}),
+                    d.TextInsertOp(insert="A ", attributes={}),
+                    d.TextInsertOp(insert="a/b/c", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.TextInsertOp(insert=" B ", attributes={}),
+                    d.TextInsertOp(insert="d#e", attributes={"choices2": {"start": "", "separator1": "#", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.TextInsertOp(insert=".\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="multiple-choices",
                     wording_paragraphs_per_pagelet=3,
@@ -6103,11 +6190,11 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Choose wisely.\n", attributes={}),
+                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="A ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="A ", attributes={}),
+                    d.TextInsertOp(
                         insert="(blah/blih)",
                         attributes={
                             "choices2": {
@@ -6119,10 +6206,10 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                             },
                         },
                     ),
-                    d.InsertOp(insert=".\n", attributes={}),
+                    d.TextInsertOp(insert=".\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="multiple-choices",
                     wording_paragraphs_per_pagelet=3,
@@ -6183,11 +6270,11 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Choose wisely.\n", attributes={}),
+                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="A ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="A ", attributes={}),
+                    d.TextInsertOp(
                         insert="  (  blah  /  blih  )  ",
                         attributes={
                             "choices2": {
@@ -6199,10 +6286,10 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                             },
                         },
                     ),
-                    d.InsertOp(insert=".\n", attributes={}),
+                    d.TextInsertOp(insert=".\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="multiple-choices",
                     wording_paragraphs_per_pagelet=3,
@@ -6263,11 +6350,11 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Choose wisely.\n", attributes={}),
+                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="A ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="A ", attributes={}),
+                    d.TextInsertOp(
                         insert="blah/blih",
                         attributes={
                             "choices2": {
@@ -6279,10 +6366,10 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                             },
                         },
                     ),
-                    d.InsertOp(insert=".\n", attributes={}),
+                    d.TextInsertOp(insert=".\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="multiple-choices",
                     wording_paragraphs_per_pagelet=3,
@@ -6343,11 +6430,11 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Choose wisely.\n", attributes={}),
+                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="A ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="A ", attributes={}),
+                    d.TextInsertOp(
                         insert="blah / blih",
                         attributes={
                             "choices2": {
@@ -6359,10 +6446,10 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                             },
                         },
                     ),
-                    d.InsertOp(insert=".\n", attributes={}),
+                    d.TextInsertOp(insert=".\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="multiple-choices",
                     wording_paragraphs_per_pagelet=3,
@@ -6421,11 +6508,11 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Choose wisely.\n", attributes={}),
+                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="A ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="A ", attributes={}),
+                    d.TextInsertOp(
                         insert="((blah//blih))",
                         attributes={
                             "choices2": {
@@ -6437,10 +6524,10 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                             },
                         },
                     ),
-                    d.InsertOp(insert=".\n", attributes={}),
+                    d.TextInsertOp(insert=".\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="multiple-choices",
                     wording_paragraphs_per_pagelet=3,
@@ -6501,11 +6588,11 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Choose wisely.\n", attributes={}),
+                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="A ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="A ", attributes={}),
+                    d.TextInsertOp(
                         insert="{blah|blih}",
                         attributes={
                             "choices2": {
@@ -6517,10 +6604,10 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                             },
                         },
                     ),
-                    d.InsertOp(insert=".\n", attributes={}),
+                    d.TextInsertOp(insert=".\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="multiple-choices",
                     wording_paragraphs_per_pagelet=3,
@@ -6581,11 +6668,11 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Choose wisely.\n", attributes={}),
+                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="The sky is @@. ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="The sky is @@. ", attributes={}),
+                    d.TextInsertOp(
                         insert="(blue/red)",
                         attributes={
                             "choices2": {
@@ -6597,10 +6684,10 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                             },
                         },
                     ),
-                    d.InsertOp(insert=" \n", attributes={}),
+                    d.TextInsertOp(insert=" \n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="multiple-choices",
                     wording_paragraphs_per_pagelet=3,
@@ -6665,10 +6752,10 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Choose wisely.\n", attributes={}),
+                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(
+                    d.TextInsertOp(
                         insert="(blue/red)",
                         attributes={
                             "choices2": {
@@ -6680,10 +6767,10 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                             },
                         },
                     ),
-                    d.InsertOp(insert=" The sky is ....\n", attributes={}),
+                    d.TextInsertOp(insert=" The sky is ....\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="multiple-choices",
                     wording_paragraphs_per_pagelet=3,
@@ -6748,10 +6835,10 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Choose wisely.\n", attributes={}),
+                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(
+                    d.TextInsertOp(
                         insert="(blue/yellow)",
                         attributes={
                             "choices2": {
@@ -6763,10 +6850,10 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                             },
                         },
                     ),
-                    d.InsertOp(insert=" The sky is ..., the sun is ....\n", attributes={}),
+                    d.TextInsertOp(insert=" The sky is ..., the sun is ....\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="multiple-choices",
                     wording_paragraphs_per_pagelet=3,
@@ -6844,10 +6931,10 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Choose wisely.\n", attributes={}),
+                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(
+                    d.TextInsertOp(
                         insert="(blue/red)",
                         attributes={
                             "choices2": {
@@ -6859,8 +6946,8 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                             },
                         },
                     ),
-                    d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert=" ", attributes={}),
+                    d.TextInsertOp(
                         insert="[green*yellow]",
                         attributes={
                             "choices2": {
@@ -6872,10 +6959,10 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                             },
                         },
                     ),
-                    d.InsertOp(insert=" The sky is @1, the sun is @2.\n", attributes={}),
+                    d.TextInsertOp(insert=" The sky is @1, the sun is @2.\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="multiple-choices",
                     wording_paragraphs_per_pagelet=3,
@@ -6953,11 +7040,11 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Choose wisely.\n", attributes={}),
+                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="The sky is @@. ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="The sky is @@. ", attributes={}),
+                    d.TextInsertOp(
                         insert="(blue/red)",
                         attributes={
                             "choices2": {
@@ -6969,8 +7056,8 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                             },
                         },
                     ),
-                    d.InsertOp(insert="\n\nThe sun is @@. ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="\n\nThe sun is @@. ", attributes={}),
+                    d.TextInsertOp(
                         insert="(green/yellow)",
                         attributes={
                             "choices2": {
@@ -6982,10 +7069,10 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                             },
                         },
                     ),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="multiple-choices",
                     wording_paragraphs_per_pagelet=3,
@@ -7066,11 +7153,11 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Choose wisely.\n", attributes={}),
+                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="The sky is @1, ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="The sky is @1, ", attributes={}),
+                    d.TextInsertOp(
                         insert="(blue/red)",
                         attributes={
                             "choices2": {
@@ -7082,8 +7169,8 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                             },
                         },
                     ),
-                    d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert=" ", attributes={}),
+                    d.TextInsertOp(
                         insert="[green*yellow]",
                         attributes={
                             "choices2": {
@@ -7095,10 +7182,10 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                             },
                         },
                     ),
-                    d.InsertOp(insert=" the sun is @2.\n", attributes={}),
+                    d.TextInsertOp(insert=" the sun is @2.\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="multiple-choices",
                     wording_paragraphs_per_pagelet=3,
@@ -7178,13 +7265,13 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 instructions=[
-                    d.InsertOp(insert="instructions\n", attributes={}),
+                    d.TextInsertOp(insert="instructions\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="The wording of this exercise is a single sentence.\n", attributes={}),
+                    d.TextInsertOp(insert="The wording of this exercise is a single sentence.\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -7244,20 +7331,20 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 instructions=[
-                    d.InsertOp(insert="abc", attributes={"sel": 1}),
-                    d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="def", attributes={"sel": 2}),
-                    d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="ghi", attributes={"sel": 3}),
-                    d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="jkl", attributes={"sel": 4}),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="abc", attributes={"sel": 1}),
+                    d.TextInsertOp(insert=" ", attributes={}),
+                    d.TextInsertOp(insert="def", attributes={"sel": 2}),
+                    d.TextInsertOp(insert=" ", attributes={}),
+                    d.TextInsertOp(insert="ghi", attributes={"sel": 3}),
+                    d.TextInsertOp(insert=" ", attributes={}),
+                    d.TextInsertOp(insert="jkl", attributes={"sel": 4}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="wording\n", attributes={}),
+                    d.TextInsertOp(insert="wording\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -7316,14 +7403,14 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 instructions=[
-                    d.InsertOp(insert="abc", attributes={"sel": 1}),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="abc", attributes={"sel": 1}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="wording\n", attributes={}),
+                    d.TextInsertOp(insert="wording\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -7364,13 +7451,13 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="instructions\nare\n\non\n\nmultiple\nlines\n", attributes={}),
+                    d.TextInsertOp(insert="instructions\nare\n\non\n\nmultiple\nlines\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="wording\n", attributes={}),
+                    d.TextInsertOp(insert="wording\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -7421,13 +7508,13 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="instructions\n", attributes={}),
+                    d.TextInsertOp(insert="instructions\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="wording is\n\non\n\nmultiple lines\n", attributes={}),
+                    d.TextInsertOp(insert="wording is\n\non\n\nmultiple lines\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -7480,13 +7567,13 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="{tag|abc}\n", attributes={}),
+                    d.TextInsertOp(insert="{tag|abc}\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="{tag|def}\n", attributes={}),
+                    d.TextInsertOp(insert="{tag|def}\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -7545,13 +7632,13 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="   abc   \n", attributes={}),
+                    d.TextInsertOp(insert="   abc   \n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="   def   \n", attributes={}),
+                    d.TextInsertOp(insert="   def   \n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -7590,16 +7677,16 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 instructions=[
-                    d.InsertOp(insert="instructions\n", attributes={}),
+                    d.TextInsertOp(insert="instructions\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="wording\n", attributes={}),
+                    d.TextInsertOp(insert="wording\n", attributes={}),
                 ],
                 example=[
-                    d.InsertOp(insert="This is the example.\n", attributes={}),
+                    d.TextInsertOp(insert="This is the example.\n", attributes={}),
                 ],
                 clue=[
-                    d.InsertOp(insert="This is the clue.\n", attributes={}),
+                    d.TextInsertOp(insert="This is the clue.\n", attributes={}),
                 ],
                 adaptation=Adaptation(
                     kind="generic",
@@ -7669,22 +7756,22 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 instructions=[
-                    d.InsertOp(insert="instructions\n", attributes={}),
+                    d.TextInsertOp(insert="instructions\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="wording\n", attributes={}),
+                    d.TextInsertOp(insert="wording\n", attributes={}),
                 ],
                 example=[
-                    d.InsertOp(insert="abc", attributes={"sel": 1}),
-                    d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="def", attributes={"sel": 2}),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="abc", attributes={"sel": 1}),
+                    d.TextInsertOp(insert=" ", attributes={}),
+                    d.TextInsertOp(insert="def", attributes={"sel": 2}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
                 clue=[
-                    d.InsertOp(insert="ghi", attributes={"sel": 3}),
-                    d.InsertOp(insert=" ", attributes={}),
-                    d.InsertOp(insert="jkl", attributes={"sel": 4}),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="ghi", attributes={"sel": 3}),
+                    d.TextInsertOp(insert=" ", attributes={}),
+                    d.TextInsertOp(insert="jkl", attributes={"sel": 4}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
                 adaptation=Adaptation(
                     kind="generic",
@@ -7748,13 +7835,13 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 instructions=[
-                    d.InsertOp(insert="Selectionne les articles.\n", attributes={}),
+                    d.TextInsertOp(insert="Selectionne les articles.\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
+                    d.TextInsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -7837,13 +7924,13 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 instructions=[
-                    d.InsertOp(insert="Selectionne les articles.\n", attributes={}),
+                    d.TextInsertOp(insert="Selectionne les articles.\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
+                    d.TextInsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -7924,13 +8011,13 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 instructions=[
-                    d.InsertOp(insert="Selectionne les articles.\n", attributes={}),
+                    d.TextInsertOp(insert="Selectionne les articles.\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
+                    d.TextInsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -8011,13 +8098,13 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 instructions=[
-                    d.InsertOp(insert="Selectionne les articles.\n", attributes={}),
+                    d.TextInsertOp(insert="Selectionne les articles.\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
+                    d.TextInsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -8100,13 +8187,13 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 instructions=[
-                    d.InsertOp(insert="Selectionne les articles.\n", attributes={}),
+                    d.TextInsertOp(insert="Selectionne les articles.\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
+                    d.TextInsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -8187,13 +8274,13 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 instructions=[
-                    d.InsertOp(insert="Selectionne les articles.\n", attributes={}),
+                    d.TextInsertOp(insert="Selectionne les articles.\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
+                    d.TextInsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -8278,29 +8365,29 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 instructions=[
-                    d.InsertOp(insert="This is a ", attributes={}),
-                    d.InsertOp(insert="strict", attributes={"bold": True}),
-                    d.InsertOp(insert=" instructions ", attributes={}),
-                    d.InsertOp(insert="paragraph", attributes={"italic": True}),
-                    d.InsertOp(insert=".\n\nAnd this is a ", attributes={}),
-                    d.InsertOp(insert="lenient", attributes={"bold": True}),
-                    d.InsertOp(insert=" instructions ", attributes={}),
-                    d.InsertOp(insert="paragraph", attributes={"italic": True}),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="This is a ", attributes={}),
+                    d.TextInsertOp(insert="strict", attributes={"bold": True}),
+                    d.TextInsertOp(insert=" instructions ", attributes={}),
+                    d.TextInsertOp(insert="paragraph", attributes={"italic": True}),
+                    d.TextInsertOp(insert=".\n\nAnd this is a ", attributes={}),
+                    d.TextInsertOp(insert="lenient", attributes={"bold": True}),
+                    d.TextInsertOp(insert=" instructions ", attributes={}),
+                    d.TextInsertOp(insert="paragraph", attributes={"italic": True}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="This is a ", attributes={}),
-                    d.InsertOp(insert="strict", attributes={"bold": True}),
-                    d.InsertOp(insert=" wording ", attributes={}),
-                    d.InsertOp(insert="paragraph", attributes={"italic": True}),
-                    d.InsertOp(insert=".\nAnd this is a ", attributes={}),
-                    d.InsertOp(insert="lenient", attributes={"bold": True}),
-                    d.InsertOp(insert=" wording ", attributes={}),
-                    d.InsertOp(insert="paragraph", attributes={"italic": True}),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="This is a ", attributes={}),
+                    d.TextInsertOp(insert="strict", attributes={"bold": True}),
+                    d.TextInsertOp(insert=" wording ", attributes={}),
+                    d.TextInsertOp(insert="paragraph", attributes={"italic": True}),
+                    d.TextInsertOp(insert=".\nAnd this is a ", attributes={}),
+                    d.TextInsertOp(insert="lenient", attributes={"bold": True}),
+                    d.TextInsertOp(insert=" wording ", attributes={}),
+                    d.TextInsertOp(insert="paragraph", attributes={"italic": True}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -8407,13 +8494,13 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 instructions=[
-                    d.InsertOp(insert="instructions\n", attributes={}),
+                    d.TextInsertOp(insert="instructions\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="This is a strict paragraph, with... some punctuation.\n\nAnd this, is a... lenient paragraph\n", attributes={}),
+                    d.TextInsertOp(insert="This is a strict paragraph, with... some punctuation.\n\nAnd this, is a... lenient paragraph\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -8490,13 +8577,13 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 instructions=[
-                    d.InsertOp(insert="instructions\n", attributes={}),
+                    d.TextInsertOp(insert="instructions\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="This is a strict paragraph, with... some punctuation.\n\nAnd this, is a... lenient paragraph\n", attributes={}),
+                    d.TextInsertOp(insert="This is a strict paragraph, with... some punctuation.\n\nAnd this, is a... lenient paragraph\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -8573,13 +8660,13 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 instructions=[
-                    d.InsertOp(insert="instructions\n", attributes={}),
+                    d.TextInsertOp(insert="instructions\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="This is a ... strict paragraph. With some punctuation.\n\nAnd this, is a ... lenient paragraph\n", attributes={}),
+                    d.TextInsertOp(insert="This is a ... strict paragraph. With some punctuation.\n\nAnd this, is a ... lenient paragraph\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -8658,17 +8745,17 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 instructions=[
-                    d.InsertOp(insert="Choose ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="Choose ", attributes={}),
+                    d.TextInsertOp(
                         insert="alpha/bravo", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "..."}}
                     ),
-                    d.InsertOp(insert=".\n", attributes={}),
+                    d.TextInsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="This is a ... strict paragraph. With some punctuation.\n\nAnd this, is a ... lenient paragraph\n", attributes={}),
+                    d.TextInsertOp(insert="This is a ... strict paragraph. With some punctuation.\n\nAnd this, is a ... lenient paragraph\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -8772,17 +8859,17 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="instructions ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="instructions ", attributes={}),
+                    d.TextInsertOp(
                         insert="short/long", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "@@@"}}
                     ),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="The wording of this ... is a @@@ sentence.\n", attributes={}),
+                    d.TextInsertOp(insert="The wording of this ... is a @@@ sentence.\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -8860,21 +8947,21 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 instructions=[
-                    d.InsertOp(insert="Choose wisely ", attributes={}),
-                    d.InsertOp(
+                    d.TextInsertOp(insert="Choose wisely ", attributes={}),
+                    d.TextInsertOp(
                         insert="alpha/bravo", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "@@@"}}
                     ),
-                    d.InsertOp(insert=".\n", attributes={}),
+                    d.TextInsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[
-                    d.InsertOp(insert="A ", attributes={}),
-                    d.InsertOp(insert="a/b/c", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": ""}}),
-                    d.InsertOp(insert=" B ", attributes={}),
-                    d.InsertOp(insert="d/e", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": ""}}),
-                    d.InsertOp(insert=" C @@@.\n", attributes={}),
+                    d.TextInsertOp(insert="A ", attributes={}),
+                    d.TextInsertOp(insert="a/b/c", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.TextInsertOp(insert=" B ", attributes={}),
+                    d.TextInsertOp(insert="d/e", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.TextInsertOp(insert=" C @@@.\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -8957,23 +9044,23 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 instructions=[
-                    d.InsertOp(insert="Choose wisely ", attributes={}),
+                    d.TextInsertOp(insert="Choose wisely ", attributes={}),
                     # Multiple choices in instructions
-                    d.InsertOp(
+                    d.TextInsertOp(
                         insert="alpha/bravo", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": "@@@"}}
                     ),
                 ],
                 wording=[
-                    d.InsertOp(insert="Hello @@@ $$$ ....", attributes={}),
+                    d.TextInsertOp(insert="Hello @@@ $$$ ....", attributes={}),
                     # Multiple choices in wording
-                    d.InsertOp(
+                    d.TextInsertOp(
                         insert="(charlie|delta)",
                         attributes={"choices2": {"start": "(", "separator1": "|", "separator2": "", "stop": ")", "placeholder": "$$$"}},
                     ),
-                    d.InsertOp(insert="\n", attributes={}),
+                    d.TextInsertOp(insert="\n", attributes={}),
                 ],
-                example=[d.InsertOp(insert="\n", attributes={})],
-                clue=[d.InsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=None,

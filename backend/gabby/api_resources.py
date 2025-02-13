@@ -1187,10 +1187,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertIsNone(exercise.textbook)
         self.assertIsNone(exercise.textbook_page)
         self.assertEqual(exercise.number, "42")
-        self.assertEqual(exercise.instructions, [deltas.InsertOp(insert="\n", attributes={})])
-        self.assertEqual(exercise.example, [deltas.InsertOp(insert="\n", attributes={})])
-        self.assertEqual(exercise.clue, [deltas.InsertOp(insert="\n", attributes={})])
-        self.assertEqual(exercise.wording, [deltas.InsertOp(insert="\n", attributes={})])
+        self.assertEqual(exercise.instructions, [deltas.TextInsertOp(insert="\n", attributes={})])
+        self.assertEqual(exercise.example, [deltas.TextInsertOp(insert="\n", attributes={})])
+        self.assertEqual(exercise.clue, [deltas.TextInsertOp(insert="\n", attributes={})])
+        self.assertEqual(exercise.wording, [deltas.TextInsertOp(insert="\n", attributes={})])
 
     def test_create__minimal_in_textbook(self):
         payload = {
@@ -1255,10 +1255,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 12)
         self.assertEqual(exercise.number, "42")
-        self.assertEqual(exercise.instructions, [deltas.InsertOp(insert="\n", attributes={})])
-        self.assertEqual(exercise.example, [deltas.InsertOp(insert="\n", attributes={})])
-        self.assertEqual(exercise.clue, [deltas.InsertOp(insert="\n", attributes={})])
-        self.assertEqual(exercise.wording, [deltas.InsertOp(insert="\n", attributes={})])
+        self.assertEqual(exercise.instructions, [deltas.TextInsertOp(insert="\n", attributes={})])
+        self.assertEqual(exercise.example, [deltas.TextInsertOp(insert="\n", attributes={})])
+        self.assertEqual(exercise.clue, [deltas.TextInsertOp(insert="\n", attributes={})])
+        self.assertEqual(exercise.wording, [deltas.TextInsertOp(insert="\n", attributes={})])
 
     def test_create__full(self):
         payload = {
@@ -1363,10 +1363,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 14)
         self.assertEqual(exercise.number, "1")
-        self.assertEqual(exercise.instructions, [deltas.InsertOp(insert="instructions\n", attributes={})])
-        self.assertEqual(exercise.example, [deltas.InsertOp(insert="example\n", attributes={})])
-        self.assertEqual(exercise.clue, [deltas.InsertOp(insert="clue\n", attributes={})])
-        self.assertEqual(exercise.wording, [deltas.InsertOp(insert="wording\n", attributes={})])
+        self.assertEqual(exercise.instructions, [deltas.TextInsertOp(insert="instructions\n", attributes={})])
+        self.assertEqual(exercise.example, [deltas.TextInsertOp(insert="example\n", attributes={})])
+        self.assertEqual(exercise.clue, [deltas.TextInsertOp(insert="clue\n", attributes={})])
+        self.assertEqual(exercise.wording, [deltas.TextInsertOp(insert="wording\n", attributes={})])
         self.assertEqual(
             exercise.rectangles,
             [
@@ -1389,10 +1389,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions=[deltas.InsertOp(insert="instructions\n", attributes={})],
-            example=[deltas.InsertOp(insert="example\n", attributes={})],
-            clue=[deltas.InsertOp(insert="clue\n", attributes={})],
-            wording=[deltas.InsertOp(insert="wording\n", attributes={})],
+            instructions=[deltas.TextInsertOp(insert="instructions\n", attributes={})],
+            example=[deltas.TextInsertOp(insert="example\n", attributes={})],
+            clue=[deltas.TextInsertOp(insert="clue\n", attributes={})],
+            wording=[deltas.TextInsertOp(insert="wording\n", attributes={})],
         )
 
         response = self.get("http://server/exercises/wbqloc")
@@ -1444,10 +1444,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions=[deltas.InsertOp(insert="instructions\n", attributes={})],
-            example=[deltas.InsertOp(insert="example\n", attributes={})],
-            clue=[deltas.InsertOp(insert="clue\n", attributes={})],
-            wording=[deltas.InsertOp(insert="wording\n", attributes={})],
+            instructions=[deltas.TextInsertOp(insert="instructions\n", attributes={})],
+            example=[deltas.TextInsertOp(insert="example\n", attributes={})],
+            clue=[deltas.TextInsertOp(insert="clue\n", attributes={})],
+            wording=[deltas.TextInsertOp(insert="wording\n", attributes={})],
         )
 
         response = self.get("http://server/exercises/wbqloc?include=textbook")
@@ -1520,10 +1520,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions=[deltas.InsertOp(insert="instructions\n", attributes={})],
-            example=[deltas.InsertOp(insert="example\n", attributes={})],
-            clue=[deltas.InsertOp(insert="clue\n", attributes={})],
-            wording=[deltas.InsertOp(insert="wording\n", attributes={})],
+            instructions=[deltas.TextInsertOp(insert="instructions\n", attributes={})],
+            example=[deltas.TextInsertOp(insert="example\n", attributes={})],
+            clue=[deltas.TextInsertOp(insert="clue\n", attributes={})],
+            wording=[deltas.TextInsertOp(insert="wording\n", attributes={})],
             adaptation=Adaptation(
                 kind="fill-with-free-text",
                 wording_paragraphs_per_pagelet=None,
@@ -2298,11 +2298,11 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions=[deltas.InsertOp(insert="instructions\n", attributes={})],
-            example=[deltas.InsertOp(insert="example\n", attributes={})],
-            clue=[deltas.InsertOp(insert="clue\n", attributes={})],
-            wording=[deltas.InsertOp(insert="wording\n", attributes={})],
-            text_reference=[deltas.InsertOp(insert="reference\n", attributes={})],
+            instructions=[deltas.TextInsertOp(insert="instructions\n", attributes={})],
+            example=[deltas.TextInsertOp(insert="example\n", attributes={})],
+            clue=[deltas.TextInsertOp(insert="clue\n", attributes={})],
+            wording=[deltas.TextInsertOp(insert="wording\n", attributes={})],
+            text_reference=[deltas.TextInsertOp(insert="reference\n", attributes={})],
             rectangles=[PdfRectangle(
                 pdf_sha256="sha256",
                 pdf_page=42,
@@ -2319,11 +2319,11 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 16)
         self.assertEqual(exercise.number, "11")
-        self.assertEqual(exercise.instructions, [deltas.InsertOp(insert="instructions\n", attributes={})])
-        self.assertEqual(exercise.example, [deltas.InsertOp(insert="example\n", attributes={})])
-        self.assertEqual(exercise.clue, [deltas.InsertOp(insert="clue\n", attributes={})])
-        self.assertEqual(exercise.wording, [deltas.InsertOp(insert="wording\n", attributes={})])
-        self.assertEqual(exercise.text_reference, [deltas.InsertOp(insert="reference\n", attributes={})])
+        self.assertEqual(exercise.instructions, [deltas.TextInsertOp(insert="instructions\n", attributes={})])
+        self.assertEqual(exercise.example, [deltas.TextInsertOp(insert="example\n", attributes={})])
+        self.assertEqual(exercise.clue, [deltas.TextInsertOp(insert="clue\n", attributes={})])
+        self.assertEqual(exercise.wording, [deltas.TextInsertOp(insert="wording\n", attributes={})])
+        self.assertEqual(exercise.text_reference, [deltas.TextInsertOp(insert="reference\n", attributes={})])
         self.assertEqual(
             exercise.rectangles,
             [
@@ -2440,11 +2440,11 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 16)
         self.assertEqual(exercise.number, "11")
-        self.assertEqual(exercise.instructions, [deltas.InsertOp(insert="INSTRUCTIONS\n", attributes={})])
-        self.assertEqual(exercise.example, [deltas.InsertOp(insert="EXAMPLE\n", attributes={})])
-        self.assertEqual(exercise.clue, [deltas.InsertOp(insert="CLUE\n", attributes={})])
-        self.assertEqual(exercise.wording, [deltas.InsertOp(insert="WORDING\n", attributes={})])
-        self.assertEqual(exercise.text_reference, [deltas.InsertOp(insert="REFERENCE\n", attributes={})])
+        self.assertEqual(exercise.instructions, [deltas.TextInsertOp(insert="INSTRUCTIONS\n", attributes={})])
+        self.assertEqual(exercise.example, [deltas.TextInsertOp(insert="EXAMPLE\n", attributes={})])
+        self.assertEqual(exercise.clue, [deltas.TextInsertOp(insert="CLUE\n", attributes={})])
+        self.assertEqual(exercise.wording, [deltas.TextInsertOp(insert="WORDING\n", attributes={})])
+        self.assertEqual(exercise.text_reference, [deltas.TextInsertOp(insert="REFERENCE\n", attributes={})])
         self.assertEqual(
             exercise.rectangles,
             [
@@ -2476,11 +2476,11 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions=[deltas.InsertOp(insert="instructions\n", attributes={})],
-            example=[deltas.InsertOp(insert="example\n", attributes={})],
-            clue=[deltas.InsertOp(insert="clue\n", attributes={})],
-            wording=[deltas.InsertOp(insert="wording\n", attributes={})],
-            text_reference=[deltas.InsertOp(insert="reference\n", attributes={})],
+            instructions=[deltas.TextInsertOp(insert="instructions\n", attributes={})],
+            example=[deltas.TextInsertOp(insert="example\n", attributes={})],
+            clue=[deltas.TextInsertOp(insert="clue\n", attributes={})],
+            wording=[deltas.TextInsertOp(insert="wording\n", attributes={})],
+            text_reference=[deltas.TextInsertOp(insert="reference\n", attributes={})],
         )
 
         payload = {
@@ -2541,11 +2541,11 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 16)
         self.assertEqual(exercise.number, "11")
-        self.assertEqual(exercise.instructions, [deltas.InsertOp(insert="INSTRUCTIONS\n", attributes={})])
-        self.assertEqual(exercise.example, [deltas.InsertOp(insert="example\n", attributes={})])
-        self.assertEqual(exercise.clue, [deltas.InsertOp(insert="clue\n", attributes={})])
-        self.assertEqual(exercise.wording, [deltas.InsertOp(insert="wording\n", attributes={})])
-        self.assertEqual(exercise.text_reference, [deltas.InsertOp(insert="reference\n", attributes={})])
+        self.assertEqual(exercise.instructions, [deltas.TextInsertOp(insert="INSTRUCTIONS\n", attributes={})])
+        self.assertEqual(exercise.example, [deltas.TextInsertOp(insert="example\n", attributes={})])
+        self.assertEqual(exercise.clue, [deltas.TextInsertOp(insert="clue\n", attributes={})])
+        self.assertEqual(exercise.wording, [deltas.TextInsertOp(insert="wording\n", attributes={})])
+        self.assertEqual(exercise.text_reference, [deltas.TextInsertOp(insert="reference\n", attributes={})])
 
     def test_patch__read_only_project(self):
         self.create_model(
@@ -2554,10 +2554,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions=[deltas.InsertOp(insert="instructions\n", attributes={})],
-            example=[deltas.InsertOp(insert="example\n", attributes={})],
-            clue=[deltas.InsertOp(insert="clue\n", attributes={})],
-            wording=[deltas.InsertOp(insert="wording\n", attributes={})],
+            instructions=[deltas.TextInsertOp(insert="instructions\n", attributes={})],
+            example=[deltas.TextInsertOp(insert="example\n", attributes={})],
+            clue=[deltas.TextInsertOp(insert="clue\n", attributes={})],
+            wording=[deltas.TextInsertOp(insert="wording\n", attributes={})],
         )
 
         payload = {
@@ -2585,10 +2585,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 16)
         self.assertEqual(exercise.number, "11")
-        self.assertEqual(exercise.instructions, [deltas.InsertOp(insert="instructions\n", attributes={})])
-        self.assertEqual(exercise.example, [deltas.InsertOp(insert="example\n", attributes={})])
-        self.assertEqual(exercise.clue, [deltas.InsertOp(insert="clue\n", attributes={})])
-        self.assertEqual(exercise.wording, [deltas.InsertOp(insert="wording\n", attributes={})])
+        self.assertEqual(exercise.instructions, [deltas.TextInsertOp(insert="instructions\n", attributes={})])
+        self.assertEqual(exercise.example, [deltas.TextInsertOp(insert="example\n", attributes={})])
+        self.assertEqual(exercise.clue, [deltas.TextInsertOp(insert="clue\n", attributes={})])
+        self.assertEqual(exercise.wording, [deltas.TextInsertOp(insert="wording\n", attributes={})])
 
     def test_patch__read_only_textbook(self):
         self.create_model(
@@ -2597,10 +2597,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions=[deltas.InsertOp(insert="instructions\n", attributes={})],
-            example=[deltas.InsertOp(insert="example\n", attributes={})],
-            clue=[deltas.InsertOp(insert="clue\n", attributes={})],
-            wording=[deltas.InsertOp(insert="wording\n", attributes={})],
+            instructions=[deltas.TextInsertOp(insert="instructions\n", attributes={})],
+            example=[deltas.TextInsertOp(insert="example\n", attributes={})],
+            clue=[deltas.TextInsertOp(insert="clue\n", attributes={})],
+            wording=[deltas.TextInsertOp(insert="wording\n", attributes={})],
         )
         self.create_model(Textbook, project=self.project, title="Another textbook")
 
@@ -2629,10 +2629,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 16)
         self.assertEqual(exercise.number, "11")
-        self.assertEqual(exercise.instructions, [deltas.InsertOp(insert="instructions\n", attributes={})])
-        self.assertEqual(exercise.example, [deltas.InsertOp(insert="example\n", attributes={})])
-        self.assertEqual(exercise.clue, [deltas.InsertOp(insert="clue\n", attributes={})])
-        self.assertEqual(exercise.wording, [deltas.InsertOp(insert="wording\n", attributes={})])
+        self.assertEqual(exercise.instructions, [deltas.TextInsertOp(insert="instructions\n", attributes={})])
+        self.assertEqual(exercise.example, [deltas.TextInsertOp(insert="example\n", attributes={})])
+        self.assertEqual(exercise.clue, [deltas.TextInsertOp(insert="clue\n", attributes={})])
+        self.assertEqual(exercise.wording, [deltas.TextInsertOp(insert="wording\n", attributes={})])
 
     def test_patch__read_only_page(self):
         self.create_model(
@@ -2641,10 +2641,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions=[deltas.InsertOp(insert="instructions\n", attributes={})],
-            example=[deltas.InsertOp(insert="example\n", attributes={})],
-            clue=[deltas.InsertOp(insert="clue\n", attributes={})],
-            wording=[deltas.InsertOp(insert="wording\n", attributes={})],
+            instructions=[deltas.TextInsertOp(insert="instructions\n", attributes={})],
+            example=[deltas.TextInsertOp(insert="example\n", attributes={})],
+            clue=[deltas.TextInsertOp(insert="clue\n", attributes={})],
+            wording=[deltas.TextInsertOp(insert="wording\n", attributes={})],
         )
 
         payload = {
@@ -2672,10 +2672,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 16)
         self.assertEqual(exercise.number, "11")
-        self.assertEqual(exercise.instructions, [deltas.InsertOp(insert="instructions\n", attributes={})])
-        self.assertEqual(exercise.example, [deltas.InsertOp(insert="example\n", attributes={})])
-        self.assertEqual(exercise.clue, [deltas.InsertOp(insert="clue\n", attributes={})])
-        self.assertEqual(exercise.wording, [deltas.InsertOp(insert="wording\n", attributes={})])
+        self.assertEqual(exercise.instructions, [deltas.TextInsertOp(insert="instructions\n", attributes={})])
+        self.assertEqual(exercise.example, [deltas.TextInsertOp(insert="example\n", attributes={})])
+        self.assertEqual(exercise.clue, [deltas.TextInsertOp(insert="clue\n", attributes={})])
+        self.assertEqual(exercise.wording, [deltas.TextInsertOp(insert="wording\n", attributes={})])
 
     def test_patch__read_only_number(self):
         self.create_model(
@@ -2684,10 +2684,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
             project=self.textbook.project,
             textbook_page=16,
             number="11",
-            instructions=[deltas.InsertOp(insert="instructions\n", attributes={})],
-            example=[deltas.InsertOp(insert="example\n", attributes={})],
-            clue=[deltas.InsertOp(insert="clue\n", attributes={})],
-            wording=[deltas.InsertOp(insert="wording\n", attributes={})],
+            instructions=[deltas.TextInsertOp(insert="instructions\n", attributes={})],
+            example=[deltas.TextInsertOp(insert="example\n", attributes={})],
+            clue=[deltas.TextInsertOp(insert="clue\n", attributes={})],
+            wording=[deltas.TextInsertOp(insert="wording\n", attributes={})],
         )
 
         payload = {
@@ -2715,10 +2715,10 @@ class ExercisesApiTestCase(LoggedInApiTestCase):
         self.assertEqual(exercise.textbook, self.textbook)
         self.assertEqual(exercise.textbook_page, 16)
         self.assertEqual(exercise.number, "11")
-        self.assertEqual(exercise.instructions, [deltas.InsertOp(insert="instructions\n", attributes={})])
-        self.assertEqual(exercise.example, [deltas.InsertOp(insert="example\n", attributes={})])
-        self.assertEqual(exercise.clue, [deltas.InsertOp(insert="clue\n", attributes={})])
-        self.assertEqual(exercise.wording, [deltas.InsertOp(insert="wording\n", attributes={})])
+        self.assertEqual(exercise.instructions, [deltas.TextInsertOp(insert="instructions\n", attributes={})])
+        self.assertEqual(exercise.example, [deltas.TextInsertOp(insert="example\n", attributes={})])
+        self.assertEqual(exercise.clue, [deltas.TextInsertOp(insert="clue\n", attributes={})])
+        self.assertEqual(exercise.wording, [deltas.TextInsertOp(insert="wording\n", attributes={})])
 
     def test_delete(self):
         self.create_model(Exercise, project=self.textbook.project, textbook=self.textbook, textbook_page=16, number="11", instructions=deltas.empty, wording=deltas.empty, example=deltas.empty, clue=deltas.empty)

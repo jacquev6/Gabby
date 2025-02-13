@@ -151,6 +151,7 @@
   "manualItemButton": "Manual item",
 
   "multipleChoicesButton": "Multiple choices",
+  "newMcqFieldButton": "Add an MCQ field",
   "alwaysShowMultipleChoices": "Show choices by default",
   "showArrowBeforeMultipleChoices": "Preceded by an arrow",
   "multipleChoicesBesideEachItem": "Beside each item",
@@ -160,6 +161,7 @@
   "multipleChoicesRepeatedWithMcq": "Double: word → MCQ",
   "mcqPlaceholderItemButton": "Word → MCQ",
   "multipleChoicesInstructions": "Select a set of choices in the \"Instructions\" or \"Wording\" fields in the \"Edition\" column. Include start, stop and separator characters.",
+  "newMcqFieldInstructions": "Click in the \"Wording\" field in the \"Edition\" column, where you want to add MCQ field(s). Then select a set of choices in the \"Instructions\" field.",
   "choicesSettingsSeparators": "Separators",
   "choicesSettingsStart": "Start",
   "choicesSettingsStop": "Stop",

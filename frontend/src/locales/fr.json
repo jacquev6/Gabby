@@ -151,6 +151,7 @@
   "manualItemButton": "Item manuel",
 
   "multipleChoicesButton": "Choix multiples",
+  "newMcqFieldButton": "Ajouter un champ QCM",
   "alwaysShowMultipleChoices": "Afficher les choix par défaut",
   "showArrowBeforeMultipleChoices": "Précédé d'une flèche",
   "multipleChoicesBesideEachItem": "À coté de chaque item",
@@ -160,6 +161,7 @@
   "multipleChoicesRepeatedWithMcq": "Double : mot → QCM",
   "mcqPlaceholderItemButton": "Mot → QCM",
   "multipleChoicesInstructions": "Sélectionnez un ensemble de choix dans le champ \"Consigne\" ou \"Énoncé\" de la colonne \"Édition\". Incluez les caractère de début, fin et séparation.",
+  "newMcqFieldInstructions": "Cliquez dans le champs \"Énoncé\" de la colonne \"Édition\", où vous voulez insérer des champs QCM. Puis sélectionnez un ensemble de choix dans le champ \"Consigne\".",
   "choicesSettingsSeparators": "Séparateurs",
   "choicesSettingsStart": "Début",
   "choicesSettingsStop": "Fin",

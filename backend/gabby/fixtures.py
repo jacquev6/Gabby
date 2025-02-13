@@ -236,8 +236,8 @@ def create_test_exercises_1(session, admin):
         ],
         number="3",
         instructions=[
-            deltas.InsertOp(insert="Complète avec : ", attributes={}),
-            deltas.InsertOp(
+            deltas.TextInsertOp(insert="Complète avec : ", attributes={}),
+            deltas.TextInsertOp(
                 insert="le, une, un, des, tu, elles, ils",
                 attributes={
                     "choices2": {
@@ -249,12 +249,12 @@ def create_test_exercises_1(session, admin):
                     }
                 },
             ),
-            deltas.InsertOp(insert=".\r\nPuis, souligne les verbes.\n", attributes={}),
+            deltas.TextInsertOp(insert=".\r\nPuis, souligne les verbes.\n", attributes={}),
         ],
         example=deltas.empty,
-        clue=[deltas.InsertOp(insert="Il peut y avoir plusieurs solutions.\n", attributes={})],
+        clue=[deltas.TextInsertOp(insert="Il peut y avoir plusieurs solutions.\n", attributes={})],
         wording=[
-            deltas.InsertOp(
+            deltas.TextInsertOp(
                 insert="... vide\r\n... vident\r\n... dépenses\r\n... dépensent\r\n... savon\r\n... savons\r\n... commande\n",
                 attributes={},
             )
@@ -296,20 +296,20 @@ def create_test_exercises_1(session, admin):
         ],
         number="4",
         instructions=[
-            deltas.InsertOp(
+            deltas.TextInsertOp(
                 insert="Écris une phrase en respectant l'ordre des classes grammaticales indiquées.\n",
                 attributes={},
             )
         ],
         example=[
-            deltas.InsertOp(
+            deltas.TextInsertOp(
                 insert="pronom personnel / verbe / déterminant / nom commun :\r\nJe mange une pomme.\n",
                 attributes={},
             )
         ],
-        clue=[deltas.InsertOp(insert="\n", attributes={})],
+        clue=[deltas.TextInsertOp(insert="\n", attributes={})],
         wording=[
-            deltas.InsertOp(
+            deltas.TextInsertOp(
                 insert="nom propre / verbe / déterminant / adjectif / nom commun\n",
                 attributes={},
             )
@@ -336,15 +336,15 @@ def create_test_exercises_1(session, admin):
         ],
         number="9",
         instructions=[
-            deltas.InsertOp(
+            deltas.TextInsertOp(
                 insert="Recopie l’intrus qui se cache dans chaque liste et écris sa classe.\n",
                 attributes={},
             )
         ],
-        example=[deltas.InsertOp(insert="\n", attributes={})],
-        clue=[deltas.InsertOp(insert="\n", attributes={})],
+        example=[deltas.TextInsertOp(insert="\n", attributes={})],
+        clue=[deltas.TextInsertOp(insert="\n", attributes={})],
         wording=[
-            deltas.InsertOp(
+            deltas.TextInsertOp(
                 insert="a. partons ◆ bidons ◆ allons ◆ vendons\r\nb. vidons ◆ mentons ◆ ballons ◆ salons\r\nc. voir ◆ armoire ◆ couloir ◆ dortoir\n",
                 attributes={},
             )
@@ -359,10 +359,10 @@ def create_test_exercises_1(session, admin):
         textbook=None,
         textbook_page=None,
         number="L1",
-        instructions=[deltas.InsertOp(insert="Faire des choses intelligentes.\n", attributes={})],
-        example=[deltas.InsertOp(insert="\n", attributes={})],
-        clue=[deltas.InsertOp(insert="\n", attributes={})],
-        wording=[deltas.InsertOp(insert="\n", attributes={})],
+        instructions=[deltas.TextInsertOp(insert="Faire des choses intelligentes.\n", attributes={})],
+        example=[deltas.TextInsertOp(insert="\n", attributes={})],
+        clue=[deltas.TextInsertOp(insert="\n", attributes={})],
+        wording=[deltas.TextInsertOp(insert="\n", attributes={})],
         created_by=admin,
         updated_by=admin,
     )
@@ -373,10 +373,10 @@ def create_test_exercises_1(session, admin):
         textbook=None,
         textbook_page=None,
         number="L2",
-        instructions=[deltas.InsertOp(insert="Faire d'autres choses intelligentes.\n", attributes={})],
-        example=[deltas.InsertOp(insert="\n", attributes={})],
-        clue=[deltas.InsertOp(insert="\n", attributes={})],
-        wording=[deltas.InsertOp(insert="\n", attributes={})],
+        instructions=[deltas.TextInsertOp(insert="Faire d'autres choses intelligentes.\n", attributes={})],
+        example=[deltas.TextInsertOp(insert="\n", attributes={})],
+        clue=[deltas.TextInsertOp(insert="\n", attributes={})],
+        wording=[deltas.TextInsertOp(insert="\n", attributes={})],
         created_by=admin,
         updated_by=admin,
     )
@@ -388,14 +388,14 @@ def create_test_exercises_1(session, admin):
         textbook_page=None,
         number="L3",
         instructions=[
-            deltas.InsertOp(
+            deltas.TextInsertOp(
                 insert="Prendre le temps de faire aussi des choses banales.\n",
                 attributes={},
             )
         ],
-        example=[deltas.InsertOp(insert="\n", attributes={})],
-        clue=[deltas.InsertOp(insert="\n", attributes={})],
-        wording=[deltas.InsertOp(insert="\n", attributes={})],
+        example=[deltas.TextInsertOp(insert="\n", attributes={})],
+        clue=[deltas.TextInsertOp(insert="\n", attributes={})],
+        wording=[deltas.TextInsertOp(insert="\n", attributes={})],
         created_by=admin,
         updated_by=admin,
     )
@@ -455,26 +455,26 @@ def create_test_exercises_2(session, admin):
         ],
         number="7",
         instructions=[
-            deltas.InsertOp(insert="Relève dans le texte trois\n", attributes={}),
-            deltas.InsertOp(insert="déterminants", attributes={"sel": 1}),
-            deltas.InsertOp(insert=", un ", attributes={}),
-            deltas.InsertOp(insert="nom propre", attributes={"sel": 2}),
-            deltas.InsertOp(insert=", quatre\n", attributes={}),
-            deltas.InsertOp(insert="noms communs", attributes={"sel": 3}),
-            deltas.InsertOp(insert=" et trois ", attributes={}),
-            deltas.InsertOp(insert="verbes", attributes={"sel": 4}),
-            deltas.InsertOp(insert=".\n", attributes={}),
+            deltas.TextInsertOp(insert="Relève dans le texte trois\n", attributes={}),
+            deltas.TextInsertOp(insert="déterminants", attributes={"sel": 1}),
+            deltas.TextInsertOp(insert=", un ", attributes={}),
+            deltas.TextInsertOp(insert="nom propre", attributes={"sel": 2}),
+            deltas.TextInsertOp(insert=", quatre\n", attributes={}),
+            deltas.TextInsertOp(insert="noms communs", attributes={"sel": 3}),
+            deltas.TextInsertOp(insert=" et trois ", attributes={}),
+            deltas.TextInsertOp(insert="verbes", attributes={"sel": 4}),
+            deltas.TextInsertOp(insert=".\n", attributes={}),
         ],
-        example=[deltas.InsertOp(insert="\n", attributes={})],
-        clue=[deltas.InsertOp(insert="\n", attributes={})],
+        example=[deltas.TextInsertOp(insert="\n", attributes={})],
+        clue=[deltas.TextInsertOp(insert="\n", attributes={})],
         wording=[
-            deltas.InsertOp(
+            deltas.TextInsertOp(
                 insert="Les Touaregs sont des Berbères, un peuple qui habite en Afrique du Nord depuis la préhistoire.\nIls vivent dans le désert du Sahara (Algérie, Libye, Mali, Niger, Burkina Faso…).\nEn été, les températures y montent à plus de 50 °C et elles descendent en dessous de zéro durant les nuits d’hiver.\n",
                 attributes={},
             )
         ],
         text_reference=[
-            deltas.InsertOp(
+            deltas.TextInsertOp(
                 insert="Mon quotidien, pour les 10-14 ans, www.monquotidien.fr, 13 septembre 2014.\n",
                 attributes={},
             ),
@@ -540,15 +540,15 @@ def create_test_exercises_2(session, admin):
         ],
         number="11",
         instructions=[
-            deltas.InsertOp(
+            deltas.TextInsertOp(
                 insert="Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.\n",
                 attributes={},
             )
         ],
-        example=[deltas.InsertOp(insert="\n", attributes={})],
-        clue=[deltas.InsertOp(insert="\n", attributes={})],
+        example=[deltas.TextInsertOp(insert="\n", attributes={})],
+        clue=[deltas.TextInsertOp(insert="\n", attributes={})],
         wording=[
-            deltas.InsertOp(
+            deltas.TextInsertOp(
                 insert="nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\ninventer ➞ … ◆ livrer ➞ …\n",
                 attributes={},
             )
@@ -590,8 +590,8 @@ def create_test_exercises_2(session, admin):
         ],
         number="8",
         instructions=[
-            deltas.InsertOp(insert="Réponds par ", attributes={}),
-            deltas.InsertOp(
+            deltas.TextInsertOp(insert="Réponds par ", attributes={}),
+            deltas.TextInsertOp(
                 insert="vrai ou faux",
                 attributes={
                     "choices2": {
@@ -603,12 +603,12 @@ def create_test_exercises_2(session, admin):
                     },
                 },
             ),
-            deltas.InsertOp(insert=".\n", attributes={}),
+            deltas.TextInsertOp(insert=".\n", attributes={}),
         ],
-        example=[deltas.InsertOp(insert="\n", attributes={})],
-        clue=[deltas.InsertOp(insert="\n", attributes={})],
+        example=[deltas.TextInsertOp(insert="\n", attributes={})],
+        clue=[deltas.TextInsertOp(insert="\n", attributes={})],
         wording=[
-            deltas.InsertOp(
+            deltas.TextInsertOp(
                 insert="a. coccinelle est un adjectif. @\nb. bûche est un verbe. @\nc. cette est un déterminant. @\nd. dentier est un verbe. @\ne. respirer est un verbe. @\nf. aspiration est un nom. @\n",
                 attributes={},
             )
@@ -660,20 +660,20 @@ def create_test_exercises_3(session, admin):
         ],
         number="7b",
         instructions=[
-            deltas.InsertOp(insert="Relève dans le texte trois\n", attributes={}),
-            deltas.InsertOp(insert="déterminants", attributes={"sel": 1}),
-            deltas.InsertOp(insert=", un ", attributes={}),
-            deltas.InsertOp(insert="nom propre", attributes={"sel": 2}),
-            deltas.InsertOp(insert=", quatre\n", attributes={}),
-            deltas.InsertOp(insert="noms communs", attributes={"sel": 3}),
-            deltas.InsertOp(insert=" et trois ", attributes={}),
-            deltas.InsertOp(insert="verbes", attributes={"sel": 4}),
-            deltas.InsertOp(insert=".\n", attributes={}),
+            deltas.TextInsertOp(insert="Relève dans le texte trois\n", attributes={}),
+            deltas.TextInsertOp(insert="déterminants", attributes={"sel": 1}),
+            deltas.TextInsertOp(insert=", un ", attributes={}),
+            deltas.TextInsertOp(insert="nom propre", attributes={"sel": 2}),
+            deltas.TextInsertOp(insert=", quatre\n", attributes={}),
+            deltas.TextInsertOp(insert="noms communs", attributes={"sel": 3}),
+            deltas.TextInsertOp(insert=" et trois ", attributes={}),
+            deltas.TextInsertOp(insert="verbes", attributes={"sel": 4}),
+            deltas.TextInsertOp(insert=".\n", attributes={}),
         ],
-        example=[deltas.InsertOp(insert="\n", attributes={})],
-        clue=[deltas.InsertOp(insert="\n", attributes={})],
+        example=[deltas.TextInsertOp(insert="\n", attributes={})],
+        clue=[deltas.TextInsertOp(insert="\n", attributes={})],
         wording=[
-            deltas.InsertOp(
+            deltas.TextInsertOp(
                 insert="Les Touaregs sont des Berbères, un peuple qui habite en Afrique du Nord depuis la préhistoire.\nIls vivent dans le désert du Sahara (Algérie, Libye, Mali, Niger, Burkina Faso…).\nEn été, les températures y montent à plus de 50 °C et elles descendent en dessous de zéro durant les nuits d’hiver.\n",
                 attributes={},
             )
@@ -706,20 +706,20 @@ def create_test_exercises_3(session, admin):
         textbook=textbook1,
         textbook_page=5,
         number="1",
-        instructions=[deltas.InsertOp(insert="...\n", attributes={})],
-        example=[deltas.InsertOp(insert="\n", attributes={})],
-        clue=[deltas.InsertOp(insert="\n", attributes={})],
+        instructions=[deltas.TextInsertOp(insert="...\n", attributes={})],
+        example=[deltas.TextInsertOp(insert="\n", attributes={})],
+        clue=[deltas.TextInsertOp(insert="\n", attributes={})],
         wording=[
-            deltas.InsertOp(insert="a. ", attributes={}),
-            deltas.InsertOp(insert="Aujourd'hui", attributes={"bold": True}),
-            deltas.InsertOp(insert=" il fait ", attributes={}),
-            deltas.InsertOp(insert="gris", attributes={"italic": True}),
-            deltas.InsertOp(insert=" et (il pleuvra / il pleut / il pleuvait).\nb. ", attributes={}),
-            deltas.InsertOp(insert="Aujourd'hui", attributes={"bold": True}),
-            deltas.InsertOp(insert=" il fait ", attributes={}),
-            deltas.InsertOp(insert="gris", attributes={"italic": True}),
-            deltas.InsertOp(insert=" et ", attributes={}),
-            deltas.InsertOp(
+            deltas.TextInsertOp(insert="a. ", attributes={}),
+            deltas.TextInsertOp(insert="Aujourd'hui", attributes={"bold": True}),
+            deltas.TextInsertOp(insert=" il fait ", attributes={}),
+            deltas.TextInsertOp(insert="gris", attributes={"italic": True}),
+            deltas.TextInsertOp(insert=" et (il pleuvra / il pleut / il pleuvait).\nb. ", attributes={}),
+            deltas.TextInsertOp(insert="Aujourd'hui", attributes={"bold": True}),
+            deltas.TextInsertOp(insert=" il fait ", attributes={}),
+            deltas.TextInsertOp(insert="gris", attributes={"italic": True}),
+            deltas.TextInsertOp(insert=" et ", attributes={}),
+            deltas.TextInsertOp(
                 insert="(il pleuvra / il pleut / il pleuvait)",
                 attributes={
                     "choices2": {
@@ -731,8 +731,8 @@ def create_test_exercises_3(session, admin):
                     }
                 },
             ),
-            deltas.InsertOp(insert=".\nc. Aujourd'hui il fait @1 et il @2. ", attributes={}),
-            deltas.InsertOp(
+            deltas.TextInsertOp(insert=".\nc. Aujourd'hui il fait @1 et il @2. ", attributes={}),
+            deltas.TextInsertOp(
                 insert="(gris / beau)",
                 attributes={
                     "choices2": {
@@ -744,8 +744,8 @@ def create_test_exercises_3(session, admin):
                     }
                 },
             ),
-            deltas.InsertOp(insert=" ", attributes={}),
-            deltas.InsertOp(
+            deltas.TextInsertOp(insert=" ", attributes={}),
+            deltas.TextInsertOp(
                 insert="[pleut * pleuvra]",
                 attributes={
                     "choices2": {
@@ -757,7 +757,7 @@ def create_test_exercises_3(session, admin):
                     }
                 },
             ),
-            deltas.InsertOp(insert="\n\n", attributes={}),
+            deltas.TextInsertOp(insert="\n\n", attributes={}),
         ],
         adaptation=Adaptation(
             kind="multiple-choices",
