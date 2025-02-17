@@ -1519,7 +1519,16 @@ describe('TricolorSection for FixturesTestCase', () => {
               {
                 "kind": "text",
                 "highlighted": "#ffc0cb",
-                "text": "nom propre"
+                "text": "nom"
+              },
+              {
+                "kind": "whitespace",
+                "highlighted": "#ffc0cb"
+              },
+              {
+                "kind": "text",
+                "highlighted": "#ffc0cb",
+                "text": "propre"
               },
               {
                 "kind": "text",
@@ -1538,7 +1547,16 @@ describe('TricolorSection for FixturesTestCase', () => {
               {
                 "kind": "text",
                 "highlighted": "#bbbbff",
-                "text": "noms communs"
+                "text": "noms"
+              },
+              {
+                "kind": "whitespace",
+                "highlighted": "#bbbbff"
+              },
+              {
+                "kind": "text",
+                "highlighted": "#bbbbff",
+                "text": "communs"
               },
               {
                 "kind": "whitespace"
@@ -4645,7 +4663,17 @@ describe('TricolorSection for FixturesTestCase', () => {
               {
                 "kind": "text",
                 "bold": true,
-                "text": "Aujourd'hui"
+                "text": "Aujourd"
+              },
+              {
+                "kind": "text",
+                "bold": true,
+                "text": "'"
+              },
+              {
+                "kind": "text",
+                "bold": true,
+                "text": "hui"
               },
               {
                 "kind": "whitespace"
@@ -4762,7 +4790,17 @@ describe('TricolorSection for FixturesTestCase', () => {
               {
                 "kind": "text",
                 "bold": true,
-                "text": "Aujourd'hui"
+                "text": "Aujourd"
+              },
+              {
+                "kind": "text",
+                "bold": true,
+                "text": "'"
+              },
+              {
+                "kind": "text",
+                "bold": true,
+                "text": "hui"
               },
               {
                 "kind": "whitespace"

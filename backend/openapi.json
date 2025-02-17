@@ -1095,6 +1095,27 @@
       "Whitespace": {
         "additionalProperties": false,
         "properties": {
+          "bold": {
+            "default": false,
+            "title": "Bold",
+            "type": "boolean"
+          },
+          "highlighted": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Highlighted"
+          },
+          "italic": {
+            "default": false,
+            "title": "Italic",
+            "type": "boolean"
+          },
           "kind": {
             "const": "whitespace",
             "title": "Kind",

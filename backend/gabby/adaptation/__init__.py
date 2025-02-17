@@ -15,7 +15,7 @@ from .. import exercises
 from .. import renderable
 
 
-def adapt(exercise: exercises.Exercise) -> renderable.Exercise | None:
+def adapt(exercise: exercises.Exercise) -> renderable.Exercise:
     return _Adapter(exercise).adapted
 
 
@@ -136,24 +136,36 @@ class _Adapter:
 
     def adapt_instructions_sentence(self, sentence_deltas: deltas.Deltas):
         for delta in sentence_deltas:
-            if delta.attributes == deltas.TextInsertOpAttributes():
+            assert delta.kind == "text", f"Unexpected delta kind: {delta!r}"
+            if delta.attributes.choices2 is None:
+                assert delta.attributes == deltas.TextInsertOpAttributes(
+                    bold=delta.attributes.bold, italic=delta.attributes.italic, sel=delta.attributes.sel
+                ), f"Unknown attributes: {delta!r}"
+
+                formatting_arguments = {}
+                if delta.attributes.sel is not None and len(self.colors_for_selectable_items) > delta.attributes.sel - 1:
+                    formatting_arguments["highlighted"] = self.colors_for_selectable_items[delta.attributes.sel - 1]
+                if delta.attributes.bold:
+                    formatting_arguments["bold"] = True
+                if delta.attributes.italic:
+                    formatting_arguments["italic"] = True
+
                 for text in re.split(r"(\.\.\.|\s+|\W)", delta.insert):
                     if text != "":
                         if text.strip() == "":
-                            yield renderable.Whitespace(kind="whitespace")
+                            yield renderable.Whitespace(
+                                kind="whitespace",
+                                **formatting_arguments,
+                            )
                         else:
-                            yield renderable.Text(kind="text", text=text)
-
-            elif delta.attributes.sel is not None:
-                assert delta.attributes == deltas.TextInsertOpAttributes(sel=delta.attributes.sel)
-
-                if len(self.colors_for_selectable_items) > delta.attributes.sel - 1:
-                    yield renderable.Text(kind="text", text=delta.insert, highlighted=self.colors_for_selectable_items[delta.attributes.sel - 1])
-                else:
-                    yield renderable.Text(kind="text", text=delta.insert)
+                            yield renderable.Text(
+                                kind="text",
+                                text=text,
+                                **formatting_arguments,
+                            )
 
             elif delta.attributes.choices2 is not None:
-                assert delta.attributes == deltas.TextInsertOpAttributes(choices2=delta.attributes.choices2)
+                assert delta.attributes == deltas.TextInsertOpAttributes(choices2=delta.attributes.choices2), f"Unknown attributes: {delta!r}"
 
                 mcq_definition = McqDefinition(
                     start=delta.attributes.choices2.start or None,
@@ -176,16 +188,6 @@ class _Adapter:
                     yield renderable.Text(kind="text", text="ou")  # @todo Fix this if we ever support exercises in English
                     yield renderable.Whitespace(kind="whitespace")
                     yield renderable.PassiveSequence(kind="passiveSequence", contents=choices[-1], boxed=True)
-
-            elif delta.attributes.bold or delta.attributes.italic:
-                assert delta.attributes == deltas.TextInsertOpAttributes(bold=delta.attributes.bold, italic=delta.attributes.italic)
-
-                yield renderable.Text(
-                    kind="text",
-                    text=delta.insert,
-                    bold=delta.attributes.bold,
-                    italic=delta.attributes.italic,
-                )
 
             else:
                 assert False, f"Unknown attributes: {delta!r}"
@@ -312,18 +314,31 @@ class _Adapter:
                 if make_mcq_placeholder_replacement is None:
                     delta.attributes.mcq_placeholder = False
 
-                if delta.attributes == deltas.TextInsertOpAttributes():
+                if delta.attributes == deltas.TextInsertOpAttributes(bold=delta.attributes.bold, italic=delta.attributes.italic):
+                    formatting_arguments = {}
+                    if delta.attributes.bold:
+                        formatting_arguments["bold"] = True
+                    if delta.attributes.italic:
+                        formatting_arguments["italic"] = True
+
                     for i, text in enumerate(re.split(r"(\.\.\.|\s+|\W|ph\d+hp)", delta.insert)):
                         if text != "":
                             if i % 2 == 1:
                                 # Separator: punctuation, spacing, placeholders
                                 if text.strip() == "":
-                                    yield renderable.Whitespace(kind="whitespace")
+                                    yield renderable.Whitespace(
+                                        kind="whitespace",
+                                        **formatting_arguments,
+                                    )
                                 elif text.startswith("ph") and text.endswith("hp"):
                                     index = int(text[2:-2])
                                     yield sentence_placeholders[index][1]
                                 else:
-                                    item = renderable.Text(kind="text", text=text)
+                                    item = renderable.Text(
+                                        kind="text",
+                                        text=text,
+                                        **formatting_arguments,
+                                    )
                                     if self.punctuation_is_items:
                                         yield from self.decorate_item([item])
                                     else:
@@ -332,19 +347,39 @@ class _Adapter:
                                 # Separated: words
                                 if self.letters_are_items:
                                     for letter in text:
-                                        yield from self.decorate_item([renderable.Text(kind="text", text=letter)])
+                                        yield from self.decorate_item(
+                                            [
+                                                renderable.Text(
+                                                    kind="text",
+                                                    text=letter,
+                                                    **formatting_arguments,
+                                                )
+                                            ]
+                                        )
                                 elif self.words_are_items:
-                                    yield from self.decorate_item([renderable.Text(kind="text", text=text)])
+                                    yield from self.decorate_item(
+                                        [
+                                            renderable.Text(
+                                                kind="text",
+                                                text=text,
+                                                **formatting_arguments,
+                                            )
+                                        ]
+                                    )
                                 else:
-                                    yield renderable.Text(kind="text", text=text)
+                                    yield renderable.Text(
+                                        kind="text",
+                                        text=text,
+                                        **formatting_arguments,
+                                    )
 
                 elif delta.attributes.mcq_placeholder:
-                    assert delta.attributes == deltas.TextInsertOpAttributes(mcq_placeholder=delta.attributes.mcq_placeholder)
+                    assert delta.attributes == deltas.TextInsertOpAttributes(mcq_placeholder=delta.attributes.mcq_placeholder), f"Unknown attributes: {delta!r}"
 
                     yield make_mcq_placeholder_replacement(delta)
 
                 elif delta.attributes.manual_item:
-                    assert delta.attributes == deltas.TextInsertOpAttributes(manual_item=delta.attributes.manual_item)
+                    assert delta.attributes == deltas.TextInsertOpAttributes(manual_item=delta.attributes.manual_item), f"Unknown attributes: {delta!r}"
 
                     for text in re.split(r"(\.\.\.|\s+|\W)", delta.insert):
                         if text != "":
@@ -357,18 +392,8 @@ class _Adapter:
                                 else:
                                     yield item
 
-                elif delta.attributes.bold or delta.attributes.italic:
-                    assert delta.attributes == deltas.TextInsertOpAttributes(bold=delta.attributes.bold, italic=delta.attributes.italic)
-
-                    yield renderable.Text(
-                        kind="text",
-                        text=delta.insert,
-                        bold=delta.attributes.bold,
-                        italic=delta.attributes.italic,
-                    )
-
                 elif delta.attributes.choices2 is not None:
-                    assert delta.attributes == deltas.TextInsertOpAttributes(choices2=delta.attributes.choices2)
+                    assert delta.attributes == deltas.TextInsertOpAttributes(choices2=delta.attributes.choices2), f"Unknown attributes: {delta!r}"
 
                     choices_settings = delta.attributes.choices2
                     placeholder = choices_settings.placeholder or None
@@ -390,7 +415,7 @@ class _Adapter:
                 else:
                     assert False, f"Unknown attributes: {delta!r}"
             else:
-                assert delta.insert.kind == "mcq-field"
+                assert delta.insert.kind == "mcq-field", f"Unexpected delta kind: {delta!r}"
                 yield self.mcqs_by_uid.get(delta.insert.mcq_field, renderable.MultipleChoicesInput(kind="multipleChoicesInput", choices=[]))
 
     def decorate_item(self, contents):

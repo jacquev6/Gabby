@@ -550,6 +550,18 @@ export interface components {
     /** Whitespace */
     Whitespace: {
       /**
+       * Bold
+       * @default false
+       */
+      bold?: boolean;
+      /** Highlighted */
+      highlighted?: string | null;
+      /**
+       * Italic
+       * @default false
+       */
+      italic?: boolean;
+      /**
        * Kind
        * @constant
        */

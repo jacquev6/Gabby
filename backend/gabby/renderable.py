@@ -7,6 +7,9 @@ from mydantic import PydanticBase
 
 class Whitespace(PydanticBase):
     kind: Literal["whitespace"]
+    bold: bool = False
+    italic: bool = False
+    highlighted: str | None = None
 
 
 class Text(PydanticBase):

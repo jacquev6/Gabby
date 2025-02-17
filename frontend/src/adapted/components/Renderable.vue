@@ -32,7 +32,10 @@ function downgradePassiveList(contents: (Paragraph['contents'][number] & {kind: 
 
 <template>
   <template v-if="node.kind === 'whitespace'">
-    <span>&nbsp;&nbsp;<wbr /></span>
+    <span
+      :class="{bold: node.bold, italic: node.italic}"
+      :style="node.highlighted !== null ? {background: node.highlighted} : {}"
+    >&nbsp;&nbsp;<wbr /></span>
   </template>
   <template v-else-if="node.kind === 'text'">
     <span
