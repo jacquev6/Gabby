@@ -11,7 +11,8 @@ class Choices2(PydanticBase):
     separator2: str
     stop: str
     placeholder: str
-    mcqFieldUid: str | None = None
+    # This field's serialization alias has inconsistent casing. Fixing it will require a data migration.
+    mcq_field_uid: Annotated[str | None, PydanticField(serialization_alias="mcqFieldUid", validation_alias=AliasChoices("mcqFieldUid", "mcq_field_uid"))] = None
 
 class TextInsertOpAttributes(PydanticBase):
     italic: bool = False

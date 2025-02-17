@@ -575,7 +575,7 @@ class _Adapter:
         section.paragraphs = list(filter(lambda p: len(p.contents) > 0, section.paragraphs))
         return section
 
-    def gather_choices(self, deltas_):
+    def gather_choices(self, deltas_: deltas.Deltas) -> Iterable[McqDefinition]:
         for delta in deltas_:
             if delta.kind == "text" and delta.attributes.choices2 is not None:
                 choices_settings = delta.attributes.choices2
@@ -585,7 +585,7 @@ class _Adapter:
                     separator2=choices_settings.separator2 or None,
                     stop=choices_settings.stop or None,
                     placeholder=choices_settings.placeholder,
-                    mcq_field_uid=choices_settings.mcqFieldUid,
+                    mcq_field_uid=choices_settings.mcq_field_uid,
                     text=delta.insert,
                 )
 
