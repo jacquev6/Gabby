@@ -207,7 +207,7 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
         )
 
     def renderable_repr(section):
-        return (
+        r = (
             repr(section)
             .replace("Paragraph(", "r.Paragraph(")
             .replace("Section(", "r.Section(")
@@ -218,7 +218,17 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
             .replace("MultipleChoicesInput(", "r.MultipleChoicesInput(")
             .replace("SelectableInput(", "r.SelectableInput(")
             .replace("PassiveSequence(", "r.PassiveSequence(")
+            .replace("bold=False", "")
+            .replace("italic=False", "")
+            .replace("highlighted=None", "")
+            .replace("boxed=False", "")
+            .replace("show_arrow_before=False", "")
+            .replace("show_choices_by_default=False", "")
+            .replace("vertical=False", "")
         )
+        while (new_r := r.replace(", , ", ", ").replace(", )", ")")) != r:
+            r = new_r
+        return r
 
     def gen(batch_index, exercises_batch):
         yield "# WARNING: this file is generated (from database content). Manual changes will be lost."
