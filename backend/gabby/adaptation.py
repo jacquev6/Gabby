@@ -377,10 +377,10 @@ class _Adapter:
                     placeholder = choices_settings["placeholder"] or None
                     if placeholder is None:
                         mcq_definition = McqDefinition(
-                            start = choices_settings["start"] or None,
-                            separator1 = choices_settings["separator1"] or None,
-                            separator2 = choices_settings["separator2"] or None,
-                            stop = choices_settings["stop"] or None,
+                            start=choices_settings["start"] or None,
+                            separator1=choices_settings["separator1"] or None,
+                            separator2=choices_settings["separator2"] or None,
+                            stop=choices_settings["stop"] or None,
                             text=delta.insert,
                         )
                         yield renderable.MultipleChoicesInput(
@@ -5191,7 +5191,9 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 instructions=[
                     d.TextInsertOp(insert="Choose ", attributes={}),
-                    d.TextInsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "..."}}),
+                    d.TextInsertOp(
+                        insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "..."}}
+                    ),
                     d.TextInsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[
@@ -5271,7 +5273,9 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 instructions=[
                     d.TextInsertOp(insert="Choose ", attributes={}),
-                    d.TextInsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "@"}}),
+                    d.TextInsertOp(
+                        insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "@"}}
+                    ),
                     d.TextInsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[
@@ -5403,7 +5407,9 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 instructions=[
                     d.TextInsertOp(insert="Choose ", attributes={}),
-                    d.TextInsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "..."}}),
+                    d.TextInsertOp(
+                        insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "..."}}
+                    ),
                     d.TextInsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[
@@ -5918,9 +5924,13 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 instructions=[
                     d.TextInsertOp(insert="Choose ", attributes={}),
-                    d.TextInsertOp(insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "..."}}),
+                    d.TextInsertOp(
+                        insert="a or b", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "..."}}
+                    ),
                     d.TextInsertOp(insert=" and ", attributes={}),
-                    d.TextInsertOp(insert="c or d", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "@@@"}}),
+                    d.TextInsertOp(
+                        insert="c or d", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": "@@@"}}
+                    ),
                     d.TextInsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[
@@ -6024,7 +6034,9 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 textbook_page=42,
                 instructions=[
                     d.TextInsertOp(insert="Complète les mots avec ", attributes={}),
-                    d.TextInsertOp(insert="m ou n", attributes={"choices2": {"start": "", "separator1": "ou", "separator2": "", "stop": "", "placeholder": "..."}}),
+                    d.TextInsertOp(
+                        insert="m ou n", attributes={"choices2": {"start": "", "separator1": "ou", "separator2": "", "stop": "", "placeholder": "..."}}
+                    ),
                     d.TextInsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[

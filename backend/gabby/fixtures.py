@@ -684,9 +684,7 @@ def create_test_exercises_3(session, admin):
             single_item_per_paragraph=False,
             placeholder_for_fill_with_free_text=None,
             items=api_models.TokensItems(kind="tokens", words=True, punctuation=False),
-            items_are_selectable=api_models.Selectable(
-                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"]
-            ),
+            items_are_selectable=api_models.Selectable(colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"]),
             items_are_boxed=False,
             items_have_mcq_beside=False,
             items_have_mcq_below=False,
@@ -864,7 +862,355 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
 
             self.do_test(
                 session.get(Exercise, 1),
-                r.Exercise(number='3', textbook_page=6, pagelets=[r.Pagelet(instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind='text', text='Complète'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='avec'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text=':'), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='le')], boxed=True), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='une')], boxed=True), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='un')], boxed=True), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='des')], boxed=True), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='tu')], boxed=True), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='elles')], boxed=True), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='ou'), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='ils')], boxed=True), r.Text(kind='text', text='.')]), r.Paragraph(contents=[r.Text(kind='text', text='Puis'), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='souligne'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='les'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='verbes'), r.Text(kind='text', text='.')]), r.Paragraph(contents=[r.Text(kind='text', text='Il'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='peut'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='y'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='avoir'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='plusieurs'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='solutions'), r.Text(kind='text', text='.')])]), wording=r.Section(paragraphs=[r.Paragraph(contents=[r.MultipleChoicesInput(kind='multipleChoicesInput', choices=[[r.Text(kind='text', text='le')], [r.Text(kind='text', text='une')], [r.Text(kind='text', text='un')], [r.Text(kind='text', text='des')], [r.Text(kind='text', text='tu')], [r.Text(kind='text', text='elles')], [r.Text(kind='text', text='ils')]], show_choices_by_default=False), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='vide')]), r.Paragraph(contents=[r.MultipleChoicesInput(kind='multipleChoicesInput', choices=[[r.Text(kind='text', text='le')], [r.Text(kind='text', text='une')], [r.Text(kind='text', text='un')], [r.Text(kind='text', text='des')], [r.Text(kind='text', text='tu')], [r.Text(kind='text', text='elles')], [r.Text(kind='text', text='ils')]], show_choices_by_default=False), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='vident')]), r.Paragraph(contents=[r.MultipleChoicesInput(kind='multipleChoicesInput', choices=[[r.Text(kind='text', text='le')], [r.Text(kind='text', text='une')], [r.Text(kind='text', text='un')], [r.Text(kind='text', text='des')], [r.Text(kind='text', text='tu')], [r.Text(kind='text', text='elles')], [r.Text(kind='text', text='ils')]], show_choices_by_default=False), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='dépenses')])])), r.Pagelet(instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind='text', text='Complète'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='avec'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text=':'), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='le')], boxed=True), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='une')], boxed=True), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='un')], boxed=True), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='des')], boxed=True), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='tu')], boxed=True), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='elles')], boxed=True), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='ou'), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='ils')], boxed=True), r.Text(kind='text', text='.')]), r.Paragraph(contents=[r.Text(kind='text', text='Puis'), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='souligne'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='les'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='verbes'), r.Text(kind='text', text='.')]), r.Paragraph(contents=[r.Text(kind='text', text='Il'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='peut'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='y'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='avoir'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='plusieurs'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='solutions'), r.Text(kind='text', text='.')])]), wording=r.Section(paragraphs=[r.Paragraph(contents=[r.MultipleChoicesInput(kind='multipleChoicesInput', choices=[[r.Text(kind='text', text='le')], [r.Text(kind='text', text='une')], [r.Text(kind='text', text='un')], [r.Text(kind='text', text='des')], [r.Text(kind='text', text='tu')], [r.Text(kind='text', text='elles')], [r.Text(kind='text', text='ils')]], show_choices_by_default=False), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='dépensent')]), r.Paragraph(contents=[r.MultipleChoicesInput(kind='multipleChoicesInput', choices=[[r.Text(kind='text', text='le')], [r.Text(kind='text', text='une')], [r.Text(kind='text', text='un')], [r.Text(kind='text', text='des')], [r.Text(kind='text', text='tu')], [r.Text(kind='text', text='elles')], [r.Text(kind='text', text='ils')]], show_choices_by_default=False), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='savon')]), r.Paragraph(contents=[r.MultipleChoicesInput(kind='multipleChoicesInput', choices=[[r.Text(kind='text', text='le')], [r.Text(kind='text', text='une')], [r.Text(kind='text', text='un')], [r.Text(kind='text', text='des')], [r.Text(kind='text', text='tu')], [r.Text(kind='text', text='elles')], [r.Text(kind='text', text='ils')]], show_choices_by_default=False), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='savons')])])), r.Pagelet(instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind='text', text='Complète'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='avec'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text=':'), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='le')], boxed=True), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='une')], boxed=True), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='un')], boxed=True), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='des')], boxed=True), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='tu')], boxed=True), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='elles')], boxed=True), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='ou'), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='ils')], boxed=True), r.Text(kind='text', text='.')]), r.Paragraph(contents=[r.Text(kind='text', text='Puis'), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='souligne'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='les'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='verbes'), r.Text(kind='text', text='.')]), r.Paragraph(contents=[r.Text(kind='text', text='Il'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='peut'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='y'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='avoir'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='plusieurs'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='solutions'), r.Text(kind='text', text='.')])]), wording=r.Section(paragraphs=[r.Paragraph(contents=[r.MultipleChoicesInput(kind='multipleChoicesInput', choices=[[r.Text(kind='text', text='le')], [r.Text(kind='text', text='une')], [r.Text(kind='text', text='un')], [r.Text(kind='text', text='des')], [r.Text(kind='text', text='tu')], [r.Text(kind='text', text='elles')], [r.Text(kind='text', text='ils')]], show_choices_by_default=False), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='commande')])]))]),
+                r.Exercise(
+                    number="3",
+                    textbook_page=6,
+                    pagelets=[
+                        r.Pagelet(
+                            instructions=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Complète"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="avec"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text=":"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="le")], boxed=True),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="une")], boxed=True),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="un")], boxed=True),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="des")], boxed=True),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="tu")], boxed=True),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="elles")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ou"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="ils")], boxed=True),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Puis"),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="souligne"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="les"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="verbes"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Il"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="peut"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="y"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="avoir"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="plusieurs"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="solutions"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                            wording=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[
+                                                    [r.Text(kind="text", text="le")],
+                                                    [r.Text(kind="text", text="une")],
+                                                    [r.Text(kind="text", text="un")],
+                                                    [r.Text(kind="text", text="des")],
+                                                    [r.Text(kind="text", text="tu")],
+                                                    [r.Text(kind="text", text="elles")],
+                                                    [r.Text(kind="text", text="ils")],
+                                                ],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="vide"),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[
+                                                    [r.Text(kind="text", text="le")],
+                                                    [r.Text(kind="text", text="une")],
+                                                    [r.Text(kind="text", text="un")],
+                                                    [r.Text(kind="text", text="des")],
+                                                    [r.Text(kind="text", text="tu")],
+                                                    [r.Text(kind="text", text="elles")],
+                                                    [r.Text(kind="text", text="ils")],
+                                                ],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="vident"),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[
+                                                    [r.Text(kind="text", text="le")],
+                                                    [r.Text(kind="text", text="une")],
+                                                    [r.Text(kind="text", text="un")],
+                                                    [r.Text(kind="text", text="des")],
+                                                    [r.Text(kind="text", text="tu")],
+                                                    [r.Text(kind="text", text="elles")],
+                                                    [r.Text(kind="text", text="ils")],
+                                                ],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="dépenses"),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                        ),
+                        r.Pagelet(
+                            instructions=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Complète"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="avec"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text=":"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="le")], boxed=True),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="une")], boxed=True),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="un")], boxed=True),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="des")], boxed=True),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="tu")], boxed=True),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="elles")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ou"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="ils")], boxed=True),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Puis"),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="souligne"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="les"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="verbes"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Il"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="peut"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="y"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="avoir"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="plusieurs"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="solutions"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                            wording=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[
+                                                    [r.Text(kind="text", text="le")],
+                                                    [r.Text(kind="text", text="une")],
+                                                    [r.Text(kind="text", text="un")],
+                                                    [r.Text(kind="text", text="des")],
+                                                    [r.Text(kind="text", text="tu")],
+                                                    [r.Text(kind="text", text="elles")],
+                                                    [r.Text(kind="text", text="ils")],
+                                                ],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="dépensent"),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[
+                                                    [r.Text(kind="text", text="le")],
+                                                    [r.Text(kind="text", text="une")],
+                                                    [r.Text(kind="text", text="un")],
+                                                    [r.Text(kind="text", text="des")],
+                                                    [r.Text(kind="text", text="tu")],
+                                                    [r.Text(kind="text", text="elles")],
+                                                    [r.Text(kind="text", text="ils")],
+                                                ],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="savon"),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[
+                                                    [r.Text(kind="text", text="le")],
+                                                    [r.Text(kind="text", text="une")],
+                                                    [r.Text(kind="text", text="un")],
+                                                    [r.Text(kind="text", text="des")],
+                                                    [r.Text(kind="text", text="tu")],
+                                                    [r.Text(kind="text", text="elles")],
+                                                    [r.Text(kind="text", text="ils")],
+                                                ],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="savons"),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                        ),
+                        r.Pagelet(
+                            instructions=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Complète"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="avec"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text=":"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="le")], boxed=True),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="une")], boxed=True),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="un")], boxed=True),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="des")], boxed=True),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="tu")], boxed=True),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="elles")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ou"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="ils")], boxed=True),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Puis"),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="souligne"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="les"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="verbes"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Il"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="peut"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="y"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="avoir"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="plusieurs"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="solutions"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                            wording=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[
+                                                    [r.Text(kind="text", text="le")],
+                                                    [r.Text(kind="text", text="une")],
+                                                    [r.Text(kind="text", text="un")],
+                                                    [r.Text(kind="text", text="des")],
+                                                    [r.Text(kind="text", text="tu")],
+                                                    [r.Text(kind="text", text="elles")],
+                                                    [r.Text(kind="text", text="ils")],
+                                                ],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="commande"),
+                                        ]
+                                    )
+                                ]
+                            ),
+                        ),
+                    ],
+                ),
             )
             session.rollback()
             self.expect_rollback()
@@ -875,7 +1221,105 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
 
             self.do_test(
                 session.get(Exercise, 2),
-                r.Exercise(number='4', textbook_page=6, pagelets=[r.Pagelet(instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind='text', text='Écris'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='une'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='phrase'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='en'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='respectant'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='l'), r.Text(kind='text', text="'"), r.Text(kind='text', text='ordre'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='des'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='classes'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='grammaticales'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='indiquées'), r.Text(kind='text', text='.')]), r.Paragraph(contents=[r.Text(kind='text', text='pronom'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='personnel'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='/'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='verbe'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='/'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='déterminant'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='/'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='nom'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='commun'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text=':'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='Je'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='mange'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='une'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='pomme'), r.Text(kind='text', text='.')])]), wording=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind='text', text='nom'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='propre'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='/'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='verbe'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='/'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='déterminant'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='/'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='adjectif'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='/'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='nom'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='commun')])]))]),
+                r.Exercise(
+                    number="4",
+                    textbook_page=6,
+                    pagelets=[
+                        r.Pagelet(
+                            instructions=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Écris"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="une"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="phrase"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="en"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="respectant"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="l"),
+                                            r.Text(kind="text", text="'"),
+                                            r.Text(kind="text", text="ordre"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="des"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="classes"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="grammaticales"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="indiquées"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="pronom"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="personnel"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="/"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="verbe"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="/"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="déterminant"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="/"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="nom"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="commun"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text=":"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="Je"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="mange"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="une"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="pomme"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                            wording=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="nom"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="propre"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="/"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="verbe"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="/"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="déterminant"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="/"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="adjectif"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="/"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="nom"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="commun"),
+                                        ]
+                                    )
+                                ]
+                            ),
+                        )
+                    ],
+                ),
             )
             session.rollback()
             self.expect_rollback()
@@ -886,7 +1330,112 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
 
             self.do_test(
                 session.get(Exercise, 3),
-                r.Exercise(number='9', textbook_page=7, pagelets=[r.Pagelet(instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind='text', text='Recopie'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='l'), r.Text(kind='text', text='’'), r.Text(kind='text', text='intrus'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='qui'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='se'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='cache'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='dans'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='chaque'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='liste'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='et'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='écris'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='sa'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='classe'), r.Text(kind='text', text='.')])]), wording=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind='text', text='a'), r.Text(kind='text', text='.'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='partons'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='◆'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='bidons'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='◆'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='allons'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='◆'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='vendons')]), r.Paragraph(contents=[r.Text(kind='text', text='b'), r.Text(kind='text', text='.'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='vidons'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='◆'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='mentons'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='◆'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='ballons'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='◆'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='salons')]), r.Paragraph(contents=[r.Text(kind='text', text='c'), r.Text(kind='text', text='.'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='voir'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='◆'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='armoire'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='◆'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='couloir'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='◆'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='dortoir')])]))]),
+                r.Exercise(
+                    number="9",
+                    textbook_page=7,
+                    pagelets=[
+                        r.Pagelet(
+                            instructions=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Recopie"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="l"),
+                                            r.Text(kind="text", text="’"),
+                                            r.Text(kind="text", text="intrus"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="qui"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="se"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="cache"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="dans"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="chaque"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="liste"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="et"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="écris"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="sa"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="classe"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ]
+                            ),
+                            wording=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="a"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="partons"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="◆"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bidons"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="◆"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="allons"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="◆"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="vendons"),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="b"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="vidons"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="◆"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="mentons"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="◆"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ballons"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="◆"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="salons"),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="c"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="voir"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="◆"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="armoire"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="◆"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="couloir"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="◆"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="dortoir"),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                        )
+                    ],
+                ),
             )
             session.rollback()
             self.expect_rollback()
@@ -897,7 +1446,31 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
 
             self.do_test(
                 session.get(Exercise, 4),
-                r.Exercise(number='L1', textbook_page=None, pagelets=[r.Pagelet(instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind='text', text='Faire'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='des'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='choses'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='intelligentes'), r.Text(kind='text', text='.')])]), wording=r.Section(paragraphs=[]))]),
+                r.Exercise(
+                    number="L1",
+                    textbook_page=None,
+                    pagelets=[
+                        r.Pagelet(
+                            instructions=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Faire"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="des"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="choses"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="intelligentes"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ]
+                            ),
+                            wording=r.Section(paragraphs=[]),
+                        )
+                    ],
+                ),
             )
             session.rollback()
             self.expect_rollback()
@@ -908,7 +1481,33 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
 
             self.do_test(
                 session.get(Exercise, 5),
-                r.Exercise(number='L2', textbook_page=None, pagelets=[r.Pagelet(instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind='text', text='Faire'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='d'), r.Text(kind='text', text="'"), r.Text(kind='text', text='autres'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='choses'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='intelligentes'), r.Text(kind='text', text='.')])]), wording=r.Section(paragraphs=[]))]),
+                r.Exercise(
+                    number="L2",
+                    textbook_page=None,
+                    pagelets=[
+                        r.Pagelet(
+                            instructions=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Faire"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="d"),
+                                            r.Text(kind="text", text="'"),
+                                            r.Text(kind="text", text="autres"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="choses"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="intelligentes"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ]
+                            ),
+                            wording=r.Section(paragraphs=[]),
+                        )
+                    ],
+                ),
             )
             session.rollback()
             self.expect_rollback()
@@ -919,7 +1518,41 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
 
             self.do_test(
                 session.get(Exercise, 6),
-                r.Exercise(number='L3', textbook_page=None, pagelets=[r.Pagelet(instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind='text', text='Prendre'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='le'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='temps'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='de'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='faire'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='aussi'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='des'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='choses'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='banales'), r.Text(kind='text', text='.')])]), wording=r.Section(paragraphs=[]))]),
+                r.Exercise(
+                    number="L3",
+                    textbook_page=None,
+                    pagelets=[
+                        r.Pagelet(
+                            instructions=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Prendre"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="le"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="temps"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="de"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="faire"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="aussi"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="des"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="choses"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="banales"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ]
+                            ),
+                            wording=r.Section(paragraphs=[]),
+                        )
+                    ],
+                ),
             )
             session.rollback()
             self.expect_rollback()
@@ -930,7 +1563,487 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
 
             self.do_test(
                 session.get(Exercise, 7),
-                r.Exercise(number='7', textbook_page=7, pagelets=[r.Pagelet(instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind='text', text='Relève'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='dans'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='le'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='texte'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='trois'), r.Whitespace(kind='whitespace'), r.Text(kind='text', highlighted='#ffff00', text='déterminants'), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='un'), r.Whitespace(kind='whitespace'), r.Text(kind='text', highlighted='#ffc0cb', text='nom propre'), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='quatre'), r.Whitespace(kind='whitespace'), r.Text(kind='text', highlighted='#bbbbff', text='noms communs'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='et'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='trois'), r.Whitespace(kind='whitespace'), r.Text(kind='text', highlighted='#bbffbb', text='verbes'), r.Text(kind='text', text='.')])]), wording=r.Section(paragraphs=[r.Paragraph(contents=[r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Les')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Touaregs')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='sont')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='des')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Berbères')]), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text=',')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='un')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='peuple')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='qui')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='habite')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='en')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Afrique')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='du')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Nord')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='depuis')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='la')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='préhistoire')]), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='.')])]), r.Paragraph(contents=[r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Ils')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='vivent')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='dans')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='le')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='désert')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='du')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Sahara')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='(')]), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Algérie')]), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text=',')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Libye')]), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text=',')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Mali')]), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text=',')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Niger')]), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text=',')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Burkina')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Faso')]), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='…')]), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text=')')]), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='.')])]), r.Paragraph(contents=[r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='En')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='été')]), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text=',')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='les')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='températures')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='y')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='montent')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='à')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='plus')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='de')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='50')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='°')]), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='C')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='et')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='elles')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='descendent')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='en')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='dessous')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='de')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='zéro')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='durant')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='les')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='nuits')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='d')]), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='’')]), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='hiver')]), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='.')])])])), r.Pagelet(instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind='text', text='Mon'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='quotidien'), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='pour'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='les'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='10'), r.Text(kind='text', text='-'), r.Text(kind='text', text='14'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='ans'), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='www'), r.Text(kind='text', text='.')]), r.Paragraph(contents=[r.Text(kind='text', text='monquotidien'), r.Text(kind='text', text='.')]), r.Paragraph(contents=[r.Text(kind='text', text='fr'), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='13'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='septembre'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='2014'), r.Text(kind='text', text='.')])]), wording=r.Section(paragraphs=[]))]),
+                r.Exercise(
+                    number="7",
+                    textbook_page=7,
+                    pagelets=[
+                        r.Pagelet(
+                            instructions=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Relève"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="dans"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="le"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="texte"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="trois"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", highlighted="#ffff00", text="déterminants"),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="un"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", highlighted="#ffc0cb", text="nom propre"),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="quatre"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", highlighted="#bbbbff", text="noms communs"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="et"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="trois"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", highlighted="#bbffbb", text="verbes"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ]
+                            ),
+                            wording=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Les")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Touaregs")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="sont")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="des")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Berbères")],
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text=",")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="un")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="peuple")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="qui")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="habite")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="en")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Afrique")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="du")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Nord")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="depuis")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="la")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="préhistoire")],
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text=".")],
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Ils")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="vivent")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="dans")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="le")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="désert")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="du")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Sahara")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="(")],
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Algérie")],
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text=",")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Libye")],
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text=",")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Mali")],
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text=",")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Niger")],
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text=",")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Burkina")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Faso")],
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="…")],
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text=")")],
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text=".")],
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="En")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="été")],
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text=",")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="les")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="températures")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="y")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="montent")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="à")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="plus")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="de")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="50")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="°")],
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="C")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="et")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="elles")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="descendent")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="en")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="dessous")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="de")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="zéro")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="durant")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="les")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="nuits")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="d")],
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="’")],
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="hiver")],
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text=".")],
+                                            ),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                        ),
+                        r.Pagelet(
+                            instructions=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Mon"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="quotidien"),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="pour"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="les"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="10"),
+                                            r.Text(kind="text", text="-"),
+                                            r.Text(kind="text", text="14"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ans"),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="www"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="monquotidien"), r.Text(kind="text", text=".")]),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="fr"),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="13"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="septembre"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="2014"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                            wording=r.Section(paragraphs=[]),
+                        ),
+                    ],
+                ),
             )
             session.rollback()
             self.expect_rollback()
@@ -941,7 +2054,99 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
 
             self.do_test(
                 session.get(Exercise, 8),
-                r.Exercise(number='11', textbook_page=7, pagelets=[r.Pagelet(instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind='text', text='Ajoute'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='le'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='suffixe'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='–'), r.Text(kind='text', text='eur'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='aux'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='verbes'), r.Text(kind='text', text='.')]), r.Paragraph(contents=[r.Text(kind='text', text='Indique'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='la'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='classe'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='des'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='mots'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='fabriqués'), r.Text(kind='text', text='.')])]), wording=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind='text', text='nager'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='➞'), r.Whitespace(kind='whitespace'), r.FreeTextInput(kind='freeTextInput'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='◆'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='tracter'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='➞'), r.Whitespace(kind='whitespace'), r.FreeTextInput(kind='freeTextInput'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='◆'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='manger'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='➞'), r.Whitespace(kind='whitespace'), r.FreeTextInput(kind='freeTextInput'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='◆')]), r.Paragraph(contents=[r.Text(kind='text', text='inventer'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='➞'), r.Whitespace(kind='whitespace'), r.FreeTextInput(kind='freeTextInput'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='◆'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='livrer'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='➞'), r.Whitespace(kind='whitespace'), r.FreeTextInput(kind='freeTextInput')])]))]),
+                r.Exercise(
+                    number="11",
+                    textbook_page=7,
+                    pagelets=[
+                        r.Pagelet(
+                            instructions=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Ajoute"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="le"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="suffixe"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="–"),
+                                            r.Text(kind="text", text="eur"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="aux"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="verbes"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Indique"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="la"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="classe"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="des"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="mots"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="fabriqués"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                            wording=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="nager"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="➞"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.FreeTextInput(kind="freeTextInput"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="◆"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="tracter"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="➞"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.FreeTextInput(kind="freeTextInput"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="◆"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="manger"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="➞"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.FreeTextInput(kind="freeTextInput"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="◆"),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="inventer"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="➞"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.FreeTextInput(kind="freeTextInput"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="◆"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="livrer"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="➞"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.FreeTextInput(kind="freeTextInput"),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                        )
+                    ],
+                ),
             )
             session.rollback()
             self.expect_rollback()
@@ -952,7 +2157,186 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
 
             self.do_test(
                 session.get(Exercise, 9),
-                r.Exercise(number='8', textbook_page=7, pagelets=[r.Pagelet(instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind='text', text='Réponds'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='par'), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='vrai')], boxed=True), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='ou'), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='faux')], boxed=True), r.Text(kind='text', text='.')])]), wording=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind='text', text='a'), r.Text(kind='text', text='.'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='coccinelle'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='est'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='un'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='adjectif'), r.Text(kind='text', text='.'), r.Whitespace(kind='whitespace'), r.MultipleChoicesInput(kind='multipleChoicesInput', choices=[[r.Text(kind='text', text='vrai')], [r.Text(kind='text', text='faux')]], show_choices_by_default=False)]), r.Paragraph(contents=[r.Text(kind='text', text='b'), r.Text(kind='text', text='.'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='bûche'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='est'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='un'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='verbe'), r.Text(kind='text', text='.'), r.Whitespace(kind='whitespace'), r.MultipleChoicesInput(kind='multipleChoicesInput', choices=[[r.Text(kind='text', text='vrai')], [r.Text(kind='text', text='faux')]], show_choices_by_default=False)]), r.Paragraph(contents=[r.Text(kind='text', text='c'), r.Text(kind='text', text='.'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='cette'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='est'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='un'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='déterminant'), r.Text(kind='text', text='.'), r.Whitespace(kind='whitespace'), r.MultipleChoicesInput(kind='multipleChoicesInput', choices=[[r.Text(kind='text', text='vrai')], [r.Text(kind='text', text='faux')]], show_choices_by_default=False)])])), r.Pagelet(instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind='text', text='Réponds'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='par'), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='vrai')], boxed=True), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='ou'), r.Whitespace(kind='whitespace'), r.PassiveSequence(kind='passiveSequence', contents=[r.Text(kind='text', text='faux')], boxed=True), r.Text(kind='text', text='.')])]), wording=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind='text', text='d'), r.Text(kind='text', text='.'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='dentier'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='est'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='un'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='verbe'), r.Text(kind='text', text='.'), r.Whitespace(kind='whitespace'), r.MultipleChoicesInput(kind='multipleChoicesInput', choices=[[r.Text(kind='text', text='vrai')], [r.Text(kind='text', text='faux')]], show_choices_by_default=False)]), r.Paragraph(contents=[r.Text(kind='text', text='e'), r.Text(kind='text', text='.'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='respirer'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='est'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='un'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='verbe'), r.Text(kind='text', text='.'), r.Whitespace(kind='whitespace'), r.MultipleChoicesInput(kind='multipleChoicesInput', choices=[[r.Text(kind='text', text='vrai')], [r.Text(kind='text', text='faux')]], show_choices_by_default=False)]), r.Paragraph(contents=[r.Text(kind='text', text='f'), r.Text(kind='text', text='.'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='aspiration'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='est'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='un'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='nom'), r.Text(kind='text', text='.'), r.Whitespace(kind='whitespace'), r.MultipleChoicesInput(kind='multipleChoicesInput', choices=[[r.Text(kind='text', text='vrai')], [r.Text(kind='text', text='faux')]], show_choices_by_default=False)])]))]),
+                r.Exercise(
+                    number="8",
+                    textbook_page=7,
+                    pagelets=[
+                        r.Pagelet(
+                            instructions=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Réponds"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="par"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="vrai")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ou"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="faux")], boxed=True),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ]
+                            ),
+                            wording=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="a"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="coccinelle"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="est"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="un"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="adjectif"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="vrai")], [r.Text(kind="text", text="faux")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="b"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bûche"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="est"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="un"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="verbe"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="vrai")], [r.Text(kind="text", text="faux")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="c"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="cette"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="est"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="un"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="déterminant"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="vrai")], [r.Text(kind="text", text="faux")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                        ),
+                        r.Pagelet(
+                            instructions=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Réponds"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="par"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="vrai")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ou"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="faux")], boxed=True),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ]
+                            ),
+                            wording=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="d"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="dentier"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="est"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="un"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="verbe"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="vrai")], [r.Text(kind="text", text="faux")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="e"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="respirer"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="est"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="un"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="verbe"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="vrai")], [r.Text(kind="text", text="faux")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="f"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="aspiration"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="est"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="un"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="nom"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="vrai")], [r.Text(kind="text", text="faux")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                        ),
+                    ],
+                ),
             )
             session.rollback()
             self.expect_rollback()
@@ -963,7 +2347,471 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
 
             self.do_test(
                 session.get(Exercise, 10),
-                r.Exercise(number='7b', textbook_page=7, pagelets=[r.Pagelet(instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind='text', text='Relève'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='dans'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='le'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='texte'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='trois'), r.Whitespace(kind='whitespace'), r.Text(kind='text', highlighted='#ffff00', text='déterminants'), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='un'), r.Whitespace(kind='whitespace'), r.Text(kind='text', highlighted='#ffc0cb', text='nom propre'), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='quatre'), r.Whitespace(kind='whitespace'), r.Text(kind='text', highlighted='#bbbbff', text='noms communs'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='et'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='trois'), r.Whitespace(kind='whitespace'), r.Text(kind='text', highlighted='#bbffbb', text='verbes'), r.Text(kind='text', text='.')])]), wording=r.Section(paragraphs=[r.Paragraph(contents=[r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Les')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Touaregs')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='sont')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='des')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Berbères')]), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='un')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='peuple')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='qui')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='habite')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='en')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Afrique')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='du')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Nord')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='depuis')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='la')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='préhistoire')]), r.Text(kind='text', text='.')])])), r.Pagelet(instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind='text', text='Relève'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='dans'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='le'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='texte'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='trois'), r.Whitespace(kind='whitespace'), r.Text(kind='text', highlighted='#ffff00', text='déterminants'), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='un'), r.Whitespace(kind='whitespace'), r.Text(kind='text', highlighted='#ffc0cb', text='nom propre'), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='quatre'), r.Whitespace(kind='whitespace'), r.Text(kind='text', highlighted='#bbbbff', text='noms communs'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='et'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='trois'), r.Whitespace(kind='whitespace'), r.Text(kind='text', highlighted='#bbffbb', text='verbes'), r.Text(kind='text', text='.')])]), wording=r.Section(paragraphs=[r.Paragraph(contents=[r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Ils')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='vivent')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='dans')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='le')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='désert')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='du')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Sahara')]), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='('), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Algérie')]), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Libye')]), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Mali')]), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Niger')]), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Burkina')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='Faso')]), r.Text(kind='text', text='…'), r.Text(kind='text', text=')'), r.Text(kind='text', text='.')])])), r.Pagelet(instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind='text', text='Relève'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='dans'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='le'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='texte'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='trois'), r.Whitespace(kind='whitespace'), r.Text(kind='text', highlighted='#ffff00', text='déterminants'), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='un'), r.Whitespace(kind='whitespace'), r.Text(kind='text', highlighted='#ffc0cb', text='nom propre'), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='quatre'), r.Whitespace(kind='whitespace'), r.Text(kind='text', highlighted='#bbbbff', text='noms communs'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='et'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='trois'), r.Whitespace(kind='whitespace'), r.Text(kind='text', highlighted='#bbffbb', text='verbes'), r.Text(kind='text', text='.')])]), wording=r.Section(paragraphs=[r.Paragraph(contents=[r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='En')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='été')]), r.Text(kind='text', text=','), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='les')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='températures')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='y')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='montent')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='à')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='plus')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='de')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='50')]), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='°'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='C')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='et')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='elles')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='descendent')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='en')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='dessous')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='de')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='zéro')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='durant')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='les')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='nuits')]), r.Whitespace(kind='whitespace'), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='d'), r.Text(kind='text', text='’')]), r.SelectableInput(kind='selectableInput', colors=['#ffff00', '#ffc0cb', '#bbbbff', '#bbffbb'], contents=[r.Text(kind='text', text='hiver')]), r.Text(kind='text', text='.')])]))]),
+                r.Exercise(
+                    number="7b",
+                    textbook_page=7,
+                    pagelets=[
+                        r.Pagelet(
+                            instructions=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Relève"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="dans"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="le"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="texte"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="trois"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", highlighted="#ffff00", text="déterminants"),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="un"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", highlighted="#ffc0cb", text="nom propre"),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="quatre"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", highlighted="#bbbbff", text="noms communs"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="et"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="trois"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", highlighted="#bbffbb", text="verbes"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ]
+                            ),
+                            wording=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Les")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Touaregs")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="sont")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="des")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Berbères")],
+                                            ),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="un")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="peuple")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="qui")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="habite")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="en")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Afrique")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="du")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Nord")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="depuis")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="la")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="préhistoire")],
+                                            ),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ]
+                            ),
+                        ),
+                        r.Pagelet(
+                            instructions=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Relève"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="dans"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="le"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="texte"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="trois"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", highlighted="#ffff00", text="déterminants"),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="un"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", highlighted="#ffc0cb", text="nom propre"),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="quatre"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", highlighted="#bbbbff", text="noms communs"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="et"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="trois"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", highlighted="#bbffbb", text="verbes"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ]
+                            ),
+                            wording=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Ils")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="vivent")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="dans")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="le")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="désert")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="du")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Sahara")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="("),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Algérie")],
+                                            ),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Libye")],
+                                            ),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Mali")],
+                                            ),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Niger")],
+                                            ),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Burkina")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="Faso")],
+                                            ),
+                                            r.Text(kind="text", text="…"),
+                                            r.Text(kind="text", text=")"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ]
+                            ),
+                        ),
+                        r.Pagelet(
+                            instructions=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Relève"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="dans"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="le"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="texte"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="trois"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", highlighted="#ffff00", text="déterminants"),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="un"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", highlighted="#ffc0cb", text="nom propre"),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="quatre"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", highlighted="#bbbbff", text="noms communs"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="et"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="trois"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", highlighted="#bbffbb", text="verbes"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ]
+                            ),
+                            wording=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="En")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="été")],
+                                            ),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="les")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="températures")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="y")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="montent")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="à")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="plus")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="de")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="50")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="°"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="C")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="et")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="elles")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="descendent")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="en")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="dessous")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="de")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="zéro")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="durant")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="les")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="nuits")],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="d"), r.Text(kind="text", text="’")],
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                contents=[r.Text(kind="text", text="hiver")],
+                                            ),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ]
+                            ),
+                        ),
+                    ],
+                ),
             )
             session.rollback()
             self.expect_rollback()
@@ -974,7 +2822,112 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
 
             self.do_test(
                 session.get(Exercise, 11),
-                r.Exercise(number='1', textbook_page=5, pagelets=[r.Pagelet(instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind='text', text='...')])]), wording=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind='text', text='a'), r.Text(kind='text', text='.'), r.Whitespace(kind='whitespace'), r.Text(kind='text', bold=True, text="Aujourd'hui"), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='il'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='fait'), r.Whitespace(kind='whitespace'), r.Text(kind='text', italic=True, text='gris'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='et'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='('), r.Text(kind='text', text='il'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='pleuvra'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='/'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='il'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='pleut'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='/'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='il'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='pleuvait'), r.Text(kind='text', text=')'), r.Text(kind='text', text='.')]), r.Paragraph(contents=[r.Text(kind='text', text='b'), r.Text(kind='text', text='.'), r.Whitespace(kind='whitespace'), r.Text(kind='text', bold=True, text="Aujourd'hui"), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='il'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='fait'), r.Whitespace(kind='whitespace'), r.Text(kind='text', italic=True, text='gris'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='et'), r.Whitespace(kind='whitespace'), r.MultipleChoicesInput(kind='multipleChoicesInput', choices=[[r.Text(kind='text', text='il pleuvra')], [r.Text(kind='text', text='il pleut')], [r.Text(kind='text', text='il pleuvait')]], show_choices_by_default=False), r.Text(kind='text', text='.')]), r.Paragraph(contents=[r.Text(kind='text', text='c'), r.Text(kind='text', text='.'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='Aujourd'), r.Text(kind='text', text="'"), r.Text(kind='text', text='hui'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='il'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='fait'), r.Whitespace(kind='whitespace'), r.MultipleChoicesInput(kind='multipleChoicesInput', choices=[[r.Text(kind='text', text='gris')], [r.Text(kind='text', text='beau')]], show_choices_by_default=False), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='et'), r.Whitespace(kind='whitespace'), r.Text(kind='text', text='il'), r.Whitespace(kind='whitespace'), r.MultipleChoicesInput(kind='multipleChoicesInput', choices=[[r.Text(kind='text', text='pleut')], [r.Text(kind='text', text='pleuvra')]], show_choices_by_default=False), r.Text(kind='text', text='.')])]))]),
+                r.Exercise(
+                    number="1",
+                    textbook_page=5,
+                    pagelets=[
+                        r.Pagelet(
+                            instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="...")])]),
+                            wording=r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="a"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", bold=True, text="Aujourd'hui"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="il"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="fait"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", italic=True, text="gris"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="et"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="("),
+                                            r.Text(kind="text", text="il"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="pleuvra"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="/"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="il"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="pleut"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="/"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="il"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="pleuvait"),
+                                            r.Text(kind="text", text=")"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="b"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", bold=True, text="Aujourd'hui"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="il"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="fait"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", italic=True, text="gris"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="et"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[
+                                                    [r.Text(kind="text", text="il pleuvra")],
+                                                    [r.Text(kind="text", text="il pleut")],
+                                                    [r.Text(kind="text", text="il pleuvait")],
+                                                ],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="c"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="Aujourd"),
+                                            r.Text(kind="text", text="'"),
+                                            r.Text(kind="text", text="hui"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="il"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="fait"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="gris")], [r.Text(kind="text", text="beau")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="et"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="il"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="pleut")], [r.Text(kind="text", text="pleuvra")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                ]
+                            ),
+                        )
+                    ],
+                ),
             )
             session.rollback()
             self.expect_rollback()
