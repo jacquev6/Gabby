@@ -8,7 +8,109 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
   it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_bold_and_italic pagelet 0 instructions', () => {
     cy.mount(TricolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "This"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "is"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "a"}, {"kind": "whitespace"}, {"kind": "text", "bold": true, "italic": false, "highlighted": null, "text": "strict"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "instructions"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": true, "highlighted": null, "text": "paragraph"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "."}]}, {"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "And"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "this"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "is"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "a"}, {"kind": "whitespace"}, {"kind": "text", "bold": true, "italic": false, "highlighted": null, "text": "lenient"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "instructions"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": true, "highlighted": null, "text": "paragraph"}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "This"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "is"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "a"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "bold": true,
+                "text": "strict"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "instructions"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "italic": true,
+                "text": "paragraph"
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          },
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "And"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "this"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "is"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "a"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "bold": true,
+                "text": "lenient"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "instructions"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "italic": true,
+                "text": "paragraph"
+              }
+            ]
+          }
+        ],
         modelValue: {},
       },
     })
@@ -18,7 +120,109 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
   it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_bold_and_italic pagelet 0 wording', () => {
     cy.mount(TricolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "This"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "is"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "a"}, {"kind": "whitespace"}, {"kind": "text", "bold": true, "italic": false, "highlighted": null, "text": "strict"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "wording"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": true, "highlighted": null, "text": "paragraph"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "."}]}, {"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "And"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "this"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "is"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "a"}, {"kind": "whitespace"}, {"kind": "text", "bold": true, "italic": false, "highlighted": null, "text": "lenient"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "wording"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": true, "highlighted": null, "text": "paragraph"}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "This"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "is"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "a"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "bold": true,
+                "text": "strict"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "wording"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "italic": true,
+                "text": "paragraph"
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          },
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "And"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "this"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "is"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "a"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "bold": true,
+                "text": "lenient"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "wording"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "italic": true,
+                "text": "paragraph"
+              }
+            ]
+          }
+        ],
         modelValue: {},
       },
     })
@@ -28,7 +232,16 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
   it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_fill_with_free_text pagelet 0 instructions', () => {
     cy.mount(TricolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "instructions"}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "instructions"
+              }
+            ]
+          }
+        ],
         modelValue: {},
       },
     })
@@ -38,7 +251,132 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
   it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_fill_with_free_text pagelet 0 wording', () => {
     cy.mount(TricolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "This"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "is"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "a"}, {"kind": "whitespace"}, {"kind": "freeTextInput"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "strict"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "paragraph"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "."}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "With"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "some"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "punctuation"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "."}]}, {"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "And"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "this"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": ","}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "is"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "a"}, {"kind": "whitespace"}, {"kind": "freeTextInput"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "lenient"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "paragraph"}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "This"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "is"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "a"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "freeTextInput"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "strict"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "paragraph"
+              },
+              {
+                "kind": "text",
+                "text": "."
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "With"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "some"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "punctuation"
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          },
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "And"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "this"
+              },
+              {
+                "kind": "text",
+                "text": ","
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "is"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "a"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "freeTextInput"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "lenient"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "paragraph"
+              }
+            ]
+          }
+        ],
         modelValue: {},
       },
     })
@@ -48,7 +386,53 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
   it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_multiple_choices pagelet 0 instructions', () => {
     cy.mount(TricolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "Choose"}, {"kind": "whitespace"}, {"kind": "passiveSequence", "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "alpha"}], "boxed": true}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "ou"}, {"kind": "whitespace"}, {"kind": "passiveSequence", "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "bravo"}], "boxed": true}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "."}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "Choose"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "alpha"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "ou"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "bravo"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          }
+        ],
         modelValue: {},
       },
     })
@@ -58,7 +442,160 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
   it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_multiple_choices pagelet 0 wording', () => {
     cy.mount(TricolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "This"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "is"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "a"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "alpha"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "bravo"}]], "show_choices_by_default": false}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "strict"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "paragraph"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "."}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "With"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "some"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "punctuation"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "."}]}, {"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "And"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "this"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": ","}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "is"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "a"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "alpha"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "bravo"}]], "show_choices_by_default": false}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "lenient"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "paragraph"}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "This"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "is"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "a"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "multipleChoicesInput",
+                "choices": [
+                  [
+                    {
+                      "kind": "text",
+                      "text": "alpha"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "bravo"
+                    }
+                  ]
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "strict"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "paragraph"
+              },
+              {
+                "kind": "text",
+                "text": "."
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "With"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "some"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "punctuation"
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          },
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "And"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "this"
+              },
+              {
+                "kind": "text",
+                "text": ","
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "is"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "a"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "multipleChoicesInput",
+                "choices": [
+                  [
+                    {
+                      "kind": "text",
+                      "text": "alpha"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "bravo"
+                    }
+                  ]
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "lenient"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "paragraph"
+              }
+            ]
+          }
+        ],
         modelValue: {},
       },
     })
@@ -68,7 +605,280 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
   it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_select_words_with_punctuation pagelet 0 wording', () => {
     cy.mount(TricolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "This"}]}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "is"}]}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "a"}]}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "strict"}]}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "paragraph"}]}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": ","}]}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "with"}]}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "..."}]}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "some"}]}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "punctuation"}]}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "."}]}]}, {"contents": [{"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "And"}]}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "this"}]}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": ","}]}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "is"}]}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "a"}]}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "..."}]}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "lenient"}]}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "paragraph"}]}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "This"
+                  }
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "is"
+                  }
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "a"
+                  }
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "strict"
+                  }
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "paragraph"
+                  }
+                ]
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": ","
+                  }
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "with"
+                  }
+                ]
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "..."
+                  }
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "some"
+                  }
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "punctuation"
+                  }
+                ]
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "contents": [
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "And"
+                  }
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "this"
+                  }
+                ]
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": ","
+                  }
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "is"
+                  }
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "a"
+                  }
+                ]
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "..."
+                  }
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "lenient"
+                  }
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "paragraph"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
         modelValue: {},
       },
     })
@@ -78,7 +888,240 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
   it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_select_words_without_punctuation pagelet 0 wording', () => {
     cy.mount(TricolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "This"}]}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "is"}]}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "a"}]}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "strict"}]}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "paragraph"}]}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": ","}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "with"}]}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "..."}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "some"}]}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "punctuation"}]}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "."}]}, {"contents": [{"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "And"}]}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "this"}]}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": ","}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "is"}]}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "a"}]}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "..."}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "lenient"}]}, {"kind": "whitespace"}, {"kind": "selectableInput", "colors": ["red"], "boxed": false, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "paragraph"}]}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "This"
+                  }
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "is"
+                  }
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "a"
+                  }
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "strict"
+                  }
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "paragraph"
+                  }
+                ]
+              },
+              {
+                "kind": "text",
+                "text": ","
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "with"
+                  }
+                ]
+              },
+              {
+                "kind": "text",
+                "text": "..."
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "some"
+                  }
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "punctuation"
+                  }
+                ]
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          },
+          {
+            "contents": [
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "And"
+                  }
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "this"
+                  }
+                ]
+              },
+              {
+                "kind": "text",
+                "text": ","
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "is"
+                  }
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "a"
+                  }
+                ]
+              },
+              {
+                "kind": "text",
+                "text": "..."
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "lenient"
+                  }
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red"
+                ],
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "paragraph"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
         modelValue: {},
       },
     })

@@ -624,7 +624,13 @@ class AdaptationTestCase(unittest.TestCase):
             for test_id, adapted in cls.tests_to_generate:
                 for pagelet_index, pagelet in enumerate(adapted.pagelets):
                     for section_name in ["instructions", "wording"]:
-                        paragraphs = json.dumps(getattr(pagelet, section_name).model_dump()["paragraphs"])
+                        paragraphs = "\n        ".join(
+                            line
+                            for line in json.dumps(
+                                getattr(pagelet, section_name).model_dump(by_alias=True, exclude_defaults=True)["paragraphs"],
+                                indent=2,
+                            ).splitlines()
+                        )
                         if paragraphs in seen_paragraphs:
                             continue
                         seen_paragraphs.add(paragraphs)
