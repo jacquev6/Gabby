@@ -226,10 +226,34 @@ export interface components {
       /** Letters */
       letters: boolean;
     };
+    /** Choices2 */
+    Choices2: {
+      /** Mcqfielduid */
+      mcqFieldUid?: string | null;
+      /** Placeholder */
+      placeholder: string;
+      /** Separator1 */
+      separator1: string;
+      /** Separator2 */
+      separator2: string;
+      /** Start */
+      start: string;
+      /** Stop */
+      stop: string;
+    };
     /** EmbedInsertOp */
-    EmbedInsertOp: {
-      /** Insert */
-      insert: Record<string, unknown>;
+    "EmbedInsertOp-Input": {
+      insert: components["schemas"]["McqFieldEmbedInsertOpInsert-Input"];
+      /**
+       * Kind
+       * @default embed
+       * @constant
+       */
+      kind?: "embed";
+    };
+    /** EmbedInsertOp */
+    "EmbedInsertOp-Output": {
+      insert: components["schemas"]["McqFieldEmbedInsertOpInsert-Output"];
     };
     /** Exercise */
     Exercise: {
@@ -265,6 +289,22 @@ export interface components {
        * @constant
        */
       kind: "manual";
+    };
+    /** McqFieldEmbedInsertOpInsert */
+    "McqFieldEmbedInsertOpInsert-Input": {
+      /**
+       * Kind
+       * @default mcq-field
+       * @constant
+       */
+      kind?: "mcq-field";
+      /** Mcq-Field */
+      "mcq-field": string;
+    };
+    /** McqFieldEmbedInsertOpInsert */
+    "McqFieldEmbedInsertOpInsert-Output": {
+      /** Mcq-Field */
+      "mcq-field": string;
     };
     /** MultipleChoicesInput */
     MultipleChoicesInput: {
@@ -443,11 +483,48 @@ export interface components {
       text: string;
     };
     /** TextInsertOp */
-    TextInsertOp: {
-      /** Attributes */
-      attributes: Record<string, unknown>;
+    "TextInsertOp-Input": {
+      attributes: components["schemas"]["TextInsertOpAttributes"];
       /** Insert */
       insert: string;
+      /**
+       * Kind
+       * @default text
+       * @constant
+       */
+      kind?: "text";
+    };
+    /** TextInsertOp */
+    "TextInsertOp-Output": {
+      attributes: components["schemas"]["TextInsertOpAttributes"];
+      /** Insert */
+      insert: string;
+    };
+    /** TextInsertOpAttributes */
+    TextInsertOpAttributes: {
+      /**
+       * Bold
+       * @default false
+       */
+      bold?: boolean;
+      choices2?: components["schemas"]["Choices2"] | null;
+      /**
+       * Italic
+       * @default false
+       */
+      italic?: boolean;
+      /**
+       * Manual-Item
+       * @default false
+       */
+      "manual-item"?: boolean;
+      /**
+       * Mcq-Placeholder
+       * @default false
+       */
+      "mcq-placeholder"?: boolean;
+      /** Sel */
+      sel?: number | null;
     };
     /** TokensItems */
     TokensItems: {
@@ -512,32 +589,47 @@ export interface components {
        * Clue
        * @default [
        *   {
-       *     "attributes": {},
+       *     "attributes": {
+       *       "bold": false,
+       *       "italic": false,
+       *       "manual_item": false,
+       *       "mcq_placeholder": false
+       *     },
        *     "insert": "\n"
        *   }
        * ]
        */
-      clue?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      clue?: (components["schemas"]["TextInsertOp-Input"] | components["schemas"]["EmbedInsertOp-Input"])[];
       /**
        * Example
        * @default [
        *   {
-       *     "attributes": {},
+       *     "attributes": {
+       *       "bold": false,
+       *       "italic": false,
+       *       "manual_item": false,
+       *       "mcq_placeholder": false
+       *     },
        *     "insert": "\n"
        *   }
        * ]
        */
-      example?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      example?: (components["schemas"]["TextInsertOp-Input"] | components["schemas"]["EmbedInsertOp-Input"])[];
       /**
        * Instructions
        * @default [
        *   {
-       *     "attributes": {},
+       *     "attributes": {
+       *       "bold": false,
+       *       "italic": false,
+       *       "manual_item": false,
+       *       "mcq_placeholder": false
+       *     },
        *     "insert": "\n"
        *   }
        * ]
        */
-      instructions?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      instructions?: (components["schemas"]["TextInsertOp-Input"] | components["schemas"]["EmbedInsertOp-Input"])[];
       /** Number */
       number: string;
       /**
@@ -549,24 +641,34 @@ export interface components {
        * Textreference
        * @default [
        *   {
-       *     "attributes": {},
+       *     "attributes": {
+       *       "bold": false,
+       *       "italic": false,
+       *       "manual_item": false,
+       *       "mcq_placeholder": false
+       *     },
        *     "insert": "\n"
        *   }
        * ]
        */
-      textReference?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      textReference?: (components["schemas"]["TextInsertOp-Input"] | components["schemas"]["EmbedInsertOp-Input"])[];
       /** Textbookpage */
       textbookPage?: number | null;
       /**
        * Wording
        * @default [
        *   {
-       *     "attributes": {},
+       *     "attributes": {
+       *       "bold": false,
+       *       "italic": false,
+       *       "manual_item": false,
+       *       "mcq_placeholder": false
+       *     },
        *     "insert": "\n"
        *   }
        * ]
        */
-      wording?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      wording?: (components["schemas"]["TextInsertOp-Input"] | components["schemas"]["EmbedInsertOp-Input"])[];
     };
     /** exerciseCreateInputDataRelationships */
     exerciseCreateInputDataRelationships: {
@@ -594,22 +696,22 @@ export interface components {
     exerciseOutputItemAttributes: {
       adaptation: components["schemas"]["Adaptation"];
       /** Clue */
-      clue: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      clue: (components["schemas"]["TextInsertOp-Output"] | components["schemas"]["EmbedInsertOp-Output"])[];
       /**
        * Createdat
        * Format: date-time
        */
       createdAt: string;
       /** Example */
-      example: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      example: (components["schemas"]["TextInsertOp-Output"] | components["schemas"]["EmbedInsertOp-Output"])[];
       /** Instructions */
-      instructions: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      instructions: (components["schemas"]["TextInsertOp-Output"] | components["schemas"]["EmbedInsertOp-Output"])[];
       /** Number */
       number: string;
       /** Rectangles */
       rectangles: components["schemas"]["PdfRectangle"][];
       /** Textreference */
-      textReference: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      textReference: (components["schemas"]["TextInsertOp-Output"] | components["schemas"]["EmbedInsertOp-Output"])[];
       /** Textbookpage */
       textbookPage: number | null;
       /**
@@ -618,7 +720,7 @@ export interface components {
        */
       updatedAt: string;
       /** Wording */
-      wording: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      wording: (components["schemas"]["TextInsertOp-Output"] | components["schemas"]["EmbedInsertOp-Output"])[];
     };
     /** exerciseOutputItemRelationships */
     exerciseOutputItemRelationships: {
@@ -655,17 +757,17 @@ export interface components {
     exerciseUpdateInputDataAttributes: {
       adaptation?: components["schemas"]["Adaptation"];
       /** Clue */
-      clue?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      clue?: (components["schemas"]["TextInsertOp-Input"] | components["schemas"]["EmbedInsertOp-Input"])[];
       /** Example */
-      example?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      example?: (components["schemas"]["TextInsertOp-Input"] | components["schemas"]["EmbedInsertOp-Input"])[];
       /** Instructions */
-      instructions?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      instructions?: (components["schemas"]["TextInsertOp-Input"] | components["schemas"]["EmbedInsertOp-Input"])[];
       /** Rectangles */
       rectangles?: components["schemas"]["PdfRectangle"][];
       /** Textreference */
-      textReference?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      textReference?: (components["schemas"]["TextInsertOp-Input"] | components["schemas"]["EmbedInsertOp-Input"])[];
       /** Wording */
-      wording?: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      wording?: (components["schemas"]["TextInsertOp-Input"] | components["schemas"]["EmbedInsertOp-Input"])[];
     };
     /** exerciseUpdateInputDataRelationships */
     exerciseUpdateInputDataRelationships: Record<string, never>;
@@ -741,17 +843,17 @@ export interface components {
     parsedExerciseCreateInputDataAttributes: {
       adaptation: components["schemas"]["Adaptation"];
       /** Clue */
-      clue: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      clue: (components["schemas"]["TextInsertOp-Input"] | components["schemas"]["EmbedInsertOp-Input"])[];
       /** Example */
-      example: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      example: (components["schemas"]["TextInsertOp-Input"] | components["schemas"]["EmbedInsertOp-Input"])[];
       /** Instructions */
-      instructions: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      instructions: (components["schemas"]["TextInsertOp-Input"] | components["schemas"]["EmbedInsertOp-Input"])[];
       /** Number */
       number: string;
       /** Textreference */
-      textReference: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      textReference: (components["schemas"]["TextInsertOp-Input"] | components["schemas"]["EmbedInsertOp-Input"])[];
       /** Wording */
-      wording: (components["schemas"]["TextInsertOp"] | components["schemas"]["EmbedInsertOp"])[];
+      wording: (components["schemas"]["TextInsertOp-Input"] | components["schemas"]["EmbedInsertOp-Input"])[];
     };
     /** parsedExerciseCreateInputDataRelationships */
     parsedExerciseCreateInputDataRelationships: Record<string, never>;

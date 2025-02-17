@@ -52,7 +52,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
 
     @instructions.setter
     def instructions(self, instructions: deltas.Deltas):
-        self._instructions = [delta.model_dump() for delta in instructions]
+        self._instructions = deltas.to_list(instructions)
 
     _wording: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="wording", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
 
@@ -64,7 +64,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
 
     @wording.setter
     def wording(self, wording: deltas.Deltas):
-        self._wording = [delta.model_dump() for delta in wording]
+        self._wording = deltas.to_list(wording)
 
     _example: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="example", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
 
@@ -76,7 +76,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
 
     @example.setter
     def example(self, example: str | deltas.Deltas):
-        self._example = [delta.model_dump() for delta in example]
+        self._example = deltas.to_list(example)
 
     _clue: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="clue", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
 
@@ -88,7 +88,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
 
     @clue.setter
     def clue(self, clue: deltas.Deltas):
-        self._clue = [delta.model_dump() for delta in clue]
+        self._clue = deltas.to_list(clue)
 
     _text_reference: orm.Mapped[list] = orm.mapped_column(sql.JSON, name="text_reference", default=deltas.empty_as_list, server_default=deltas.empty_as_string)
 
@@ -100,7 +100,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
 
     @text_reference.setter
     def text_reference(self, text_reference: deltas.Deltas):
-        self._text_reference = [delta.model_dump() for delta in text_reference]
+        self._text_reference = deltas.to_list(text_reference)
 
     # @todo(After migration dd7b7de68daa is applied) Remove the following field
     _old_wording_paragraphs_per_pagelet: orm.Mapped[int | None] = orm.mapped_column(name="wording_paragraphs_per_pagelet", nullable=True)

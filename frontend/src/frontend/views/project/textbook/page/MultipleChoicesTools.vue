@@ -1,7 +1,8 @@
 <script lang="ts">
 import Quill from 'quill/core'
 
-import { InlineBlot, InlineEmbed, type Model as Deltas } from '$frontend/components/Quill.vue'
+import { InlineBlot, InlineEmbed } from '$frontend/components/Quill.vue'
+import type { CustomDeltas } from './ExerciseFieldsForm.vue'
 import ContextMenu from '$frontend/components/ContextMenu.vue'
 import deepCopy from 'deep-copy'
 
@@ -90,7 +91,7 @@ function doneEditingChoices2() {
     // @todo Don't replicate if current selection doesn't match start separator and stop
   if (needsReplication) {
     console.log('Replicating choices')
-    const newWording: Deltas = []
+    const newWording: CustomDeltas = []
     for (const operation of model.value.wording) {
       if (typeof operation.insert === 'string') {
         console.assert('attributes' in operation)

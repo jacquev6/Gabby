@@ -140,7 +140,7 @@ class _Adapter:
 
     def adapt_instructions_sentence(self, sentence_deltas: deltas.Deltas):
         for delta in sentence_deltas:
-            if delta.attributes == {}:
+            if delta.attributes == deltas.TextInsertOpAttributes():
                 for text in re.split(r"(\.\.\.|\s+|\W)", delta.insert):
                     if text != "":
                         if text.strip() == "":
@@ -148,23 +148,23 @@ class _Adapter:
                         else:
                             yield renderable.Text(kind="text", text=text)
 
-            elif "sel" in delta.attributes:
-                assert delta.attributes == {"sel": delta.attributes["sel"]}
+            elif delta.attributes.sel is not None:
+                assert delta.attributes == deltas.TextInsertOpAttributes(sel=delta.attributes.sel)
 
-                if len(self.colors_for_selectable_items) > delta.attributes["sel"] - 1:
-                    yield renderable.Text(kind="text", text=delta.insert, highlighted=self.colors_for_selectable_items[delta.attributes["sel"] - 1])
+                if len(self.colors_for_selectable_items) > delta.attributes.sel - 1:
+                    yield renderable.Text(kind="text", text=delta.insert, highlighted=self.colors_for_selectable_items[delta.attributes.sel - 1])
                 else:
                     yield renderable.Text(kind="text", text=delta.insert)
 
-            elif "choices2" in delta.attributes:
-                assert delta.attributes == {"choices2": delta.attributes["choices2"]}
+            elif delta.attributes.choices2 is not None:
+                assert delta.attributes == deltas.TextInsertOpAttributes(choices2=delta.attributes.choices2)
 
                 mcq_definition = McqDefinition(
-                    start=delta.attributes["choices2"]["start"] or None,
-                    separator1=delta.attributes["choices2"]["separator1"] or None,
-                    separator2=delta.attributes["choices2"]["separator2"] or None,
-                    stop=delta.attributes["choices2"]["stop"] or None,
-                    placeholder=delta.attributes["choices2"]["placeholder"] or None,
+                    start=delta.attributes.choices2.start or None,
+                    separator1=delta.attributes.choices2.separator1 or None,
+                    separator2=delta.attributes.choices2.separator2 or None,
+                    stop=delta.attributes.choices2.stop or None,
+                    placeholder=delta.attributes.choices2.placeholder or None,
                     text=delta.insert,
                 )
 
@@ -181,18 +181,18 @@ class _Adapter:
                     yield renderable.Whitespace(kind="whitespace")
                     yield renderable.PassiveSequence(kind="passiveSequence", contents=choices[-1], boxed=True)
 
-            elif "bold" in delta.attributes or "italic" in delta.attributes:
-                assert set(delta.attributes.keys()) <= {"bold", "italic"}
+            elif delta.attributes.bold or delta.attributes.italic:
+                assert delta.attributes == deltas.TextInsertOpAttributes(bold=delta.attributes.bold, italic=delta.attributes.italic)
 
                 yield renderable.Text(
                     kind="text",
                     text=delta.insert,
-                    bold=delta.attributes.get("bold", False),
-                    italic=delta.attributes.get("italic", False),
+                    bold=delta.attributes.bold,
+                    italic=delta.attributes.italic,
                 )
 
             else:
-                assert False, f"Unknown attributes: {delta.attributes}"
+                assert False, f"Unknown attributes: {delta!r}"
 
     def adapt_wording(self, wording: deltas.Deltas, wording_paragraphs_per_pagelet: int | None) -> Iterable[list[renderable.Paragraph]]:
         current_pagelet = []
@@ -214,7 +214,7 @@ class _Adapter:
 
     def adapt_wording_pagelet(self, pagelet_deltas: deltas.Deltas) -> Iterable[renderable.Paragraph]:
         for delta in pagelet_deltas:
-            if isinstance(delta, deltas.TextInsertOp) and delta.attributes == {}:
+            if delta.kind == "text" and delta.attributes == deltas.TextInsertOpAttributes():
                 for index, (placeholder, _token) in enumerate(self.global_placeholders):
                     delta.insert = delta.insert.replace(placeholder, f"ph{index}hp")
 
@@ -245,7 +245,7 @@ class _Adapter:
                 )
 
         for delta in paragraph_deltas:
-            if isinstance(delta, deltas.TextInsertOp) and delta.attributes == {}:
+            if delta.kind == "text" and delta.attributes == deltas.TextInsertOpAttributes():
                 for index, (mcq_definition.placeholder, _token) in enumerate(sentence_specific_placeholders):
                     delta.insert = delta.insert.replace(mcq_definition.placeholder, f"ph{len(self.global_placeholders) + index}hp")
 
@@ -312,10 +312,11 @@ class _Adapter:
         make_mcq_placeholder_replacement: renderable.AnyRenderable | None = None,
     ):
         for delta in sentence_deltas:
-            if isinstance(delta, deltas.TextInsertOp):
+            if delta.kind == "text":
                 if make_mcq_placeholder_replacement is None:
-                    delta.attributes.pop("mcq-placeholder", None)
-                if delta.attributes == {}:
+                    delta.attributes.mcq_placeholder = False
+
+                if delta.attributes == deltas.TextInsertOpAttributes():
                     for i, text in enumerate(re.split(r"(\.\.\.|\s+|\W|ph\d+hp)", delta.insert)):
                         if text != "":
                             if i % 2 == 1:
@@ -341,13 +342,13 @@ class _Adapter:
                                 else:
                                     yield renderable.Text(kind="text", text=text)
 
-                elif "mcq-placeholder" in delta.attributes:
-                    assert delta.attributes == {"mcq-placeholder": delta.attributes["mcq-placeholder"]}
+                elif delta.attributes.mcq_placeholder:
+                    assert delta.attributes == deltas.TextInsertOpAttributes(mcq_placeholder=delta.attributes.mcq_placeholder)
 
                     yield make_mcq_placeholder_replacement(delta)
 
-                elif "manual-item" in delta.attributes:
-                    assert delta.attributes == {"manual-item": delta.attributes["manual-item"]}
+                elif delta.attributes.manual_item:
+                    assert delta.attributes == deltas.TextInsertOpAttributes(manual_item=delta.attributes.manual_item)
 
                     for text in re.split(r"(\.\.\.|\s+|\W)", delta.insert):
                         if text != "":
@@ -360,27 +361,27 @@ class _Adapter:
                                 else:
                                     yield item
 
-                elif "bold" in delta.attributes or "italic" in delta.attributes:
-                    assert set(delta.attributes.keys()) <= {"bold", "italic"}
+                elif delta.attributes.bold or delta.attributes.italic:
+                    assert delta.attributes == deltas.TextInsertOpAttributes(bold=delta.attributes.bold, italic=delta.attributes.italic)
 
                     yield renderable.Text(
                         kind="text",
                         text=delta.insert,
-                        bold=delta.attributes.get("bold", False),
-                        italic=delta.attributes.get("italic", False),
+                        bold=delta.attributes.bold,
+                        italic=delta.attributes.italic,
                     )
 
-                elif "choices2" in delta.attributes:
-                    assert delta.attributes == {"choices2": delta.attributes["choices2"]}
+                elif delta.attributes.choices2 is not None:
+                    assert delta.attributes == deltas.TextInsertOpAttributes(choices2=delta.attributes.choices2)
 
-                    choices_settings = delta.attributes["choices2"]
-                    placeholder = choices_settings["placeholder"] or None
+                    choices_settings = delta.attributes.choices2
+                    placeholder = choices_settings.placeholder or None
                     if placeholder is None:
                         mcq_definition = McqDefinition(
-                            start=choices_settings["start"] or None,
-                            separator1=choices_settings["separator1"] or None,
-                            separator2=choices_settings["separator2"] or None,
-                            stop=choices_settings["stop"] or None,
+                            start=choices_settings.start or None,
+                            separator1=choices_settings.separator1 or None,
+                            separator2=choices_settings.separator2 or None,
+                            stop=choices_settings.stop or None,
                             text=delta.insert,
                         )
                         yield renderable.MultipleChoicesInput(
@@ -391,11 +392,10 @@ class _Adapter:
                         )
 
                 else:
-                    assert False, f"Unknown attributes: {delta}"
+                    assert False, f"Unknown attributes: {delta!r}"
             else:
-                assert "mcq-field" in delta.insert
-                assert delta.insert == {"mcq-field": delta.insert["mcq-field"]}
-                yield self.mcqs_by_uid.get(delta.insert["mcq-field"], renderable.MultipleChoicesInput(kind="multipleChoicesInput", choices=[]))
+                assert delta.insert.kind == "mcq-field"
+                yield self.mcqs_by_uid.get(delta.insert.mcq_field, renderable.MultipleChoicesInput(kind="multipleChoicesInput", choices=[]))
 
     def decorate_item(self, contents):
         if self.items_are_selectable:
@@ -458,15 +458,15 @@ class _Adapter:
     def split_deltas(self, section_deltas: deltas.Deltas, separator_pattern: str) -> Iterable[deltas.Deltas]:
         section_deltas = copy.deepcopy(section_deltas)
         assert len(section_deltas) > 0
-        if isinstance(section_deltas[0], deltas.TextInsertOp):
+        if section_deltas[0].kind == "text":
             section_deltas[0].insert = section_deltas[0].insert.lstrip()
-        if isinstance(section_deltas[-1], deltas.TextInsertOp):
+        if section_deltas[-1].kind == "text":
             section_deltas[-1].insert = section_deltas[-1].insert.rstrip()
 
         current_paragraph = []
         for delta in section_deltas:
-            if isinstance(delta, deltas.TextInsertOp):
-                if "choices2" in delta.attributes:
+            if delta.kind == "text":
+                if delta.attributes.choices2 is not None:
                     current_paragraph.append(delta)
                 else:
                     for i, paragraph_part in enumerate(re.split(separator_pattern, delta.insert)):
@@ -482,7 +482,7 @@ class _Adapter:
     def split_deltas_into_sentences(self, paragraph_deltas: deltas.Deltas) -> Iterable[deltas.Deltas]:
         current_sentence = []
         for delta in paragraph_deltas:
-            if "choices2" in delta.attributes:
+            if delta.attributes.choices2 is not None:
                 current_sentence.append(delta)
             else:
                 for i, sentence_part in enumerate(re.split(r"(\.\.\.|[.!?…])", delta.insert)):
@@ -494,7 +494,7 @@ class _Adapter:
         yield current_sentence
 
     def split_list_header(self, paragraph_deltas: deltas.Deltas) -> tuple[deltas.Deltas, deltas.Deltas]:
-        if len(paragraph_deltas) == 0 or not isinstance(paragraph_deltas[0], deltas.TextInsertOp):
+        if len(paragraph_deltas) == 0 or paragraph_deltas[0].kind != "text":
             return ([], paragraph_deltas)
         else:
             # WARNING: keep the list formats supported here consistent with what's supported in 'listFormats' in 'TextPicker.vue'
@@ -581,15 +581,15 @@ class _Adapter:
 
     def gather_choices(self, deltas_):
         for delta in deltas_:
-            if isinstance(delta, deltas.TextInsertOp) and "choices2" in delta.attributes:
-                choices_settings = delta.attributes["choices2"]
+            if delta.kind == "text" and delta.attributes.choices2 is not None:
+                choices_settings = delta.attributes.choices2
                 yield McqDefinition(
-                    start=choices_settings["start"] or None,
-                    separator1=choices_settings["separator1"] or None,
-                    separator2=choices_settings["separator2"] or None,
-                    stop=choices_settings["stop"] or None,
-                    placeholder=choices_settings["placeholder"],
-                    mcq_field_uid=choices_settings.get("mcqFieldUid"),
+                    start=choices_settings.start or None,
+                    separator1=choices_settings.separator1 or None,
+                    separator2=choices_settings.separator2 or None,
+                    stop=choices_settings.stop or None,
+                    placeholder=choices_settings.placeholder,
+                    mcq_field_uid=choices_settings.mcqFieldUid,
                     text=delta.insert,
                 )
 

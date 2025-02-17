@@ -2,8 +2,7 @@
 import { useApiStore } from '$frontend/stores/api'
 import type { Project, Textbook, Exercise, InCache, Exists } from '$frontend/stores/api'
 import deepEqual from 'deep-equal'
-import { type Model as Deltas } from '$frontend/components/Quill.vue'
-import { Delta } from 'quill/core'
+import { Delta as QuillDelta } from 'quill/core'
 
 
 const api = useApiStore()
@@ -11,7 +10,9 @@ const api = useApiStore()
 type Adaptation = (Exercise & InCache & Exists)['attributes']['adaptation']
 type PdfRectangle = (Exercise & InCache & Exists)['attributes']['rectangles'][number]
 
-const emptyDeltas: Deltas = [{insert: '\n', attributes: {}}]
+export type CustomDeltas = (Exercise & InCache & Exists)['attributes']['instructions']
+
+const emptyDeltas: CustomDeltas = [{insert: '\n', attributes: {}}]
 
 export const adaptationKinds: Adaptation['kind'][] = ['generic', 'fill-with-free-text', 'multiple-choices']
 
@@ -31,11 +32,11 @@ type MakeModelOptions  = {
 // - its addendum in the "Tools" column
 export type Model = MakeModelOptions & {
   number: string
-  instructions: Deltas
-  wording: Deltas
-  example: Deltas
-  clue: Deltas
-  textReference: Deltas
+  instructions: CustomDeltas
+  wording: CustomDeltas
+  example: CustomDeltas
+  clue: CustomDeltas
+  textReference: CustomDeltas
   rectangles: PdfRectangle[]
   adaptationSettings: {
     kind: Adaptation['kind']
@@ -219,7 +220,7 @@ export function cleanupModel(model: Model) {
   const hasManualItems = model.adaptationSettings.itemized.items.isManual
   const colorsCount = model.adaptationSettings.itemized.effects.isSelectable ? model.adaptationSettings.itemized.effects.selectable.colorsCount : 0
   for (const fieldName of ['instructions', 'wording', 'example'] as const) {
-    const newOps = new Delta()
+    const newOps = new QuillDelta()
     for (const delta of model[fieldName]) {
       if (typeof delta.insert === 'string') {
         console.assert('attributes' in delta)
@@ -523,7 +524,7 @@ function selectionChangeInInstructionsOrWording(fieldName: 'instructions' | 'wor
   console.assert(instructionsEditor.value !== null)
   console.assert(instructionsEditor.value.quill !== null)
 
-  function guessSettings(deltas: Deltas, baseSettings: {mcqFieldUid: string | null}) {
+  function guessSettings(deltas: CustomDeltas, baseSettings: {mcqFieldUid: string | null}) {
     const selected = deltas.map(delta => delta.insert).join('').slice(range.index, range.index + range.length)
 
     const [start, stop] = (() => {

@@ -256,12 +256,75 @@
         "title": "CharactersItems",
         "type": "object"
       },
-      "EmbedInsertOp": {
+      "Choices2": {
+        "additionalProperties": false,
+        "properties": {
+          "mcqFieldUid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mcqfielduid"
+          },
+          "placeholder": {
+            "title": "Placeholder",
+            "type": "string"
+          },
+          "separator1": {
+            "title": "Separator1",
+            "type": "string"
+          },
+          "separator2": {
+            "title": "Separator2",
+            "type": "string"
+          },
+          "start": {
+            "title": "Start",
+            "type": "string"
+          },
+          "stop": {
+            "title": "Stop",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start",
+          "separator1",
+          "separator2",
+          "stop",
+          "placeholder"
+        ],
+        "title": "Choices2",
+        "type": "object"
+      },
+      "EmbedInsertOp-Input": {
         "additionalProperties": false,
         "properties": {
           "insert": {
-            "title": "Insert",
-            "type": "object"
+            "$ref": "#/components/schemas/McqFieldEmbedInsertOpInsert-Input"
+          },
+          "kind": {
+            "const": "embed",
+            "default": "embed",
+            "title": "Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "insert"
+        ],
+        "title": "EmbedInsertOp",
+        "type": "object"
+      },
+      "EmbedInsertOp-Output": {
+        "additionalProperties": false,
+        "properties": {
+          "insert": {
+            "$ref": "#/components/schemas/McqFieldEmbedInsertOpInsert-Output"
           }
         },
         "required": [
@@ -359,6 +422,40 @@
           "kind"
         ],
         "title": "ManualItems",
+        "type": "object"
+      },
+      "McqFieldEmbedInsertOpInsert-Input": {
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "const": "mcq-field",
+            "default": "mcq-field",
+            "title": "Kind",
+            "type": "string"
+          },
+          "mcq-field": {
+            "title": "Mcq-Field",
+            "type": "string"
+          }
+        },
+        "required": [
+          "mcq-field"
+        ],
+        "title": "McqFieldEmbedInsertOpInsert",
+        "type": "object"
+      },
+      "McqFieldEmbedInsertOpInsert-Output": {
+        "additionalProperties": false,
+        "properties": {
+          "mcq-field": {
+            "title": "Mcq-Field",
+            "type": "string"
+          }
+        },
+        "required": [
+          "mcq-field"
+        ],
+        "title": "McqFieldEmbedInsertOpInsert",
         "type": "object"
       },
       "MultipleChoicesInput": {
@@ -847,12 +944,35 @@
         "title": "Text",
         "type": "object"
       },
-      "TextInsertOp": {
+      "TextInsertOp-Input": {
         "additionalProperties": false,
         "properties": {
           "attributes": {
-            "title": "Attributes",
-            "type": "object"
+            "$ref": "#/components/schemas/TextInsertOpAttributes"
+          },
+          "insert": {
+            "title": "Insert",
+            "type": "string"
+          },
+          "kind": {
+            "const": "text",
+            "default": "text",
+            "title": "Kind",
+            "type": "string"
+          }
+        },
+        "required": [
+          "insert",
+          "attributes"
+        ],
+        "title": "TextInsertOp",
+        "type": "object"
+      },
+      "TextInsertOp-Output": {
+        "additionalProperties": false,
+        "properties": {
+          "attributes": {
+            "$ref": "#/components/schemas/TextInsertOpAttributes"
           },
           "insert": {
             "title": "Insert",
@@ -864,6 +984,54 @@
           "attributes"
         ],
         "title": "TextInsertOp",
+        "type": "object"
+      },
+      "TextInsertOpAttributes": {
+        "additionalProperties": false,
+        "properties": {
+          "bold": {
+            "default": false,
+            "title": "Bold",
+            "type": "boolean"
+          },
+          "choices2": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Choices2"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "italic": {
+            "default": false,
+            "title": "Italic",
+            "type": "boolean"
+          },
+          "manual-item": {
+            "default": false,
+            "title": "Manual-Item",
+            "type": "boolean"
+          },
+          "mcq-placeholder": {
+            "default": false,
+            "title": "Mcq-Placeholder",
+            "type": "boolean"
+          },
+          "sel": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sel"
+          }
+        },
+        "title": "TextInsertOpAttributes",
         "type": "object"
       },
       "TokensItems": {
@@ -997,17 +1165,22 @@
           "clue": {
             "default": [
               {
-                "attributes": {},
+                "attributes": {
+                  "bold": false,
+                  "italic": false,
+                  "manual_item": false,
+                  "mcq_placeholder": false
+                },
                 "insert": "\n"
               }
             ],
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/TextInsertOp"
+                  "$ref": "#/components/schemas/TextInsertOp-Input"
                 },
                 {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
+                  "$ref": "#/components/schemas/EmbedInsertOp-Input"
                 }
               ]
             },
@@ -1017,17 +1190,22 @@
           "example": {
             "default": [
               {
-                "attributes": {},
+                "attributes": {
+                  "bold": false,
+                  "italic": false,
+                  "manual_item": false,
+                  "mcq_placeholder": false
+                },
                 "insert": "\n"
               }
             ],
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/TextInsertOp"
+                  "$ref": "#/components/schemas/TextInsertOp-Input"
                 },
                 {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
+                  "$ref": "#/components/schemas/EmbedInsertOp-Input"
                 }
               ]
             },
@@ -1037,17 +1215,22 @@
           "instructions": {
             "default": [
               {
-                "attributes": {},
+                "attributes": {
+                  "bold": false,
+                  "italic": false,
+                  "manual_item": false,
+                  "mcq_placeholder": false
+                },
                 "insert": "\n"
               }
             ],
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/TextInsertOp"
+                  "$ref": "#/components/schemas/TextInsertOp-Input"
                 },
                 {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
+                  "$ref": "#/components/schemas/EmbedInsertOp-Input"
                 }
               ]
             },
@@ -1069,17 +1252,22 @@
           "textReference": {
             "default": [
               {
-                "attributes": {},
+                "attributes": {
+                  "bold": false,
+                  "italic": false,
+                  "manual_item": false,
+                  "mcq_placeholder": false
+                },
                 "insert": "\n"
               }
             ],
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/TextInsertOp"
+                  "$ref": "#/components/schemas/TextInsertOp-Input"
                 },
                 {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
+                  "$ref": "#/components/schemas/EmbedInsertOp-Input"
                 }
               ]
             },
@@ -1100,17 +1288,22 @@
           "wording": {
             "default": [
               {
-                "attributes": {},
+                "attributes": {
+                  "bold": false,
+                  "italic": false,
+                  "manual_item": false,
+                  "mcq_placeholder": false
+                },
                 "insert": "\n"
               }
             ],
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/TextInsertOp"
+                  "$ref": "#/components/schemas/TextInsertOp-Input"
                 },
                 {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
+                  "$ref": "#/components/schemas/EmbedInsertOp-Input"
                 }
               ]
             },
@@ -1200,10 +1393,10 @@
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/TextInsertOp"
+                  "$ref": "#/components/schemas/TextInsertOp-Output"
                 },
                 {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
+                  "$ref": "#/components/schemas/EmbedInsertOp-Output"
                 }
               ]
             },
@@ -1219,10 +1412,10 @@
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/TextInsertOp"
+                  "$ref": "#/components/schemas/TextInsertOp-Output"
                 },
                 {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
+                  "$ref": "#/components/schemas/EmbedInsertOp-Output"
                 }
               ]
             },
@@ -1233,10 +1426,10 @@
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/TextInsertOp"
+                  "$ref": "#/components/schemas/TextInsertOp-Output"
                 },
                 {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
+                  "$ref": "#/components/schemas/EmbedInsertOp-Output"
                 }
               ]
             },
@@ -1258,10 +1451,10 @@
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/TextInsertOp"
+                  "$ref": "#/components/schemas/TextInsertOp-Output"
                 },
                 {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
+                  "$ref": "#/components/schemas/EmbedInsertOp-Output"
                 }
               ]
             },
@@ -1288,10 +1481,10 @@
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/TextInsertOp"
+                  "$ref": "#/components/schemas/TextInsertOp-Output"
                 },
                 {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
+                  "$ref": "#/components/schemas/EmbedInsertOp-Output"
                 }
               ]
             },
@@ -1420,10 +1613,10 @@
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/TextInsertOp"
+                  "$ref": "#/components/schemas/TextInsertOp-Input"
                 },
                 {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
+                  "$ref": "#/components/schemas/EmbedInsertOp-Input"
                 }
               ]
             },
@@ -1434,10 +1627,10 @@
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/TextInsertOp"
+                  "$ref": "#/components/schemas/TextInsertOp-Input"
                 },
                 {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
+                  "$ref": "#/components/schemas/EmbedInsertOp-Input"
                 }
               ]
             },
@@ -1448,10 +1641,10 @@
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/TextInsertOp"
+                  "$ref": "#/components/schemas/TextInsertOp-Input"
                 },
                 {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
+                  "$ref": "#/components/schemas/EmbedInsertOp-Input"
                 }
               ]
             },
@@ -1469,10 +1662,10 @@
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/TextInsertOp"
+                  "$ref": "#/components/schemas/TextInsertOp-Input"
                 },
                 {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
+                  "$ref": "#/components/schemas/EmbedInsertOp-Input"
                 }
               ]
             },
@@ -1483,10 +1676,10 @@
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/TextInsertOp"
+                  "$ref": "#/components/schemas/TextInsertOp-Input"
                 },
                 {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
+                  "$ref": "#/components/schemas/EmbedInsertOp-Input"
                 }
               ]
             },
@@ -1687,10 +1880,10 @@
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/TextInsertOp"
+                  "$ref": "#/components/schemas/TextInsertOp-Input"
                 },
                 {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
+                  "$ref": "#/components/schemas/EmbedInsertOp-Input"
                 }
               ]
             },
@@ -1701,10 +1894,10 @@
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/TextInsertOp"
+                  "$ref": "#/components/schemas/TextInsertOp-Input"
                 },
                 {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
+                  "$ref": "#/components/schemas/EmbedInsertOp-Input"
                 }
               ]
             },
@@ -1715,10 +1908,10 @@
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/TextInsertOp"
+                  "$ref": "#/components/schemas/TextInsertOp-Input"
                 },
                 {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
+                  "$ref": "#/components/schemas/EmbedInsertOp-Input"
                 }
               ]
             },
@@ -1733,10 +1926,10 @@
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/TextInsertOp"
+                  "$ref": "#/components/schemas/TextInsertOp-Input"
                 },
                 {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
+                  "$ref": "#/components/schemas/EmbedInsertOp-Input"
                 }
               ]
             },
@@ -1747,10 +1940,10 @@
             "items": {
               "anyOf": [
                 {
-                  "$ref": "#/components/schemas/TextInsertOp"
+                  "$ref": "#/components/schemas/TextInsertOp-Input"
                 },
                 {
-                  "$ref": "#/components/schemas/EmbedInsertOp"
+                  "$ref": "#/components/schemas/EmbedInsertOp-Input"
                 }
               ]
             },
