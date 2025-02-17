@@ -10,13 +10,13 @@ import unittest
 
 import mydantic
 
-from . import deltas
-from . import deltas as d
-from . import exercises
-from . import exercises as e
-from . import renderable
-from . import renderable as r
-from .api_models import Adaptation, TokensItems, Selectable, PredefinedMcq
+from .. import deltas
+from .. import deltas as d
+from .. import exercises
+from .. import exercises as e
+from .. import renderable
+from .. import renderable as r
+from ..api_models import Adaptation, TokensItems, Selectable, PredefinedMcq
 
 
 def adapt(exercise: exercises.Exercise) -> renderable.Exercise | None:
