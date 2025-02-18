@@ -183,7 +183,7 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
     cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic.1.wording')
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions_with_mcq_beside_words pagelet 0 instructions', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -251,10 +251,64 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions.0.instructions')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions_with_mcq_beside_words.0.instructions')
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions pagelet 0 wording', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions_with_mcq_beside_words pagelet 0 wording', () => {
+    cy.mount(TricolorSection, {
+      props: {
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "blah"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "multipleChoicesInput",
+                "choices": [
+                  [
+                    {
+                      "kind": "text",
+                      "text": "alpha"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "b"
+                    },
+                    {
+                      "kind": "text",
+                      "bold": true,
+                      "text": "rav"
+                    },
+                    {
+                      "kind": "text",
+                      "text": "o"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "charlie"
+                    }
+                  ]
+                ]
+              }
+            ]
+          }
+        ],
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions_with_mcq_beside_words.0.wording')
+  })
+
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions_with_placeholder pagelet 0 wording', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -298,7 +352,7 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions.0.wording')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions_with_placeholder.0.wording')
   })
 
   it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_sel_and_bold pagelet 0 instructions', () => {
