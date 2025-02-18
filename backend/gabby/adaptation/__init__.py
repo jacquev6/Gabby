@@ -278,7 +278,9 @@ class _Adapter:
                     self.adapt_wording_sentence(
                         sentence_deltas,
                         sentence_placeholders,
-                        make_mcq_placeholder_replacement=lambda delta: renderable.Text(kind="text", text=delta.insert, highlighted="#ffff00"),
+                        make_mcq_placeholder_replacement=lambda deltas_: self.adapt_wording_sentence(
+                            deltas_, sentence_placeholders, initial_formatting_arguments={"highlighted": "#ffff00"}
+                        ),
                     )
                 )
                 while contents[0].kind == "whitespace":
@@ -286,7 +288,7 @@ class _Adapter:
                 if self.items_are_repeated_with_mcq:
                     contents2 = list(
                         self.adapt_wording_sentence(
-                            sentence_deltas, sentence_placeholders, make_mcq_placeholder_replacement=lambda _: self.mcq_for_placeholders
+                            sentence_deltas, sentence_placeholders, make_mcq_placeholder_replacement=lambda _: [self.mcq_for_placeholders or renderable.MultipleChoicesInput(kind="multipleChoicesInput", choices=[])]
                         )
                     )
                     while contents2[0].kind == "whitespace":
@@ -316,8 +318,9 @@ class _Adapter:
     def adapt_wording_sentence(
         self,
         sentence_deltas: deltas.Deltas,
-        sentence_placeholders: list[tuple[str, renderable.SentenceToken]],
-        make_mcq_placeholder_replacement: renderable.AnyRenderable | None = None,
+        sentence_placeholders,
+        make_mcq_placeholder_replacement = None,
+        initial_formatting_arguments: dict = {},
     ):
         next_delta_index = 0
         while next_delta_index < len(sentence_deltas):
@@ -325,11 +328,22 @@ class _Adapter:
             next_delta_index += 1
 
             if delta.kind == "text":
-                if make_mcq_placeholder_replacement is None:
-                    delta.attributes.mcq_placeholder = False
+                if make_mcq_placeholder_replacement is not None and delta.attributes.mcq_placeholder:
+                    mcq_placeholder_deltas = [delta]
+                    while (
+                        next_delta_index < len(sentence_deltas)
+                        and sentence_deltas[next_delta_index].kind == "text"
+                        and sentence_deltas[next_delta_index].attributes.mcq_placeholder
+                    ):
+                        mcq_placeholder_deltas.append(sentence_deltas[next_delta_index])
+                        next_delta_index += 1
 
-                if delta.attributes == deltas.TextInsertOpAttributes(bold=delta.attributes.bold, italic=delta.attributes.italic):
-                    formatting_arguments = {}
+                    yield from make_mcq_placeholder_replacement(mcq_placeholder_deltas)
+
+                elif delta.attributes == deltas.TextInsertOpAttributes(
+                    bold=delta.attributes.bold, italic=delta.attributes.italic, mcq_placeholder=delta.attributes.mcq_placeholder
+                ):
+                    formatting_arguments = dict(initial_formatting_arguments)
                     if delta.attributes.bold:
                         formatting_arguments["bold"] = True
                     if delta.attributes.italic:
@@ -386,11 +400,6 @@ class _Adapter:
                                         text=text,
                                         **formatting_arguments,
                                     )
-
-                elif delta.attributes.mcq_placeholder:
-                    assert delta.attributes == deltas.TextInsertOpAttributes(mcq_placeholder=delta.attributes.mcq_placeholder), f"Unknown attributes: {delta!r}"
-
-                    yield make_mcq_placeholder_replacement(delta)
 
                 elif delta.attributes.manual_item:
                     assert delta.attributes == deltas.TextInsertOpAttributes(manual_item=delta.attributes.manual_item), f"Unknown attributes: {delta!r}"

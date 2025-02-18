@@ -183,6 +183,144 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
     cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic.1.wording')
   })
 
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_mcq_placeholder pagelet 0 instructions', () => {
+    cy.mount(TricolorSection, {
+      props: {
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "Instructions"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "alpha"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "ou"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "bravo"
+                  }
+                ],
+                "boxed": true
+              }
+            ]
+          }
+        ],
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_mcq_placeholder.0.instructions')
+  })
+
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_mcq_placeholder pagelet 0 wording', () => {
+    cy.mount(TricolorSection, {
+      props: {
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "sequence",
+                "contents": [
+                  {
+                    "kind": "sequence",
+                    "contents": [
+                      {
+                        "kind": "text",
+                        "text": "Blah"
+                      },
+                      {
+                        "kind": "whitespace"
+                      },
+                      {
+                        "kind": "text",
+                        "highlighted": "#ffff00",
+                        "text": "b"
+                      },
+                      {
+                        "kind": "text",
+                        "bold": true,
+                        "highlighted": "#ffff00",
+                        "text": "la"
+                      },
+                      {
+                        "kind": "text",
+                        "highlighted": "#ffff00",
+                        "text": "h"
+                      },
+                      {
+                        "kind": "text",
+                        "text": "."
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "sequence",
+                    "contents": [
+                      {
+                        "kind": "text",
+                        "text": "Blah"
+                      },
+                      {
+                        "kind": "whitespace"
+                      },
+                      {
+                        "kind": "multipleChoicesInput",
+                        "choices": [
+                          [
+                            {
+                              "kind": "text",
+                              "text": "alpha"
+                            }
+                          ],
+                          [
+                            {
+                              "kind": "text",
+                              "text": "bravo"
+                            }
+                          ]
+                        ]
+                      },
+                      {
+                        "kind": "text",
+                        "text": "."
+                      }
+                    ]
+                  }
+                ],
+                "vertical": true
+              }
+            ]
+          }
+        ],
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_mcq_placeholder.0.wording')
+  })
+
   it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions_with_mcq_beside_words pagelet 0 instructions', () => {
     cy.mount(TricolorSection, {
       props: {

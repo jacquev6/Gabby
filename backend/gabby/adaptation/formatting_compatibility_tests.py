@@ -576,3 +576,101 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 ],
             ),
         )
+
+    def test_bold_in_mcq_placeholder(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[
+                    d.TextInsertOp(insert="Instructions ", attributes={}),
+                    d.TextInsertOp(
+                        insert="alpha ou bravo",
+                        attributes={"choices2": {"start": "", "separator1": "ou", "separator2": "", "stop": "", "placeholder": ""}},
+                    ),
+                    d.TextInsertOp(insert="\n", attributes={}),
+                ],
+                wording=[
+                    d.TextInsertOp(insert="Blah ", attributes={}),
+                    d.TextInsertOp(insert="b", attributes={"mcq-placeholder": True}),
+                    d.TextInsertOp(insert="la", attributes={"mcq-placeholder": True, "bold": True}),
+                    d.TextInsertOp(insert="h", attributes={"mcq-placeholder": True}),
+                    d.TextInsertOp(insert=".\n", attributes={}),
+                ],
+                adaptation=Adaptation(
+                    kind="generic",
+                    wording_paragraphs_per_pagelet=None,
+                    single_item_per_paragraph=False,
+                    placeholder_for_fill_with_free_text=None,
+                    items=None,  # {"kind": "sentences"} is implied by items_are_repeated_with_mcq (for now?)
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                    items_are_repeated_with_mcq=True,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Instructions"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="ou"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
+                                    ]
+                                )
+                            ]
+                        ),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.AnySequence(
+                                            kind="sequence",
+                                            contents=[
+                                                r.AnySequence(
+                                                    kind="sequence",
+                                                    contents=[
+                                                        r.Text(kind="text", text="Blah"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", highlighted="#ffff00", text="b"),
+                                                        r.Text(kind="text", highlighted="#ffff00", bold=True, text="la"),
+                                                        r.Text(kind="text", highlighted="#ffff00", text="h"),
+                                                        r.Text(kind="text", text="."),
+                                                    ],
+                                                ),
+                                                r.AnySequence(
+                                                    kind="sequence",
+                                                    contents=[
+                                                        r.Text(kind="text", text="Blah"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.MultipleChoicesInput(
+                                                            kind="multipleChoicesInput",
+                                                            choices=[[r.Text(kind="text", text="alpha")], [r.Text(kind="text", text="bravo")]],
+                                                        ),
+                                                        r.Text(kind="text", text="."),
+                                                    ],
+                                                ),
+                                            ],
+                                            vertical=True,
+                                        )
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
+            ),
+        )

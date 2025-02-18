@@ -319,8 +319,63 @@ describe('Gabby', () => {
     cy.get('bold-blot > choices2-blot').should('not.exist')
     cy.get('@instructions').find('choices2-blot').should('have.length', 1)
 
-    cy.get('button:contains("Full screen")').click()
     cy.get('span.main').click()
-    screenshot('mcq-in-instructions-with-formatted-choices')
+    screenshot('mcq-in-instructions-with-formatted-choices-1')
+    cy.get('button:contains("Full screen")').click()
+    screenshot('mcq-in-instructions-with-formatted-choices-2')
+  })
+
+  it('allows bold and italic in MCQ placeholder in "Double: word -> MCQ"', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+
+    cy.get('label:contains("Instructions") + .ql-container > .ql-editor').as('instructions')
+    cy.get('label:contains("Wording") + .ql-container > .ql-editor').as('wording')
+
+    cy.get('@instructions').click().type('{selectAll}Choisis le bon verbe conjugué disez/dites.', {delay: 0})
+    cy.get('@wording').click().type('{selectAll}Vous (dire) toujours la vérité.', {delay: 0})
+
+    cy.get('div:contains("Double: word → MCQ") > input').check()
+
+    cy.get('@wording').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 7, node, 8)
+    })
+    cy.get('button[data-cy="format-bold"]').click()
+
+    cy.get('@wording').find('p').then($el => {
+      const startNode = $el[0].firstChild
+      console.assert(startNode !== null)
+      const endNode = $el[0].lastChild
+      console.assert(endNode !== null)
+      selectRange(startNode, 5, endNode, 3)
+    })
+    cy.get('button:contains("Word → MCQ")').click()
+    cy.get('mcq-placeholder-blot > bold-blot').should('exist')
+    cy.get('bold-blot > mcq-placeholder-blot').should('not.exist')
+    cy.get('@wording').find('mcq-placeholder-blot').should('have.length', 1)
+
+    cy.get('mcq-placeholder-blot').then($el => {
+      const node = $el[0].lastChild
+      console.assert(node !== null)
+      selectRange(node, 0, node, 1)
+    })
+    cy.get('button[data-cy="format-italic"]').click()
+    cy.get('mcq-placeholder-blot > italic-blot').should('exist')
+    cy.get('italic-blot > mcq-placeholder-blot').should('not.exist')
+    cy.get('@wording').find('mcq-placeholder-blot').should('have.length', 1)
+
+    cy.get('button:contains("Multiple choices")').click()
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 30, node, 41)
+    })
+    cy.get('button:contains("OK")').click()
+
+    cy.get('span.main').click()
+    screenshot('bold-in-mcq-placeholder-1')
+    cy.get('button:contains("Full screen")').click()
+    screenshot('bold-in-mcq-placeholder-2')
   })
 })
