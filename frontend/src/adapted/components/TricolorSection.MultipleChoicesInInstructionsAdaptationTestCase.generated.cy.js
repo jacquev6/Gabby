@@ -145,7 +145,14 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
                 "contents": [
                   {
                     "kind": "text",
-                    "text": "a b"
+                    "text": "a"
+                  },
+                  {
+                    "kind": "whitespace"
+                  },
+                  {
+                    "kind": "text",
+                    "text": "b"
                   }
                 ],
                 "boxed": true
@@ -182,7 +189,14 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
                   [
                     {
                       "kind": "text",
-                      "text": "a b"
+                      "text": "a"
+                    },
+                    {
+                      "kind": "whitespace"
+                    },
+                    {
+                      "kind": "text",
+                      "text": "b"
                     }
                   ]
                 ]
@@ -203,7 +217,14 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
                   [
                     {
                       "kind": "text",
-                      "text": "a b"
+                      "text": "a"
+                    },
+                    {
+                      "kind": "whitespace"
+                    },
+                    {
+                      "kind": "text",
+                      "text": "b"
                     }
                   ]
                 ]

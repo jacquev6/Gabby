@@ -1,20 +1,25 @@
 <script setup lang="ts">
 import { ref, computed, inject, watch } from 'vue'
 import { useFloating, shift, autoUpdate } from '@floating-ui/vue'
+import type { Paragraph } from '$adapted/types'
+import Renderable from './Renderable.vue'
 
 
 defineOptions({
   inheritAttrs: false
 })
 
+type Choices = (Paragraph['contents'][number] & {kind: 'multipleChoicesInput'})['choices']
+type Choice = Choices[number]
+
 const props = defineProps<{
   showArrowBefore: boolean
-  choices: string[]
+  choices: Choices
   placeholder: string
   showChoicesByDefault: boolean
 }>()
 
-const model = defineModel<string | undefined>({
+const model = defineModel<number | undefined>({
   required: true,
 })
 
@@ -34,9 +39,7 @@ watch(
   {immediate: true}
 )
 
-const value = computed(() => model.value || props.placeholder)
-
-function set(choice: string) {
+function set(choice: number) {
   model.value = choice
   showChoices.value = false
 }
@@ -54,12 +57,14 @@ const { floatingStyles } = useFloating(
 );
 
 const choicesLines = computed(() => {
-  const lines: {text: string, colorIndex: number}[][] = [[], []]
+  const lines: {index: number, colorIndex: number, content: Choice}[][] = [[], []]
   for (let i = 0; i < props.choices.length; ++i) {
-    lines[i % 2].push({text: props.choices[i], colorIndex: i % 3})
+    lines[i % 2].push({index: i, content: props.choices[i], colorIndex: i % 3})
   }
   return lines
 })
+
+const unusedModels = ref<Record<string, any>>({})  // @todo Remove
 
 const backdropCovers = inject<string>('adaptedExerciseBackdropCovers', 'body')
 </script>
@@ -67,7 +72,14 @@ const backdropCovers = inject<string>('adaptedExerciseBackdropCovers', 'body')
 <template>
   <span v-bind="$attrs" style="display: inline flow-root; vertical-align: top">
     <template v-if="showArrowBefore">⮕</template>
-    <span ref="reference" class="main" :class="{open: showChoices}" @click="showChoices = !showChoices">{{ value }}</span>
+    <span ref="reference" class="main" :class="{open: showChoices}" @click="showChoices = !showChoices">
+      <template v-if="model !== undefined">
+        <Renderable v-for="node in choices[model]" :node :inStack="true" v-model="unusedModels" :modelKey="[0]" />
+      </template>
+      <template v-else>
+        {{ placeholder }}
+      </template>
+    </span>
     <!-- Insert hidden nodes in the DOM to ensure the floating choices does not cover any text. -->
     <span class="choices" style="display: block; margin-top: -24px; max-width: 0; overflow: hidden; visibility: hidden;">
       <span class="choicesColumn" style="display: block;">
@@ -85,7 +97,9 @@ const backdropCovers = inject<string>('adaptedExerciseBackdropCovers', 'body')
         <div class="choicesColumn">
           <p v-for="choicesLine in choicesLines" class="choicesLine">
             <template v-for="(choice, i) in choicesLine">
-              <span v-if="i !== 0">&nbsp;&nbsp;</span><span class="choice" :class="`choice${choice.colorIndex}`" @click="set(choice.text)">{{ choice.text }}</span>
+              <span v-if="i !== 0">&nbsp;&nbsp;</span><span class="choice" :class="`choice${choice.colorIndex}`"@click="set(choice.index)">
+                <Renderable v-for="node in choice.content" :node :inStack="true" v-model="unusedModels" :modelKey="[0]" />
+              </span>
             </template>
           </p>
         </div>

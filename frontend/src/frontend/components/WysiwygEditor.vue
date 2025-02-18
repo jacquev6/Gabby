@@ -12,6 +12,7 @@ import Quill, { type Model, type SelectionRange } from './Quill.vue'
 defineProps<{
   label: string
   blots: (typeof BoldBlot)[]
+  formatsNestingOrder: string[]
   compatibleFormats: string[][]
   contagiousFormats: string[]
 }>()
@@ -75,6 +76,7 @@ defineExpose({
       ref="quill"
       v-model="model"
       :blots
+      :formatsNestingOrder
       :compatibleFormats
       :contagiousFormats
       @focus="emit('focus')"

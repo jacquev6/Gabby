@@ -5,15 +5,15 @@ describe('MultipleChoicesInput', () => {
   before(console.clear)
 
   it('closes without value when clicking the backdrop', () => {
-    let value: string | undefined = undefined
+    let value: number | undefined = undefined
 
     cy.mount(MultipleChoicesInput, {props: {
       showArrowBefore: false,
-      choices: ['alpha', 'beta'],
+      choices: [[{kind: 'text', text: 'alpha'}], [{kind: 'text', text: 'beta'}]],
       placeholder: '....',
       showChoicesByDefault: false,
       modelValue: value,
-      'onUpdate:modelValue': (v: string | undefined) => {
+      'onUpdate:modelValue': (v: number | undefined) => {
         value = v
         Cypress.vueWrapper.setProps({ modelValue: v })
       }
@@ -27,15 +27,15 @@ describe('MultipleChoicesInput', () => {
   })
 
   it('closes with a value when clicking a value', () => {
-    let value: string | undefined = undefined
+    let value: number | undefined = undefined
 
     cy.mount(MultipleChoicesInput, {props: {
       showArrowBefore: false,
-      choices: ['alpha', 'beta'],
+      choices: [[{kind: 'text', text: 'alpha'}], [{kind: 'text', text: 'beta'}]],
       placeholder: '....',
       showChoicesByDefault: false,
       modelValue: value,
-      'onUpdate:modelValue': (v: string | undefined) => {
+      'onUpdate:modelValue': (v: number | undefined) => {
         value = v
         Cypress.vueWrapper.setProps({ modelValue: v })
       }
@@ -45,19 +45,19 @@ describe('MultipleChoicesInput', () => {
     cy.get('span.main').should('have.text', '....').click()
     cy.get('span.choice0').should('exist').click()
     cy.get('span.main').should('have.text', 'alpha')
-    cy.wait(0).then(() => expect(value).to.equal('alpha'))
+    cy.wait(0).then(() => expect(value).to.equal(0))
   })
 
   it('closes without value when clicking the main span', () => {
-    let value: string | undefined = undefined
+    let value: number | undefined = undefined
 
     cy.mount(MultipleChoicesInput, {props: {
       showArrowBefore: false,
-      choices: ['alpha', 'beta'],
+      choices: [[{kind: 'text', text: 'alpha'}], [{kind: 'text', text: 'beta'}]],
       placeholder: '....',
       showChoicesByDefault: true,
       modelValue: value,
-      'onUpdate:modelValue': (v: string | undefined) => {
+      'onUpdate:modelValue': (v: number | undefined) => {
         value = v
         Cypress.vueWrapper.setProps({ modelValue: v })
       }
@@ -72,15 +72,15 @@ describe('MultipleChoicesInput', () => {
   })
 
   it('shows up again with a backdrop after selecting a value', () => {
-    let value: string | undefined = undefined
+    let value: number | undefined = undefined
 
     cy.mount(MultipleChoicesInput, {props: {
       showArrowBefore: false,
-      choices: ['alpha', 'beta'],
+      choices: [[{kind: 'text', text: 'alpha'}], [{kind: 'text', text: 'beta'}]],
       placeholder: '....',
       showChoicesByDefault: false,
       modelValue: value,
-      'onUpdate:modelValue': (v: string | undefined) => {
+      'onUpdate:modelValue': (v: number | undefined) => {
         value = v
         Cypress.vueWrapper.setProps({ modelValue: v })
       }
@@ -96,15 +96,15 @@ describe('MultipleChoicesInput', () => {
   })
 
   it('shows up again without backdrop after selecting a value', () => {
-    let value: string | undefined = undefined
+    let value: number | undefined = undefined
 
     cy.mount(MultipleChoicesInput, {props: {
       showArrowBefore: false,
-      choices: ['alpha', 'beta'],
+      choices: [[{kind: 'text', text: 'alpha'}], [{kind: 'text', text: 'beta'}]],
       placeholder: '....',
       showChoicesByDefault: true,
       modelValue: value,
-      'onUpdate:modelValue': (v: string | undefined) => {
+      'onUpdate:modelValue': (v: number | undefined) => {
         value = v
         Cypress.vueWrapper.setProps({ modelValue: v })
       }

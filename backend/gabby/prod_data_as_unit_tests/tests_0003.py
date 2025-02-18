@@ -546,35 +546,57 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                     contents=[
                                         r.PassiveSequence(
                                             kind="passiveSequence",
-                                            contents=[r.Text(kind="text", text="ube babbeoabe")],
+                                            contents=[
+                                                r.Text(kind="text", text="ube"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="babbeoabe"),
+                                            ],
                                             boxed=True,
                                         ),
                                         r.Text(kind="text", text=","),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",
-                                            contents=[r.Text(kind="text", text="bec cbouc")],
+                                            contents=[
+                                                r.Text(kind="text", text="bec"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="cbouc"),
+                                            ],
                                             boxed=True,
                                         ),
                                         r.Text(kind="text", text=","),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",
-                                            contents=[r.Text(kind="text", text="ub beau bbou")],
+                                            contents=[
+                                                r.Text(kind="text", text="ub"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="beau"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="bbou"),
+                                            ],
                                             boxed=True,
                                         ),
                                         r.Text(kind="text", text=","),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",
-                                            contents=[r.Text(kind="text", text="bec oaceaub")],
+                                            contents=[
+                                                r.Text(kind="text", text="bec"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="oaceaub"),
+                                            ],
                                             boxed=True,
                                         ),
                                         r.Text(kind="text", text=","),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",
-                                            contents=[r.Text(kind="text", text="dec oubabc")],
+                                            contents=[
+                                                r.Text(kind="text", text="dec"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="oubabc"),
+                                            ],
                                             boxed=True,
                                         ),
                                         r.Whitespace(kind="whitespace"),
@@ -582,7 +604,11 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",
-                                            contents=[r.Text(kind="text", text="ube ccae")],
+                                            contents=[
+                                                r.Text(kind="text", text="ube"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="ccae"),
+                                            ],
                                             boxed=True,
                                         ),
                                     ]
@@ -602,12 +628,38 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                         r.MultipleChoicesInput(
                                             kind="multipleChoicesInput",
                                             choices=[
-                                                [r.Text(kind="text", text="ube babbeoabe")],
-                                                [r.Text(kind="text", text="bec cbouc")],
-                                                [r.Text(kind="text", text="ub beau bbou")],
-                                                [r.Text(kind="text", text="bec oaceaub")],
-                                                [r.Text(kind="text", text="dec oubabc")],
-                                                [r.Text(kind="text", text="ube ccae")],
+                                                [
+                                                    r.Text(kind="text", text="ube"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="babbeoabe"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="bec"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="cbouc"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="ub"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="beau"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="bbou"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="bec"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="oaceaub"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="dec"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="oubabc"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="ube"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ccae"),
+                                                ],
                                             ],
                                         ),
                                         r.Whitespace(kind="whitespace"),
@@ -632,12 +684,38 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                         r.MultipleChoicesInput(
                                             kind="multipleChoicesInput",
                                             choices=[
-                                                [r.Text(kind="text", text="ube babbeoabe")],
-                                                [r.Text(kind="text", text="bec cbouc")],
-                                                [r.Text(kind="text", text="ub beau bbou")],
-                                                [r.Text(kind="text", text="bec oaceaub")],
-                                                [r.Text(kind="text", text="dec oubabc")],
-                                                [r.Text(kind="text", text="ube ccae")],
+                                                [
+                                                    r.Text(kind="text", text="ube"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="babbeoabe"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="bec"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="cbouc"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="ub"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="beau"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="bbou"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="bec"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="oaceaub"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="dec"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="oubabc"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="ube"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ccae"),
+                                                ],
                                             ],
                                         ),
                                         r.Whitespace(kind="whitespace"),
@@ -666,12 +744,38 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                         r.MultipleChoicesInput(
                                             kind="multipleChoicesInput",
                                             choices=[
-                                                [r.Text(kind="text", text="ube babbeoabe")],
-                                                [r.Text(kind="text", text="bec cbouc")],
-                                                [r.Text(kind="text", text="ub beau bbou")],
-                                                [r.Text(kind="text", text="bec oaceaub")],
-                                                [r.Text(kind="text", text="dec oubabc")],
-                                                [r.Text(kind="text", text="ube ccae")],
+                                                [
+                                                    r.Text(kind="text", text="ube"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="babbeoabe"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="bec"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="cbouc"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="ub"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="beau"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="bbou"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="bec"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="oaceaub"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="dec"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="oubabc"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="ube"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ccae"),
+                                                ],
                                             ],
                                         ),
                                         r.Whitespace(kind="whitespace"),
@@ -690,12 +794,38 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                         r.MultipleChoicesInput(
                                             kind="multipleChoicesInput",
                                             choices=[
-                                                [r.Text(kind="text", text="ube babbeoabe")],
-                                                [r.Text(kind="text", text="bec cbouc")],
-                                                [r.Text(kind="text", text="ub beau bbou")],
-                                                [r.Text(kind="text", text="bec oaceaub")],
-                                                [r.Text(kind="text", text="dec oubabc")],
-                                                [r.Text(kind="text", text="ube ccae")],
+                                                [
+                                                    r.Text(kind="text", text="ube"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="babbeoabe"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="bec"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="cbouc"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="ub"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="beau"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="bbou"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="bec"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="oaceaub"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="dec"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="oubabc"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="ube"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ccae"),
+                                                ],
                                             ],
                                         ),
                                         r.Whitespace(kind="whitespace"),
@@ -744,35 +874,57 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                     contents=[
                                         r.PassiveSequence(
                                             kind="passiveSequence",
-                                            contents=[r.Text(kind="text", text="ube babbeoabe")],
+                                            contents=[
+                                                r.Text(kind="text", text="ube"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="babbeoabe"),
+                                            ],
                                             boxed=True,
                                         ),
                                         r.Text(kind="text", text=","),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",
-                                            contents=[r.Text(kind="text", text="bec cbouc")],
+                                            contents=[
+                                                r.Text(kind="text", text="bec"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="cbouc"),
+                                            ],
                                             boxed=True,
                                         ),
                                         r.Text(kind="text", text=","),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",
-                                            contents=[r.Text(kind="text", text="ub beau bbou")],
+                                            contents=[
+                                                r.Text(kind="text", text="ub"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="beau"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="bbou"),
+                                            ],
                                             boxed=True,
                                         ),
                                         r.Text(kind="text", text=","),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",
-                                            contents=[r.Text(kind="text", text="bec oaceaub")],
+                                            contents=[
+                                                r.Text(kind="text", text="bec"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="oaceaub"),
+                                            ],
                                             boxed=True,
                                         ),
                                         r.Text(kind="text", text=","),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",
-                                            contents=[r.Text(kind="text", text="dec oubabc")],
+                                            contents=[
+                                                r.Text(kind="text", text="dec"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="oubabc"),
+                                            ],
                                             boxed=True,
                                         ),
                                         r.Whitespace(kind="whitespace"),
@@ -780,7 +932,11 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",
-                                            contents=[r.Text(kind="text", text="ube ccae")],
+                                            contents=[
+                                                r.Text(kind="text", text="ube"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="ccae"),
+                                            ],
                                             boxed=True,
                                         ),
                                     ]
@@ -798,12 +954,38 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                         r.MultipleChoicesInput(
                                             kind="multipleChoicesInput",
                                             choices=[
-                                                [r.Text(kind="text", text="ube babbeoabe")],
-                                                [r.Text(kind="text", text="bec cbouc")],
-                                                [r.Text(kind="text", text="ub beau bbou")],
-                                                [r.Text(kind="text", text="bec oaceaub")],
-                                                [r.Text(kind="text", text="dec oubabc")],
-                                                [r.Text(kind="text", text="ube ccae")],
+                                                [
+                                                    r.Text(kind="text", text="ube"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="babbeoabe"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="bec"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="cbouc"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="ub"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="beau"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="bbou"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="bec"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="oaceaub"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="dec"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="oubabc"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="ube"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ccae"),
+                                                ],
                                             ],
                                         ),
                                         r.Whitespace(kind="whitespace"),
@@ -811,12 +993,38 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                         r.MultipleChoicesInput(
                                             kind="multipleChoicesInput",
                                             choices=[
-                                                [r.Text(kind="text", text="ube babbeoabe")],
-                                                [r.Text(kind="text", text="bec cbouc")],
-                                                [r.Text(kind="text", text="ub beau bbou")],
-                                                [r.Text(kind="text", text="bec oaceaub")],
-                                                [r.Text(kind="text", text="dec oubabc")],
-                                                [r.Text(kind="text", text="ube ccae")],
+                                                [
+                                                    r.Text(kind="text", text="ube"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="babbeoabe"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="bec"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="cbouc"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="ub"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="beau"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="bbou"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="bec"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="oaceaub"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="dec"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="oubabc"),
+                                                ],
+                                                [
+                                                    r.Text(kind="text", text="ube"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ccae"),
+                                                ],
                                             ],
                                         ),
                                         r.Whitespace(kind="whitespace"),

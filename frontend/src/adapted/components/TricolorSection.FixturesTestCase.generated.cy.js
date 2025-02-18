@@ -4840,19 +4840,40 @@ describe('TricolorSection for FixturesTestCase', () => {
                   [
                     {
                       "kind": "text",
-                      "text": "il pleuvra"
+                      "text": "il"
+                    },
+                    {
+                      "kind": "whitespace"
+                    },
+                    {
+                      "kind": "text",
+                      "text": "pleuvra"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "il pleut"
+                      "text": "il"
+                    },
+                    {
+                      "kind": "whitespace"
+                    },
+                    {
+                      "kind": "text",
+                      "text": "pleut"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "il pleuvait"
+                      "text": "il"
+                    },
+                    {
+                      "kind": "whitespace"
+                    },
+                    {
+                      "kind": "text",
+                      "text": "pleuvait"
                     }
                   ]
                 ]

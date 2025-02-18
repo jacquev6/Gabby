@@ -26,7 +26,7 @@ class McqDefinition(mydantic.PydanticBase):
     stop: str | None
     placeholder: str | None = None
     mcq_field_uid: str | None = None
-    text: str
+    deltas: list[deltas.TextInsertOp]
 
 
 class _Adapter:
@@ -135,7 +135,11 @@ class _Adapter:
                 yield renderable.Paragraph(contents=list(self.adapt_instructions_sentence(sentence_deltas)))
 
     def adapt_instructions_sentence(self, sentence_deltas: deltas.Deltas):
-        for delta in sentence_deltas:
+        next_delta_index = 0
+        while next_delta_index < len(sentence_deltas):
+            delta = sentence_deltas[next_delta_index]
+            next_delta_index += 1
+
             assert delta.kind == "text", f"Unexpected delta kind: {delta!r}"
             if delta.attributes.choices2 is None:
                 assert delta.attributes == deltas.TextInsertOpAttributes(
@@ -165,7 +169,16 @@ class _Adapter:
                             )
 
             elif delta.attributes.choices2 is not None:
-                assert delta.attributes == deltas.TextInsertOpAttributes(choices2=delta.attributes.choices2), f"Unknown attributes: {delta!r}"
+                choices2 = delta.attributes.choices2
+                choices_deltas = [delta]
+
+                while (
+                    next_delta_index < len(sentence_deltas)
+                    and sentence_deltas[next_delta_index].kind == "text"
+                    and sentence_deltas[next_delta_index].attributes.choices2 == choices2
+                ):
+                    choices_deltas.append(sentence_deltas[next_delta_index])
+                    next_delta_index += 1
 
                 mcq_definition = McqDefinition(
                     start=delta.attributes.choices2.start or None,
@@ -173,7 +186,7 @@ class _Adapter:
                     separator2=delta.attributes.choices2.separator2 or None,
                     stop=delta.attributes.choices2.stop or None,
                     placeholder=delta.attributes.choices2.placeholder or None,
-                    text=delta.insert,
+                    deltas=choices_deltas,
                 )
 
                 choices = self.separate_choices(mcq_definition)
@@ -403,7 +416,7 @@ class _Adapter:
                             separator1=choices_settings.separator1 or None,
                             separator2=choices_settings.separator2 or None,
                             stop=choices_settings.stop or None,
-                            text=delta.insert,
+                            deltas=[delta],
                         )
                         yield renderable.MultipleChoicesInput(
                             kind="multipleChoicesInput",
@@ -478,11 +491,11 @@ class _Adapter:
 
     def split_deltas(self, section_deltas: deltas.Deltas, separator_pattern: str) -> Iterable[deltas.Deltas]:
         section_deltas = copy.deepcopy(section_deltas)
-        assert len(section_deltas) > 0
-        if section_deltas[0].kind == "text":
-            section_deltas[0].insert = section_deltas[0].insert.lstrip()
-        if section_deltas[-1].kind == "text":
-            section_deltas[-1].insert = section_deltas[-1].insert.rstrip()
+        if len(section_deltas) > 0:
+            if section_deltas[0].kind == "text":
+                section_deltas[0].insert = section_deltas[0].insert.lstrip()
+            if section_deltas[-1].kind == "text":
+                section_deltas[-1].insert = section_deltas[-1].insert.rstrip()
 
         current_paragraph = []
         for delta in section_deltas:
@@ -601,9 +614,23 @@ class _Adapter:
         return section
 
     def gather_choices(self, deltas_: deltas.Deltas) -> Iterable[McqDefinition]:
-        for delta in deltas_:
+        next_delta_index = 0
+        while next_delta_index < len(deltas_):
+            delta = deltas_[next_delta_index]
+            next_delta_index += 1
+
             if delta.kind == "text" and delta.attributes.choices2 is not None:
                 choices_settings = delta.attributes.choices2
+                choices_deltas = [delta]
+
+                while (
+                    next_delta_index < len(deltas_)
+                    and deltas_[next_delta_index].kind == "text"
+                    and deltas_[next_delta_index].attributes.choices2 == choices_settings
+                ):
+                    choices_deltas.append(deltas_[next_delta_index])
+                    next_delta_index += 1
+
                 yield McqDefinition(
                     start=choices_settings.start or None,
                     separator1=choices_settings.separator1 or None,
@@ -611,20 +638,49 @@ class _Adapter:
                     stop=choices_settings.stop or None,
                     placeholder=choices_settings.placeholder,
                     mcq_field_uid=choices_settings.mcq_field_uid,
-                    text=delta.insert,
+                    deltas=choices_deltas,
                 )
 
     def separate_choices(self, definition: McqDefinition):
-        text = definition.text.strip()
-        if definition.start is not None and definition.stop is not None and text.startswith(definition.start) and text.endswith(definition.stop):
-            text = text[len(definition.start) : -len(definition.stop)]
+        definition: McqDefinition = definition.model_copy(deep=True)  # Avoid modifying the 'TextInsertOp's in place
+        assert len(definition.deltas) > 0
+
+        for delta in definition.deltas:
+            assert delta.kind == "text"
+            delta.attributes.choices2 = None
+
+        definition.deltas[0].insert = definition.deltas[0].insert.lstrip()
+        definition.deltas[-1].insert = definition.deltas[-1].insert.rstrip()
+        if (
+            definition.start is not None
+            and definition.stop is not None
+            and definition.deltas[0].insert.startswith(definition.start)
+            and definition.deltas[-1].insert.endswith(definition.stop)
+        ):
+            definition.deltas[0].insert = definition.deltas[0].insert[len(definition.start) :]
+            definition.deltas[-1].insert = definition.deltas[-1].insert[: -len(definition.stop)]
+
         if definition.separator1 is None:
-            choices = [text]
+            choices_deltas = [definition.deltas]
         else:
-            choices = text.split(definition.separator1)
+            choices_deltas = list(self.split_deltas(definition.deltas, re.escape(definition.separator1)))
+
         if definition.separator2 is not None:
-            choices[-1:] = choices[-1].split(definition.separator2)
-        return list([renderable.Text(kind="text", text=text)] for text in filter(lambda c: c != "", [choice.strip() for choice in choices]))
+            choices_deltas[-1:] = list(self.split_deltas(choices_deltas[-1], re.escape(definition.separator2)))
+
+        def gen():
+            for choice_deltas in choices_deltas:
+                text = "".join(delta.insert for delta in choice_deltas).strip()
+                if text != "":
+                    r = list(self.adapt_instructions_sentence(choice_deltas))
+                    while len(r) > 0 and r[0].kind == "whitespace":
+                        r.pop(0)
+                    while len(r) > 0 and r[-1].kind == "whitespace":
+                        r.pop(-1)
+                    if len(r) > 0:
+                        yield r
+
+        return list(gen())
 
 
 class AdaptationTestCase(unittest.TestCase):
@@ -685,30 +741,8 @@ class AdaptationTestCase(unittest.TestCase):
         actual_adapted = exercise.make_adapted()
         if actual_adapted != expected_adapted:
             calling_frame = traceback.extract_stack()[-2]
-            print(
-                f"actual_adapted at {calling_frame.filename}:{calling_frame.lineno}:",
+            r = (
                 repr([actual_adapted])[1:-1]
-                .replace("bold=False, ", "")
-                .replace("bold=False,", "")
-                .replace("bold=False", "")
-                .replace("italic=False, ", "")
-                .replace("italic=False,", "")
-                .replace("italic=False", "")
-                .replace("highlighted=None, ", "")
-                .replace("highlighted=None,", "")
-                .replace("highlighted=None", "")
-                .replace("boxed=False, ", "")
-                .replace("boxed=False,", "")
-                .replace("boxed=False", "")
-                .replace("show_arrow_before=False, ", "")
-                .replace("show_arrow_before=False,", "")
-                .replace("show_arrow_before=False", "")
-                .replace("show_choices_by_default=False, ", "")
-                .replace("show_choices_by_default=False,", "")
-                .replace("show_choices_by_default=False", "")
-                .replace("vertical=False, ", "")
-                .replace("vertical=False,", "")
-                .replace("vertical=False", "")
                 .replace("Exercise(", "r.Exercise(")
                 .replace("Pagelet(", "r.Pagelet(")
                 .replace("Section(", "r.Section(")
@@ -719,6 +753,16 @@ class AdaptationTestCase(unittest.TestCase):
                 .replace("MultipleChoicesInput(", "r.MultipleChoicesInput(")
                 .replace("SelectableInput(", "r.SelectableInput(")
                 .replace("PassiveSequence(", "r.PassiveSequence(")
-                .replace("AnySequence(", "r.AnySequence("),
+                .replace("AnySequence(", "r.AnySequence(")
+                .replace("bold=False", "")
+                .replace("italic=False", "")
+                .replace("highlighted=None", "")
+                .replace("boxed=False", "")
+                .replace("show_arrow_before=False", "")
+                .replace("show_choices_by_default=False", "")
+                .replace("vertical=False", "")
             )
+            while (new_r := r.replace(", , ", ", ").replace(", )", ")")) != r:
+                r = new_r
+            print(f"actual_adapted at {calling_frame.filename}:{calling_frame.lineno}:", r)
         self.assertEqual(actual_adapted, expected_adapted)

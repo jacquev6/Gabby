@@ -436,7 +436,7 @@ import deepCopy from 'deep-copy'
 
 import { BRow, BCol, BLabeledInput, BLabeledNumberInput, BLabeledSelect } from '../../../../components/opinion/bootstrap'
 import WysiwygEditor from '$frontend/components/WysiwygEditor.vue'
-import { wysiwygBlots, wysiwygCompatibleFormats, wysiwygContagiousFormats } from './ExerciseToolsColumn.vue'
+import { wysiwygBlots, wysiwygFormatsNestingOrder, wysiwygCompatibleFormats, wysiwygContagiousFormats } from './ExerciseToolsColumn.vue'
 import OptionalWysiwygEditor from '$frontend/components/OptionalWysiwygEditor.vue'
 
 
@@ -628,6 +628,7 @@ defineExpose({
       ref="instructionsEditor"
       :label="$t('exerciseInstructions')"
       :blots="wysiwygBlots"
+      :formatsNestingOrder="wysiwygFormatsNestingOrder"
       :compatibleFormats="wysiwygCompatibleFormats"
       :contagiousFormats="wysiwygContagiousFormats"
       v-model="model.instructions"
@@ -637,6 +638,7 @@ defineExpose({
       ref="wordingEditor"
       :label="$t('exerciseWording')"
       :blots="wysiwygBlots"
+      :formatsNestingOrder="wysiwygFormatsNestingOrder"
       :compatibleFormats="wysiwygCompatibleFormats"
       :contagiousFormats="wysiwygContagiousFormats"
       v-model="model.wording"
@@ -649,6 +651,7 @@ defineExpose({
             ref="exampleEditor"
             :label="$t('exerciseExample')"
             :blots="wysiwygBlots"
+            :formatsNestingOrder="wysiwygFormatsNestingOrder"
             :compatibleFormats="wysiwygCompatibleFormats"
             :contagiousFormats="wysiwygContagiousFormats"
             v-model="model.example"
@@ -659,6 +662,7 @@ defineExpose({
             ref="clueEditor"
             :label="$t('exerciseClue')"
             :blots="wysiwygBlots"
+            :formatsNestingOrder="wysiwygFormatsNestingOrder"
             :compatibleFormats="wysiwygCompatibleFormats"
             :contagiousFormats="wysiwygContagiousFormats"
             v-model="model.clue"
@@ -669,6 +673,7 @@ defineExpose({
             ref="textReferenceEditor"
             :label="$t('exerciseTextReference')"
             :blots="wysiwygBlots"
+            :formatsNestingOrder="wysiwygFormatsNestingOrder"
             :compatibleFormats="wysiwygCompatibleFormats"
             :contagiousFormats="wysiwygContagiousFormats"
             v-model="model.textReference"

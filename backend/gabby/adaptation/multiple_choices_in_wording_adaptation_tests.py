@@ -396,7 +396,20 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                                         r.Text(kind="text", text="A"),
                                         r.Whitespace(kind="whitespace"),
                                         r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput", choices=[[r.Text(kind="text", text="blah / blih")]], show_choices_by_default=False
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [
+                                                    r.Text(kind="text", text="blah"),
+                                                    r.Whitespace(
+                                                        kind="whitespace",
+                                                    ),
+                                                    r.Text(kind="text", text="/"),
+                                                    r.Whitespace(
+                                                        kind="whitespace",
+                                                    ),
+                                                    r.Text(kind="text", text="blih"),
+                                                ]
+                                            ],
                                         ),
                                         r.Text(kind="text", text="."),
                                     ]

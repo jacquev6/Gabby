@@ -54,7 +54,21 @@ describe('TricolorSection for MultipleChoicesInWordingAdaptationTestCase', () =>
                   [
                     {
                       "kind": "text",
-                      "text": "blah / blih"
+                      "text": "blah"
+                    },
+                    {
+                      "kind": "whitespace"
+                    },
+                    {
+                      "kind": "text",
+                      "text": "/"
+                    },
+                    {
+                      "kind": "whitespace"
+                    },
+                    {
+                      "kind": "text",
+                      "text": "blih"
                     }
                   ]
                 ]

@@ -2903,9 +2903,27 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                             r.MultipleChoicesInput(
                                                 kind="multipleChoicesInput",
                                                 choices=[
-                                                    [r.Text(kind="text", text="il pleuvra")],
-                                                    [r.Text(kind="text", text="il pleut")],
-                                                    [r.Text(kind="text", text="il pleuvait")],
+                                                    [
+                                                        r.Text(kind="text", text="il"),
+                                                        r.Whitespace(
+                                                            kind="whitespace",
+                                                        ),
+                                                        r.Text(kind="text", text="pleuvra"),
+                                                    ],
+                                                    [
+                                                        r.Text(kind="text", text="il"),
+                                                        r.Whitespace(
+                                                            kind="whitespace",
+                                                        ),
+                                                        r.Text(kind="text", text="pleut"),
+                                                    ],
+                                                    [
+                                                        r.Text(kind="text", text="il"),
+                                                        r.Whitespace(
+                                                            kind="whitespace",
+                                                        ),
+                                                        r.Text(kind="text", text="pleuvait"),
+                                                    ],
                                                 ],
                                             ),
                                             r.Text(kind="text", text="."),

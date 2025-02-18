@@ -351,7 +351,17 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                                     contents=[
                                         r.Text(kind="text", text="Choose"),
                                         r.Whitespace(kind="whitespace"),
-                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="a b")], boxed=True),
+                                        r.PassiveSequence(
+                                            kind="passiveSequence",
+                                            contents=[
+                                                r.Text(kind="text", text="a"),
+                                                r.Whitespace(
+                                                    kind="whitespace",
+                                                ),
+                                                r.Text(kind="text", text="b"),
+                                            ],
+                                            boxed=True,
+                                        ),
                                         r.Text(kind="text", text="."),
                                     ]
                                 )
@@ -364,13 +374,31 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                                         r.Text(kind="text", text="A"),
                                         r.Whitespace(kind="whitespace"),
                                         r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput", choices=[[r.Text(kind="text", text="a b")]], show_choices_by_default=False
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [
+                                                    r.Text(kind="text", text="a"),
+                                                    r.Whitespace(
+                                                        kind="whitespace",
+                                                    ),
+                                                    r.Text(kind="text", text="b"),
+                                                ]
+                                            ],
                                         ),
                                         r.Whitespace(kind="whitespace"),
                                         r.Text(kind="text", text="B"),
                                         r.Whitespace(kind="whitespace"),
                                         r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput", choices=[[r.Text(kind="text", text="a b")]], show_choices_by_default=False
+                                            kind="multipleChoicesInput",
+                                            choices=[
+                                                [
+                                                    r.Text(kind="text", text="a"),
+                                                    r.Whitespace(
+                                                        kind="whitespace",
+                                                    ),
+                                                    r.Text(kind="text", text="b"),
+                                                ]
+                                            ],
                                         ),
                                     ]
                                 )

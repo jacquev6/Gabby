@@ -6044,7 +6044,15 @@ class DatabaseAsUnitTests0004(AdaptationTestCase):
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",
-                                            contents=[r.Text(kind="text", text="b ou ub b")],
+                                            contents=[
+                                                r.Text(kind="text", text="b"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="ou"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="ub"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="b"),
+                                            ],
                                             boxed=True,
                                         ),
                                         r.Whitespace(kind="whitespace"),
@@ -6105,7 +6113,17 @@ class DatabaseAsUnitTests0004(AdaptationTestCase):
                                         r.Text(kind="text", text="cfa"),
                                         r.MultipleChoicesInput(
                                             kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="b ou ub b")]],
+                                            choices=[
+                                                [
+                                                    r.Text(kind="text", text="b"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ou"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ub"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="b"),
+                                                ]
+                                            ],
                                         ),
                                         r.Text(kind="text", text="beb"),
                                         r.Whitespace(kind="whitespace"),
@@ -6114,7 +6132,17 @@ class DatabaseAsUnitTests0004(AdaptationTestCase):
                                         r.Text(kind="text", text="ca"),
                                         r.MultipleChoicesInput(
                                             kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="b ou ub b")]],
+                                            choices=[
+                                                [
+                                                    r.Text(kind="text", text="b"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ou"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ub"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="b"),
+                                                ]
+                                            ],
                                         ),
                                         r.Text(kind="text", text="feb"),
                                         r.Whitespace(kind="whitespace"),
@@ -6123,7 +6151,17 @@ class DatabaseAsUnitTests0004(AdaptationTestCase):
                                         r.Text(kind="text", text="ce"),
                                         r.MultipleChoicesInput(
                                             kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="b ou ub b")]],
+                                            choices=[
+                                                [
+                                                    r.Text(kind="text", text="b"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ou"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ub"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="b"),
+                                                ]
+                                            ],
                                         ),
                                         r.Text(kind="text", text="bbeb"),
                                         r.Whitespace(kind="whitespace"),
@@ -6132,7 +6170,17 @@ class DatabaseAsUnitTests0004(AdaptationTestCase):
                                         r.Text(kind="text", text="be"),
                                         r.MultipleChoicesInput(
                                             kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="b ou ub b")]],
+                                            choices=[
+                                                [
+                                                    r.Text(kind="text", text="b"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ou"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ub"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="b"),
+                                                ]
+                                            ],
                                         ),
                                         r.Text(kind="text", text="bab"),
                                     ]
@@ -6142,7 +6190,17 @@ class DatabaseAsUnitTests0004(AdaptationTestCase):
                                         r.Text(kind="text", text="a"),
                                         r.MultipleChoicesInput(
                                             kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="b ou ub b")]],
+                                            choices=[
+                                                [
+                                                    r.Text(kind="text", text="b"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ou"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ub"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="b"),
+                                                ]
+                                            ],
                                         ),
                                         r.Text(kind="text", text="cacbeb"),
                                         r.Whitespace(kind="whitespace"),
@@ -6151,7 +6209,17 @@ class DatabaseAsUnitTests0004(AdaptationTestCase):
                                         r.Text(kind="text", text="a"),
                                         r.MultipleChoicesInput(
                                             kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="b ou ub b")]],
+                                            choices=[
+                                                [
+                                                    r.Text(kind="text", text="b"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ou"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ub"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="b"),
+                                                ]
+                                            ],
                                         ),
                                         r.Text(kind="text", text="fbabeb"),
                                         r.Whitespace(kind="whitespace"),
@@ -6160,7 +6228,17 @@ class DatabaseAsUnitTests0004(AdaptationTestCase):
                                         r.Text(kind="text", text="co"),
                                         r.MultipleChoicesInput(
                                             kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="b ou ub b")]],
+                                            choices=[
+                                                [
+                                                    r.Text(kind="text", text="b"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ou"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ub"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="b"),
+                                                ]
+                                            ],
                                         ),
                                         r.Text(kind="text", text="bbeb"),
                                         r.Whitespace(kind="whitespace"),
@@ -6169,7 +6247,17 @@ class DatabaseAsUnitTests0004(AdaptationTestCase):
                                         r.Text(kind="text", text="bo"),
                                         r.MultipleChoicesInput(
                                             kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="b ou ub b")]],
+                                            choices=[
+                                                [
+                                                    r.Text(kind="text", text="b"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ou"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ub"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="b"),
+                                                ]
+                                            ],
                                         ),
                                         r.Text(kind="text", text="dbe"),
                                     ]
@@ -6179,7 +6267,17 @@ class DatabaseAsUnitTests0004(AdaptationTestCase):
                                         r.Text(kind="text", text="e"),
                                         r.MultipleChoicesInput(
                                             kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="b ou ub b")]],
+                                            choices=[
+                                                [
+                                                    r.Text(kind="text", text="b"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ou"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ub"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="b"),
+                                                ]
+                                            ],
                                         ),
                                         r.Text(kind="text", text="bubeb"),
                                         r.Whitespace(kind="whitespace"),
@@ -6188,7 +6286,17 @@ class DatabaseAsUnitTests0004(AdaptationTestCase):
                                         r.Text(kind="text", text="e"),
                                         r.MultipleChoicesInput(
                                             kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="b ou ub b")]],
+                                            choices=[
+                                                [
+                                                    r.Text(kind="text", text="b"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ou"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ub"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="b"),
+                                                ]
+                                            ],
                                         ),
                                         r.Text(kind="text", text="babeb"),
                                         r.Whitespace(kind="whitespace"),
@@ -6197,7 +6305,17 @@ class DatabaseAsUnitTests0004(AdaptationTestCase):
                                         r.Text(kind="text", text="ebco"),
                                         r.MultipleChoicesInput(
                                             kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="b ou ub b")]],
+                                            choices=[
+                                                [
+                                                    r.Text(kind="text", text="b"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ou"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ub"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="b"),
+                                                ]
+                                            ],
                                         ),
                                         r.Text(kind="text", text="bbeb"),
                                         r.Whitespace(kind="whitespace"),
@@ -6206,7 +6324,17 @@ class DatabaseAsUnitTests0004(AdaptationTestCase):
                                         r.Text(kind="text", text="débo"),
                                         r.MultipleChoicesInput(
                                             kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="b ou ub b")]],
+                                            choices=[
+                                                [
+                                                    r.Text(kind="text", text="b"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ou"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="ub"),
+                                                    r.Whitespace(kind="whitespace"),
+                                                    r.Text(kind="text", text="b"),
+                                                ]
+                                            ],
                                         ),
                                         r.Text(kind="text", text="bbeb"),
                                     ]

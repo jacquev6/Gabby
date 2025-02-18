@@ -77,6 +77,7 @@ import deepEqual from 'deep-equal'
 
 const props = defineProps<{
   blots: Blot[]
+  formatsNestingOrder: string[]
   compatibleFormats: string[][]
   contagiousFormats: string[]
 }>()
@@ -86,6 +87,14 @@ const emit = defineEmits<{
   blur: []
   selectionChange: [SelectionRange]
 }>()
+
+watch(
+  () => props.formatsNestingOrder,
+  (order) => {
+    Inline.order.splice(2, 0, ...order)
+  },
+  {immediate: true},
+)
 
 const registry = computed(() => makeRegistryWithBlots(props.blots))
 
@@ -203,7 +212,6 @@ const compatibleFormats = computed(() => {
     }
   }
 
-  console.log('Compatible formats', result)
   return result
 })
 

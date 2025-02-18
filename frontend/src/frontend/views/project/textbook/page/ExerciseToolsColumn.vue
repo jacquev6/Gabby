@@ -26,7 +26,10 @@ export const wysiwygBlots = [
 
 export const wysiwygContagiousFormats = ['choices2']
 
-export const wysiwygCompatibleFormats = [['bold', 'italic', 'sel']]
+export const wysiwygCompatibleFormats = [['bold', 'italic', 'sel'], ['bold', 'italic', 'choices2']]
+
+// Formats on the left are nested inside formats on the right. Embeds shall not be in this list.
+export const wysiwygFormatsNestingOrder = ['bold', 'italic', 'sel', 'choices2', 'manual-item', 'mcq-placeholder']
 </script>
 
 <script setup lang="ts">

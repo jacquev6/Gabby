@@ -5,6 +5,7 @@ import { InlineBlot, InlineEmbed } from '$frontend/components/Quill.vue'
 import type { CustomDeltas } from './ExerciseFieldsForm.vue'
 import ContextMenu from '$frontend/components/ContextMenu.vue'
 import deepCopy from 'deep-copy'
+import deepEqual from 'deep-equal'
 
 
 let model = ref<Model>(null as any/* OK: 'model' is assigned a value in "script setup" below */ as Model)
@@ -75,6 +76,17 @@ export class Choices2Blot extends InlineBlot {
     const settings = node.getAttribute('data-gabby-settings')
     console.assert(settings !== null)
     return JSON.parse(settings)
+  }
+
+  override optimize(context: any/* Typed like this in parchment*/) {
+    // Hinted by https://github.com/slab/quill/issues/2363#issuecomment-979494430
+    // Inspired by _InlineBlot.optimize in node_modules/parchment/dist/parchment.js
+    super.optimize(context);
+    const next = this.next;
+    if (next instanceof Choices2Blot && next.prev === this && deepEqual(this.formats(), next.formats())) {
+      next.moveChildren(this)
+      next.remove()
+    }
   }
 }
 

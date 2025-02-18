@@ -278,4 +278,49 @@ describe('Gabby', () => {
     cy.get('div:contains("1 item per line") > input').scrollIntoView().should('be.checked')
     screenshot('single-item-per-line-2')
   })
+
+  it('allows bold and italic in MCQ choices in instructions', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+
+    cy.get('label:contains("Instructions") + .ql-container > .ql-editor').as('instructions')
+    cy.get('label:contains("Wording") + .ql-container > .ql-editor').as('wording')
+
+    cy.get('@instructions').click().type('{selectAll}Choose between A plain choice/An italic choice/A bold choice.', {delay: 0})
+    cy.get('@wording').click().type('{selectAll}...', {delay: 0})
+
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 33, node, 39)
+    })
+    cy.get('button[data-cy="format-italic"]').click()
+
+    cy.get('button:contains("Multiple choices")').click()
+    cy.get('@instructions').find('p').then($el => {
+      const startNode = $el[0].firstChild
+      console.assert(startNode !== null)
+      const endNode = $el[0].lastChild
+      console.assert(endNode !== null)
+      selectRange(startNode, 15, endNode, 21)
+    })
+    cy.get('label:contains("Separators") + input').should('have.value', '/')
+    cy.get('label:contains("Placeholder") + input').click().type('...')
+    cy.get('button:contains("OK")').click()
+    cy.get('choices2-blot > italic-blot').should('exist')
+    cy.get('italic-blot > choices2-blot').should('not.exist')
+    cy.get('@instructions').click()
+    cy.get('@instructions').find('choices2-blot').should('have.length', 1).then($el => {
+      const node = $el[0].lastChild
+      console.assert(node !== null)
+      selectRange(node, 10, node, 14)
+    })
+    cy.get('button[data-cy="format-bold"]').scrollIntoView().should('be.enabled').click()
+    cy.get('choices2-blot > bold-blot').should('exist')
+    cy.get('bold-blot > choices2-blot').should('not.exist')
+    cy.get('@instructions').find('choices2-blot').should('have.length', 1)
+
+    cy.get('button:contains("Full screen")').click()
+    cy.get('span.main').click()
+    screenshot('mcq-in-instructions-with-formatted-choices')
+  })
 })

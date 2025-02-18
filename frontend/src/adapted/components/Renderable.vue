@@ -22,12 +22,6 @@ const models = defineModel<Record<string, any/* @todo Type */>>({
 })
 
 const modelKey = computed(() => `model-${props.modelKey.join('-')}`)
-
-function downgradePassiveList(contents: (Paragraph['contents'][number] & {kind: 'multipleChoicesInput'})['choices'][number]) {
-  console.assert(contents.length === 1)
-  console.assert(contents[0].kind === 'text')
-  return contents[0].text
-}
 </script>
 
 <template>
@@ -39,8 +33,7 @@ function downgradePassiveList(contents: (Paragraph['contents'][number] & {kind: 
   </template>
   <template v-else-if="node.kind === 'text'">
     <span
-      class="tricolorable"
-      :class="{bold: node.bold, italic: node.italic}"
+      :class="{bold: node.bold, italic: node.italic, tricolorable: !inStack}"
       :style="node.highlighted !== null ? {background: node.highlighted} : {}"
     >
       {{ node.text }}
@@ -52,13 +45,13 @@ function downgradePassiveList(contents: (Paragraph['contents'][number] & {kind: 
     </span>
   </template>
   <template v-else-if="node.kind === 'freeTextInput'">
-    <FreeTextInput class="tricolorable" v-model="models[modelKey]" />
+    <FreeTextInput :class="{tricolorable: !inStack}" v-model="models[modelKey]" />
   </template>
   <template v-else-if="node.kind === 'multipleChoicesInput'">
     <MultipleChoicesInput
       :class="{tricolorable: !inStack}"
       v-model="models[modelKey]"
-      :choices="node.choices.map(downgradePassiveList)"
+      :choices="node.choices"
       placeholder="...."
       :showArrowBefore="!!node.show_arrow_before"
       :showChoicesByDefault="!!node.show_choices_by_default"
@@ -76,7 +69,7 @@ function downgradePassiveList(contents: (Paragraph['contents'][number] & {kind: 
   <template v-else-if="node.kind === 'sequence'">
     <template v-if="node.vertical">
       <span style="display: inline-block; vertical-align: top;">
-        <p v-for="(sub, index) in node.contents"><Renderable :node="sub" v-model="models" :modelKey="[...props.modelKey, index]" :inStack="true" /></p>
+        <p v-for="(sub, index) in node.contents"><Renderable :node="sub" v-model="models" :modelKey="[...props.modelKey, index]" :inStack="index > 0" /></p>
       </span>
     </template>
     <template v-else>
