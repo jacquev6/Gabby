@@ -242,7 +242,7 @@ const repeatedWithMcq = computed({
           <BCol><BLabeledInput :label="$t('choicesSettingsStart')" style="width: 8em" v-model="model.inProgress.settings.start" /></BCol>
           <BCol><BLabeledInput :label="$t('choicesSettingsStop')" style="width: 8em" v-model="model.inProgress.settings.stop" /></BCol>
         </BRow>
-        <BLabeledInput v-if="model.inProgress.settings.mcqFieldUid === null" :label="$t('choicesSettingsPlaceholder')" v-model="model.inProgress.settings.placeholder" />
+        <BLabeledInput v-if="!model.inProgress.settings.mcqFieldUid" :label="$t('choicesSettingsPlaceholder')" v-model="model.inProgress.settings.placeholder" />
         <BButton sm secondary @click="() => {console.assert(model.inProgress.kind === 'multipleChoicesEdition'); model.inProgress.delete()}">{{ $t(model.inProgress.initial ? 'choicesSettingsCancel' : 'choicesSettingsDelete') }}</BButton>
         <BButton sm primary v-if="choices2ContextMenu !== null" @click="choices2ContextMenu.hide()">OK</BButton>
       </div>
