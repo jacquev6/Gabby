@@ -141,10 +141,7 @@ class _Adapter:
             next_delta_index += 1
 
             assert delta.kind == "text", f"Unexpected delta kind: {delta!r}"
-            if delta.attributes.choices2 is None:
-                assert delta.attributes == deltas.TextInsertOpAttributes(
-                    bold=delta.attributes.bold, italic=delta.attributes.italic, sel=delta.attributes.sel
-                ), f"Unknown attributes: {delta!r}"
+            if delta.attributes == deltas.TextInsertOpAttributes(bold=delta.attributes.bold, italic=delta.attributes.italic, sel=delta.attributes.sel):
 
                 formatting_arguments = {}
                 if delta.attributes.sel is not None and len(self.colors_for_selectable_items) > delta.attributes.sel - 1:
@@ -169,23 +166,23 @@ class _Adapter:
                             )
 
             elif delta.attributes.choices2 is not None:
-                choices2 = delta.attributes.choices2
+                choices_settings = delta.attributes.choices2
                 choices_deltas = [delta]
 
                 while (
                     next_delta_index < len(sentence_deltas)
                     and sentence_deltas[next_delta_index].kind == "text"
-                    and sentence_deltas[next_delta_index].attributes.choices2 == choices2
+                    and sentence_deltas[next_delta_index].attributes.choices2 == choices_settings
                 ):
                     choices_deltas.append(sentence_deltas[next_delta_index])
                     next_delta_index += 1
 
                 mcq_definition = McqDefinition(
-                    start=delta.attributes.choices2.start or None,
-                    separator1=delta.attributes.choices2.separator1 or None,
-                    separator2=delta.attributes.choices2.separator2 or None,
-                    stop=delta.attributes.choices2.stop or None,
-                    placeholder=delta.attributes.choices2.placeholder or None,
+                    start=choices_settings.start or None,
+                    separator1=choices_settings.separator1 or None,
+                    separator2=choices_settings.separator2 or None,
+                    stop=choices_settings.stop or None,
+                    placeholder=choices_settings.placeholder or None,
                     deltas=choices_deltas,
                 )
 
@@ -322,7 +319,11 @@ class _Adapter:
         sentence_placeholders: list[tuple[str, renderable.SentenceToken]],
         make_mcq_placeholder_replacement: renderable.AnyRenderable | None = None,
     ):
-        for delta in sentence_deltas:
+        next_delta_index = 0
+        while next_delta_index < len(sentence_deltas):
+            delta = sentence_deltas[next_delta_index]
+            next_delta_index += 1
+
             if delta.kind == "text":
                 if make_mcq_placeholder_replacement is None:
                     delta.attributes.mcq_placeholder = False
@@ -406,9 +407,17 @@ class _Adapter:
                                     yield item
 
                 elif delta.attributes.choices2 is not None:
-                    assert delta.attributes == deltas.TextInsertOpAttributes(choices2=delta.attributes.choices2), f"Unknown attributes: {delta!r}"
-
                     choices_settings = delta.attributes.choices2
+                    choices_deltas = [delta]
+
+                    while (
+                        next_delta_index < len(sentence_deltas)
+                        and sentence_deltas[next_delta_index].kind == "text"
+                        and sentence_deltas[next_delta_index].attributes.choices2 == choices_settings
+                    ):
+                        choices_deltas.append(sentence_deltas[next_delta_index])
+                        next_delta_index += 1
+
                     placeholder = choices_settings.placeholder or None
                     if placeholder is None:
                         mcq_definition = McqDefinition(
@@ -416,7 +425,7 @@ class _Adapter:
                             separator1=choices_settings.separator1 or None,
                             separator2=choices_settings.separator2 or None,
                             stop=choices_settings.stop or None,
-                            deltas=[delta],
+                            deltas=choices_deltas,
                         )
                         yield renderable.MultipleChoicesInput(
                             kind="multipleChoicesInput",
