@@ -27,7 +27,6 @@ then
     backend-shell \
     python -m gabby dump-database-as-unit-tests \
       --tests-per-file 50 \
-      --no-format \
       prod_data_as_unit_tests
 fi
 
