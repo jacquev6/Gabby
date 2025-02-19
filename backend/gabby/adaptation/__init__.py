@@ -6,9 +6,10 @@ import itertools
 import json
 import re
 import traceback
+import typing
 import unittest
 
-import mydantic
+from mydantic import PydanticBase
 
 from .. import deltas
 from .. import exercises
@@ -19,7 +20,7 @@ def adapt(exercise: exercises.Exercise) -> renderable.Exercise:
     return _Adapter(exercise).adapted
 
 
-class McqDefinition(mydantic.PydanticBase):
+class McqDefinition(PydanticBase):
     start: str | None
     separator1: str | None
     separator2: str | None
@@ -33,6 +34,11 @@ class _Adapter:
     paragraph_separator = object()
 
     def __init__(self, exercise: exercises.Exercise):
+        pagelets = self.untyped_init(exercise)  # type: ignore
+        self.adapted = renderable.Exercise(number=exercise.number, textbook_page=exercise.textbook_page, pagelets=pagelets)
+
+    @typing.no_type_check
+    def untyped_init(self, exercise: exercises.Exercise):
         self.wording_paragraphs_per_pagelet = exercise.adaptation.wording_paragraphs_per_pagelet
         self.single_item_per_paragraph = exercise.adaptation.single_item_per_paragraph
         self.show_mcq_choices_by_default = exercise.adaptation.show_mcq_choices_by_default
@@ -127,13 +133,15 @@ class _Adapter:
                 )
             )
 
-        self.adapted = renderable.Exercise(number=exercise.number, textbook_page=exercise.textbook_page, pagelets=pagelets)
+        return pagelets
 
+    @typing.no_type_check
     def adapt_instructions(self, instructions: deltas.Deltas) -> Iterable[renderable.Paragraph]:
         for paragraph_deltas in self.split_deltas(instructions, r"\s*\n\s*\n\s*"):
             for sentence_deltas in self.split_deltas_into_sentences(paragraph_deltas):
                 yield renderable.Paragraph(contents=list(self.adapt_instructions_sentence(sentence_deltas)))
 
+    @typing.no_type_check
     def adapt_instructions_sentence(self, sentence_deltas: deltas.Deltas):
         next_delta_index = 0
         while next_delta_index < len(sentence_deltas):
@@ -202,6 +210,7 @@ class _Adapter:
             else:
                 assert False, f"Unknown attributes: {delta!r}"
 
+    @typing.no_type_check
     def adapt_wording(self, wording: deltas.Deltas, wording_paragraphs_per_pagelet: int | None) -> Iterable[list[renderable.Paragraph]]:
         current_pagelet = []
         has_yielded = False
@@ -220,6 +229,7 @@ class _Adapter:
         if not has_yielded:
             yield []
 
+    @typing.no_type_check
     def adapt_wording_pagelet(self, pagelet_deltas: deltas.Deltas) -> Iterable[renderable.Paragraph]:
         for delta in pagelet_deltas:
             if delta.kind == "text" and delta.attributes == deltas.TextInsertOpAttributes():
@@ -235,6 +245,7 @@ class _Adapter:
 
         return paragraphs
 
+    @typing.no_type_check
     def adapt_wording_paragraph(self, paragraph_deltas: deltas.Deltas):
         sentence_specific_placeholders = []
 
@@ -319,6 +330,7 @@ class _Adapter:
         else:
             yield from self.adapt_wording_sentence(paragraph_deltas, sentence_placeholders)
 
+    @typing.no_type_check
     def adapt_wording_sentence(
         self,
         sentence_deltas: deltas.Deltas,
@@ -453,6 +465,7 @@ class _Adapter:
                 assert delta.insert.kind == "mcq-field", f"Unexpected delta kind: {delta!r}"
                 yield self.mcqs_by_uid.get(delta.insert.mcq_field, renderable.MultipleChoicesInput(kind="multipleChoicesInput", choices=[]))
 
+    @typing.no_type_check
     def decorate_item(self, contents):
         if self.items_are_selectable:
             contents = [
@@ -511,6 +524,7 @@ class _Adapter:
         if self.single_item_per_paragraph:
             yield self.paragraph_separator
 
+    @typing.no_type_check
     def split_deltas(self, section_deltas: deltas.Deltas, separator_pattern: str) -> Iterable[deltas.Deltas]:
         section_deltas = copy.deepcopy(section_deltas)
         if len(section_deltas) > 0:
@@ -535,6 +549,7 @@ class _Adapter:
                 current_paragraph.append(delta)
         yield current_paragraph
 
+    @typing.no_type_check
     def split_deltas_into_sentences(self, paragraph_deltas: deltas.Deltas) -> Iterable[deltas.Deltas]:
         current_sentence = []
         for delta in paragraph_deltas:
@@ -549,6 +564,7 @@ class _Adapter:
                         current_sentence.append(deltas.TextInsertOp(insert=sentence_part, attributes=delta.attributes))
         yield current_sentence
 
+    @typing.no_type_check
     def split_list_header(self, paragraph_deltas: deltas.Deltas) -> tuple[deltas.Deltas, deltas.Deltas]:
         if len(paragraph_deltas) == 0 or paragraph_deltas[0].kind != "text":
             return ([], paragraph_deltas)
@@ -602,6 +618,7 @@ class _Adapter:
         "\u02BC",
     ]
 
+    @typing.no_type_check
     def postprocess_section(self, section: renderable.Section) -> renderable.Section:
         section = copy.deepcopy(section)
         for paragraph in section.paragraphs:
@@ -635,6 +652,7 @@ class _Adapter:
         section.paragraphs = list(filter(lambda p: len(p.contents) > 0, section.paragraphs))
         return section
 
+    @typing.no_type_check
     def gather_choices(self, deltas_: deltas.Deltas) -> Iterable[McqDefinition]:
         next_delta_index = 0
         while next_delta_index < len(deltas_):
@@ -663,8 +681,9 @@ class _Adapter:
                     deltas=choices_deltas,
                 )
 
-    def separate_choices(self, definition: McqDefinition):
-        definition: McqDefinition = definition.model_copy(deep=True)  # Avoid modifying the 'TextInsertOp's in place
+    @typing.no_type_check
+    def separate_choices(self, definition_: McqDefinition):
+        definition: McqDefinition = definition_.model_copy(deep=True)  # Avoid modifying the 'TextInsertOp's in place
         assert len(definition.deltas) > 0
 
         for delta in definition.deltas:
@@ -710,11 +729,13 @@ class AdaptationTestCase(unittest.TestCase):
     generate_frontend_tests = True
 
     @classmethod
+    @typing.no_type_check
     def setUpClass(cls):
         cls.tests_to_generate = []
         return super().setUpClass()
 
     @classmethod
+    @typing.no_type_check
     def tearDownClass(cls):
         def generate():
             yield "import TricolorSection from './TricolorSection.vue'"
@@ -757,34 +778,55 @@ class AdaptationTestCase(unittest.TestCase):
 
         return super().tearDownClass()
 
-    def do_test(self, exercise, expected_adapted):
+    @typing.no_type_check
+    def do_test(self, exercise: exercises.Exercise, expected_adapted: renderable.Exercise):
         self.tests_to_generate.append((self.id(), expected_adapted))
 
         actual_adapted = exercise.make_adapted()
         if actual_adapted != expected_adapted:
             calling_frame = traceback.extract_stack()[-2]
-            r = (
-                repr([actual_adapted])[1:-1]
-                .replace("Exercise(", "r.Exercise(")
-                .replace("Pagelet(", "r.Pagelet(")
-                .replace("Section(", "r.Section(")
-                .replace("Paragraph(", "r.Paragraph(")
-                .replace("Text(", "r.Text(")
-                .replace("Whitespace(", "r.Whitespace(")
-                .replace("FreeTextInput(", "r.FreeTextInput(")
-                .replace("MultipleChoicesInput(", "r.MultipleChoicesInput(")
-                .replace("SelectableInput(", "r.SelectableInput(")
-                .replace("PassiveSequence(", "r.PassiveSequence(")
-                .replace("AnySequence(", "r.AnySequence(")
-                .replace("bold=False", "")
-                .replace("italic=False", "")
-                .replace("highlighted=None", "")
-                .replace("boxed=False", "")
-                .replace("show_arrow_before=False", "")
-                .replace("show_choices_by_default=False", "")
-                .replace("vertical=False", "")
-            )
-            while (new_r := r.replace(", , ", ", ").replace(", )", ")")) != r:
-                r = new_r
-            print(f"actual_adapted at {calling_frame.filename}:{calling_frame.lineno}:", r)
-        self.assertEqual(actual_adapted, expected_adapted)
+
+            print(f"actual_adapted at {calling_frame.filename}:{calling_frame.lineno}:", self.renderable_repr(actual_adapted))
+        for pagelet_index, (actual_pagelet, expected_pagelet) in enumerate(itertools.zip_longest(actual_adapted.pagelets, expected_adapted.pagelets)):
+            actual_instructions = None if actual_pagelet is None else actual_pagelet.instructions.paragraphs
+            expected_instructions = None if expected_pagelet is None else expected_pagelet.instructions.paragraphs
+            if actual_instructions != expected_instructions:
+                self.fail(
+                    f"pagelet {pagelet_index} instructions paragraphs are:\n{self.renderable_repr(actual_instructions)}\ninstead of:\n{self.renderable_repr(expected_instructions)}",
+                )
+            actual_wording = None if actual_pagelet is None else actual_pagelet.wording.paragraphs
+            expected_wording = None if expected_pagelet is None else expected_pagelet.wording.paragraphs
+            if actual_wording != expected_wording:
+                self.fail(
+                    f"pagelet {pagelet_index} wording paragraphs are:\n{self.renderable_repr(actual_wording)}\ninstead of:\n{self.renderable_repr(expected_wording)}",
+                )
+        if actual_adapted != expected_adapted:
+            self.fail(f"adapted is:\n{self.renderable_repr(actual_adapted)}\ninstead of:\n{self.renderable_repr(expected_adapted)}")
+
+    @staticmethod
+    @typing.no_type_check
+    def renderable_repr(rend):
+        r = (
+            repr([rend])[1:-1]
+            .replace("Exercise(", "r.Exercise(")
+            .replace("Pagelet(", "r.Pagelet(")
+            .replace("Section(", "r.Section(")
+            .replace("Paragraph(", "r.Paragraph(")
+            .replace("Text(", "r.Text(")
+            .replace("Whitespace(", "r.Whitespace(")
+            .replace("FreeTextInput(", "r.FreeTextInput(")
+            .replace("MultipleChoicesInput(", "r.MultipleChoicesInput(")
+            .replace("SelectableInput(", "r.SelectableInput(")
+            .replace("PassiveSequence(", "r.PassiveSequence(")
+            .replace("AnySequence(", "r.AnySequence(")
+            .replace("bold=False", "")
+            .replace("italic=False", "")
+            .replace("highlighted=None", "")
+            .replace("boxed=False", "")
+            .replace("show_arrow_before=False", "")
+            .replace("show_choices_by_default=False", "")
+            .replace("vertical=False", "")
+        )
+        while (new_r := r.replace(", , ", ", ").replace(", )", ")")) != r:
+            r = new_r
+        return r

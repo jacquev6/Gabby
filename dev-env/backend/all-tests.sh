@@ -6,8 +6,6 @@ set -o pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 
-backend/all-tests.sh
-
-frontend/all-tests.sh
-
-./end-to-end-tests.sh --no-console
+./format.sh
+./type-check.sh
+./unit-tests.sh --failfast
