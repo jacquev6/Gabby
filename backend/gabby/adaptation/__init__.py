@@ -288,7 +288,11 @@ class _Adapter:
                 if self.items_are_repeated_with_mcq:
                     contents2 = list(
                         self.adapt_wording_sentence(
-                            sentence_deltas, sentence_placeholders, make_mcq_placeholder_replacement=lambda _: [self.mcq_for_placeholders or renderable.MultipleChoicesInput(kind="multipleChoicesInput", choices=[])]
+                            sentence_deltas,
+                            sentence_placeholders,
+                            make_mcq_placeholder_replacement=lambda _: [
+                                self.mcq_for_placeholders or renderable.MultipleChoicesInput(kind="multipleChoicesInput", choices=[])
+                            ],
                         )
                     )
                     while contents2[0].kind == "whitespace":
@@ -319,7 +323,7 @@ class _Adapter:
         self,
         sentence_deltas: deltas.Deltas,
         sentence_placeholders,
-        make_mcq_placeholder_replacement = None,
+        make_mcq_placeholder_replacement=None,
         initial_formatting_arguments: dict = {},
     ):
         next_delta_index = 0
