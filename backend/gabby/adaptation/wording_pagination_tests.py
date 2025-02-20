@@ -421,7 +421,66 @@ class WordingPaginationTestCase(AdaptationTestCase):
             ),
         )
 
-    def test_one_word_per_paragraph(self):
+    def test_one_word_per_paragraph__plain(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions=[d.TextInsertOp(insert="instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="worda wordb\nwordc wordd\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
+                adaptation=Adaptation(
+                    kind="generic",
+                    wording_paragraphs_per_pagelet=3,
+                    single_item_per_paragraph=True,
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "tokens", "words": True, "punctuation": False},
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                    items_are_repeated_with_mcq=False,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="worda"),
+                                    ]
+                                ),
+                                r.Paragraph(contents=[r.Text(kind="text", text="wordb")]),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="wordc"),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    ),
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(contents=[r.Text(kind="text", text="wordd")]),
+                            ]
+                        ),
+                    ),
+                ],
+            ),
+        )
+
+    def test_one_word_per_paragraph__with_list(self):
         self.do_test(
             e.Exercise(
                 number="number",
@@ -486,7 +545,65 @@ class WordingPaginationTestCase(AdaptationTestCase):
             ),
         )
 
-    def test_one_punctuation_per_paragraph(self):
+    def test_one_punctuation_per_paragraph__plain(self):
+        # This is probably not an actual use case. But this behavior is consistent with the others, so we capture it with a test.
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions=[d.TextInsertOp(insert="instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="word, word\nword! word\n", attributes={})],
+                example=[d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="\n", attributes={})],
+                adaptation=Adaptation(
+                    kind="generic",
+                    wording_paragraphs_per_pagelet=3,
+                    single_item_per_paragraph=True,
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "tokens", "words": False, "punctuation": True},
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                    items_are_repeated_with_mcq=False,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="word"),
+                                        r.Text(kind="text", text=","),
+                                    ]
+                                ),
+                                r.Paragraph(contents=[r.Text(kind="text", text="word")]),
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="word"),
+                                        r.Text(kind="text", text="!"),
+                                    ]
+                                ),
+                            ]
+                        ),
+                    ),
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
+                        wording=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="word")])]),
+                    ),
+                ],
+            ),
+        )
+
+    def test_one_punctuation_per_paragraph__with_list(self):
         # This is probably not an actual use case. But this behavior is consistent with the others, so we capture it with a test.
         self.do_test(
             e.Exercise(

@@ -468,7 +468,69 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
     cy.screenshot('gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_manual_item_per_paragraph.0.wording')
   })
 
-  it('renders gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_punctuation_per_paragraph pagelet 0 wording', () => {
+  it('renders gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_punctuation_per_paragraph__plain pagelet 0 wording', () => {
+    cy.mount(TricolorSection, {
+      props: {
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "word"
+              },
+              {
+                "kind": "text",
+                "text": ","
+              }
+            ]
+          },
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "word"
+              }
+            ]
+          },
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "word"
+              },
+              {
+                "kind": "text",
+                "text": "!"
+              }
+            ]
+          }
+        ],
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_punctuation_per_paragraph__plain.0.wording')
+  })
+
+  it('renders gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_punctuation_per_paragraph__plain pagelet 1 wording', () => {
+    cy.mount(TricolorSection, {
+      props: {
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "word"
+              }
+            ]
+          }
+        ],
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_punctuation_per_paragraph__plain.1.wording')
+  })
+
+  it('renders gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_punctuation_per_paragraph__with_list pagelet 0 wording', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -530,26 +592,7 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_punctuation_per_paragraph.0.wording')
-  })
-
-  it('renders gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_punctuation_per_paragraph pagelet 1 wording', () => {
-    cy.mount(TricolorSection, {
-      props: {
-        paragraphs: [
-          {
-            "contents": [
-              {
-                "kind": "text",
-                "text": "word"
-              }
-            ]
-          }
-        ],
-        modelValue: {},
-      },
-    })
-    cy.screenshot('gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_punctuation_per_paragraph.1.wording')
+    cy.screenshot('gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_punctuation_per_paragraph__with_list.0.wording')
   })
 
   it('renders gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_sentence_per_paragraph pagelet 0 wording', () => {
@@ -659,7 +702,61 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
     cy.screenshot('gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_sentence_per_paragraph.1.wording')
   })
 
-  it('renders gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_word_per_paragraph pagelet 0 wording', () => {
+  it('renders gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_word_per_paragraph__plain pagelet 0 wording', () => {
+    cy.mount(TricolorSection, {
+      props: {
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "worda"
+              }
+            ]
+          },
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "wordb"
+              }
+            ]
+          },
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "wordc"
+              }
+            ]
+          }
+        ],
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_word_per_paragraph__plain.0.wording')
+  })
+
+  it('renders gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_word_per_paragraph__plain pagelet 1 wording', () => {
+    cy.mount(TricolorSection, {
+      props: {
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "wordd"
+              }
+            ]
+          }
+        ],
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_word_per_paragraph__plain.1.wording')
+  })
+
+  it('renders gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_word_per_paragraph__with_list pagelet 0 wording', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -713,26 +810,7 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_word_per_paragraph.0.wording')
-  })
-
-  it('renders gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_word_per_paragraph pagelet 1 wording', () => {
-    cy.mount(TricolorSection, {
-      props: {
-        paragraphs: [
-          {
-            "contents": [
-              {
-                "kind": "text",
-                "text": "wordd"
-              }
-            ]
-          }
-        ],
-        modelValue: {},
-      },
-    })
-    cy.screenshot('gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_word_per_paragraph.1.wording')
+    cy.screenshot('gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_word_per_paragraph__with_list.0.wording')
   })
 
   it('renders gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_only_manual_pagination pagelet 1 wording', () => {
