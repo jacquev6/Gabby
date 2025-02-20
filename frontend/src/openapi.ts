@@ -373,7 +373,7 @@ export interface components {
        */
       boxed?: boolean;
       /** Contents */
-      contents: (components["schemas"]["Whitespace"] | components["schemas"]["Text"])[];
+      contents: (components["schemas"]["Whitespace"] | components["schemas"]["Text"] | components["schemas"]["PassiveSequence"])[];
       /**
        * Kind
        * @constant

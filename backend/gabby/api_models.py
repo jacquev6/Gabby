@@ -126,10 +126,10 @@ class SeparatedItems(PydanticBase):
     kind: Literal["separated"]
     separator: str
 
+Items = CharactersItems | TokensItems | SentencesItems | ManualItems | SeparatedItems
+
 class Selectable(PydanticBase):
     colors: list[str]
-
-Items = CharactersItems | TokensItems | SentencesItems | ManualItems | SeparatedItems
 
 class PredefinedMcq(PydanticBase):
     grammatical_gender: bool

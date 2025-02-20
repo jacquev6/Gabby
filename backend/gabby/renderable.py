@@ -25,7 +25,7 @@ PassiveLeafRenderable = Whitespace | Text
 
 class PassiveSequence(PydanticBase):
     kind: Literal["passiveSequence"]
-    contents: list[PassiveLeafRenderable]
+    contents: list[PassiveRenderable]
     boxed: bool = False
 
 

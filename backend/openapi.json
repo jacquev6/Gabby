@@ -670,6 +670,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/Text"
+                },
+                {
+                  "$ref": "#/components/schemas/PassiveSequence"
                 }
               ]
             },
