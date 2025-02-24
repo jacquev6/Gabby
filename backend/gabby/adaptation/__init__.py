@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from typing import Any, Iterable
-import copy
 import itertools
 import json
 import re
@@ -243,11 +242,10 @@ class _Adapter:
         assert begin < end, (begin, end)
 
         while begin < end:
-            next_choices: tuple[Interval, deltas.Choices2] | None = None
-            for choices in instructions.choices:
-                if choices[0].begin >= begin:
-                    next_choices = choices
-                    break
+            (next_choices, next_manual_item, next_mcq_field) = self.find_next_disruptions(instructions, begin)
+            assert next_manual_item is None
+            assert next_mcq_field is None
+
             next_disruption = min(end, end if next_choices is None else next_choices[0].begin)
 
             if begin < next_disruption:
@@ -319,12 +317,12 @@ class _Adapter:
             begin = after_list
 
         while begin < end:
+            (next_choices, next_manual_item, next_mcq_field) = self.find_next_disruptions(wording, begin)
+
             next_placeholder: tuple[int, str] | None = None
             for placeholder in placeholders.keys():
                 if (index := wording.text.find(placeholder, begin, end)) >= begin and (next_placeholder is None or index < next_placeholder[0]):
                     next_placeholder = (index, placeholder)
-
-            (next_choices, next_manual_item, next_mcq_field) = self.find_next_disruptions(wording, begin)
 
             next_disruption = min(
                 end,
