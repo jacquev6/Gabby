@@ -757,8 +757,11 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                                     contents=[
                                         r.Text(kind="text", text="This"),
                                         r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red", "blue"], contents=[r.Text(kind="text", text="is")]),
-                                        r.SelectableInput(kind="selectableInput", colors=["red", "blue"], contents=[r.Text(kind="text", text=",")]),
+                                        r.SelectableInput(
+                                            kind="selectableInput",
+                                            colors=["red", "blue"],
+                                            contents=[r.Text(kind="text", text="is"), r.Text(kind="text", text=",")],
+                                        ),
                                         r.Whitespace(kind="whitespace"),
                                         r.SelectableInput(kind="selectableInput", colors=["red", "blue"], contents=[r.Text(kind="text", text="the")]),
                                         r.Whitespace(kind="whitespace"),
@@ -817,9 +820,11 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                                         r.Text(kind="text", text="This"),
                                         r.Whitespace(kind="whitespace"),
                                         r.SelectableInput(
-                                            kind="selectableInput", colors=["red", "blue"], boxed=True, contents=[r.Text(kind="text", text="is")]
+                                            kind="selectableInput",
+                                            colors=["red", "blue"],
+                                            boxed=True,
+                                            contents=[r.Text(kind="text", text="is"), r.Text(kind="text", text=",")],
                                         ),
-                                        r.SelectableInput(kind="selectableInput", colors=["red", "blue"], boxed=True, contents=[r.Text(kind="text", text=",")]),
                                         r.Whitespace(kind="whitespace"),
                                         r.SelectableInput(
                                             kind="selectableInput", colors=["red", "blue"], boxed=True, contents=[r.Text(kind="text", text="the")]

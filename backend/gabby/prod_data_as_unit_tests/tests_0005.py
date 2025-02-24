@@ -7228,10 +7228,7 @@ class DatabaseAsUnitTests0005(AdaptationTestCase):
                                 r.Paragraph(
                                     contents=[
                                         r.Text(kind="text", text="a"),
-                                        r.Text(kind="text", text="."),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="."),
-                                        r.Text(kind="text", text="."),
+                                        r.Text(kind="text", text="..."),
                                         r.Text(kind="text", text="bebce"),
                                         r.Whitespace(kind="whitespace"),
                                         r.Text(kind="text", text="◆"),
@@ -7260,10 +7257,7 @@ class DatabaseAsUnitTests0005(AdaptationTestCase):
                                 r.Paragraph(
                                     contents=[
                                         r.Text(kind="text", text="a"),
-                                        r.Text(kind="text", text="."),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="."),
-                                        r.Text(kind="text", text="."),
+                                        r.Text(kind="text", text="..."),
                                         r.Text(kind="text", text="bobabe"),
                                         r.Whitespace(kind="whitespace"),
                                         r.Text(kind="text", text="◆"),
@@ -7471,10 +7465,7 @@ class DatabaseAsUnitTests0005(AdaptationTestCase):
                                 r.Paragraph(
                                     contents=[
                                         r.Text(kind="text", text="a"),
-                                        r.Text(kind="text", text="."),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="."),
-                                        r.Text(kind="text", text="."),
+                                        r.Text(kind="text", text="..."),
                                         r.Text(kind="text", text="cobbu"),
                                         r.Whitespace(kind="whitespace"),
                                         r.Text(kind="text", text="◆"),

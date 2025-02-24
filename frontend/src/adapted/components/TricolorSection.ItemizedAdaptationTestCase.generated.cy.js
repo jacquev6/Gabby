@@ -3435,17 +3435,7 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                   {
                     "kind": "text",
                     "text": "is"
-                  }
-                ]
-              },
-              {
-                "kind": "selectableInput",
-                "colors": [
-                  "red",
-                  "blue"
-                ],
-                "boxed": true,
-                "contents": [
+                  },
                   {
                     "kind": "text",
                     "text": ","
@@ -3512,16 +3502,7 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                   {
                     "kind": "text",
                     "text": "is"
-                  }
-                ]
-              },
-              {
-                "kind": "selectableInput",
-                "colors": [
-                  "red",
-                  "blue"
-                ],
-                "contents": [
+                  },
                   {
                     "kind": "text",
                     "text": ","

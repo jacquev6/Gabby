@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Iterable
+from typing import Any, Iterable
 import copy
 import itertools
 import json
@@ -11,9 +11,14 @@ import unittest
 
 from mydantic import PydanticBase
 
+from .. import api_models
 from .. import deltas
 from .. import exercises
 from .. import renderable
+
+
+# We use the 're.*' functions without worrying about re-compiling the same regexes again and again. The 're' module
+# does some caching (see https://docs.python.org/3/library/re.html#re.compile) so this does not impact performances.
 
 
 def adapt(exercise: exercises.Exercise) -> renderable.Exercise:
@@ -30,484 +35,624 @@ class McqDefinition(PydanticBase):
     deltas: list[deltas.TextInsertOp]
 
 
+class Interval(PydanticBase):
+    begin: int  # Included
+    end: int  # Excluded
+
+
+class AnnotatedSection(PydanticBase):
+    class Point(PydanticBase):
+        position: int
+
+    class Format(PydanticBase):
+        bold: bool
+        italic: bool
+        sel: int | None
+
+    text: str
+    choices: list[tuple[Interval, deltas.Choices2]]
+    mcq_placeholders: list[Interval]
+    manual_items: list[Interval]
+    mcq_fields: list[tuple[Interval, str]]
+    formats: list[tuple[Interval, Format]]
+
+
 class _Adapter:
-    paragraph_separator = object()
-
     def __init__(self, exercise: exercises.Exercise):
-        pagelets = self.untyped_init(exercise)  # type: ignore
-        self.adapted = renderable.Exercise(number=exercise.number, textbook_page=exercise.textbook_page, pagelets=pagelets)
+        instructions_section = self.make_annotated_section(exercise.instructions)
 
-    @typing.no_type_check
-    def untyped_init(self, exercise: exercises.Exercise):
-        self.wording_paragraphs_per_pagelet = exercise.adaptation.wording_paragraphs_per_pagelet
         self.single_item_per_paragraph = exercise.adaptation.single_item_per_paragraph
         self.show_mcq_choices_by_default = exercise.adaptation.show_mcq_choices_by_default
         self.show_arrow_before_mcq_fields = exercise.adaptation.show_arrow_before_mcq_fields
-        self.global_placeholders: list[tuple[str, renderable.AnyRenderable]] = []
-        self.letters_are_items = False
-        self.words_are_items = False
-        self.punctuation_is_items = False
-        self.sentences_are_items = False
-        self.manual_items_are_items = False
-        self.items_separator = None
-        self.items_are_selectable = False
-        self.items_are_boxed = False
-        self.colors_for_selectable_items = []
-        self.items_have_mcq_beside = exercise.adaptation.items_have_mcq_beside
-        self.mcq_beside_items = None
-        self.items_have_mcq_below = exercise.adaptation.items_have_mcq_below
-        self.mcq_below_items = None
-        self.items_have_gender_mcq_beside = exercise.adaptation.items_have_predefined_mcq.grammatical_gender
-        self.items_have_number_mcq_beside = exercise.adaptation.items_have_predefined_mcq.grammatical_number
-        self.items_are_repeated_with_mcq = exercise.adaptation.items_are_repeated_with_mcq
-        if self.items_are_repeated_with_mcq:
-            assert exercise.adaptation.items is None
-            self.sentences_are_items = True
-        self.mcq_for_placeholders = None
-        self.mcqs_by_uid = {}
 
-        if exercise.adaptation.placeholder_for_fill_with_free_text is not None:
-            self.global_placeholders.append((exercise.adaptation.placeholder_for_fill_with_free_text, renderable.FreeTextInput(kind="freeTextInput")))
-
-        if exercise.adaptation.items is not None:
+        if exercise.adaptation.items is None:
+            self.letters_are_items = False
+            self.words_are_items = False
+            self.punctuation_is_items = False
+            self.sentences_are_items = False
+            self.manual_items_are_items = False
+            self.separated_items_separator = None
+        else:
             self.letters_are_items = exercise.adaptation.items.kind == "characters" and exercise.adaptation.items.letters
             self.words_are_items = exercise.adaptation.items.kind == "tokens" and exercise.adaptation.items.words
             self.punctuation_is_items = exercise.adaptation.items.kind == "tokens" and exercise.adaptation.items.punctuation
             self.sentences_are_items = exercise.adaptation.items.kind == "sentences"
             self.manual_items_are_items = exercise.adaptation.items.kind == "manual"
-            self.items_separator = re.escape(exercise.adaptation.items.separator) if exercise.adaptation.items.kind == "separated" else None
-            self.items_are_boxed = exercise.adaptation.items_are_boxed
-            if exercise.adaptation.items_are_selectable is not None:
-                self.items_are_selectable = True
+            self.separated_items_separator = exercise.adaptation.items.separator if exercise.adaptation.items.kind == "separated" else None
+
+        if exercise.adaptation.items is not None:
+            self.items_are_selectable = exercise.adaptation.items_are_selectable is not None
+            if self.items_are_selectable:
+                assert exercise.adaptation.items_are_selectable is not None
                 self.colors_for_selectable_items = exercise.adaptation.items_are_selectable.colors
-
-        for mcq_definition in self.gather_choices(exercise.instructions):
-            mcq = renderable.MultipleChoicesInput(
-                kind="multipleChoicesInput",
-                show_arrow_before=self.show_arrow_before_mcq_fields,
-                choices=self.separate_choices(mcq_definition),
-                show_choices_by_default=self.show_mcq_choices_by_default,
-            )
-
-            if mcq_definition.placeholder == "":
-                if mcq_definition.mcq_field_uid is None:
-                    if self.items_have_mcq_beside:
-                        self.mcq_beside_items = mcq
-                    elif self.items_have_mcq_below:
-                        self.mcq_below_items = mcq
-                    elif self.items_are_repeated_with_mcq:
-                        self.mcq_for_placeholders = mcq
-                else:
-                    self.mcqs_by_uid[mcq_definition.mcq_field_uid] = mcq
             else:
-                self.global_placeholders.append((mcq_definition.placeholder, mcq))
+                self.colors_for_selectable_items = []
+            self.items_are_boxed = exercise.adaptation.items_are_boxed
+        else:
+            self.items_are_selectable = False
+            self.colors_for_selectable_items = []
+            self.items_are_boxed = False
 
-        instructions = self.postprocess_section(
-            renderable.Section(
-                paragraphs=list(
-                    itertools.chain.from_iterable(
-                        self.adapt_instructions(part)
-                        for part in [
-                            exercise.instructions,
-                            exercise.example,
-                            exercise.clue,
-                        ]
-                    )
+        if exercise.adaptation.items_have_mcq_below:
+            self.mcq_below_items = None
+            for choices in instructions_section.choices:
+                if choices[1].placeholder == "" and choices[1].mcq_field_uid is None:
+                    self.mcq_below_items = self.make_multiple_choices_input(instructions_section, choices[0].begin, choices[0].end, choices[1])
+                    break
+        else:
+            self.mcq_below_items = None
+
+        if exercise.adaptation.items_have_mcq_beside:
+            self.mcq_beside_items = None
+            for choices in instructions_section.choices:
+                if choices[1].placeholder == "" and choices[1].mcq_field_uid is None:
+                    self.mcq_beside_items = self.make_multiple_choices_input(instructions_section, choices[0].begin, choices[0].end, choices[1])
+                    break
+        else:
+            self.mcq_beside_items = None
+
+        if exercise.adaptation.items_are_repeated_with_mcq:
+            assert exercise.adaptation.items is None
+            self.sentences_are_items = True
+            self.mcq_for_repeated_items = None
+            for choices in instructions_section.choices:
+                if choices[1].placeholder == "" and choices[1].mcq_field_uid is None:
+                    self.mcq_for_repeated_items = self.make_multiple_choices_input(instructions_section, choices[0].begin, choices[0].end, choices[1])
+                    break
+        else:
+            self.mcq_for_repeated_items = None
+
+        self.items_have_gender_mcq_beside = exercise.adaptation.items_have_predefined_mcq.grammatical_gender
+        self.items_have_number_mcq_beside = exercise.adaptation.items_have_predefined_mcq.grammatical_number
+
+        adapted_instructions = list(
+            self.remove_empty_paragraphs(
+                itertools.chain.from_iterable(
+                    self.adapt_instructions(section)
+                    for section in [instructions_section, self.make_annotated_section(exercise.example), self.make_annotated_section(exercise.clue)]
                 )
             )
         )
-
-        pagelets = list(
-            renderable.Pagelet(
-                instructions=instructions,
-                wording=self.postprocess_section(renderable.Section(paragraphs=wording_paragraphs)),
-            )
-            for wording_paragraphs in self.adapt_wording(exercise.wording, self.wording_paragraphs_per_pagelet)
-        )
+        self.global_placeholders = dict(self.make_global_placeholders(exercise.adaptation, instructions_section))
+        self.mcq_fields = dict(self.make_global_mcq_fields(instructions_section))
+        adapted_wording = list(list(w) for w in self.adapt_wording(self.make_annotated_section(exercise.wording)))
+        pagelets = list(self.make_pagelets(exercise.adaptation.wording_paragraphs_per_pagelet, adapted_instructions, adapted_wording))
 
         if exercise.text_reference != deltas.empty:
             pagelets.append(
-                renderable.Pagelet(
-                    instructions=self.postprocess_section(renderable.Section(paragraphs=list(self.adapt_instructions(exercise.text_reference)))),
-                    wording=renderable.Section(paragraphs=[]),
+                self.make_pagelet(
+                    list(self.remove_empty_paragraphs(self.adapt_instructions(self.make_annotated_section(exercise.text_reference)))),
+                    [],
                 )
             )
 
-        return pagelets
+        self.adapted = renderable.Exercise(number=exercise.number, textbook_page=exercise.textbook_page, pagelets=pagelets)
 
-    @typing.no_type_check
-    def adapt_instructions(self, instructions: deltas.Deltas) -> Iterable[renderable.Paragraph]:
-        for paragraph_deltas in self.split_deltas(instructions, r"\s*\n\s*\n\s*"):
-            for sentence_deltas in self.split_deltas_into_sentences(paragraph_deltas):
-                yield renderable.Paragraph(contents=list(self.adapt_instructions_sentence(sentence_deltas)))
+    def make_annotated_section(self, section_deltas: deltas.Deltas) -> AnnotatedSection:
+        begin = 0
+        end = 0
 
-    @typing.no_type_check
-    def adapt_instructions_sentence(self, sentence_deltas: deltas.Deltas):
-        next_delta_index = 0
-        while next_delta_index < len(sentence_deltas):
-            delta = sentence_deltas[next_delta_index]
-            next_delta_index += 1
+        section = AnnotatedSection(
+            text="",
+            choices=[],
+            mcq_placeholders=[],
+            manual_items=[],
+            mcq_fields=[],
+            formats=[],
+        )
 
-            assert delta.kind == "text", f"Unexpected delta kind: {delta!r}"
-            if delta.attributes == deltas.TextInsertOpAttributes(bold=delta.attributes.bold, italic=delta.attributes.italic, sel=delta.attributes.sel):
-
-                formatting_arguments = {}
-                if delta.attributes.sel is not None and len(self.colors_for_selectable_items) > delta.attributes.sel - 1:
-                    formatting_arguments["highlighted"] = self.colors_for_selectable_items[delta.attributes.sel - 1]
-                if delta.attributes.bold:
-                    formatting_arguments["bold"] = True
-                if delta.attributes.italic:
-                    formatting_arguments["italic"] = True
-
-                for text in re.split(r"(\.\.\.|\s+|\W)", delta.insert):
-                    if text != "":
-                        if text.strip() == "":
-                            yield renderable.Whitespace(
-                                kind="whitespace",
-                                **formatting_arguments,
-                            )
-                        else:
-                            yield renderable.Text(
-                                kind="text",
-                                text=text,
-                                **formatting_arguments,
-                            )
-
-            elif delta.attributes.choices2 is not None:
-                choices_settings = delta.attributes.choices2
-                choices_deltas = [delta]
-
-                while (
-                    next_delta_index < len(sentence_deltas)
-                    and sentence_deltas[next_delta_index].kind == "text"
-                    and sentence_deltas[next_delta_index].attributes.choices2 == choices_settings
-                ):
-                    choices_deltas.append(sentence_deltas[next_delta_index])
-                    next_delta_index += 1
-
-                mcq_definition = McqDefinition(
-                    start=choices_settings.start or None,
-                    separator1=choices_settings.separator1 or None,
-                    separator2=choices_settings.separator2 or None,
-                    stop=choices_settings.stop or None,
-                    placeholder=choices_settings.placeholder or None,
-                    deltas=choices_deltas,
-                )
-
-                choices = self.separate_choices(mcq_definition)
-                # Always format choices the same way in instructions: https://github.com/jacquev6/Gabby/issues/74
-                yield renderable.PassiveSequence(kind="passiveSequence", contents=choices[0], boxed=True)
-                for choice in choices[1:-1]:
-                    yield renderable.Text(kind="text", text=",")
-                    yield renderable.Whitespace(kind="whitespace")
-                    yield renderable.PassiveSequence(kind="passiveSequence", contents=choice, boxed=True)
-                if len(choices) > 1:
-                    yield renderable.Whitespace(kind="whitespace")
-                    yield renderable.Text(kind="text", text="ou")  # @todo Fix this if we ever support exercises in English
-                    yield renderable.Whitespace(kind="whitespace")
-                    yield renderable.PassiveSequence(kind="passiveSequence", contents=choices[-1], boxed=True)
-
-            else:
-                assert False, f"Unknown attributes: {delta!r}"
-
-    @typing.no_type_check
-    def adapt_wording(self, wording: deltas.Deltas, wording_paragraphs_per_pagelet: int | None) -> Iterable[list[renderable.Paragraph]]:
-        current_pagelet = []
-        has_yielded = False
-        for pagelet_deltas in self.split_deltas(wording, r"\s*\n\s*\n\s*\n\s*"):
-            if len(pagelet_deltas) != 0:
-                for paragraph in self.adapt_wording_pagelet(pagelet_deltas):
-                    current_pagelet.append(paragraph)
-                    if len(current_pagelet) == wording_paragraphs_per_pagelet:
-                        yield current_pagelet
-                        current_pagelet = []
-                        has_yielded = True
-            if len(current_pagelet) > 0:
-                yield current_pagelet
-                current_pagelet = []
-                has_yielded = True
-        if not has_yielded:
-            yield []
-
-    @typing.no_type_check
-    def adapt_wording_pagelet(self, pagelet_deltas: deltas.Deltas) -> Iterable[renderable.Paragraph]:
-        for delta in pagelet_deltas:
-            if delta.kind == "text" and delta.attributes == deltas.TextInsertOpAttributes():
-                for index, (placeholder, _token) in enumerate(self.global_placeholders):
-                    delta.insert = delta.insert.replace(placeholder, f"ph{index}hp")
-
-        paragraphs = []
-
-        for paragraph_deltas in self.split_deltas(pagelet_deltas, r"\s*\n\s*"):
-            for is_separator, contents in itertools.groupby(self.adapt_wording_paragraph(paragraph_deltas), lambda c: c is self.paragraph_separator):
-                if not is_separator:
-                    paragraphs.append(renderable.Paragraph(contents=list(contents)))
-
-        return paragraphs
-
-    @typing.no_type_check
-    def adapt_wording_paragraph(self, paragraph_deltas: deltas.Deltas):
-        sentence_specific_placeholders = []
-
-        for mcq_definition in self.gather_choices(paragraph_deltas):
-            if mcq_definition.placeholder != "":
-                sentence_specific_placeholders.append(
-                    (
-                        mcq_definition.placeholder,
-                        renderable.MultipleChoicesInput(
-                            kind="multipleChoicesInput",
-                            show_arrow_before=self.show_arrow_before_mcq_fields,
-                            choices=self.separate_choices(mcq_definition),
-                            show_choices_by_default=self.show_mcq_choices_by_default,
-                        ),
-                    ),
-                )
-
-        for delta in paragraph_deltas:
-            if delta.kind == "text" and delta.attributes == deltas.TextInsertOpAttributes():
-                for index, (mcq_definition.placeholder, _token) in enumerate(sentence_specific_placeholders):
-                    delta.insert = delta.insert.replace(mcq_definition.placeholder, f"ph{len(self.global_placeholders) + index}hp")
-
-        sentence_placeholders = list(itertools.chain(self.global_placeholders, sentence_specific_placeholders))
-
-        list_header_deltas, paragraph_deltas = self.split_list_header(paragraph_deltas)
-
-        if len(list_header_deltas) > 0:
-            for delta in list_header_deltas:
-                for text in re.split(r"(\.\.\.|\s+|\W|ph\d+hp)", delta.insert):
-                    if text != "":
-                        yield renderable.Text(kind="text", text=text)
-            yield renderable.Whitespace(kind="whitespace")
-
-        if self.sentences_are_items:
-            is_first_sentence = True
-            for sentence_deltas in self.split_deltas_into_sentences(paragraph_deltas):
-                if not is_first_sentence:
-                    yield renderable.Whitespace(kind="whitespace")
-                is_first_sentence = False
-                contents = list(
-                    self.adapt_wording_sentence(
-                        sentence_deltas,
-                        sentence_placeholders,
-                        make_mcq_placeholder_replacement=lambda deltas_: self.adapt_wording_sentence(
-                            deltas_, sentence_placeholders, initial_formatting_arguments={"highlighted": "#ffff00"}
-                        ),
-                    )
-                )
-                while contents[0].kind == "whitespace":
-                    contents.pop(0)
-                if self.items_are_repeated_with_mcq:
-                    contents2 = list(
-                        self.adapt_wording_sentence(
-                            sentence_deltas,
-                            sentence_placeholders,
-                            make_mcq_placeholder_replacement=lambda _: [
-                                self.mcq_for_placeholders or renderable.MultipleChoicesInput(kind="multipleChoicesInput", choices=[])
-                            ],
-                        )
-                    )
-                    while contents2[0].kind == "whitespace":
-                        contents2.pop(0)
-                    yield renderable.AnySequence(
-                        kind="sequence",
-                        contents=[renderable.AnySequence(kind="sequence", contents=contents), renderable.AnySequence(kind="sequence", contents=contents2)],
-                        vertical=True,
-                    )
-                else:
-                    yield from self.decorate_item(contents)
-        elif self.items_separator is not None:
-            is_first_item = True
-            for item_deltas in self.split_deltas(paragraph_deltas, self.items_separator):
-                if not is_first_item:
-                    yield renderable.Whitespace(kind="whitespace")
-                is_first_item = False
-                contents = list(self.adapt_wording_sentence(item_deltas, sentence_placeholders))
-                while len(contents) > 0 and contents[0].kind == "whitespace":
-                    contents.pop(0)
-                while len(contents) > 0 and contents[-1].kind == "whitespace":
-                    contents.pop(-1)
-                yield from self.decorate_item(contents)
-        else:
-            yield from self.adapt_wording_sentence(paragraph_deltas, sentence_placeholders)
-
-    @typing.no_type_check
-    def adapt_wording_sentence(
-        self,
-        sentence_deltas: deltas.Deltas,
-        sentence_placeholders,
-        make_mcq_placeholder_replacement=None,
-        initial_formatting_arguments: dict = {},
-    ):
-        next_delta_index = 0
-        while next_delta_index < len(sentence_deltas):
-            delta = sentence_deltas[next_delta_index]
-            next_delta_index += 1
-
+        for delta in section_deltas:
             if delta.kind == "text":
-                if make_mcq_placeholder_replacement is not None and delta.attributes.mcq_placeholder:
-                    mcq_placeholder_deltas = [delta]
-                    while (
-                        next_delta_index < len(sentence_deltas)
-                        and sentence_deltas[next_delta_index].kind == "text"
-                        and sentence_deltas[next_delta_index].attributes.mcq_placeholder
-                    ):
-                        mcq_placeholder_deltas.append(sentence_deltas[next_delta_index])
-                        next_delta_index += 1
+                section.text += delta.insert
+                end += len(delta.insert)
 
-                    yield from make_mcq_placeholder_replacement(mcq_placeholder_deltas)
+                if delta.attributes.choices2 is not None:
+                    if len(section.choices) == 0 or section.choices[-1][1] != delta.attributes.choices2 or section.choices[-1][0].end != begin:
+                        section.choices.append((Interval(begin=begin, end=end), delta.attributes.choices2))
+                    else:
+                        section.choices[-1][0].end = end
 
-                elif delta.attributes == deltas.TextInsertOpAttributes(
-                    bold=delta.attributes.bold, italic=delta.attributes.italic, mcq_placeholder=delta.attributes.mcq_placeholder
-                ):
-                    formatting_arguments = dict(initial_formatting_arguments)
-                    if delta.attributes.bold:
-                        formatting_arguments["bold"] = True
-                    if delta.attributes.italic:
-                        formatting_arguments["italic"] = True
+                if delta.attributes.mcq_placeholder:
+                    if len(section.mcq_placeholders) == 0 or section.mcq_placeholders[-1].end != begin:
+                        section.mcq_placeholders.append(Interval(begin=begin, end=end))
+                    else:
+                        section.mcq_placeholders[-1].end = end
 
-                    for i, text in enumerate(re.split(r"(\.\.\.|\s+|\W|ph\d+hp)", delta.insert)):
-                        if text != "":
-                            if i % 2 == 1:
-                                # Separator: punctuation, spacing, placeholders
-                                if text.strip() == "":
-                                    yield renderable.Whitespace(
-                                        kind="whitespace",
-                                        **formatting_arguments,
-                                    )
-                                elif text.startswith("ph") and text.endswith("hp"):
-                                    index = int(text[2:-2])
-                                    yield sentence_placeholders[index][1]
-                                else:
-                                    item = renderable.Text(
-                                        kind="text",
-                                        text=text,
-                                        **formatting_arguments,
-                                    )
-                                    if self.punctuation_is_items:
-                                        yield from self.decorate_item([item])
-                                    else:
-                                        yield item
-                            else:
-                                # Separated: words
-                                if self.letters_are_items:
-                                    for letter in text:
-                                        yield from self.decorate_item(
-                                            [
-                                                renderable.Text(
-                                                    kind="text",
-                                                    text=letter,
-                                                    **formatting_arguments,
-                                                )
-                                            ]
-                                        )
-                                elif self.words_are_items:
-                                    yield from self.decorate_item(
-                                        [
-                                            renderable.Text(
-                                                kind="text",
-                                                text=text,
-                                                **formatting_arguments,
-                                            )
-                                        ]
-                                    )
-                                else:
-                                    yield renderable.Text(
-                                        kind="text",
-                                        text=text,
-                                        **formatting_arguments,
-                                    )
+                if delta.attributes.manual_item:
+                    if len(section.manual_items) == 0 or section.manual_items[-1].end != begin:
+                        section.manual_items.append(Interval(begin=begin, end=end))
+                    else:
+                        section.manual_items[-1].end = end
 
-                elif delta.attributes.manual_item:
-                    assert delta.attributes == deltas.TextInsertOpAttributes(manual_item=delta.attributes.manual_item), f"Unknown attributes: {delta!r}"
-
-                    for text in re.split(r"(\.\.\.|\s+|\W)", delta.insert):
-                        if text != "":
-                            if text.strip() == "":
-                                yield renderable.Whitespace(kind="whitespace")
-                            else:
-                                item = renderable.Text(kind="text", text=text)
-                                if self.manual_items_are_items:
-                                    yield from self.decorate_item([item])
-                                else:
-                                    yield item
-
-                elif delta.attributes.choices2 is not None:
-                    choices_settings = delta.attributes.choices2
-                    choices_deltas = [delta]
-
-                    while (
-                        next_delta_index < len(sentence_deltas)
-                        and sentence_deltas[next_delta_index].kind == "text"
-                        and sentence_deltas[next_delta_index].attributes.choices2 == choices_settings
-                    ):
-                        choices_deltas.append(sentence_deltas[next_delta_index])
-                        next_delta_index += 1
-
-                    placeholder = choices_settings.placeholder or None
-                    if placeholder is None:
-                        mcq_definition = McqDefinition(
-                            start=choices_settings.start or None,
-                            separator1=choices_settings.separator1 or None,
-                            separator2=choices_settings.separator2 or None,
-                            stop=choices_settings.stop or None,
-                            deltas=choices_deltas,
+                if delta.attributes.bold or delta.attributes.italic or delta.attributes.sel is not None:
+                    section.formats.append(
+                        (
+                            Interval(begin=begin, end=end),
+                            AnnotatedSection.Format(bold=delta.attributes.bold, italic=delta.attributes.italic, sel=delta.attributes.sel),
                         )
-                        yield renderable.MultipleChoicesInput(
-                            kind="multipleChoicesInput",
-                            show_arrow_before=self.show_arrow_before_mcq_fields,
-                            choices=self.separate_choices(mcq_definition),
-                            show_choices_by_default=self.show_mcq_choices_by_default,
-                        )
+                    )
 
-                else:
-                    assert False, f"Unknown attributes: {delta!r}"
+                begin += len(delta.insert)
+            elif delta.kind == "embed":
+                assert delta.insert.kind == "mcq-field"
+                section.text += "¤"
+                end += 1
+                section.mcq_fields.append((Interval(begin=begin, end=end), delta.insert.mcq_field))
+                begin += 1
             else:
-                assert delta.insert.kind == "mcq-field", f"Unexpected delta kind: {delta!r}"
-                yield self.mcqs_by_uid.get(delta.insert.mcq_field, renderable.MultipleChoicesInput(kind="multipleChoicesInput", choices=[]))
+                assert False, f"Unexpected delta kind: {delta!r}"
 
-    @typing.no_type_check
-    def decorate_item(self, contents):
-        if self.items_are_selectable:
-            contents = [
-                renderable.SelectableInput(
-                    kind="selectableInput",
-                    contents=contents,
-                    colors=self.colors_for_selectable_items,
-                    boxed=self.items_are_boxed,
-                )
-            ]
-        elif self.items_are_boxed:
-            contents = [
-                renderable.PassiveSequence(
-                    kind="passiveSequence",
-                    contents=contents,
-                    boxed=True,
-                )
-            ]
+        return section
+
+    def adapt_instructions(self, instructions: AnnotatedSection) -> Iterable[renderable.Paragraph]:
+        begin, end = self.strip(instructions, 0, len(instructions.text))
+
+        for token_index, token in enumerate(re.split(r"(\s*\n\s*\n\s*)", instructions.text[begin:end])):
+            if token_index % 2 == 0 and len(token) > 0:
+                for paragraph in self.adapt_instructions_paragraph(instructions, begin, begin + len(token)):
+                    yield renderable.Paragraph(contents=list(self.strip_whitespace_renderables(paragraph)))
+            begin += len(token)
+
+        assert begin == end
+
+    def adapt_instructions_paragraph(self, instructions: AnnotatedSection, begin: int, end: int) -> Iterable[Iterable[renderable.AnyRenderable]]:
+        for b, e in self.fix_instructions_sentence_candidates(instructions, list(self.make_instructions_sentence_candidates(instructions, begin, end))):
+            yield self.adapt_instructions_sentence(instructions, b, e)
+
+    def make_instructions_sentence_candidates(self, instructions: AnnotatedSection, begin: int, end: int) -> Iterable[tuple[int, int]]:
+        paragraph_begin = begin
+        for match in re.finditer(r".*?(:?\.\.\.|[.!?…])\s*", instructions.text[paragraph_begin:end], flags=re.DOTALL):
+            assert match.start() == begin - paragraph_begin
+            yield (paragraph_begin + match.start(), paragraph_begin + match.end())
+            begin = paragraph_begin + match.end()
+        if begin < end:
+            yield (begin, end)
+
+    def fix_instructions_sentence_candidates(self, instructions: AnnotatedSection, sentence_candidates: list[tuple[int, int]]) -> Iterable[tuple[int, int]]:
+        current_begin = None
+        for begin, end in sentence_candidates:
+            if current_begin is None:
+                current_begin = begin
+            if not any(choice[0].begin < end <= choice[0].end for choice in instructions.choices):
+                yield (current_begin, end)
+                current_begin = None
+        if current_begin is not None:
+            yield (current_begin, end)
+
+    def adapt_instructions_sentence(self, instructions: AnnotatedSection, begin: int, end: int) -> Iterable[renderable.AnyRenderable]:
+        assert begin < end, (begin, end)
+
+        while begin < end:
+            next_choices: tuple[Interval, deltas.Choices2] | None = None
+            for choices in instructions.choices:
+                if choices[0].begin >= begin:
+                    next_choices = choices
+                    break
+            next_disruption = min(end, end if next_choices is None else next_choices[0].begin)
+
+            if begin < next_disruption:
+                yield from self.adapt_formatted_text(instructions, begin, next_disruption)
+                begin = next_disruption
+            else:
+                assert begin == next_disruption
+                if next_choices is not None and next_disruption == next_choices[0].begin:
+                    yield from self.adapt_multiple_choices(instructions, next_choices[0].begin, next_choices[0].end, next_choices[1])
+                    begin = next_choices[0].end
+                else:
+                    assert False, "Mishandled disruption"
+
+        assert begin == end, (begin, end)
+
+    def make_global_placeholders(
+        self, adaptation: api_models.Adaptation, instructions: AnnotatedSection
+    ) -> Iterable[tuple[str, list[renderable.AnyRenderable]]]:
+        if adaptation.placeholder_for_fill_with_free_text is not None:
+            yield (adaptation.placeholder_for_fill_with_free_text, [renderable.FreeTextInput(kind="freeTextInput")])
+
+        for choices in instructions.choices:
+            if choices[1].placeholder != "":
+                yield choices[1].placeholder, [self.make_multiple_choices_input(instructions, choices[0].begin, choices[0].end, choices[1])]
+
+    def make_global_mcq_fields(self, instructions: AnnotatedSection) -> Iterable[tuple[str, list[renderable.AnyRenderable]]]:
+        for choices in instructions.choices:
+            if choices[1].mcq_field_uid is not None:
+                yield choices[1].mcq_field_uid, [self.make_multiple_choices_input(instructions, choices[0].begin, choices[0].end, choices[1])]
+
+    def adapt_wording(self, wording: AnnotatedSection) -> Iterable[Iterable[renderable.Paragraph]]:
+        begin, end = self.strip(wording, 0, len(wording.text))
+
+        for token_index, token in enumerate(re.split(r"(\s*\n\s*\n\s*\n)", wording.text[begin:end])):
+            if token_index % 2 == 0:
+                yield self.remove_empty_paragraphs(self.adapt_wording_pagelet(wording, begin, begin + len(token)))
+            begin += len(token)
+
+        assert begin == end
+
+    def adapt_wording_pagelet(self, wording: AnnotatedSection, begin: int, end: int) -> Iterable[renderable.Paragraph]:
+        assert begin <= end, (begin, end)
+
+        if end != begin:
+            for token_index, token in enumerate(re.split(r"(\s*\n\s*)", wording.text[begin:end])):
+                if token_index % 2 == 0:
+                    for _, group in itertools.groupby(self.adapt_wording_paragraph(wording, begin, begin + len(token)), key=lambda e: e[0]):
+                        yield renderable.Paragraph(contents=list(self.strip_whitespace_renderables(e[1] for e in group)))
+                begin += len(token)
+
+        assert begin == end, (begin, end)
+
+    def adapt_wording_paragraph(self, wording: AnnotatedSection, begin: int, end: int) -> Iterable[tuple[int, renderable.AnyRenderable]]:
+        assert begin <= end, (begin, end)
+
+        placeholders = dict(self.global_placeholders)
+        for choices in wording.choices:
+            if choices[0].begin >= begin and choices[0].end <= end and choices[1].placeholder != "":
+                placeholders[choices[1].placeholder] = [self.make_multiple_choices_input(wording, choices[0].begin, choices[0].end, choices[1])]
+
+        paragraph_index = 0
+
+        r: renderable.AnyRenderable
+
+        if (after_list := self.detect_list_header(wording, begin, end)) is not None:
+            for r in self.adapt_formatted_text(wording, begin, after_list):
+                yield (paragraph_index, r)
+            yield (paragraph_index, renderable.Whitespace(kind="whitespace"))
+            begin = after_list
+
+        while begin < end:
+            next_placeholder: tuple[int, str] | None = None
+            for placeholder in placeholders.keys():
+                if (index := wording.text.find(placeholder, begin, end)) >= begin and (next_placeholder is None or index < next_placeholder[0]):
+                    next_placeholder = (index, placeholder)
+
+            (next_choices, next_manual_item, next_mcq_field) = self.find_next_disruptions(wording, begin)
+
+            next_disruption = min(
+                end,
+                end if next_choices is None else next_choices[0].begin,
+                end if next_placeholder is None else next_placeholder[0],
+                end if next_manual_item is None else next_manual_item.begin,
+                end if next_mcq_field is None else next_mcq_field[0].begin,
+            )
+
+            if begin < next_disruption:
+                if self.letters_are_items:
+                    for paragraph_index_2, r in self.adapt_itemized_letters(wording, begin, next_disruption, paragraph_index):
+                        paragraph_index = paragraph_index_2
+                        yield (paragraph_index, r)
+                elif self.words_are_items or self.punctuation_is_items:
+                    for paragraph_index_2, r in self.adapt_itemized_words_and_punctuation(wording, begin, next_disruption, paragraph_index):
+                        paragraph_index = paragraph_index_2
+                        yield (paragraph_index, r)
+                elif self.sentences_are_items:
+                    for paragraph_index_2, r in self.adapt_itemized_sentences(wording, begin, next_disruption, paragraph_index):
+                        paragraph_index = paragraph_index_2
+                        yield (paragraph_index, r)
+                elif self.separated_items_separator is not None:
+                    for paragraph_index_2, r in self.adapt_separated_items(wording, begin, next_disruption, paragraph_index):
+                        paragraph_index = paragraph_index_2
+                        yield (paragraph_index, r)
+                else:
+                    for r in self.adapt_formatted_text(wording, begin, next_disruption):
+                        yield (paragraph_index, r)
+                begin = next_disruption
+            else:
+                assert begin == next_disruption
+                if next_choices is not None and next_disruption == next_choices[0].begin:
+                    if next_choices[1].placeholder == "":
+                        yield (paragraph_index, self.make_multiple_choices_input(wording, next_choices[0].begin, next_choices[0].end, next_choices[1]))
+                    begin = next_choices[0].end
+                elif next_placeholder is not None and next_disruption == next_placeholder[0]:
+                    for r in placeholders[next_placeholder[1]]:
+                        yield (paragraph_index, r)
+                    begin += len(next_placeholder[1])
+                elif next_manual_item is not None and next_disruption == next_manual_item.begin:
+                    assert self.manual_items_are_items
+                    for r in self.decorate_item(self.adapt_formatted_text(wording, next_manual_item.begin, next_manual_item.end)):
+                        yield (paragraph_index, r)
+                    if self.single_item_per_paragraph:
+                        paragraph_index += 1
+                    begin = next_manual_item.end
+                elif next_mcq_field is not None and next_disruption == next_mcq_field[0].begin:
+                    mcq_field = self.mcq_fields.get(next_mcq_field[1])
+                    if mcq_field is None:
+                        yield (
+                            paragraph_index,
+                            renderable.MultipleChoicesInput(
+                                kind="multipleChoicesInput",
+                                show_arrow_before=self.show_arrow_before_mcq_fields,
+                                choices=[],
+                                show_choices_by_default=self.show_mcq_choices_by_default,
+                            ),
+                        )
+                    else:
+                        for r in mcq_field:
+                            yield (paragraph_index, r)
+                    begin = next_mcq_field[0].end
+                else:
+                    assert False, "Mishandled disruption"
+
+        assert begin == end, (begin, end)
+
+    def find_next_disruptions(
+        self, wording: AnnotatedSection, begin: int
+    ) -> tuple[tuple[Interval, deltas.Choices2] | None, Interval | None, tuple[Interval, str] | None]:
+        next_choices: tuple[Interval, deltas.Choices2] | None = None
+        for choices in wording.choices:
+            if choices[0].begin >= begin:
+                next_choices = choices
+                break
+
+        next_manual_item: Interval | None = None
+        for manual_item in wording.manual_items:
+            if manual_item.begin >= begin:
+                next_manual_item = manual_item
+                break
+
+        next_mcq_field: tuple[Interval, str] | None = None
+        for mcq_field in wording.mcq_fields:
+            if mcq_field[0].begin >= begin:
+                next_mcq_field = mcq_field
+                break
+
+        return (next_choices, next_manual_item, next_mcq_field)
+
+    def detect_list_header(self, wording: AnnotatedSection, begin: int, end: int) -> int | None:
+        assert begin <= end, (begin, end)
+
+        (next_choices, next_manual_item, next_mcq_field) = self.find_next_disruptions(wording, begin)
+        next_disruption = min(
+            end,
+            end if next_choices is None else next_choices[0].begin,
+            end if next_manual_item is None else next_manual_item.begin,
+            end if next_mcq_field is None else next_mcq_field[0].begin,
+        )
+
+        # WARNING: keep the list formats supported here consistent with what's supported in 'listFormats' in 'TextPicker.vue'
+        text = wording.text[begin:end]
+
+        if (m := re.match(r"^\d+", text)) is None:
+            number_prefix = None
         else:
-            pass
-        if self.mcq_below_items is None:
-            yield from contents
-            if self.mcq_beside_items is not None:
-                yield renderable.Whitespace(kind="whitespace")
-                yield self.mcq_beside_items
-            if self.items_have_gender_mcq_beside:
-                yield renderable.Whitespace(kind="whitespace")
-                yield renderable.MultipleChoicesInput(
-                    kind="multipleChoicesInput",
-                    show_arrow_before=True,
-                    choices=[
-                        # @todo Support exercises in English?
-                        [renderable.Text(kind="text", text="féminin")],
-                        [renderable.Text(kind="text", text="masculin")],
-                    ],
-                    show_choices_by_default=self.show_mcq_choices_by_default,
+            number_prefix = m.group(0)
+
+        if number_prefix is not None and len(text) > len(number_prefix) and text[len(number_prefix)] in ").":
+            # "1. 2. 3.", "1) 2) 3)", etc.
+            after_list = begin + len(number_prefix) + 1
+        elif len(text) > 1 and text[0] in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" and text[1] in ").":
+            # "a. b. c.", "A) B) C)", etc.
+            after_list = begin + 2
+        elif len(text) > 0 and text[0] in "◆■":
+            # "◆", "■", etc.
+            after_list = begin + 1
+        else:
+            after_list = None
+
+        if after_list is not None and wording.text[after_list] != " ":  # Space required, but we tolerate if the space is after the next disruption
+            after_list = None
+
+        while after_list is not None and after_list < next_disruption and wording.text[after_list] == " ":
+            after_list += 1
+
+        return after_list
+
+    def adapt_itemized_letters(self, wording: AnnotatedSection, begin: int, end: int, paragraph_index: int) -> Iterable[tuple[int, renderable.AnyRenderable]]:
+        assert self.letters_are_items
+        assert begin < end, (begin, end)
+
+        for token_index, token in enumerate(re.split(r"(\.\.\.|\s+|\W)", wording.text[begin:end])):
+            if token_index % 2 == 0:
+                # Word
+                for letter in token:
+                    for r in self.decorate_item(self.adapt_formatted_text(wording, begin, begin + len(letter))):
+                        yield (paragraph_index, r)
+                    if self.single_item_per_paragraph:
+                        paragraph_index += 1
+                    begin += 1
+            else:
+                # Separator: whitespace or punctuation
+                if token.strip() == "":
+                    yield (paragraph_index, renderable.Whitespace(kind="whitespace"))
+                else:
+                    for r in self.adapt_formatted_text(wording, begin, begin + len(token)):
+                        yield (paragraph_index, r)
+                begin += len(token)
+
+        assert begin == end, (begin, end)
+
+    def adapt_itemized_words_and_punctuation(
+        self, wording: AnnotatedSection, begin: int, end: int, paragraph_index: int
+    ) -> Iterable[tuple[int, renderable.AnyRenderable]]:
+        assert self.words_are_items or self.punctuation_is_items
+        assert begin < end, (begin, end)
+
+        # @todo Clarify spec with client, remove these weird specific cases.
+        if self.words_are_items and not self.punctuation_is_items or self.words_are_items and self.punctuation_is_items and self.items_are_boxed:
+            # Keep apostrophes near the preceding word, for French elision.
+            regex = r"((?:(?=[^\u2019\u0027\u02BC])(?:\.\.\.|\s+|\W|\b)))"
+        else:
+            regex = r"(\.\.\.|\s+|\W)"
+
+        for token_index, token in enumerate(re.split(regex, wording.text[begin:end])):
+            if token_index % 2 == 0:
+                if token != "":
+                    # Word
+                    r = self.adapt_formatted_text(wording, begin, begin + len(token))
+                    if self.words_are_items:
+                        for r2 in self.decorate_item(r):
+                            yield (paragraph_index, r2)
+                        if self.single_item_per_paragraph:
+                            paragraph_index += 1
+                    else:
+                        for r2 in r:
+                            yield (paragraph_index, r2)
+            else:
+                # Separator:
+                if token.strip() == "":
+                    if token != "":
+                        # whitespace
+                        yield (paragraph_index, renderable.Whitespace(kind="whitespace"))
+                else:
+                    # or punctuation
+                    r = self.adapt_formatted_text(wording, begin, begin + len(token))
+                    if self.punctuation_is_items:
+                        for r2 in self.decorate_item(r):
+                            yield (paragraph_index, r2)
+                        if self.single_item_per_paragraph:
+                            paragraph_index += 1
+                    else:
+                        for r2 in r:
+                            yield (paragraph_index, r2)
+            begin += len(token)
+
+        assert begin == end, (begin, end)
+
+    def adapt_itemized_sentences(self, wording: AnnotatedSection, begin: int, end: int, paragraph_index: int) -> Iterable[tuple[int, renderable.AnyRenderable]]:
+        assert self.sentences_are_items
+        assert begin < end, (begin, end)
+
+        first = True
+
+        def gen_sentence(b: int, e: int) -> Iterable[tuple[int, renderable.AnyRenderable]]:
+            nonlocal paragraph_index
+            nonlocal first
+
+            if not first:
+                yield (paragraph_index, renderable.Whitespace(kind="whitespace"))
+            first = False
+            if self.mcq_for_repeated_items is None:
+                r = self.adapt_formatted_text(wording, b, e)
+                for r2 in self.decorate_item(r):
+                    yield (paragraph_index, r2)
+            else:
+                yield (paragraph_index, self.adapt_sentence_repeated_with_mcq(wording, b, e))
+            if self.single_item_per_paragraph:
+                paragraph_index += 1
+
+        sentences_begin = begin
+        for match in re.finditer(r"(.*?(:?\.\.\.|[.!?…]))\s*", wording.text[sentences_begin:end], flags=re.DOTALL):
+            assert match.start() == begin - sentences_begin
+            yield from gen_sentence(sentences_begin + match.start(1), sentences_begin + match.end(1))
+            begin = sentences_begin + match.end()
+        if begin < end:
+            yield from gen_sentence(begin, end)
+
+    def adapt_sentence_repeated_with_mcq(self, wording: AnnotatedSection, begin: int, end: int) -> renderable.AnySequence:
+        assert begin < end, (begin, end)
+
+        assert self.mcq_for_repeated_items is not None
+
+        original_sentence: list[renderable.AnyRenderable] = []
+        repeated_sentence: list[renderable.AnyRenderable] = []
+
+        while begin < end:
+            next_mcq_placeholder: Interval | None = None
+            for mcq_placeholder in wording.mcq_placeholders:
+                if mcq_placeholder.begin >= begin:
+                    next_mcq_placeholder = mcq_placeholder
+                    break
+
+            next_disruption = min(end, end if next_mcq_placeholder is None else next_mcq_placeholder.begin)
+
+            if begin < next_disruption:
+                r = list(self.adapt_formatted_text(wording, begin, next_disruption))
+                original_sentence.extend(r)
+                repeated_sentence.extend(r)
+                begin = next_disruption
+            else:
+                assert begin == next_disruption
+                assert next_mcq_placeholder is not None
+                original_sentence.extend(
+                    self.adapt_formatted_text(
+                        wording, next_mcq_placeholder.begin, next_mcq_placeholder.end, additional_format_parameters={"highlighted": "#ffff00"}
+                    )
                 )
+                repeated_sentence.append(self.mcq_for_repeated_items)
+                begin = next_mcq_placeholder.end
+
+        assert begin == end, (begin, end, wording)
+
+        return renderable.AnySequence(
+            kind="sequence",
+            contents=[
+                renderable.AnySequence(kind="sequence", contents=original_sentence),
+                renderable.AnySequence(kind="sequence", contents=repeated_sentence),
+            ],
+            vertical=True,
+        )
+
+    def adapt_separated_items(self, wording: AnnotatedSection, begin: int, end: int, paragraph_index: int) -> Iterable[tuple[int, renderable.AnyRenderable]]:
+        assert self.separated_items_separator is not None
+        assert begin < end, (begin, end)
+
+        for token_index, token in enumerate(re.split(r"(\s*" + re.escape(self.separated_items_separator) + r"\s*)", wording.text[begin:end])):
+            if token_index % 2 == 0:
+                if token != "":
+                    # Item
+                    for r2 in self.decorate_item(self.adapt_formatted_text(wording, begin, begin + len(token))):
+                        yield (paragraph_index, r2)
+                    if self.single_item_per_paragraph:
+                        paragraph_index += 1
+            else:
+                # Separator:
+                yield (paragraph_index, renderable.Whitespace(kind="whitespace"))
+            begin += len(token)
+
+        assert begin == end, (begin, end)
+
+    def decorate_item(self, r: Iterable[renderable.PassiveRenderable]) -> Iterable[renderable.AnyRenderable]:
+        if self.items_are_selectable:
+            yield renderable.SelectableInput(kind="selectableInput", contents=list(r), colors=self.colors_for_selectable_items, boxed=self.items_are_boxed)
+        elif self.mcq_below_items is not None:
+            rr = list(typing.cast(Iterable[renderable.AnyRenderable], r))
+            if len(rr) == 1:
+                rrr = rr[0]
+            else:
+                rrr = renderable.AnySequence(kind="sequence", contents=rr, vertical=False)
+            yield renderable.AnySequence(kind="sequence", contents=[rrr, self.mcq_below_items], vertical=True)
+        elif self.mcq_beside_items is not None:
+            yield from r
+            yield renderable.Whitespace(kind="whitespace")
+            yield self.mcq_beside_items
+        elif self.items_are_boxed:
+            yield renderable.PassiveSequence(kind="passiveSequence", contents=list(r), boxed=True)
+        elif self.items_have_gender_mcq_beside:
+            yield from r
+            yield renderable.Whitespace(kind="whitespace")
+            yield renderable.MultipleChoicesInput(
+                kind="multipleChoicesInput",
+                show_arrow_before=True,
+                choices=[
+                    # @todo Support exercises in English?
+                    [renderable.Text(kind="text", text="féminin")],
+                    [renderable.Text(kind="text", text="masculin")],
+                ],
+                show_choices_by_default=self.show_mcq_choices_by_default,
+            )
             if self.items_have_number_mcq_beside:
                 yield renderable.Whitespace(kind="whitespace")
                 yield renderable.MultipleChoicesInput(
                     kind="multipleChoicesInput",
-                    show_arrow_before=not self.items_have_gender_mcq_beside,
+                    show_arrow_before=False,
                     choices=[
                         # @todo Support exercises in English?
                         [renderable.Text(kind="text", text="singulier")],
@@ -515,213 +660,175 @@ class _Adapter:
                     ],
                     show_choices_by_default=self.show_mcq_choices_by_default,
                 )
-        else:
-            yield renderable.AnySequence(
-                kind="sequence",
-                contents=[contents[0] if len(contents) == 1 else renderable.AnySequence(kind="sequence", contents=contents), self.mcq_below_items],
-                vertical=True,
+        elif self.items_have_number_mcq_beside:
+            yield from r
+            yield renderable.Whitespace(kind="whitespace")
+            yield renderable.MultipleChoicesInput(
+                kind="multipleChoicesInput",
+                show_arrow_before=True,
+                choices=[
+                    # @todo Support exercises in English?
+                    [renderable.Text(kind="text", text="singulier")],
+                    [renderable.Text(kind="text", text="pluriel")],
+                ],
+                show_choices_by_default=self.show_mcq_choices_by_default,
             )
-        if self.single_item_per_paragraph:
-            yield self.paragraph_separator
-
-    @typing.no_type_check
-    def split_deltas(self, section_deltas: deltas.Deltas, separator_pattern: str) -> Iterable[deltas.Deltas]:
-        section_deltas = copy.deepcopy(section_deltas)
-        if len(section_deltas) > 0:
-            if section_deltas[0].kind == "text":
-                section_deltas[0].insert = section_deltas[0].insert.lstrip()
-            if section_deltas[-1].kind == "text":
-                section_deltas[-1].insert = section_deltas[-1].insert.rstrip()
-
-        current_paragraph = []
-        for delta in section_deltas:
-            if delta.kind == "text":
-                if delta.attributes.choices2 is not None:
-                    current_paragraph.append(delta)
-                else:
-                    for i, paragraph_part in enumerate(re.split(separator_pattern, delta.insert)):
-                        if i > 0:
-                            yield current_paragraph
-                            current_paragraph = []
-                        if paragraph_part != "":
-                            current_paragraph.append(deltas.TextInsertOp(insert=paragraph_part, attributes=delta.attributes))
-            else:
-                current_paragraph.append(delta)
-        yield current_paragraph
-
-    @typing.no_type_check
-    def split_deltas_into_sentences(self, paragraph_deltas: deltas.Deltas) -> Iterable[deltas.Deltas]:
-        current_sentence = []
-        for delta in paragraph_deltas:
-            if delta.attributes.choices2 is not None:
-                current_sentence.append(delta)
-            else:
-                for i, sentence_part in enumerate(re.split(r"(\.\.\.|[.!?…])", delta.insert)):
-                    if sentence_part != "":
-                        if i % 2 == 0 and i > 1:
-                            yield current_sentence
-                            current_sentence = []
-                        current_sentence.append(deltas.TextInsertOp(insert=sentence_part, attributes=delta.attributes))
-        yield current_sentence
-
-    @typing.no_type_check
-    def split_list_header(self, paragraph_deltas: deltas.Deltas) -> tuple[deltas.Deltas, deltas.Deltas]:
-        if len(paragraph_deltas) == 0 or paragraph_deltas[0].kind != "text":
-            return ([], paragraph_deltas)
         else:
-            # WARNING: keep the list formats supported here consistent with what's supported in 'listFormats' in 'TextPicker.vue'
-            list_header_deltas = []
-            paragraph_deltas = copy.deepcopy(paragraph_deltas)
+            yield from r
 
-            number_prefix = re.match(r"^\d+", paragraph_deltas[0].insert)
-            if number_prefix is not None:
-                number_prefix = number_prefix.group(0)
+    def adapt_formatted_text(
+        self, section: AnnotatedSection, begin: int, end: int, additional_format_parameters: dict[str, Any] = {}
+    ) -> Iterable[renderable.PassiveLeafRenderable]:
+        assert begin < end, (begin, end)
 
-            if number_prefix is not None and len(paragraph_deltas[0].insert) > len(number_prefix) and paragraph_deltas[0].insert[len(number_prefix)] in ").":
-                # "1. 2. 3.", "1) 2) 3)", etc.
-                list_header_deltas.append(
-                    deltas.TextInsertOp(
-                        insert=paragraph_deltas[0].insert[: len(number_prefix) + 1],
-                        attributes=paragraph_deltas[0].attributes,
-                    )
-                )
-                paragraph_deltas[0].insert = paragraph_deltas[0].insert[len(number_prefix) + 1 :].lstrip()
-            elif (
-                len(paragraph_deltas[0].insert) > 1
-                and paragraph_deltas[0].insert[0] in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                and paragraph_deltas[0].insert[1] in ")."
-            ):
-                # "a. b. c.", "A) B) C)", etc.
-                list_header_deltas.append(
-                    deltas.TextInsertOp(
-                        insert=paragraph_deltas[0].insert[:2],
-                        attributes=paragraph_deltas[0].attributes,
-                    )
-                )
-                paragraph_deltas[0].insert = paragraph_deltas[0].insert[2:].lstrip()
-            elif len(paragraph_deltas[0].insert) > 0 and paragraph_deltas[0].insert[0] in "◆■":
-                # "◆", "■", etc.
-                list_header_deltas.append(
-                    deltas.TextInsertOp(
-                        insert=paragraph_deltas[0].insert[0],
-                        attributes=paragraph_deltas[0].attributes,
-                    )
-                )
-                paragraph_deltas[0].insert = paragraph_deltas[0].insert[1:].lstrip()
+        for token_index, token in enumerate(re.split(r"(\.\.\.|\s+|\W)", section.text[begin:end])):
+            token_begin = begin
+            token_end = begin + len(token)
+            character_formats: list[AnnotatedSection.Format] = [AnnotatedSection.Format(bold=False, italic=False, sel=None) for c in token]
+            for interval, format in section.formats:
+                if interval.begin < token_end and interval.end > token_begin:
+                    for i in range(max(interval.begin, token_begin), min(interval.end, token_end)):
+                        character_formats[i - token_begin] = format
 
-            return (list_header_deltas, paragraph_deltas)
+            for format, characters in itertools.groupby(zip(character_formats, token, strict=True), lambda c: c[0]):
+                format_parameters = dict(additional_format_parameters)
+                if format.bold:
+                    format_parameters["bold"] = True
+                if format.italic:
+                    format_parameters["italic"] = True
+                if format.sel is not None and len(self.colors_for_selectable_items) > format.sel - 1:
+                    format_parameters["highlighted"] = self.colors_for_selectable_items[format.sel - 1]
 
-    __apostrophes = [
-        # https://fr.wikipedia.org/wiki/Apostrophe_(typographie) mentions one more encoding than https://en.wikipedia.org/wiki/Apostrophe
-        "\u2019",
-        "\u0027",
-        "\u02BC",
-    ]
-
-    @typing.no_type_check
-    def postprocess_section(self, section: renderable.Section) -> renderable.Section:
-        section = copy.deepcopy(section)
-        for paragraph in section.paragraphs:
-            fixed_contents = []
-            for content in paragraph.contents:
-                if content.kind == "whitespace" and len(fixed_contents) == 0:
-                    pass
-                elif content.kind == "whitespace" and len(fixed_contents) > 0 and fixed_contents[-1].kind == "whitespace":
-                    pass
-                elif (
-                    content.kind == "text"
-                    and content.text in self.__apostrophes
-                    and len(fixed_contents) > 0
-                    and fixed_contents[-1].kind in ["selectableInput", "passiveSequence"]
-                ):
-                    fixed_contents[-1].contents.append(content)
-                elif (
-                    content.kind == "passiveSequence"
-                    and len(content.contents) == 1
-                    and content.contents[0].kind == "text"
-                    and content.contents[0].text in self.__apostrophes
-                    and len(fixed_contents) > 0
-                    and fixed_contents[-1].kind in ["selectableInput", "passiveSequence"]
-                ):
-                    fixed_contents[-1].contents.append(content.contents[0])
+                text = "".join(c[1] for c in characters)
+                if token_index % 2 == 1:
+                    if token.strip() == "":
+                        yield renderable.Whitespace(kind="whitespace", **format_parameters)
+                    else:
+                        yield renderable.Text(kind="text", text=text, **format_parameters)
                 else:
-                    fixed_contents.append(content)
-            while len(fixed_contents) > 0 and fixed_contents[-1].kind == "whitespace":
-                fixed_contents.pop(-1)
-            paragraph.contents = fixed_contents
-        section.paragraphs = list(filter(lambda p: len(p.contents) > 0, section.paragraphs))
-        return section
+                    if token.strip() != "":
+                        yield renderable.Text(kind="text", text=text, **format_parameters)
+                begin += len(text)
 
-    @typing.no_type_check
-    def gather_choices(self, deltas_: deltas.Deltas) -> Iterable[McqDefinition]:
-        next_delta_index = 0
-        while next_delta_index < len(deltas_):
-            delta = deltas_[next_delta_index]
-            next_delta_index += 1
+        assert begin == end, (begin, end)
 
-            if delta.kind == "text" and delta.attributes.choices2 is not None:
-                choices_settings = delta.attributes.choices2
-                choices_deltas = [delta]
+    def adapt_multiple_choices(self, instructions: AnnotatedSection, begin: int, end: int, choices: deltas.Choices2) -> Iterable[renderable.PassiveRenderable]:
+        choice_locations = self.extract_choice_locations(instructions, begin, end, choices)
 
-                while (
-                    next_delta_index < len(deltas_)
-                    and deltas_[next_delta_index].kind == "text"
-                    and deltas_[next_delta_index].attributes.choices2 == choices_settings
-                ):
-                    choices_deltas.append(deltas_[next_delta_index])
-                    next_delta_index += 1
+        first = True
+        for choice in choice_locations[:-1]:
+            if not first:
+                yield renderable.Text(kind="text", text=",")
+                yield renderable.Whitespace(kind="whitespace")
+            first = False
+            yield renderable.PassiveSequence(
+                kind="passiveSequence", contents=list(self.adapt_formatted_text(instructions, choice.begin, choice.end)), boxed=True
+            )
+        if len(choice_locations) > 1:
+            yield renderable.Whitespace(kind="whitespace")
+            yield renderable.Text(kind="text", text="ou")  # @todo Fix this if we ever support exercises in English
+            yield renderable.Whitespace(kind="whitespace")
+        yield renderable.PassiveSequence(
+            kind="passiveSequence", contents=list(self.adapt_formatted_text(instructions, choice_locations[-1].begin, choice_locations[-1].end)), boxed=True
+        )
 
-                yield McqDefinition(
-                    start=choices_settings.start or None,
-                    separator1=choices_settings.separator1 or None,
-                    separator2=choices_settings.separator2 or None,
-                    stop=choices_settings.stop or None,
-                    placeholder=choices_settings.placeholder,
-                    mcq_field_uid=choices_settings.mcq_field_uid,
-                    deltas=choices_deltas,
-                )
+    def make_multiple_choices_input(self, section: AnnotatedSection, begin: int, end: int, choices: deltas.Choices2) -> renderable.MultipleChoicesInput:
+        choice_locations = self.extract_choice_locations(section, begin, end, choices)
 
-    @typing.no_type_check
-    def separate_choices(self, definition_: McqDefinition):
-        definition: McqDefinition = definition_.model_copy(deep=True)  # Avoid modifying the 'TextInsertOp's in place
-        assert len(definition.deltas) > 0
+        return renderable.MultipleChoicesInput(
+            kind="multipleChoicesInput",
+            choices=[list(self.adapt_formatted_text(section, choice.begin, choice.end)) for choice in choice_locations],
+            show_arrow_before=self.show_arrow_before_mcq_fields,
+            show_choices_by_default=self.show_mcq_choices_by_default,
+        )
 
-        for delta in definition.deltas:
-            assert delta.kind == "text"
-            delta.attributes.choices2 = None
+    def extract_choice_locations(self, section: AnnotatedSection, begin: int, end: int, choices: deltas.Choices2) -> list[Interval]:
+        assert begin < end, (begin, end)
 
-        definition.deltas[0].insert = definition.deltas[0].insert.lstrip()
-        definition.deltas[-1].insert = definition.deltas[-1].insert.rstrip()
-        if (
-            definition.start is not None
-            and definition.stop is not None
-            and definition.deltas[0].insert.startswith(definition.start)
-            and definition.deltas[-1].insert.endswith(definition.stop)
-        ):
-            definition.deltas[0].insert = definition.deltas[0].insert[len(definition.start) :]
-            definition.deltas[-1].insert = definition.deltas[-1].insert[: -len(definition.stop)]
+        begin, end = self.lstrip(section, begin, end)
+        if section.text[begin : begin + len(choices.start)] == choices.start:
+            begin += len(choices.start)
 
-        if definition.separator1 is None:
-            choices_deltas = [definition.deltas]
+        begin, end = self.rstrip(section, begin, end)
+        if section.text[end - len(choices.stop) : end] == choices.stop:
+            end -= len(choices.stop)
+
+        if choices.separator1 == "":
+            choice_locations = [Interval(begin=begin, end=end)]
+            begin = end
         else:
-            choices_deltas = list(self.split_deltas(definition.deltas, re.escape(definition.separator1)))
+            choice_locations = []
+            for token_index, token in enumerate(re.split(r"(" + re.escape(choices.separator1) + r")", section.text[begin:end])):
+                if token_index % 2 == 0:
+                    choice_locations.append(Interval(begin=begin, end=begin + len(token)))
+                begin += len(token)
 
-        if definition.separator2 is not None:
-            choices_deltas[-1:] = list(self.split_deltas(choices_deltas[-1], re.escape(definition.separator2)))
+        if choices.separator2 != "" and len(choice_locations) > 0:
+            begin = choice_locations[-1].begin
+            choice_locations.pop()
+            for token_index, token in enumerate(re.split(r"(" + re.escape(choices.separator2) + r")", section.text[begin:end])):
+                if token_index % 2 == 0:
+                    choice_locations.append(Interval(begin=begin, end=begin + len(token)))
+                begin += len(token)
 
-        def gen():
-            for choice_deltas in choices_deltas:
-                text = "".join(delta.insert for delta in choice_deltas).strip()
-                if text != "":
-                    r = list(self.adapt_instructions_sentence(choice_deltas))
-                    while len(r) > 0 and r[0].kind == "whitespace":
-                        r.pop(0)
-                    while len(r) > 0 and r[-1].kind == "whitespace":
-                        r.pop(-1)
-                    if len(r) > 0:
-                        yield r
+        for choice in choice_locations:
+            choice.begin, choice.end = self.strip(section, choice.begin, choice.end)
 
-        return list(gen())
+        assert begin == end, (begin, end)
+
+        return list(filter(lambda c: c.begin < c.end, choice_locations))
+
+    def remove_empty_paragraphs(self, paragraphs: Iterable[renderable.Paragraph]) -> Iterable[renderable.Paragraph]:
+        for p in paragraphs:
+            if len(p.contents) > 0:
+                yield p
+
+    def lstrip(self, section: AnnotatedSection, begin: int, end: int) -> tuple[int, int]:
+        while begin < end and section.text[begin].strip() == "":
+            begin += 1
+        return begin, end
+
+    def rstrip(self, section: AnnotatedSection, begin: int, end: int) -> tuple[int, int]:
+        while end > begin and section.text[end - 1].strip() == "":
+            end -= 1
+        return begin, end
+
+    def strip(self, section: AnnotatedSection, begin: int, end: int) -> tuple[int, int]:
+        return self.rstrip(section, *self.lstrip(section, begin, end))
+
+    def strip_whitespace_renderables(self, renderables: Iterable[renderable.AnyRenderable]) -> Iterable[renderable.AnyRenderable]:
+        """
+        Remove leading and trailing whitespace; replace strides of several whitespace by a single one.
+        """
+        content_seen = False
+        in_stock: list[renderable.AnyRenderable] = []
+        for r in renderables:
+            if r.kind == "whitespace":
+                if content_seen:
+                    in_stock.append(r)
+            else:
+                content_seen = True
+                yield from in_stock[0:1]
+                in_stock = []
+                yield r
+
+    def make_pagelets(
+        self, wording_paragraphs_per_pagelet: int | None, instructions: list[renderable.Paragraph], wording: list[list[renderable.Paragraph]]
+    ) -> Iterable[renderable.Pagelet]:
+        for manual_wording_pagelet in wording:
+            has_yielded = False
+            current_paragraphs = []
+            for paragraph in manual_wording_pagelet:
+                current_paragraphs.append(paragraph)
+                if len(current_paragraphs) == wording_paragraphs_per_pagelet:
+                    has_yielded = True
+                    yield self.make_pagelet(instructions, current_paragraphs)
+                    current_paragraphs = []
+            if len(current_paragraphs) > 0 or not has_yielded:
+                yield self.make_pagelet(instructions, current_paragraphs)
+
+    def make_pagelet(self, instructions: list[renderable.Paragraph], wording: list[renderable.Paragraph]) -> renderable.Pagelet:
+        return renderable.Pagelet(instructions=renderable.Section(paragraphs=instructions), wording=renderable.Section(paragraphs=wording))
 
 
 class AdaptationTestCase(unittest.TestCase):
