@@ -923,6 +923,240 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
     cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions_with_placeholder.0.wording')
   })
 
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_choices2_with_one_line_end_in_instructions pagelet 0 instructions', () => {
+    cy.mount(TricolorSection, {
+      props: {
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "alpha"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "text",
+                "text": ","
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "bravo"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "ou"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "charlie"
+                  }
+                ],
+                "boxed": true
+              }
+            ]
+          }
+        ],
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_choices2_with_one_line_end_in_instructions.0.instructions')
+  })
+
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_choices2_with_one_line_end_in_instructions pagelet 0 wording', () => {
+    cy.mount(TricolorSection, {
+      props: {
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "multipleChoicesInput",
+                "choices": [
+                  [
+                    {
+                      "kind": "text",
+                      "text": "alpha"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "bravo"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "charlie"
+                    }
+                  ]
+                ]
+              }
+            ]
+          }
+        ],
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_choices2_with_one_line_end_in_instructions.0.wording')
+  })
+
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_manual_item_with_one_line_end pagelet 0 wording', () => {
+    cy.mount(TricolorSection, {
+      props: {
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "Blah"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "bl"
+                  },
+                  {
+                    "kind": "whitespace"
+                  },
+                  {
+                    "kind": "text",
+                    "text": "ah"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "blah"
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          }
+        ],
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_manual_item_with_one_line_end.0.wording')
+  })
+
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_mcq_placeholder_with_one_line_end pagelet 0 wording', () => {
+    cy.mount(TricolorSection, {
+      props: {
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "sequence",
+                "contents": [
+                  {
+                    "kind": "sequence",
+                    "contents": [
+                      {
+                        "kind": "text",
+                        "text": "Blah"
+                      },
+                      {
+                        "kind": "whitespace"
+                      },
+                      {
+                        "kind": "text",
+                        "highlighted": "#ffff00",
+                        "text": "bl"
+                      },
+                      {
+                        "kind": "whitespace",
+                        "highlighted": "#ffff00"
+                      },
+                      {
+                        "kind": "text",
+                        "highlighted": "#ffff00",
+                        "text": "ah"
+                      },
+                      {
+                        "kind": "text",
+                        "text": "."
+                      }
+                    ]
+                  },
+                  {
+                    "kind": "sequence",
+                    "contents": [
+                      {
+                        "kind": "text",
+                        "text": "Blah"
+                      },
+                      {
+                        "kind": "whitespace"
+                      },
+                      {
+                        "kind": "multipleChoicesInput",
+                        "choices": [
+                          [
+                            {
+                              "kind": "text",
+                              "text": "alpha"
+                            }
+                          ],
+                          [
+                            {
+                              "kind": "text",
+                              "text": "bravo"
+                            }
+                          ]
+                        ]
+                      },
+                      {
+                        "kind": "text",
+                        "text": "."
+                      }
+                    ]
+                  }
+                ],
+                "vertical": true
+              }
+            ]
+          }
+        ],
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_mcq_placeholder_with_one_line_end.0.wording')
+  })
+
   it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_sel_and_bold pagelet 0 instructions', () => {
     cy.mount(TricolorSection, {
       props: {

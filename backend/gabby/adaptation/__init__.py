@@ -206,17 +206,61 @@ class _Adapter:
     def adapt_instructions(self, instructions: AnnotatedSection) -> Iterable[renderable.Paragraph]:
         begin, end = self.strip(instructions, 0, len(instructions.text))
 
-        for token_index, token in enumerate(re.split(r"(\s*\n\s*\n\s*)", instructions.text[begin:end])):
-            if token_index % 2 == 0 and len(token) > 0:
-                for paragraph in self.adapt_instructions_paragraph(instructions, begin, begin + len(token)):
+        for _, (b, e) in self.split(r"(\s*\n\s*\n\s*)", instructions, begin, end):
+            if b < e:
+                for paragraph in self.adapt_instructions_paragraph(instructions, b, e):
                     yield renderable.Paragraph(contents=list(self.strip_whitespace_renderables(paragraph)))
-            begin += len(token)
+            begin = e
 
-        assert begin == end
+        assert begin == end, (begin, end)
+
+    def split(
+        self, pattern: str, section: AnnotatedSection, begin: int, end: int, ignore_disruptions: bool = False
+    ) -> Iterable[tuple[tuple[int, int] | None, tuple[int, int]]]:
+        assert pattern.startswith("(")
+        assert pattern.endswith(")")
+        assert begin <= end, (begin, end)
+        split = re.split(pattern, section.text[begin:end])
+        assert len(split) % 2 == 1
+
+        to_yield: tuple[tuple[int, int] | None, tuple[int, int]] | None = None
+        for token_index in range(0, len(split), 2):
+            if token_index == 0:
+                token = split[token_index]
+                assert to_yield is None
+                to_yield = (None, (begin, begin + len(token)))
+                begin += len(token)
+            else:
+                separator = split[token_index - 1]
+                token = split[token_index]
+                if to_yield is None:
+                    to_yield = ((begin, begin + len(separator)), (begin + len(separator), begin + len(separator) + len(token)))
+                else:
+                    to_yield = (to_yield[0], (to_yield[1][0], to_yield[1][1] + len(separator) + len(token)))
+                begin += len(separator) + len(token)
+
+            # @todo Rethink the 'ignore_disruptions' parameter
+            if ignore_disruptions or (
+                not any(choice[0].begin < to_yield[1][1] < choice[0].end for choice in section.choices)
+                and not any(manual_item.begin < to_yield[1][1] < manual_item.end for manual_item in section.manual_items)
+                and not any(mcq_placeholder.begin < to_yield[1][1] < mcq_placeholder.end for mcq_placeholder in section.mcq_placeholders)
+            ):
+                yield to_yield
+                to_yield = None
+
+        if to_yield is not None:
+            yield to_yield
+
+        assert begin == end, (begin, end)
 
     def adapt_instructions_paragraph(self, instructions: AnnotatedSection, begin: int, end: int) -> Iterable[Iterable[renderable.AnyRenderable]]:
+        assert begin < end, (begin, end)
+
         for b, e in self.fix_instructions_sentence_candidates(instructions, list(self.make_instructions_sentence_candidates(instructions, begin, end))):
             yield self.adapt_instructions_sentence(instructions, b, e)
+            begin = e
+
+        assert begin == end, (begin, end)
 
     def make_instructions_sentence_candidates(self, instructions: AnnotatedSection, begin: int, end: int) -> Iterable[tuple[int, int]]:
         paragraph_begin = begin
@@ -279,22 +323,17 @@ class _Adapter:
     def adapt_wording(self, wording: AnnotatedSection) -> Iterable[Iterable[renderable.Paragraph]]:
         begin, end = self.strip(wording, 0, len(wording.text))
 
-        for token_index, token in enumerate(re.split(r"(\s*\n\s*\n\s*\n)", wording.text[begin:end])):
-            if token_index % 2 == 0:
-                yield self.remove_empty_paragraphs(self.adapt_wording_pagelet(wording, begin, begin + len(token)))
-            begin += len(token)
-
-        assert begin == end
+        for _, (b, e) in self.split(r"(\s*\n\s*\n\s*\n)", wording, begin, end):
+            yield self.remove_empty_paragraphs(self.adapt_wording_pagelet(wording, b, e))
 
     def adapt_wording_pagelet(self, wording: AnnotatedSection, begin: int, end: int) -> Iterable[renderable.Paragraph]:
         assert begin <= end, (begin, end)
 
         if end != begin:
-            for token_index, token in enumerate(re.split(r"(\s*\n\s*)", wording.text[begin:end])):
-                if token_index % 2 == 0:
-                    for _, group in itertools.groupby(self.adapt_wording_paragraph(wording, begin, begin + len(token)), key=lambda e: e[0]):
-                        yield renderable.Paragraph(contents=list(self.strip_whitespace_renderables(e[1] for e in group)))
-                begin += len(token)
+            for _, (b, e) in self.split(r"(\s*\n\s*)", wording, begin, end):
+                for _, group in itertools.groupby(self.adapt_wording_paragraph(wording, b, e), key=lambda p: p[0]):
+                    yield renderable.Paragraph(contents=list(self.strip_whitespace_renderables(p[1] for p in group)))
+                begin = e
 
         assert begin == end, (begin, end)
 
@@ -457,23 +496,23 @@ class _Adapter:
         assert self.letters_are_items
         assert begin < end, (begin, end)
 
-        for token_index, token in enumerate(re.split(r"(\.\.\.|\s+|\W)", wording.text[begin:end])):
-            if token_index % 2 == 0:
-                # Word
-                for letter in token:
-                    for r in self.decorate_item(self.adapt_formatted_text(wording, begin, begin + len(letter))):
-                        yield (paragraph_index, r)
-                    if self.single_item_per_paragraph:
-                        paragraph_index += 1
-                    begin += 1
-            else:
-                # Separator: whitespace or punctuation
-                if token.strip() == "":
+        for separator, token in self.split(r"(\.\.\.|\s+|\W)", wording, begin, end):
+            if separator is not None:
+                (b, e) = separator
+                if wording.text[b:e].strip() == "":
                     yield (paragraph_index, renderable.Whitespace(kind="whitespace"))
                 else:
-                    for r in self.adapt_formatted_text(wording, begin, begin + len(token)):
+                    for r in self.adapt_formatted_text(wording, b, e):
                         yield (paragraph_index, r)
-                begin += len(token)
+
+            (b, e) = token
+            for b in range(b, e):
+                for r2 in self.decorate_item(self.adapt_formatted_text(wording, b, b + 1)):
+                    yield (paragraph_index, r2)
+                if self.single_item_per_paragraph:
+                    paragraph_index += 1
+
+            begin = e
 
         assert begin == end, (begin, end)
 
@@ -490,28 +529,16 @@ class _Adapter:
         else:
             regex = r"(\.\.\.|\s+|\W)"
 
-        for token_index, token in enumerate(re.split(regex, wording.text[begin:end])):
-            if token_index % 2 == 0:
-                if token != "":
-                    # Word
-                    r = self.adapt_formatted_text(wording, begin, begin + len(token))
-                    if self.words_are_items:
-                        for r2 in self.decorate_item(r):
-                            yield (paragraph_index, r2)
-                        if self.single_item_per_paragraph:
-                            paragraph_index += 1
-                    else:
-                        for r2 in r:
-                            yield (paragraph_index, r2)
-            else:
-                # Separator:
-                if token.strip() == "":
-                    if token != "":
-                        # whitespace
+        for separator, token in self.split(regex, wording, begin, end):
+            if separator is not None:
+                (b, e) = separator
+                if wording.text[b:e].strip() == "":
+                    # whitespace
+                    if b < e:
                         yield (paragraph_index, renderable.Whitespace(kind="whitespace"))
                 else:
                     # or punctuation
-                    r = self.adapt_formatted_text(wording, begin, begin + len(token))
+                    r = self.adapt_formatted_text(wording, b, e)
                     if self.punctuation_is_items:
                         for r2 in self.decorate_item(r):
                             yield (paragraph_index, r2)
@@ -520,7 +547,21 @@ class _Adapter:
                     else:
                         for r2 in r:
                             yield (paragraph_index, r2)
-            begin += len(token)
+
+            (b, e) = token
+            if b < e:
+                # Word
+                r = self.adapt_formatted_text(wording, b, e)
+                if self.words_are_items:
+                    for r2 in self.decorate_item(r):
+                        yield (paragraph_index, r2)
+                    if self.single_item_per_paragraph:
+                        paragraph_index += 1
+                else:
+                    for r2 in r:
+                        yield (paragraph_index, r2)
+
+            begin = e
 
         assert begin == end, (begin, end)
 
@@ -602,18 +643,19 @@ class _Adapter:
         assert self.separated_items_separator is not None
         assert begin < end, (begin, end)
 
-        for token_index, token in enumerate(re.split(r"(\s*" + re.escape(self.separated_items_separator) + r"\s*)", wording.text[begin:end])):
-            if token_index % 2 == 0:
-                if token != "":
-                    # Item
-                    for r2 in self.decorate_item(self.adapt_formatted_text(wording, begin, begin + len(token))):
-                        yield (paragraph_index, r2)
-                    if self.single_item_per_paragraph:
-                        paragraph_index += 1
-            else:
-                # Separator:
+        for separator, token in self.split(r"(\s*" + re.escape(self.separated_items_separator) + r"\s*)", wording, begin, end):
+            if separator is not None:
                 yield (paragraph_index, renderable.Whitespace(kind="whitespace"))
-            begin += len(token)
+
+            (b, e) = token
+            if b < e:
+                # Item
+                for r2 in self.decorate_item(self.adapt_formatted_text(wording, b, e)):
+                    yield (paragraph_index, r2)
+                if self.single_item_per_paragraph:
+                    paragraph_index += 1
+
+            begin = e
 
         assert begin == end, (begin, end)
 
@@ -679,34 +721,36 @@ class _Adapter:
     ) -> Iterable[renderable.PassiveLeafRenderable]:
         assert begin < end, (begin, end)
 
-        for token_index, token in enumerate(re.split(r"(\.\.\.|\s+|\W)", section.text[begin:end])):
-            token_begin = begin
-            token_end = begin + len(token)
-            character_formats: list[AnnotatedSection.Format] = [AnnotatedSection.Format(bold=False, italic=False, sel=None) for c in token]
-            for interval, format in section.formats:
-                if interval.begin < token_end and interval.end > token_begin:
-                    for i in range(max(interval.begin, token_begin), min(interval.end, token_end)):
-                        character_formats[i - token_begin] = format
+        for parts in self.split(r"(\.\.\.|\s+|\W)", section, begin, end, ignore_disruptions=True):
+            for part_index, part in enumerate(parts):
+                if part is None:
+                    continue
+                (b, e) = part
+                character_formats: list[AnnotatedSection.Format] = [AnnotatedSection.Format(bold=False, italic=False, sel=None) for _ in range(b, e)]
+                for interval, format in section.formats:
+                    if interval.begin < e and interval.end > b:
+                        for i in range(max(interval.begin, b), min(interval.end, e)):
+                            character_formats[i - b] = format
 
-            for format, characters in itertools.groupby(zip(character_formats, token, strict=True), lambda c: c[0]):
-                format_parameters = dict(additional_format_parameters)
-                if format.bold:
-                    format_parameters["bold"] = True
-                if format.italic:
-                    format_parameters["italic"] = True
-                if format.sel is not None and len(self.colors_for_selectable_items) > format.sel - 1:
-                    format_parameters["highlighted"] = self.colors_for_selectable_items[format.sel - 1]
+                for format, characters in itertools.groupby(zip(character_formats, section.text[b:e], strict=True), lambda c: c[0]):
+                    format_parameters = dict(additional_format_parameters)
+                    if format.bold:
+                        format_parameters["bold"] = True
+                    if format.italic:
+                        format_parameters["italic"] = True
+                    if format.sel is not None and len(self.colors_for_selectable_items) > format.sel - 1:
+                        format_parameters["highlighted"] = self.colors_for_selectable_items[format.sel - 1]
 
-                text = "".join(c[1] for c in characters)
-                if token_index % 2 == 1:
-                    if token.strip() == "":
-                        yield renderable.Whitespace(kind="whitespace", **format_parameters)
+                    text = "".join(c[1] for c in characters)
+                    if part_index == 0:
+                        if text.strip() == "":
+                            yield renderable.Whitespace(kind="whitespace", **format_parameters)
+                        else:
+                            yield renderable.Text(kind="text", text=text, **format_parameters)
                     else:
-                        yield renderable.Text(kind="text", text=text, **format_parameters)
-                else:
-                    if token.strip() != "":
-                        yield renderable.Text(kind="text", text=text, **format_parameters)
-                begin += len(text)
+                        if text.strip() != "":
+                            yield renderable.Text(kind="text", text=text, **format_parameters)
+                    begin += len(text)
 
         assert begin == end, (begin, end)
 
@@ -756,18 +800,16 @@ class _Adapter:
             begin = end
         else:
             choice_locations = []
-            for token_index, token in enumerate(re.split(r"(" + re.escape(choices.separator1) + r")", section.text[begin:end])):
-                if token_index % 2 == 0:
-                    choice_locations.append(Interval(begin=begin, end=begin + len(token)))
-                begin += len(token)
+            for _, (b, e) in self.split(r"(" + re.escape(choices.separator1) + r")", section, begin, end, ignore_disruptions=True):
+                choice_locations.append(Interval(begin=b, end=e))
+                begin = e
 
         if choices.separator2 != "" and len(choice_locations) > 0:
             begin = choice_locations[-1].begin
             choice_locations.pop()
-            for token_index, token in enumerate(re.split(r"(" + re.escape(choices.separator2) + r")", section.text[begin:end])):
-                if token_index % 2 == 0:
-                    choice_locations.append(Interval(begin=begin, end=begin + len(token)))
-                begin += len(token)
+            for _, (b, e) in self.split(r"(" + re.escape(choices.separator2) + r")", section, begin, end, ignore_disruptions=True):
+                choice_locations.append(Interval(begin=b, end=e))
+                begin = e
 
         for choice in choice_locations:
             choice.begin, choice.end = self.strip(section, choice.begin, choice.end)
