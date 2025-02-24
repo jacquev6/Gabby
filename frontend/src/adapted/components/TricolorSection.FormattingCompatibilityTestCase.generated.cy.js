@@ -183,6 +183,384 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
     cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic.1.wording')
   })
 
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__letters pagelet 0 wording', () => {
+    cy.mount(TricolorSection, {
+      props: {
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "B"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "l"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "a"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "h"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "b"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "bold": true,
+                    "text": "l"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "bold": true,
+                    "text": "a"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "h"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "b"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "l"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "a"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "h"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          }
+        ],
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__letters.0.wording')
+  })
+
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__punctuation pagelet 0 wording', () => {
+    cy.mount(TricolorSection, {
+      props: {
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "Blah"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "bold": true,
+                    "text": ","
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "blah"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "."
+                  }
+                ],
+                "boxed": true
+              }
+            ]
+          }
+        ],
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__punctuation.0.wording')
+  })
+
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__sentences pagelet 0 wording', () => {
+    cy.mount(TricolorSection, {
+      props: {
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "Blah"
+                  },
+                  {
+                    "kind": "whitespace"
+                  },
+                  {
+                    "kind": "text",
+                    "text": "b"
+                  },
+                  {
+                    "kind": "text",
+                    "bold": true,
+                    "text": "la"
+                  },
+                  {
+                    "kind": "text",
+                    "text": "h"
+                  },
+                  {
+                    "kind": "text",
+                    "text": "."
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "Blah"
+                  },
+                  {
+                    "kind": "text",
+                    "text": "."
+                  }
+                ],
+                "boxed": true
+              }
+            ]
+          }
+        ],
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__sentences.0.wording')
+  })
+
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__separated pagelet 0 wording', () => {
+    cy.mount(TricolorSection, {
+      props: {
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "Blah"
+                  },
+                  {
+                    "kind": "whitespace"
+                  },
+                  {
+                    "kind": "text",
+                    "text": "b"
+                  },
+                  {
+                    "kind": "text",
+                    "bold": true,
+                    "text": "la"
+                  },
+                  {
+                    "kind": "text",
+                    "text": "h"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "blah"
+                  },
+                  {
+                    "kind": "text",
+                    "text": "."
+                  }
+                ],
+                "boxed": true
+              }
+            ]
+          }
+        ],
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__separated.0.wording')
+  })
+
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__words pagelet 0 wording', () => {
+    cy.mount(TricolorSection, {
+      props: {
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "Blah"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "b"
+                  },
+                  {
+                    "kind": "text",
+                    "bold": true,
+                    "text": "la"
+                  },
+                  {
+                    "kind": "text",
+                    "text": "h"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "blah"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          }
+        ],
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__words.0.wording')
+  })
+
   it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_mcq_placeholder pagelet 0 instructions', () => {
     cy.mount(TricolorSection, {
       props: {

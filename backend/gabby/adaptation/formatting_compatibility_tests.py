@@ -674,3 +674,289 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 ],
             ),
         )
+
+    def test_bold_in_automated_items__letters(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                wording=[
+                    d.TextInsertOp(insert="Blah b", attributes={}),
+                    d.TextInsertOp(insert="la", attributes={"bold": True}),
+                    d.TextInsertOp(insert="h blah.\n", attributes={}),
+                ],
+                adaptation=Adaptation(
+                    kind="generic",
+                    wording_paragraphs_per_pagelet=3,
+                    single_item_per_paragraph=False,
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "characters", "letters": True},
+                    items_are_selectable=None,
+                    items_are_boxed=True,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                    items_are_repeated_with_mcq=False,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="B")], boxed=True),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="l")], boxed=True),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="a")], boxed=True),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="h")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="b")], boxed=True),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", bold=True, text="l")], boxed=True),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", bold=True, text="a")], boxed=True),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="h")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="b")], boxed=True),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="l")], boxed=True),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="a")], boxed=True),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="h")], boxed=True),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
+            ),
+        )
+
+    def test_bold_in_automated_items__words(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                wording=[
+                    d.TextInsertOp(insert="Blah b", attributes={}),
+                    d.TextInsertOp(insert="la", attributes={"bold": True}),
+                    d.TextInsertOp(insert="h blah.\n", attributes={}),
+                ],
+                adaptation=Adaptation(
+                    kind="generic",
+                    wording_paragraphs_per_pagelet=3,
+                    single_item_per_paragraph=False,
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "tokens", "words": True, "punctuation": False},
+                    items_are_selectable=None,
+                    items_are_boxed=True,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                    items_are_repeated_with_mcq=False,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="Blah")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(
+                                            kind="passiveSequence",
+                                            contents=[r.Text(kind="text", text="b"), r.Text(kind="text", bold=True, text="la"), r.Text(kind="text", text="h")],
+                                            boxed=True,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="blah")], boxed=True),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
+            ),
+        )
+
+    def test_bold_in_automated_items__punctuation(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                wording=[
+                    d.TextInsertOp(insert="Blah", attributes={}),
+                    d.TextInsertOp(insert=",", attributes={"bold": True}),
+                    d.TextInsertOp(insert=" blah.\n", attributes={}),
+                ],
+                adaptation=Adaptation(
+                    kind="generic",
+                    wording_paragraphs_per_pagelet=3,
+                    single_item_per_paragraph=False,
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "tokens", "words": False, "punctuation": True},
+                    items_are_selectable=None,
+                    items_are_boxed=True,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                    items_are_repeated_with_mcq=False,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Blah"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", bold=True, text=",")], boxed=True),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="blah"),
+                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text=".")], boxed=True),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
+            ),
+        )
+
+    def test_bold_in_automated_items__sentences(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                wording=[
+                    d.TextInsertOp(insert="Blah b", attributes={}),
+                    d.TextInsertOp(insert="la", attributes={"bold": True}),
+                    d.TextInsertOp(insert="h. Blah.\n", attributes={}),
+                ],
+                adaptation=Adaptation(
+                    kind="generic",
+                    wording_paragraphs_per_pagelet=3,
+                    single_item_per_paragraph=False,
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "sentences"},
+                    items_are_selectable=None,
+                    items_are_boxed=True,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                    items_are_repeated_with_mcq=False,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.PassiveSequence(
+                                            kind="passiveSequence",
+                                            contents=[
+                                                r.Text(kind="text", text="Blah"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="b"),
+                                                r.Text(kind="text", bold=True, text="la"),
+                                                r.Text(kind="text", text="h"),
+                                                r.Text(kind="text", text="."),
+                                            ],
+                                            boxed=True,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(
+                                            kind="passiveSequence", contents=[r.Text(kind="text", text="Blah"), r.Text(kind="text", text=".")], boxed=True
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
+            ),
+        )
+
+    def test_bold_in_automated_items__separated(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                wording=[
+                    d.TextInsertOp(insert="Blah b", attributes={}),
+                    d.TextInsertOp(insert="la", attributes={"bold": True}),
+                    d.TextInsertOp(insert="h / blah.\n", attributes={}),
+                ],
+                adaptation=Adaptation(
+                    kind="generic",
+                    wording_paragraphs_per_pagelet=3,
+                    single_item_per_paragraph=False,
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "separated", "separator": "/"},
+                    items_are_selectable=None,
+                    items_are_boxed=True,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                    items_are_repeated_with_mcq=False,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.PassiveSequence(
+                                            kind="passiveSequence",
+                                            contents=[
+                                                r.Text(kind="text", text="Blah"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="b"),
+                                                r.Text(kind="text", bold=True, text="la"),
+                                                r.Text(kind="text", text="h"),
+                                            ],
+                                            boxed=True,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(
+                                            kind="passiveSequence", contents=[r.Text(kind="text", text="blah"), r.Text(kind="text", text=".")], boxed=True
+                                        ),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
+            ),
+        )
