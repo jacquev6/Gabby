@@ -248,7 +248,10 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
             yield f"    def test_exercise_{exercise.id:04}(self):"
 
             exercise = waste_exercise(exercise)
-            adapted = exercise.make_adapted()
+            try:
+                adapted = exercise.make_adapted()
+            except AssertionError:
+                adapted = None
 
             yield f"        self.do_test("
             yield f"            e.Exercise("
@@ -261,17 +264,20 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
             yield f"                text_reference={repr(exercise.text_reference)},"
             yield f"                adaptation={repr(exercise.adaptation)},"
             yield f"            ),"
-            yield f"            r.Exercise("
-            yield f"                number={repr(exercise.number)},"
-            yield f"                textbook_page={repr(exercise.textbook_page)},"
-            yield f"                pagelets=["
-            for pagelet in adapted.pagelets:
-                yield f"                    r.Pagelet("
-                yield f"                        instructions={renderable_repr(pagelet.instructions)},"
-                yield f"                        wording={renderable_repr(pagelet.wording)},"
-                yield f"                    ),"
-            yield f"                ],"
-            yield f"            ),"
+            if adapted is None:
+                yield f"            None,"
+            else:
+                yield f"            r.Exercise("
+                yield f"                number={repr(exercise.number)},"
+                yield f"                textbook_page={repr(exercise.textbook_page)},"
+                yield f"                pagelets=["
+                for pagelet in adapted.pagelets:
+                    yield f"                    r.Pagelet("
+                    yield f"                        instructions={renderable_repr(pagelet.instructions)},"
+                    yield f"                        wording={renderable_repr(pagelet.wording)},"
+                    yield f"                    ),"
+                yield f"                ],"
+                yield f"            ),"
             yield f"        )"
             yield f""
 
