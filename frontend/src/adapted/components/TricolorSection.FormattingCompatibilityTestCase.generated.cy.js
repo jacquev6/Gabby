@@ -561,6 +561,58 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
     cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__words.0.wording')
   })
 
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_manual_items pagelet 0 wording', () => {
+    cy.mount(TricolorSection, {
+      props: {
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "Blah"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "b"
+                  },
+                  {
+                    "kind": "text",
+                    "bold": true,
+                    "text": "la"
+                  },
+                  {
+                    "kind": "text",
+                    "text": "h"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "blah"
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          }
+        ],
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_manual_items.0.wording')
+  })
+
   it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_mcq_placeholder pagelet 0 instructions', () => {
     cy.mount(TricolorSection, {
       props: {

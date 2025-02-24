@@ -960,3 +960,60 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 ],
             ),
         )
+
+    def test_bold_in_manual_items(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                wording=[
+                    d.TextInsertOp(insert="Blah ", attributes={}),
+                    d.TextInsertOp(insert="b", attributes={"manual-item": True}),
+                    d.TextInsertOp(insert="la", attributes={"manual-item": True, "bold": True}),
+                    d.TextInsertOp(insert="h", attributes={"manual-item": True}),
+                    d.TextInsertOp(insert=" blah.\n", attributes={}),
+                ],
+                adaptation=Adaptation(
+                    kind="generic",
+                    wording_paragraphs_per_pagelet=3,
+                    single_item_per_paragraph=False,
+                    placeholder_for_fill_with_free_text=None,
+                    items={"kind": "manual"},
+                    items_are_selectable=None,
+                    items_are_boxed=True,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                    items_are_repeated_with_mcq=False,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                pagelets=[
+                    r.Pagelet(
+                        instructions=r.Section(paragraphs=[]),
+                        wording=r.Section(
+                            paragraphs=[
+                                r.Paragraph(
+                                    contents=[
+                                        r.Text(kind="text", text="Blah"),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.PassiveSequence(
+                                            kind="passiveSequence",
+                                            contents=[r.Text(kind="text", text="b"), r.Text(kind="text", bold=True, text="la"), r.Text(kind="text", text="h")],
+                                            boxed=True,
+                                        ),
+                                        r.Whitespace(kind="whitespace"),
+                                        r.Text(kind="text", text="blah"),
+                                        r.Text(kind="text", text="."),
+                                    ]
+                                )
+                            ]
+                        ),
+                    )
+                ],
+            ),
+        )
