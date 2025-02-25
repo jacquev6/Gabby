@@ -5,7 +5,7 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
     cy.viewport(1000, 100)
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -91,13 +91,16 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic.0.instructions')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic.0.0')
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic pagelet 0 wording', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -129,13 +132,16 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic.0.wording')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic.0.1')
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic pagelet 1 instructions', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic pagelet 1 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -167,23 +173,29 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic.1.instructions')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic.1.0')
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic pagelet 1 wording', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic pagelet 1 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic.1.wording')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic.1.1')
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__letters pagelet 0 wording', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__letters pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -324,13 +336,16 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__letters.0.wording')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__letters.0.1')
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__punctuation pagelet 0 wording', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__punctuation pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -371,13 +386,16 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__punctuation.0.wording')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__punctuation.0.1')
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__sentences pagelet 0 wording', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__sentences pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -433,13 +451,16 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__sentences.0.wording')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__sentences.0.1')
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__separated pagelet 0 wording', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__separated pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -491,13 +512,16 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__separated.0.wording')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__separated.0.1')
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__words pagelet 0 wording', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__words pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -555,13 +579,16 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__words.0.wording')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__words.0.1')
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_manual_items pagelet 0 wording', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_manual_items pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -607,13 +634,16 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_manual_items.0.wording')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_manual_items.0.1')
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_mcq_placeholder pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_mcq_placeholder pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -659,13 +689,16 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_mcq_placeholder.0.instructions')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_mcq_placeholder.0.0')
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_mcq_placeholder pagelet 0 wording', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_mcq_placeholder pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -745,13 +778,16 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_mcq_placeholder.0.wording')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_mcq_placeholder.0.1')
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions_with_mcq_beside_words pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions_with_mcq_beside_words pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -812,13 +848,16 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions_with_mcq_beside_words.0.instructions')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions_with_mcq_beside_words.0.0')
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions_with_mcq_beside_words pagelet 0 wording', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions_with_mcq_beside_words pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -866,13 +905,16 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions_with_mcq_beside_words.0.wording')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions_with_mcq_beside_words.0.1')
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions_with_placeholder pagelet 0 wording', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions_with_placeholder pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -913,13 +955,16 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions_with_placeholder.0.wording')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions_with_placeholder.0.1')
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_choices2_with_one_line_end_in_instructions pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_choices2_with_one_line_end_in_instructions pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -971,13 +1016,16 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_choices2_with_one_line_end_in_instructions.0.instructions')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_choices2_with_one_line_end_in_instructions.0.0')
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_choices2_with_one_line_end_in_instructions pagelet 0 wording', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_choices2_with_one_line_end_in_instructions pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1009,13 +1057,16 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_choices2_with_one_line_end_in_instructions.0.wording')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_choices2_with_one_line_end_in_instructions.0.1')
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_manual_item_with_one_line_end pagelet 0 wording', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_manual_item_with_one_line_end pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1059,13 +1110,16 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_manual_item_with_one_line_end.0.wording')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_manual_item_with_one_line_end.0.1')
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_mcq_placeholder_with_one_line_end pagelet 0 wording', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_mcq_placeholder_with_one_line_end pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1143,13 +1197,16 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_mcq_placeholder_with_one_line_end.0.wording')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_mcq_placeholder_with_one_line_end.0.1')
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_sel_and_bold pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_sel_and_bold pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1235,13 +1292,16 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_sel_and_bold.0.instructions')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_sel_and_bold.0.0')
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_sel_and_italic pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_sel_and_italic pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1327,9 +1387,12 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_sel_and_italic.0.instructions')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_sel_and_italic.0.0')
   })
 })

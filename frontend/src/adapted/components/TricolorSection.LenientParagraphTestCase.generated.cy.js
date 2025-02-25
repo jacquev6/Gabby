@@ -5,7 +5,7 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
     cy.viewport(1000, 100)
   })
 
-  it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_bold_and_italic pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_bold_and_italic pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -111,13 +111,16 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_bold_and_italic.0.instructions')
+    cy.screenshot('gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_bold_and_italic.0.0')
   })
 
-  it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_bold_and_italic pagelet 0 wording', () => {
+  it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_bold_and_italic pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -223,13 +226,16 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_bold_and_italic.0.wording')
+    cy.screenshot('gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_bold_and_italic.0.1')
   })
 
-  it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_fill_with_free_text pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_fill_with_free_text pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -242,13 +248,16 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_fill_with_free_text.0.instructions')
+    cy.screenshot('gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_fill_with_free_text.0.0')
   })
 
-  it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_fill_with_free_text pagelet 0 wording', () => {
+  it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_fill_with_free_text pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -377,13 +386,16 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_fill_with_free_text.0.wording')
+    cy.screenshot('gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_fill_with_free_text.0.1')
   })
 
-  it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_multiple_choices pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_multiple_choices pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -433,13 +445,16 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_multiple_choices.0.instructions')
+    cy.screenshot('gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_multiple_choices.0.0')
   })
 
-  it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_multiple_choices pagelet 0 wording', () => {
+  it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_multiple_choices pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -596,13 +611,16 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_multiple_choices.0.wording')
+    cy.screenshot('gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_multiple_choices.0.1')
   })
 
-  it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_select_words_with_punctuation pagelet 0 wording', () => {
+  it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_select_words_with_punctuation pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -879,13 +897,16 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_select_words_with_punctuation.0.wording')
+    cy.screenshot('gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_select_words_with_punctuation.0.1')
   })
 
-  it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_select_words_without_punctuation pagelet 0 wording', () => {
+  it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_select_words_without_punctuation pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1122,9 +1143,12 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_select_words_without_punctuation.0.wording')
+    cy.screenshot('gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_select_words_without_punctuation.0.1')
   })
 })

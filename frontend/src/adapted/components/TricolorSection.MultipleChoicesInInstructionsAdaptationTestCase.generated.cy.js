@@ -5,7 +5,7 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
     cy.viewport(1000, 100)
   })
 
-  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2 pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2 pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -55,13 +55,16 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2.0.instructions')
+    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2.0.0')
   })
 
-  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2 pagelet 0 wording', () => {
+  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2 pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -121,13 +124,16 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2.0.wording')
+    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2.0.1')
   })
 
-  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_empty_separator pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_empty_separator pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -164,13 +170,16 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_empty_separator.0.instructions')
+    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_empty_separator.0.0')
   })
 
-  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_empty_separator pagelet 0 wording', () => {
+  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_empty_separator pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -232,13 +241,16 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_empty_separator.0.wording')
+    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_empty_separator.0.1')
   })
 
-  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_oxford_comma pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_oxford_comma pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -314,13 +326,16 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_oxford_comma.0.instructions')
+    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_oxford_comma.0.0')
   })
 
-  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_oxford_comma pagelet 0 wording', () => {
+  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_oxford_comma pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -404,13 +419,16 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_oxford_comma.0.wording')
+    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_oxford_comma.0.1')
   })
 
-  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_successive_separators pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_successive_separators pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -473,13 +491,16 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_successive_separators.0.instructions')
+    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_successive_separators.0.0')
   })
 
-  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_successive_separators pagelet 0 wording', () => {
+  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_successive_separators pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -551,13 +572,16 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_successive_separators.0.wording')
+    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_successive_separators.0.1')
   })
 
-  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_chose_a_single_letter_to_complete_a_word pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_chose_a_single_letter_to_complete_a_word pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -628,13 +652,16 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_chose_a_single_letter_to_complete_a_word.0.instructions')
+    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_chose_a_single_letter_to_complete_a_word.0.0')
   })
 
-  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_chose_a_single_letter_to_complete_a_word pagelet 0 wording', () => {
+  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_chose_a_single_letter_to_complete_a_word pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -696,13 +723,16 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_chose_a_single_letter_to_complete_a_word.0.wording')
+    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_chose_a_single_letter_to_complete_a_word.0.1')
   })
 
-  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_example_and_clue pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_example_and_clue pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -912,13 +942,16 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_example_and_clue.0.instructions')
+    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_example_and_clue.0.0')
   })
 
-  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_two_choices2 pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_two_choices2 pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1008,13 +1041,16 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_two_choices2.0.instructions')
+    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_two_choices2.0.0')
   })
 
-  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_two_choices2 pagelet 0 wording', () => {
+  it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_two_choices2 pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1115,9 +1151,12 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_two_choices2.0.wording')
+    cy.screenshot('gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_two_choices2.0.1')
   })
 })

@@ -5,7 +5,7 @@ describe('TricolorSection for ManualMcqFieldsAdaptationTestCase', () => {
     cy.viewport(1000, 100)
   })
 
-  it('renders gabby.adaptation.manual_mcq_fields_adaptation_tests.ManualMcqFieldsAdaptationTestCase.test_simplest pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.manual_mcq_fields_adaptation_tests.ManualMcqFieldsAdaptationTestCase.test_simplest pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -57,13 +57,16 @@ describe('TricolorSection for ManualMcqFieldsAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.manual_mcq_fields_adaptation_tests.ManualMcqFieldsAdaptationTestCase.test_simplest.0.instructions')
+    cy.screenshot('gabby.adaptation.manual_mcq_fields_adaptation_tests.ManualMcqFieldsAdaptationTestCase.test_simplest.0.0')
   })
 
-  it('renders gabby.adaptation.manual_mcq_fields_adaptation_tests.ManualMcqFieldsAdaptationTestCase.test_simplest pagelet 0 wording', () => {
+  it('renders gabby.adaptation.manual_mcq_fields_adaptation_tests.ManualMcqFieldsAdaptationTestCase.test_simplest pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -95,9 +98,12 @@ describe('TricolorSection for ManualMcqFieldsAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.manual_mcq_fields_adaptation_tests.ManualMcqFieldsAdaptationTestCase.test_simplest.0.wording')
+    cy.screenshot('gabby.adaptation.manual_mcq_fields_adaptation_tests.ManualMcqFieldsAdaptationTestCase.test_simplest.0.1')
   })
 })

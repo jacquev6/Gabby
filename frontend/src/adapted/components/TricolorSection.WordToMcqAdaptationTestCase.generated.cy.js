@@ -5,7 +5,7 @@ describe('TricolorSection for WordToMcqAdaptationTestCase', () => {
     cy.viewport(1000, 100)
   })
 
-  it('renders gabby.adaptation.word_to_mcq_adaptation_tests.WordToMcqAdaptationTestCase.test_words_in_sentences pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.word_to_mcq_adaptation_tests.WordToMcqAdaptationTestCase.test_words_in_sentences pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -64,13 +64,16 @@ describe('TricolorSection for WordToMcqAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.word_to_mcq_adaptation_tests.WordToMcqAdaptationTestCase.test_words_in_sentences.0.instructions')
+    cy.screenshot('gabby.adaptation.word_to_mcq_adaptation_tests.WordToMcqAdaptationTestCase.test_words_in_sentences.0.0')
   })
 
-  it('renders gabby.adaptation.word_to_mcq_adaptation_tests.WordToMcqAdaptationTestCase.test_words_in_sentences pagelet 0 wording', () => {
+  it('renders gabby.adaptation.word_to_mcq_adaptation_tests.WordToMcqAdaptationTestCase.test_words_in_sentences pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -336,9 +339,12 @@ describe('TricolorSection for WordToMcqAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.word_to_mcq_adaptation_tests.WordToMcqAdaptationTestCase.test_words_in_sentences.0.wording')
+    cy.screenshot('gabby.adaptation.word_to_mcq_adaptation_tests.WordToMcqAdaptationTestCase.test_words_in_sentences.0.1')
   })
 })

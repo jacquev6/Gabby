@@ -5,7 +5,7 @@ describe('TricolorSection for FixturesTestCase', () => {
     cy.viewport(1000, 100)
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_01 pagelet 0 instructions', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_01 pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -218,13 +218,16 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_01.0.instructions')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_01.0.0')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_01 pagelet 0 wording', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_01 pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -403,13 +406,16 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_01.0.wording')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_01.0.1')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_01 pagelet 1 wording', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_01 pagelet 1 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -588,13 +594,16 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_01.1.wording')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_01.1.1')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_01 pagelet 2 wording', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_01 pagelet 2 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -657,13 +666,16 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_01.2.wording')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_01.2.1')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_02 pagelet 0 instructions', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_02 pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -854,13 +866,16 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_02.0.instructions')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_02.0.0')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_02 pagelet 0 wording', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_02 pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -943,13 +958,16 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_02.0.wording')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_02.0.1')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_03 pagelet 0 instructions', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_03 pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1051,13 +1069,16 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_03.0.instructions')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_03.0.0')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_03 pagelet 0 wording', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_03 pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1245,13 +1266,16 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_03.0.wording')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_03.0.1')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_04 pagelet 0 instructions', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_04 pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1289,23 +1313,29 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_04.0.instructions')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_04.0.0')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_04 pagelet 0 wording', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_04 pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_04.0.wording')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_04.0.1')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_05 pagelet 0 instructions', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_05 pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1351,13 +1381,16 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_05.0.instructions')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_05.0.0')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_06 pagelet 0 instructions', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_06 pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1430,13 +1463,16 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_06.0.instructions')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_06.0.0')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_07 pagelet 0 instructions', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_07 pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1567,13 +1603,16 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_07.0.instructions')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_07.0.0')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_07 pagelet 0 wording', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_07 pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -2724,13 +2763,16 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_07.0.wording')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_07.0.1')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_07 pagelet 1 instructions', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_07 pagelet 1 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -2854,13 +2896,16 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_07.1.instructions')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_07.1.0')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_08 pagelet 0 instructions', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_08 pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -2963,13 +3008,16 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_08.0.instructions')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_08.0.0')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_08 pagelet 0 wording', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_08 pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -3104,13 +3152,16 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_08.0.wording')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_08.0.1')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_09 pagelet 0 instructions', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_09 pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -3167,13 +3218,16 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_09.0.instructions')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_09.0.0')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_09 pagelet 0 wording', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_09 pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -3370,13 +3424,16 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_09.0.wording')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_09.0.1')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_09 pagelet 1 wording', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_09 pagelet 1 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -3573,13 +3630,16 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_09.1.wording')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_09.1.1')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_10 pagelet 0 wording', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_10 pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -3881,13 +3941,16 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_10.0.wording')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_10.0.1')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_10 pagelet 1 wording', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_10 pagelet 1 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -4159,13 +4222,16 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_10.1.wording')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_10.1.1')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_10 pagelet 2 wording', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_10 pagelet 2 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -4598,13 +4664,16 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_10.2.wording')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_10.2.1')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_11 pagelet 0 instructions', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_11 pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -4617,13 +4686,16 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_11.0.instructions')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_11.0.0')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_11 pagelet 0 wording', () => {
+  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_11 pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -4964,9 +5036,12 @@ describe('TricolorSection for FixturesTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_11.0.wording')
+    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_11.0.1')
   })
 })

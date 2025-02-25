@@ -205,12 +205,13 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
             adaptation=exercise.adaptation,
         )
 
-    def renderable_repr(section):
-        r = (
-            repr(section)
+    def renderable_repr(r):
+        s = (
+            repr(r)
+            .replace("Exercise(", "r.Exercise(")
             .replace("Paragraph(", "r.Paragraph(")
-            .replace("Section(", "r.Section(")
-            .replace("Pagelet(", "r.Pagelet(")
+            .replace("Section_(", "r.Section_(")
+            .replace("Pagelet_(", "r.Pagelet_(")
             .replace("Text(", "r.Text(")
             .replace("Whitespace(", "r.Whitespace(")
             .replace("FreeTextInput(", "r.FreeTextInput(")
@@ -225,9 +226,9 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
             .replace("show_choices_by_default=False", "")
             .replace("vertical=False", "")
         )
-        while (new_r := r.replace(", , ", ", ").replace(", )", ")")) != r:
-            r = new_r
-        return r
+        while (new_s := s.replace(", , ", ", ").replace(", )", ")")) != s:
+            s = new_s
+        return s
 
     def gen(batch_index, exercises_batch):
         yield "# WARNING: this file is generated (from database content). Manual changes will be lost."
@@ -266,17 +267,7 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
             if adapted is None:
                 yield f"            None,"
             else:
-                yield f"            r.Exercise("
-                yield f"                number={repr(exercise.number)},"
-                yield f"                textbook_page={repr(exercise.textbook_page)},"
-                yield f"                pagelets=["
-                for pagelet in adapted.pagelets:
-                    yield f"                    r.Pagelet("
-                    yield f"                        instructions={renderable_repr(pagelet.instructions)},"
-                    yield f"                        wording={renderable_repr(pagelet.wording)},"
-                    yield f"                    ),"
-                yield f"                ],"
-                yield f"            ),"
+                yield f"            {renderable_repr(adapted)},"
             yield f"        )"
             yield f""
 

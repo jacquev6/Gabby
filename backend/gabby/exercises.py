@@ -9,6 +9,7 @@ from fastjsonapi import make_filters
 from . import adaptation
 from . import api_models
 from . import deltas
+from . import renderable
 from . import settings
 from .api_utils import create_item, get_item, get_page, save_item, delete_item
 from .database_utils import OrmBase, SessionDependable
@@ -148,7 +149,7 @@ class Exercise(OrmBase, CreatedUpdatedByAtMixin):
     def adaptation(self, adaptation: api_models.Adaptation):
         self._adaptation = {"format": 2, "settings": adaptation.model_dump()}
 
-    def make_adapted(self):
+    def make_adapted(self) -> renderable.Exercise:
         return adaptation.adapt(self)
 
 

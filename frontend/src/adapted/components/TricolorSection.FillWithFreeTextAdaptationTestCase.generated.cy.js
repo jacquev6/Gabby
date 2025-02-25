@@ -5,7 +5,7 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
     cy.viewport(1000, 100)
   })
 
-  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_example_and_clue pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_example_and_clue pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -98,13 +98,16 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_example_and_clue.0.instructions')
+    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_example_and_clue.0.0')
   })
 
-  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_example_and_clue pagelet 0 wording', () => {
+  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_example_and_clue pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -148,13 +151,16 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_example_and_clue.0.wording')
+    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_example_and_clue.0.1')
   })
 
-  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_multiple_lines_in_instructions pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_multiple_lines_in_instructions pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -197,13 +203,16 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_multiple_lines_in_instructions.0.instructions')
+    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_multiple_lines_in_instructions.0.0')
   })
 
-  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_multiple_lines_in_instructions pagelet 0 wording', () => {
+  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_multiple_lines_in_instructions pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -216,13 +225,16 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_multiple_lines_in_instructions.0.wording')
+    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_multiple_lines_in_instructions.0.1')
   })
 
-  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_multiple_lines_in_wording pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_multiple_lines_in_wording pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -235,13 +247,16 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_multiple_lines_in_wording.0.instructions')
+    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_multiple_lines_in_wording.0.0')
   })
 
-  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_multiple_lines_in_wording pagelet 0 wording', () => {
+  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_multiple_lines_in_wording pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -316,13 +331,16 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_multiple_lines_in_wording.0.wording')
+    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_multiple_lines_in_wording.0.1')
   })
 
-  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_single_sentence pagelet 0 wording', () => {
+  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_single_sentence pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -393,13 +411,16 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_single_sentence.0.wording')
+    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_single_sentence.0.1')
   })
 
-  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_start_and_end_with_placeholder pagelet 0 wording', () => {
+  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_start_and_end_with_placeholder pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -424,13 +445,16 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_start_and_end_with_placeholder.0.wording')
+    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_start_and_end_with_placeholder.0.1')
   })
 
-  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_strip_whitespace pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_strip_whitespace pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -443,13 +467,16 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_strip_whitespace.0.instructions')
+    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_strip_whitespace.0.0')
   })
 
-  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_strip_whitespace pagelet 0 wording', () => {
+  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_strip_whitespace pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -462,13 +489,16 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_strip_whitespace.0.wording')
+    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_strip_whitespace.0.1')
   })
 
-  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_unknown_tags pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_unknown_tags pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -497,13 +527,16 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_unknown_tags.0.instructions')
+    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_unknown_tags.0.0')
   })
 
-  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_unknown_tags pagelet 0 wording', () => {
+  it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_unknown_tags pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -532,9 +565,12 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_unknown_tags.0.wording')
+    cy.screenshot('gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_unknown_tags.0.1')
   })
 })

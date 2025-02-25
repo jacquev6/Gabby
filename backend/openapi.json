@@ -342,7 +342,7 @@
           },
           "pagelets": {
             "items": {
-              "$ref": "#/components/schemas/Pagelet"
+              "$ref": "#/components/schemas/Pagelet_"
             },
             "title": "Pagelets",
             "type": "array"
@@ -574,21 +574,21 @@
         "title": "PageMeta",
         "type": "object"
       },
-      "Pagelet": {
+      "Pagelet_": {
         "additionalProperties": false,
         "properties": {
-          "instructions": {
-            "$ref": "#/components/schemas/Section"
-          },
-          "wording": {
-            "$ref": "#/components/schemas/Section"
+          "sections": {
+            "items": {
+              "$ref": "#/components/schemas/Section_"
+            },
+            "title": "Sections",
+            "type": "array"
           }
         },
         "required": [
-          "instructions",
-          "wording"
+          "sections"
         ],
-        "title": "Pagelet",
+        "title": "Pagelet_",
         "type": "object"
       },
       "Pagination": {
@@ -791,21 +791,31 @@
         "title": "PredefinedMcq",
         "type": "object"
       },
-      "Section": {
+      "Section_": {
         "additionalProperties": false,
         "properties": {
+          "centered": {
+            "title": "Centered",
+            "type": "boolean"
+          },
           "paragraphs": {
             "items": {
               "$ref": "#/components/schemas/Paragraph"
             },
             "title": "Paragraphs",
             "type": "array"
+          },
+          "tricolored": {
+            "title": "Tricolored",
+            "type": "boolean"
           }
         },
         "required": [
-          "paragraphs"
+          "paragraphs",
+          "centered",
+          "tricolored"
         ],
-        "title": "Section",
+        "title": "Section_",
         "type": "object"
       },
       "Selectable": {

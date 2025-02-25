@@ -5,7 +5,7 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
     cy.viewport(1000, 100)
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_boxed_words pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_boxed_words pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -18,13 +18,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_boxed_words.0.instructions')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_boxed_words.0.0')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_boxed_words pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_boxed_words pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -90,13 +93,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_boxed_words.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_boxed_words.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_gender_and_number_mcq pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_gender_and_number_mcq pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -246,13 +252,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_gender_and_number_mcq.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_gender_and_number_mcq.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_gender_and_number_mcq__single_item_per_paragraph pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_gender_and_number_mcq__single_item_per_paragraph pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -404,13 +413,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_gender_and_number_mcq__single_item_per_paragraph.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_gender_and_number_mcq__single_item_per_paragraph.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_gender_mcq pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_gender_mcq pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -500,13 +512,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_gender_mcq.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_gender_mcq.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_letters pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_letters pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -565,13 +580,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_letters.0.instructions')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_letters.0.0')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_letters pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_letters pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -712,13 +730,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_letters.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_letters.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_manual_items pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_manual_items pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -818,13 +839,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_manual_items.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_manual_items.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_punctuation pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_punctuation pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -924,13 +948,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_punctuation.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_punctuation.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_sentences pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_sentences pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1247,13 +1274,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_sentences.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_sentences.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_separated_items pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_separated_items pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1363,13 +1393,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_separated_items.0.instructions')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_separated_items.0.0')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_separated_items pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_separated_items pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1657,13 +1690,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_separated_items.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_separated_items.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_words pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_words pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1821,13 +1857,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_words.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_words.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_words_and_punctuation pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_words_and_punctuation pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -2043,13 +2082,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_words_and_punctuation.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_words_and_punctuation.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_letters pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_letters pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -2178,13 +2220,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_letters.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_letters.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_manual_items pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_manual_items pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -2278,13 +2323,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_manual_items.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_manual_items.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_punctuation pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_punctuation pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -2378,13 +2426,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_punctuation.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_punctuation.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_sentences pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_sentences pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -2653,13 +2704,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_sentences.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_sentences.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_words pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_words pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -2805,13 +2859,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_words.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_words.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_words_and_punctuation pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_words_and_punctuation pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -3009,13 +3066,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_words_and_punctuation.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_beside_words_and_punctuation.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_number_mcq pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_number_mcq pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -3105,13 +3165,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_number_mcq.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_number_mcq.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_sel_tags pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_sel_tags pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -3148,13 +3211,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_sel_tags.0.instructions')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_sel_tags.0.0')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_sel_tags pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_sel_tags pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -3177,13 +3243,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_sel_tags.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_sel_tags.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_letters pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_letters pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -3401,13 +3470,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_letters.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_letters.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_manual_items__boxed pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_manual_items__boxed pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -3469,13 +3541,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_manual_items__boxed.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_manual_items__boxed.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_manual_items__plain pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_manual_items__plain pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -3535,13 +3610,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_manual_items__plain.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_manual_items__plain.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_punctuation_only pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_punctuation_only pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -3603,13 +3681,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_punctuation_only.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_punctuation_only.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_sentences pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_sentences pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -3782,13 +3863,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_sentences.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_sentences.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_bullet_list pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_bullet_list pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -3965,13 +4049,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_bullet_list.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_bullet_list.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_bullet_list pagelet 1 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_bullet_list pagelet 1 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -4083,13 +4170,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_bullet_list.1.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_bullet_list.1.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_lettered_list pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_lettered_list pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -4274,13 +4364,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_lettered_list.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_lettered_list.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_lettered_list pagelet 1 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_lettered_list pagelet 1 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -4396,13 +4489,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_lettered_list.1.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_lettered_list.1.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_numbered_list pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_numbered_list pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -4587,13 +4683,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_numbered_list.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_numbered_list.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_numbered_list pagelet 1 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_numbered_list pagelet 1 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -4709,13 +4808,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_numbered_list.1.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_tokens__in_numbered_list.1.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_words__boxed pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_words__boxed pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -4797,13 +4899,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_words__boxed.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_words__boxed.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_words__plain pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_words__plain pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -4881,13 +4986,16 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_words__plain.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_words__plain.0.1')
   })
 
-  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_words_and_punctuation pagelet 0 wording', () => {
+  it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_words_and_punctuation pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -4989,9 +5097,12 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_words_and_punctuation.0.wording')
+    cy.screenshot('gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_selectable_words_and_punctuation.0.1')
   })
 })

@@ -69,9 +69,15 @@ defineExpose({
 
 <template>
   <div style="position: relative; font-family: Arial, sans-serif;">
-    <MonocolorSection :paragraphs="pagelet.instructions.paragraphs" :centered="true" :first="true" v-model="models[pageletIndex].instructions" />
-    <div style="padding: 6px">
-      <TricolorSection :paragraphs="pagelet.wording.paragraphs" :centered="false" :first="false" v-model="models[pageletIndex].wording" />
-    </div>
+    <template v-for="section, sectionIndex in pagelet.sections">
+      <template v-if="section.tricolored">
+        <div style="padding: 6px">
+          <TricolorSection :paragraphs="section.paragraphs" :centered="section.centered" :first="sectionIndex == 0" v-model="models[pageletIndex].wording" />
+        </div>
+      </template>
+      <template v-else>
+        <MonocolorSection :paragraphs="section.paragraphs" :centered="section.centered" :first="sectionIndex == 0" v-model="models[pageletIndex].instructions" />
+      </template>
+    </template>
   </div>
 </template>

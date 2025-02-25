@@ -5,7 +5,7 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
     cy.viewport(1000, 100)
   })
 
-  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_example_and_clue pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_example_and_clue pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -84,13 +84,16 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_example_and_clue.0.instructions')
+    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_example_and_clue.0.0')
   })
 
-  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_example_and_clue pagelet 0 wording', () => {
+  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_example_and_clue pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -111,13 +114,16 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_example_and_clue.0.wording')
+    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_example_and_clue.0.1')
   })
 
-  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_example_and_clue_with_sel_tags pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_example_and_clue_with_sel_tags pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -163,13 +169,16 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_example_and_clue_with_sel_tags.0.instructions')
+    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_example_and_clue_with_sel_tags.0.0')
   })
 
-  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_example_and_clue_with_sel_tags pagelet 0 wording', () => {
+  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_example_and_clue_with_sel_tags pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -192,13 +201,16 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_example_and_clue_with_sel_tags.0.wording')
+    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_example_and_clue_with_sel_tags.0.1')
   })
 
-  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__punctuation_only pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__punctuation_only pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -229,13 +241,16 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__punctuation_only.0.instructions')
+    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__punctuation_only.0.0')
   })
 
-  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__punctuation_only pagelet 0 wording', () => {
+  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__punctuation_only pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -379,13 +394,16 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__punctuation_only.0.wording')
+    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__punctuation_only.0.1')
   })
 
-  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__punctuation_only__boxed_only pagelet 0 wording', () => {
+  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__punctuation_only__boxed_only pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -519,13 +537,16 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__punctuation_only__boxed_only.0.wording')
+    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__punctuation_only__boxed_only.0.1')
   })
 
-  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__with_punctuation pagelet 0 wording', () => {
+  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__with_punctuation pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -765,13 +786,16 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__with_punctuation.0.wording')
+    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__with_punctuation.0.1')
   })
 
-  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__with_punctuation__boxed_only pagelet 0 wording', () => {
+  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__with_punctuation__boxed_only pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -965,13 +989,16 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__with_punctuation__boxed_only.0.wording')
+    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__with_punctuation__boxed_only.0.1')
   })
 
-  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__without_punctuation pagelet 0 wording', () => {
+  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__without_punctuation pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1171,13 +1198,16 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__without_punctuation.0.wording')
+    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__without_punctuation.0.1')
   })
 
-  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__without_punctuation__boxed_only pagelet 0 wording', () => {
+  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__without_punctuation__boxed_only pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1353,13 +1383,16 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__without_punctuation__boxed_only.0.wording')
+    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__without_punctuation__boxed_only.0.1')
   })
 
-  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_multiple_lines_in_instructions pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_multiple_lines_in_instructions pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1402,13 +1435,16 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_multiple_lines_in_instructions.0.instructions')
+    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_multiple_lines_in_instructions.0.0')
   })
 
-  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_multiple_lines_in_wording pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_multiple_lines_in_wording pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1421,13 +1457,16 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_multiple_lines_in_wording.0.instructions')
+    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_multiple_lines_in_wording.0.0')
   })
 
-  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_multiple_lines_in_wording pagelet 0 wording', () => {
+  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_multiple_lines_in_wording pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1510,13 +1549,16 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_multiple_lines_in_wording.0.wording')
+    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_multiple_lines_in_wording.0.1')
   })
 
-  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_sel_tags pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_sel_tags pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1553,13 +1595,16 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_sel_tags.0.instructions')
+    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_sel_tags.0.0')
   })
 
-  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_single_color pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_single_color pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1573,13 +1618,16 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_single_color.0.instructions')
+    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_single_color.0.0')
   })
 
-  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_single_sentence pagelet 0 wording', () => {
+  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_single_sentence pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1733,13 +1781,16 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_single_sentence.0.wording')
+    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_single_sentence.0.1')
   })
 
-  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_strip_whitespace pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_strip_whitespace pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1752,13 +1803,16 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_strip_whitespace.0.instructions')
+    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_strip_whitespace.0.0')
   })
 
-  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_strip_whitespace pagelet 0 wording', () => {
+  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_strip_whitespace pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1779,13 +1833,16 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_strip_whitespace.0.wording')
+    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_strip_whitespace.0.1')
   })
 
-  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_unknown_tags pagelet 0 instructions', () => {
+  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_unknown_tags pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1814,13 +1871,16 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_unknown_tags.0.instructions')
+    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_unknown_tags.0.0')
   })
 
-  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_unknown_tags pagelet 0 wording', () => {
+  it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_unknown_tags pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [
@@ -1865,9 +1925,12 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
             ]
           }
         ],
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_unknown_tags.0.wording')
+    cy.screenshot('gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_unknown_tags.0.1')
   })
 })

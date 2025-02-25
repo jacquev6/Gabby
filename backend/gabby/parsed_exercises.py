@@ -77,44 +77,50 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 "textbook_page": None,  # @todo Rename to textbookPage
                 "pagelets": [
                     {
-                        "instructions": {
-                            "paragraphs": [
-                                {
-                                    "contents": [
-                                        {"kind": "text", "text": "This"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "is"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "the"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "{"},
-                                        {"kind": "text", "text": "boxed"},
-                                        {"kind": "text", "text": "-"},
-                                        {"kind": "text", "text": "text"},
-                                        {"kind": "text", "text": "|"},
-                                        {"kind": "text", "text": "instructions"},
-                                        {"kind": "text", "text": "}"},
-                                        {"kind": "text", "text": "."},
-                                    ]
-                                }
-                            ]
-                        },
-                        "wording": {
-                            "paragraphs": [
-                                {
-                                    "contents": [
-                                        {"kind": "text", "text": "This"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "is"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "the"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "wording"},
-                                        {"kind": "text", "text": "."},
-                                    ]
-                                }
-                            ]
-                        },
+                        "sections": [
+                            {
+                                "paragraphs": [
+                                    {
+                                        "contents": [
+                                            {"kind": "text", "text": "This"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "is"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "the"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "{"},
+                                            {"kind": "text", "text": "boxed"},
+                                            {"kind": "text", "text": "-"},
+                                            {"kind": "text", "text": "text"},
+                                            {"kind": "text", "text": "|"},
+                                            {"kind": "text", "text": "instructions"},
+                                            {"kind": "text", "text": "}"},
+                                            {"kind": "text", "text": "."},
+                                        ]
+                                    }
+                                ],
+                                "centered": True,
+                                "tricolored": False,
+                            },
+                            {
+                                "paragraphs": [
+                                    {
+                                        "contents": [
+                                            {"kind": "text", "text": "This"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "is"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "the"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "wording"},
+                                            {"kind": "text", "text": "."},
+                                        ]
+                                    }
+                                ],
+                                "centered": False,
+                                "tricolored": True,
+                            },
+                        ]
                     }
                 ],
             },
@@ -158,58 +164,64 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 "textbook_page": None,  # @todo Rename to textbookPage
                 "pagelets": [
                     {
-                        "instructions": {
-                            "paragraphs": [
-                                {
-                                    "contents": [
-                                        {"kind": "text", "text": "This"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "is"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "the"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "instructions"},
-                                        {"kind": "text", "text": "."},
-                                    ]
-                                }
-                            ]
-                        },
-                        "wording": {
-                            "paragraphs": [
-                                {
-                                    "contents": [
-                                        {
-                                            "kind": "selectableInput",
-                                            "contents": [{"kind": "text", "text": "This"}],
-                                            "colors": ["red", "green", "blue"],
-                                            "boxed": False,
-                                        },
-                                        {"kind": "whitespace"},
-                                        {
-                                            "kind": "selectableInput",
-                                            "contents": [{"kind": "text", "text": "is"}],
-                                            "colors": ["red", "green", "blue"],
-                                            "boxed": False,
-                                        },
-                                        {"kind": "whitespace"},
-                                        {
-                                            "kind": "selectableInput",
-                                            "contents": [{"kind": "text", "text": "the"}],
-                                            "colors": ["red", "green", "blue"],
-                                            "boxed": False,
-                                        },
-                                        {"kind": "whitespace"},
-                                        {
-                                            "kind": "selectableInput",
-                                            "contents": [{"kind": "text", "text": "wording"}],
-                                            "colors": ["red", "green", "blue"],
-                                            "boxed": False,
-                                        },
-                                        {"kind": "text", "text": "."},
-                                    ]
-                                }
-                            ]
-                        },
+                        "sections": [
+                            {
+                                "paragraphs": [
+                                    {
+                                        "contents": [
+                                            {"kind": "text", "text": "This"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "is"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "the"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "instructions"},
+                                            {"kind": "text", "text": "."},
+                                        ]
+                                    }
+                                ],
+                                "centered": True,
+                                "tricolored": False,
+                            },
+                            {
+                                "paragraphs": [
+                                    {
+                                        "contents": [
+                                            {
+                                                "kind": "selectableInput",
+                                                "contents": [{"kind": "text", "text": "This"}],
+                                                "colors": ["red", "green", "blue"],
+                                                "boxed": False,
+                                            },
+                                            {"kind": "whitespace"},
+                                            {
+                                                "kind": "selectableInput",
+                                                "contents": [{"kind": "text", "text": "is"}],
+                                                "colors": ["red", "green", "blue"],
+                                                "boxed": False,
+                                            },
+                                            {"kind": "whitespace"},
+                                            {
+                                                "kind": "selectableInput",
+                                                "contents": [{"kind": "text", "text": "the"}],
+                                                "colors": ["red", "green", "blue"],
+                                                "boxed": False,
+                                            },
+                                            {"kind": "whitespace"},
+                                            {
+                                                "kind": "selectableInput",
+                                                "contents": [{"kind": "text", "text": "wording"}],
+                                                "colors": ["red", "green", "blue"],
+                                                "boxed": False,
+                                            },
+                                            {"kind": "text", "text": "."},
+                                        ]
+                                    }
+                                ],
+                                "centered": False,
+                                "tricolored": True,
+                            },
+                        ]
                     }
                 ],
             },
@@ -253,82 +265,88 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 "textbook_page": None,  # @todo Rename to textbookPage
                 "pagelets": [
                     {
-                        "instructions": {
-                            "paragraphs": [
-                                {
-                                    "contents": [
-                                        {"kind": "text", "text": "This"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "is"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "the"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "instructions"},
-                                        {"kind": "text", "text": "."},
-                                    ]
-                                },
-                                {
-                                    "contents": [
-                                        {"kind": "text", "text": "This"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "is"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "the"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "example"},
-                                        {"kind": "text", "text": "."},
-                                    ]
-                                },
-                                {
-                                    "contents": [
-                                        {"kind": "text", "text": "This"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "is"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "the"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "clue"},
-                                        {"kind": "text", "text": "."},
-                                    ]
-                                },
-                            ]
-                        },
-                        "wording": {
-                            "paragraphs": [
-                                {
-                                    "contents": [
-                                        {
-                                            "kind": "selectableInput",
-                                            "contents": [{"kind": "text", "text": "This"}],
-                                            "colors": ["red", "green", "blue"],
-                                            "boxed": False,
-                                        },
-                                        {"kind": "whitespace"},
-                                        {
-                                            "kind": "selectableInput",
-                                            "contents": [{"kind": "text", "text": "is"}],
-                                            "colors": ["red", "green", "blue"],
-                                            "boxed": False,
-                                        },
-                                        {"kind": "whitespace"},
-                                        {
-                                            "kind": "selectableInput",
-                                            "contents": [{"kind": "text", "text": "the"}],
-                                            "colors": ["red", "green", "blue"],
-                                            "boxed": False,
-                                        },
-                                        {"kind": "whitespace"},
-                                        {
-                                            "kind": "selectableInput",
-                                            "contents": [{"kind": "text", "text": "wording"}],
-                                            "colors": ["red", "green", "blue"],
-                                            "boxed": False,
-                                        },
-                                        {"kind": "text", "text": "."},
-                                    ]
-                                }
-                            ]
-                        },
+                        "sections": [
+                            {
+                                "paragraphs": [
+                                    {
+                                        "contents": [
+                                            {"kind": "text", "text": "This"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "is"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "the"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "instructions"},
+                                            {"kind": "text", "text": "."},
+                                        ]
+                                    },
+                                    {
+                                        "contents": [
+                                            {"kind": "text", "text": "This"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "is"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "the"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "example"},
+                                            {"kind": "text", "text": "."},
+                                        ]
+                                    },
+                                    {
+                                        "contents": [
+                                            {"kind": "text", "text": "This"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "is"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "the"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "clue"},
+                                            {"kind": "text", "text": "."},
+                                        ]
+                                    },
+                                ],
+                                "centered": True,
+                                "tricolored": False,
+                            },
+                            {
+                                "paragraphs": [
+                                    {
+                                        "contents": [
+                                            {
+                                                "kind": "selectableInput",
+                                                "contents": [{"kind": "text", "text": "This"}],
+                                                "colors": ["red", "green", "blue"],
+                                                "boxed": False,
+                                            },
+                                            {"kind": "whitespace"},
+                                            {
+                                                "kind": "selectableInput",
+                                                "contents": [{"kind": "text", "text": "is"}],
+                                                "colors": ["red", "green", "blue"],
+                                                "boxed": False,
+                                            },
+                                            {"kind": "whitespace"},
+                                            {
+                                                "kind": "selectableInput",
+                                                "contents": [{"kind": "text", "text": "the"}],
+                                                "colors": ["red", "green", "blue"],
+                                                "boxed": False,
+                                            },
+                                            {"kind": "whitespace"},
+                                            {
+                                                "kind": "selectableInput",
+                                                "contents": [{"kind": "text", "text": "wording"}],
+                                                "colors": ["red", "green", "blue"],
+                                                "boxed": False,
+                                            },
+                                            {"kind": "text", "text": "."},
+                                        ]
+                                    }
+                                ],
+                                "centered": False,
+                                "tricolored": True,
+                            },
+                        ]
                     }
                 ],
             },
@@ -372,23 +390,31 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 "textbook_page": None,  # @todo Rename to textbookPage
                 "pagelets": [
                     {
-                        "instructions": {
-                            "paragraphs": [
-                                {
-                                    "contents": [
-                                        {"kind": "text", "text": "This"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "is"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "the"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "instructions"},
-                                        {"kind": "text", "text": "."},
-                                    ]
-                                }
-                            ]
-                        },
-                        "wording": {"paragraphs": [{"contents": [{"kind": "text", "text": "Fill"}, {"kind": "whitespace"}, {"kind": "freeTextInput"}]}]},
+                        "sections": [
+                            {
+                                "paragraphs": [
+                                    {
+                                        "contents": [
+                                            {"kind": "text", "text": "This"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "is"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "the"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "instructions"},
+                                            {"kind": "text", "text": "."},
+                                        ]
+                                    }
+                                ],
+                                "centered": True,
+                                "tricolored": False,
+                            },
+                            {
+                                "paragraphs": [{"contents": [{"kind": "text", "text": "Fill"}, {"kind": "whitespace"}, {"kind": "freeTextInput"}]}],
+                                "centered": False,
+                                "tricolored": True,
+                            },
+                        ]
                     }
                 ],
             },
@@ -435,47 +461,53 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 "textbook_page": None,  # @todo Rename to textbookPage
                 "pagelets": [
                     {
-                        "instructions": {
-                            "paragraphs": [
-                                {
-                                    "contents": [
-                                        {"kind": "passiveSequence", "contents": [{"kind": "text", "text": "a"}], "boxed": True},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "ou"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "passiveSequence", "contents": [{"kind": "text", "text": "b"}], "boxed": True},
-                                    ]
-                                }
-                            ]
-                        },
-                        "wording": {
-                            "paragraphs": [
-                                {
-                                    "contents": [
-                                        {"kind": "text", "text": "A"},
-                                        {"kind": "whitespace"},
-                                        {
-                                            "kind": "multipleChoicesInput",
-                                            "show_arrow_before": False,
-                                            "choices": [[{"kind": "text", "text": "a"}], [{"kind": "text", "text": "b"}]],
-                                            "show_choices_by_default": False,
-                                        },
-                                    ]
-                                },
-                                {
-                                    "contents": [
-                                        {"kind": "text", "text": "B"},
-                                        {"kind": "whitespace"},
-                                        {
-                                            "kind": "multipleChoicesInput",
-                                            "show_arrow_before": False,
-                                            "choices": [[{"kind": "text", "text": "a"}], [{"kind": "text", "text": "b"}]],
-                                            "show_choices_by_default": False,
-                                        },
-                                    ]
-                                },
-                            ]
-                        },
+                        "sections": [
+                            {
+                                "paragraphs": [
+                                    {
+                                        "contents": [
+                                            {"kind": "passiveSequence", "contents": [{"kind": "text", "text": "a"}], "boxed": True},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "ou"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "passiveSequence", "contents": [{"kind": "text", "text": "b"}], "boxed": True},
+                                        ]
+                                    }
+                                ],
+                                "centered": True,
+                                "tricolored": False,
+                            },
+                            {
+                                "paragraphs": [
+                                    {
+                                        "contents": [
+                                            {"kind": "text", "text": "A"},
+                                            {"kind": "whitespace"},
+                                            {
+                                                "kind": "multipleChoicesInput",
+                                                "show_arrow_before": False,
+                                                "choices": [[{"kind": "text", "text": "a"}], [{"kind": "text", "text": "b"}]],
+                                                "show_choices_by_default": False,
+                                            },
+                                        ]
+                                    },
+                                    {
+                                        "contents": [
+                                            {"kind": "text", "text": "B"},
+                                            {"kind": "whitespace"},
+                                            {
+                                                "kind": "multipleChoicesInput",
+                                                "show_arrow_before": False,
+                                                "choices": [[{"kind": "text", "text": "a"}], [{"kind": "text", "text": "b"}]],
+                                                "show_choices_by_default": False,
+                                            },
+                                        ]
+                                    },
+                                ],
+                                "centered": False,
+                                "tricolored": True,
+                            },
+                        ]
                     }
                 ],
             },
@@ -523,24 +555,32 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 "textbook_page": None,  # @todo Rename to textbookPage
                 "pagelets": [
                     {
-                        "instructions": {"paragraphs": [{"contents": [{"kind": "text", "text": "Instructions"}, {"kind": "text", "text": "."}]}]},
-                        "wording": {
-                            "paragraphs": [
-                                {
-                                    "contents": [
-                                        {"kind": "text", "text": "A"},
-                                        {"kind": "whitespace"},
-                                        {
-                                            "kind": "multipleChoicesInput",
-                                            "show_arrow_before": False,
-                                            "choices": [[{"kind": "text", "text": "alpha"}], [{"kind": "text", "text": "beta"}]],
-                                            "show_choices_by_default": False,
-                                        },
-                                        {"kind": "text", "text": "."},
-                                    ]
-                                }
-                            ]
-                        },
+                        "sections": [
+                            {
+                                "paragraphs": [{"contents": [{"kind": "text", "text": "Instructions"}, {"kind": "text", "text": "."}]}],
+                                "centered": True,
+                                "tricolored": False,
+                            },
+                            {
+                                "paragraphs": [
+                                    {
+                                        "contents": [
+                                            {"kind": "text", "text": "A"},
+                                            {"kind": "whitespace"},
+                                            {
+                                                "kind": "multipleChoicesInput",
+                                                "show_arrow_before": False,
+                                                "choices": [[{"kind": "text", "text": "alpha"}], [{"kind": "text", "text": "beta"}]],
+                                                "show_choices_by_default": False,
+                                            },
+                                            {"kind": "text", "text": "."},
+                                        ]
+                                    }
+                                ],
+                                "centered": False,
+                                "tricolored": True,
+                            },
+                        ]
                     }
                 ],
             },
@@ -589,38 +629,44 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                 "textbook_page": None,
                 "pagelets": [
                     {
-                        "instructions": {
-                            "paragraphs": [
-                                {
-                                    "contents": [
-                                        {"kind": "text", "text": "Blah"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "passiveSequence", "contents": [{"kind": "text", "text": "n"}], "boxed": True},
-                                        {"kind": "whitespace"},
-                                        {"kind": "passiveSequence", "contents": [{"kind": "text", "text": "u"}], "boxed": True},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "ou"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "passiveSequence", "contents": [{"kind": "text", "text": "nt"}], "boxed": True},
-                                        {"kind": "text", "text": "."},
-                                    ]
-                                }
-                            ]
-                        },
-                        "wording": {
-                            "paragraphs": [
-                                {
-                                    "contents": [
-                                        {"kind": "text", "text": "Blah"},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "..."},
-                                        {"kind": "whitespace"},
-                                        {"kind": "text", "text": "blih"},
-                                        {"kind": "text", "text": "."},
-                                    ]
-                                }
-                            ]
-                        },
+                        "sections": [
+                            {
+                                "paragraphs": [
+                                    {
+                                        "contents": [
+                                            {"kind": "text", "text": "Blah"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "passiveSequence", "contents": [{"kind": "text", "text": "n"}], "boxed": True},
+                                            {"kind": "whitespace"},
+                                            {"kind": "passiveSequence", "contents": [{"kind": "text", "text": "u"}], "boxed": True},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "ou"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "passiveSequence", "contents": [{"kind": "text", "text": "nt"}], "boxed": True},
+                                            {"kind": "text", "text": "."},
+                                        ]
+                                    }
+                                ],
+                                "centered": True,
+                                "tricolored": False,
+                            },
+                            {
+                                "paragraphs": [
+                                    {
+                                        "contents": [
+                                            {"kind": "text", "text": "Blah"},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "..."},
+                                            {"kind": "whitespace"},
+                                            {"kind": "text", "text": "blih"},
+                                            {"kind": "text", "text": "."},
+                                        ]
+                                    }
+                                ],
+                                "centered": False,
+                                "tricolored": True,
+                            },
+                        ]
                     }
                 ],
             },

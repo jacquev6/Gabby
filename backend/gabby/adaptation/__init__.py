@@ -840,7 +840,7 @@ class _Adapter:
 
     def make_pagelets(
         self, wording_paragraphs_per_pagelet: int | None, instructions: list[renderable.Paragraph], wording: list[list[renderable.Paragraph]]
-    ) -> Iterable[renderable.Pagelet]:
+    ) -> Iterable[renderable.Pagelet_]:
         for manual_wording_pagelet in wording:
             has_yielded = False
             current_paragraphs = []
@@ -853,24 +853,28 @@ class _Adapter:
             if len(current_paragraphs) > 0 or not has_yielded:
                 yield self.make_pagelet(instructions, current_paragraphs)
 
-    def make_pagelet(self, instructions: list[renderable.Paragraph], wording: list[renderable.Paragraph]) -> renderable.Pagelet:
-        return renderable.Pagelet(instructions=renderable.Section(paragraphs=instructions), wording=renderable.Section(paragraphs=wording))
+    def make_pagelet(self, instructions: list[renderable.Paragraph], wording: list[renderable.Paragraph]) -> renderable.Pagelet_:
+        return renderable.Pagelet_(
+            sections=[
+                renderable.Section_(paragraphs=instructions, centered=True, tricolored=False),
+                renderable.Section_(paragraphs=wording, centered=False, tricolored=True),
+            ]
+        )
 
 
 class AdaptationTestCase(unittest.TestCase):
     maxDiff = None
     generate_frontend_tests = True
+    tests_to_generate: list[tuple[str, renderable.Exercise]]
 
     @classmethod
-    @typing.no_type_check
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.tests_to_generate = []
         return super().setUpClass()
 
     @classmethod
-    @typing.no_type_check
-    def tearDownClass(cls):
-        def generate():
+    def tearDownClass(cls) -> None:
+        def generate() -> Iterable[str]:
             yield "import TricolorSection from './TricolorSection.vue'"
             yield ""
             yield f"describe('TricolorSection for {cls.__name__}', () => " "{"
@@ -880,25 +884,25 @@ class AdaptationTestCase(unittest.TestCase):
             seen_paragraphs = set()
             for test_id, adapted in cls.tests_to_generate:
                 for pagelet_index, pagelet in enumerate(adapted.pagelets):
-                    for section_name in ["instructions", "wording"]:
+                    for section_index, section in enumerate(pagelet.sections):
                         paragraphs = "\n        ".join(
-                            line
-                            for line in json.dumps(
-                                getattr(pagelet, section_name).model_dump(by_alias=True, exclude_defaults=True)["paragraphs"], indent=2
-                            ).splitlines()
+                            line for line in json.dumps(section.model_dump(by_alias=True, exclude_defaults=True)["paragraphs"], indent=2).splitlines()
                         )
                         if paragraphs in seen_paragraphs:
                             continue
                         seen_paragraphs.add(paragraphs)
                         yield ""
-                        yield f"  it('renders {test_id} pagelet {pagelet_index} {section_name}', () => " "{"
+                        yield f"  it('renders {test_id} pagelet {pagelet_index} section {section_index}', () => " "{"
                         yield "    cy.mount(TricolorSection, {"
                         yield "      props: {"
                         yield f"        paragraphs: {paragraphs},"
+                        yield "        first: false,"
+                        yield "        centered: false,"  # @todo Set to section.centered
+                        yield "        tricolored: false,"  # @todo Set to section.tricolored
                         yield "        modelValue: {},"
                         yield "      },"
                         yield "    })"
-                        yield f"    cy.screenshot('{test_id}.{pagelet_index}.{section_name}')"
+                        yield f"    cy.screenshot('{test_id}.{pagelet_index}.{section_index}')"
                         yield "  })"
             yield "})"
 
@@ -910,8 +914,7 @@ class AdaptationTestCase(unittest.TestCase):
 
         return super().tearDownClass()
 
-    @typing.no_type_check
-    def do_test(self, exercise: exercises.Exercise, expected_adapted: renderable.Exercise):
+    def do_test(self, exercise: exercises.Exercise, expected_adapted: renderable.Exercise) -> None:
         self.tests_to_generate.append((self.id(), expected_adapted))
 
         actual_adapted = exercise.make_adapted()
@@ -919,27 +922,28 @@ class AdaptationTestCase(unittest.TestCase):
             calling_frame = traceback.extract_stack()[-2]
 
             print(f"actual_adapted at {calling_frame.filename}:{calling_frame.lineno}:", self.renderable_repr(actual_adapted))
+
+        self.assertEqual(actual_adapted is None, expected_adapted is None)
         for pagelet_index, (actual_pagelet, expected_pagelet) in enumerate(itertools.zip_longest(actual_adapted.pagelets, expected_adapted.pagelets)):
-            actual_instructions = None if actual_pagelet is None else actual_pagelet.instructions.paragraphs
-            expected_instructions = None if expected_pagelet is None else expected_pagelet.instructions.paragraphs
-            if actual_instructions != expected_instructions:
-                self.fail(
-                    f"pagelet {pagelet_index} instructions paragraphs are:\n{self.renderable_repr(actual_instructions)}\ninstead of:\n{self.renderable_repr(expected_instructions)}"
-                )
-            actual_wording = None if actual_pagelet is None else actual_pagelet.wording.paragraphs
-            expected_wording = None if expected_pagelet is None else expected_pagelet.wording.paragraphs
-            if actual_wording != expected_wording:
-                self.fail(
-                    f"pagelet {pagelet_index} wording paragraphs are:\n{self.renderable_repr(actual_wording)}\ninstead of:\n{self.renderable_repr(expected_wording)}"
-                )
+            self.assertEqual(actual_pagelet is None, expected_pagelet is None)
+            for section_index, (actual_section, expected_section) in enumerate(itertools.zip_longest(actual_pagelet.sections, expected_pagelet.sections)):
+                self.assertEqual(actual_section is None, expected_section is None)
+                for paragraph_index, (actual_paragraph, expected_paragraph) in enumerate(
+                    itertools.zip_longest(actual_section.paragraphs, expected_section.paragraphs)
+                ):
+                    self.assertEqual(actual_paragraph is None, expected_paragraph is None)
+                    if actual_paragraph != expected_paragraph:
+                        self.fail(
+                            f"pagelet {pagelet_index}, section {section_index}, paragraph {paragraph_index} is:\n{self.renderable_repr(actual_paragraph)}\ninstead of:\n{self.renderable_repr(expected_paragraph)}"
+                        )
+
         if actual_adapted != expected_adapted:
             self.fail(f"adapted is:\n{self.renderable_repr(actual_adapted)}\ninstead of:\n{self.renderable_repr(expected_adapted)}")
 
     @staticmethod
-    @typing.no_type_check
-    def renderable_repr(rend):
-        r = (
-            repr([rend])[1:-1]
+    def renderable_repr(r: renderable.Exercise | renderable.Paragraph) -> str:
+        s = (
+            repr([r])[1:-1]
             .replace("Exercise(", "r.Exercise(")
             .replace("Pagelet(", "r.Pagelet(")
             .replace("Section(", "r.Section(")
@@ -959,6 +963,6 @@ class AdaptationTestCase(unittest.TestCase):
             .replace("show_choices_by_default=False", "")
             .replace("vertical=False", "")
         )
-        while (new_r := r.replace(", , ", ", ").replace(", )", ")")) != r:
-            r = new_r
-        return r
+        while (new_s := s.replace(", , ", ", ").replace(", )", ")")) != s:
+            s = new_s
+        return s
