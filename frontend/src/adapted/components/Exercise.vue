@@ -1,18 +1,17 @@
 <script setup lang="ts">
 import { reactive, computed, watch } from 'vue'
 
-import type { Settings, Exercise } from '$adapted/types'
+import type { Exercise } from '$adapted/types'
 import TricolorSection from './TricolorSection.vue'
 import MonocolorSection from './MonocolorSection.vue'
 
 
 const props = withDefaults(defineProps<{
-  projectId: string,
-  exerciseId: string,
-  exercise: Exercise,
-  pageletIndex: number,
-  settings: Settings,
-  isPreview?: boolean,
+  projectId: string
+  exerciseId: string
+  exercise: Exercise
+  pageletIndex: number
+  isPreview?: boolean
 }>(), {
   isPreview: false,
 })
@@ -70,10 +69,9 @@ defineExpose({
 
 <template>
   <div style="position: relative; font-family: Arial, sans-serif;">
-    <MonocolorSection :paragraphs="pagelet.instructions.paragraphs" :centered="settings.centeredInstructions" :first="true" v-model="models[pageletIndex].instructions" />
+    <MonocolorSection :paragraphs="pagelet.instructions.paragraphs" :centered="true" :first="true" v-model="models[pageletIndex].instructions" />
     <div style="padding: 6px">
-      <TricolorSection v-if="settings.tricolorWording" :paragraphs="pagelet.wording.paragraphs" v-model="models[pageletIndex].wording" />
-      <MonocolorSection v-else :paragraphs="pagelet.wording.paragraphs" v-model="models[pageletIndex].wording" />
+      <TricolorSection :paragraphs="pagelet.wording.paragraphs" :centered="false" :first="false" v-model="models[pageletIndex].wording" />
     </div>
   </div>
 </template>

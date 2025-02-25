@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import type { Data, Settings } from '$adapted/types'
+import type { Data } from '$adapted/types'
 
 
 defineProps<{
   data: Data,
-  settings: Settings,
 }>()
 </script>
 

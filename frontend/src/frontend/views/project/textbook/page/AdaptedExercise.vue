@@ -14,11 +14,6 @@ const props = defineProps<{
   exercise: Exercise,
 }>()
 
-const settings = {
-  centeredInstructions: true,
-  tricolorWording: true,
-}
-
 const pageletIndex = ref(0)
 const pageletsCount = computed(() => props.exercise.pagelets.length)
 
@@ -94,7 +89,6 @@ provide('adaptedExerciseBackdropCovers', preview)
           :exerciseId="props.exerciseId"
           :exercise
           :pageletIndex
-          :settings
           :isPreview="true"
         />
       </PageletsNavigationControls>

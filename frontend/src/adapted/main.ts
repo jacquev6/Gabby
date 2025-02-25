@@ -10,11 +10,6 @@ import type { Data } from './types'
 
 const data = JSON.parse('{{ data }}') as Data
 
-const settings = {
-  centeredInstructions: true,
-  tricolorWording: true,
-}
-
 const router = createRouter({
   history: createWebHashHistory(),
   routes: [
@@ -22,7 +17,7 @@ const router = createRouter({
       path: '/',
       name: 'index',
       component: IndexView,
-      props: () => ({ data, settings }),
+      props: () => ({ data }),
     },
     {
       path: '/exercise-:exerciseId/:pageletIndex',
@@ -32,7 +27,6 @@ const router = createRouter({
         console.assert(typeof(route.params.pageletIndex) === 'string')
         return {
           data,
-          settings,
           exerciseId: route.params.exerciseId,
           pageletIndex: Number.parseInt(route.params.pageletIndex, 10),
         }

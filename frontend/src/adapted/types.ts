@@ -8,9 +8,7 @@ export interface Settings {
 
 export type Exercise = Exclude<paths['/api/parsedExercises/{id}']['get']['responses']['200']['content']['application/vnd.api+json']['data']['attributes']['adapted'], null>
 
-export type Section = Exercise['pagelets'][number]['instructions']
-
-export type Paragraph = Section['paragraphs'][number]
+export type Paragraph = Exercise['pagelets'][number]['sections'][number]['paragraphs'][number]
 
 
 export interface Data {

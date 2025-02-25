@@ -6,14 +6,11 @@ import type { Paragraph } from '$adapted/types'
 import Renderable from './Renderable.vue'
 
 
-const props = withDefaults(defineProps<{
+const props = defineProps<{
   paragraphs: Paragraph[]
-  centered?: boolean
-  first?: boolean
-}>(), {
-  centered: false,
-  first: false,
-})
+  centered: boolean
+  first: boolean
+}>()
 
 const models = defineModel<Record<string, any/* @todo Type */>>({
   required: true,

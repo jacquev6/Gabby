@@ -2,14 +2,14 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
-import type { Data, Settings } from '$adapted/types'
+import type { Data } from '$adapted/types'
 import Exercise from '$adapted/components/Exercise.vue'
 import PageletsNavigationControls from '$adapted/components/PageletsNavigationControls.vue'
 
 
 const props = defineProps<{
   data: Data,
-  settings: Settings,
+  blah: string
   exerciseId: string,
   pageletIndex: number,
 }>()
@@ -39,7 +39,6 @@ function changePagelet(newPageletIndex: number) {
       :exerciseId
       :exercise
       :pageletIndex
-      :settings
     />
   </PageletsNavigationControls>
 </template>
