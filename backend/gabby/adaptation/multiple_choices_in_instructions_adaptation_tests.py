@@ -23,9 +23,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     ),
                     d.TextInsertOp(insert=".\n", attributes={}),
                 ],
-                wording=[
-                    d.TextInsertOp(insert="A ... B ...\n", attributes={}),
-                ],
+                wording=[d.TextInsertOp(insert="A ... B ...\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -105,15 +103,9 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     ),
                     d.TextInsertOp(insert=".\n", attributes={}),
                 ],
-                wording=[
-                    d.TextInsertOp(insert="A @ B @\n", attributes={}),
-                ],
-                example=[
-                    d.TextInsertOp(insert="This {choices2||/||||is} the @ example.\n", attributes={}),
-                ],
-                clue=[
-                    d.TextInsertOp(insert="This is {choices2||/||||the} @ clue.\n", attributes={}),
-                ],
+                wording=[d.TextInsertOp(insert="A @ B @\n", attributes={})],
+                example=[d.TextInsertOp(insert="This {choices2||/||||is} the @ example.\n", attributes={})],
+                clue=[d.TextInsertOp(insert="This is {choices2||/||||the} @ clue.\n", attributes={})],
                 adaptation=Adaptation(
                     kind="multiple-choices",
                     wording_paragraphs_per_pagelet=3,
@@ -239,9 +231,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     ),
                     d.TextInsertOp(insert=".\n", attributes={}),
                 ],
-                wording=[
-                    d.TextInsertOp(insert="A ... B ...\n", attributes={}),
-                ],
+                wording=[d.TextInsertOp(insert="A ... B ...\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -319,9 +309,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     d.TextInsertOp(insert="a b", attributes={"choices2": {"start": "", "separator1": "", "separator2": "", "stop": "", "placeholder": "..."}}),
                     d.TextInsertOp(insert=".\n", attributes={}),
                 ],
-                wording=[
-                    d.TextInsertOp(insert="A ... B ...\n", attributes={}),
-                ],
+                wording=[d.TextInsertOp(insert="A ... B ...\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -353,13 +341,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",
-                                            contents=[
-                                                r.Text(kind="text", text="a"),
-                                                r.Whitespace(
-                                                    kind="whitespace",
-                                                ),
-                                                r.Text(kind="text", text="b"),
-                                            ],
+                                            contents=[r.Text(kind="text", text="a"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="b")],
                                             boxed=True,
                                         ),
                                         r.Text(kind="text", text="."),
@@ -375,30 +357,14 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                                         r.Whitespace(kind="whitespace"),
                                         r.MultipleChoicesInput(
                                             kind="multipleChoicesInput",
-                                            choices=[
-                                                [
-                                                    r.Text(kind="text", text="a"),
-                                                    r.Whitespace(
-                                                        kind="whitespace",
-                                                    ),
-                                                    r.Text(kind="text", text="b"),
-                                                ]
-                                            ],
+                                            choices=[[r.Text(kind="text", text="a"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="b")]],
                                         ),
                                         r.Whitespace(kind="whitespace"),
                                         r.Text(kind="text", text="B"),
                                         r.Whitespace(kind="whitespace"),
                                         r.MultipleChoicesInput(
                                             kind="multipleChoicesInput",
-                                            choices=[
-                                                [
-                                                    r.Text(kind="text", text="a"),
-                                                    r.Whitespace(
-                                                        kind="whitespace",
-                                                    ),
-                                                    r.Text(kind="text", text="b"),
-                                                ]
-                                            ],
+                                            choices=[[r.Text(kind="text", text="a"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="b")]],
                                         ),
                                     ]
                                 )
@@ -421,9 +387,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     ),
                     d.TextInsertOp(insert=".\n", attributes={}),
                 ],
-                wording=[
-                    d.TextInsertOp(insert="A ... B ...\n", attributes={}),
-                ],
+                wording=[d.TextInsertOp(insert="A ... B ...\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -517,9 +481,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     ),
                     d.TextInsertOp(insert=".\n", attributes={}),
                 ],
-                wording=[
-                    d.TextInsertOp(insert="A ... B ...\n", attributes={}),
-                ],
+                wording=[d.TextInsertOp(insert="A ... B ...\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -613,9 +575,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     ),
                     d.TextInsertOp(insert=".\n", attributes={}),
                 ],
-                wording=[
-                    d.TextInsertOp(insert="A ... B ...\n", attributes={}),
-                ],
+                wording=[d.TextInsertOp(insert="A ... B ...\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -697,9 +657,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     ),
                     d.TextInsertOp(insert=".\n", attributes={}),
                 ],
-                wording=[
-                    d.TextInsertOp(insert="A ... B ...\n", attributes={}),
-                ],
+                wording=[d.TextInsertOp(insert="A ... B ...\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -783,9 +741,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     ),
                     d.TextInsertOp(insert=".\n", attributes={}),
                 ],
-                wording=[
-                    d.TextInsertOp(insert="A ... @@@\nB ... @@@\n", attributes={}),
-                ],
+                wording=[d.TextInsertOp(insert="A ... @@@\nB ... @@@\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -889,9 +845,7 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                     ),
                     d.TextInsertOp(insert=".\n", attributes={}),
                 ],
-                wording=[
-                    d.TextInsertOp(insert="i...mense i...juste\n", attributes={}),
-                ],
+                wording=[d.TextInsertOp(insert="i...mense i...juste\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(

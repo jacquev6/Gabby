@@ -15,15 +15,10 @@ def upgrade():
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("items", sa.JSON(), nullable=False),
         sa.Column("effects", sa.JSON(), nullable=False),
-        sa.ForeignKeyConstraint(
-            ["id"],
-            ["adaptations.id"],
-        ),
+        sa.ForeignKeyConstraint(["id"], ["adaptations.id"]),
         sa.PrimaryKeyConstraint("id"),
     )
-    op.add_column(
-        "exercises", sa.Column("wording_paragraphs_per_pagelet", sa.Integer(), server_default="3", nullable=False)
-    )
+    op.add_column("exercises", sa.Column("wording_paragraphs_per_pagelet", sa.Integer(), server_default="3", nullable=False))
     op.add_column("exercises", sa.Column("adaptation", sa.JSON(), server_default='{"format": 0}', nullable=False))
     # ### end Alembic commands ###
 

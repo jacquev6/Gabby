@@ -18,10 +18,7 @@ class ManualMcqFieldsAdaptationTestCase(AdaptationTestCase):
                     ),
                     d.TextInsertOp(insert="\n", attributes={}),
                 ],
-                wording=[
-                    d.EmbedInsertOp(insert={"mcq-field": "f34d6"}),
-                    d.TextInsertOp(insert="\n", attributes={}),
-                ],
+                wording=[d.EmbedInsertOp(insert={"mcq-field": "f34d6"}), d.TextInsertOp(insert="\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -72,8 +69,8 @@ class ManualMcqFieldsAdaptationTestCase(AdaptationTestCase):
                                                 [r.Text(kind="text", text="charlie")],
                                             ],
                                         )
-                                    ],
-                                ),
+                                    ]
+                                )
                             ]
                         ),
                     )

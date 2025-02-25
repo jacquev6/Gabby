@@ -40,42 +40,17 @@ class PingsResource:
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 
-    def create_item(
-        self,
-        message,
-        prev,
-        next,
-        session: SessionDependable,
-        authenticated_user: OptionalAuthBearerDependable,
-    ):
-        return create_item(
-            session,
-            Ping,
-            message=message,
-            created_by=authenticated_user,
-            updated_by=authenticated_user,
-            prev=prev,
-            next=next,
-        )
+    def create_item(self, message, prev, next, session: SessionDependable, authenticated_user: OptionalAuthBearerDependable):
+        return create_item(session, Ping, message=message, created_by=authenticated_user, updated_by=authenticated_user, prev=prev, next=next)
 
-    def get_item(
-        self,
-        id: str,
-        session: SessionDependable,
-    ):
+    def get_item(self, id: str, session: SessionDependable):
         return get_item(session, Ping, int(id))
 
     class Filters(PydanticBase):
         message: str | None
         prev: str | None
 
-    def get_page(
-        self,
-        first_index,
-        page_size,
-        session: SessionDependable,
-        filters: Annotated[Filters, make_filters(Filters)],
-    ):
+    def get_page(self, first_index, page_size, session: SessionDependable, filters: Annotated[Filters, make_filters(Filters)]):
         query = sql.select(Ping)
         if filters.message is not None:
             query = query.where(Ping.message == filters.message)
@@ -84,12 +59,7 @@ class PingsResource:
         return get_page(session, query, first_index, page_size)
 
     @contextmanager
-    def save_item(
-        self,
-        item,
-        session: SessionDependable,
-        authenticated_user: OptionalAuthBearerDependable,
-    ):
+    def save_item(self, item, session: SessionDependable, authenticated_user: OptionalAuthBearerDependable):
         created_by = unwrap(item.created_by)
         if created_by is not None:
             if authenticated_user != created_by:
@@ -98,12 +68,7 @@ class PingsResource:
         item.updated_by = authenticated_user
         save_item(session, item)
 
-    def delete_item(
-        self,
-        item,
-        session: SessionDependable,
-        authenticated_user: OptionalAuthBearerDependable,
-    ):
+    def delete_item(self, item, session: SessionDependable, authenticated_user: OptionalAuthBearerDependable):
         created_by = unwrap(item.created_by)
         if created_by is not None:
             if authenticated_user != created_by:
@@ -126,36 +91,28 @@ class PingsApiTestCase(testing.ApiTestCase):
 
     def test_create__minimal(self):
         before = datetime.datetime.now(tz=datetime.timezone.utc)
-        response = self.post(
-            "http://server/pings",
-            {
-                "data": {
-                    "type": "ping",
-                },
-            },
-        )
+        response = self.post("http://server/pings", {"data": {"type": "ping"}})
         after = datetime.datetime.now(tz=datetime.timezone.utc)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         created_at = self.parse_date(response.json()["data"]["attributes"]["createdAt"])
         updated_at = self.parse_date(response.json()["data"]["attributes"]["updatedAt"])
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "ping",
-                "id": "1",
-                "links": {"self": "http://server/pings/1"},
-                "attributes": {
-                    "createdAt": self.format_date(created_at),
-                    "updatedAt": self.format_date(updated_at),
-                    "message": None,
-                },
-                "relationships": {
-                    "createdBy": {"data": None},
-                    "updatedBy": {"data": None},
-                    "prev": {"data": None},
-                    "next": {"data": [], "meta": {"count": 0}},
-                },
+        self.assertEqual(
+            response.json(),
+            {
+                "data": {
+                    "type": "ping",
+                    "id": "1",
+                    "links": {"self": "http://server/pings/1"},
+                    "attributes": {"createdAt": self.format_date(created_at), "updatedAt": self.format_date(updated_at), "message": None},
+                    "relationships": {
+                        "createdBy": {"data": None},
+                        "updatedBy": {"data": None},
+                        "prev": {"data": None},
+                        "next": {"data": [], "meta": {"count": 0}},
+                    },
+                }
             },
-        })
+        )
 
         self.assertGreaterEqual(created_at, before)
         self.assertLessEqual(created_at, after)
@@ -182,71 +139,65 @@ class PingsApiTestCase(testing.ApiTestCase):
             {
                 "data": {
                     "type": "ping",
-                    "attributes": {
-                        "message": "hello",
-                    },
-                    "relationships": {
-                        "prev": {"data": {"type": "ping", "id": "1"}},
-                        "next": {"data": [{"type": "ping", "id": "2"}]},
-                    },
-                },
+                    "attributes": {"message": "hello"},
+                    "relationships": {"prev": {"data": {"type": "ping", "id": "1"}}, "next": {"data": [{"type": "ping", "id": "2"}]}},
+                }
             },
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
         created_at = self.parse_date(response.json()["data"]["attributes"]["createdAt"])
         updated_at = self.parse_date(response.json()["data"]["attributes"]["updatedAt"])
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "ping",
-                "id": "3",
-                "links": {"self": "http://server/pings/3"},
-                "attributes": {
-                    "createdAt": self.format_date(created_at),
-                    "updatedAt": self.format_date(updated_at),
-                    "message": "hello",
+        self.assertEqual(
+            response.json(),
+            {
+                "data": {
+                    "type": "ping",
+                    "id": "3",
+                    "links": {"self": "http://server/pings/3"},
+                    "attributes": {"createdAt": self.format_date(created_at), "updatedAt": self.format_date(updated_at), "message": "hello"},
+                    "relationships": {
+                        "createdBy": {"data": None},
+                        "updatedBy": {"data": None},
+                        "prev": {"data": {"type": "ping", "id": "1"}},
+                        "next": {"data": [{"type": "ping", "id": "2"}], "meta": {"count": 1}},
+                    },
                 },
-                "relationships": {
-                    "createdBy": {"data": None},
-                    "updatedBy": {"data": None},
-                    "prev": {"data": {"type": "ping", "id": "1"}},
-                    "next": {"data": [{"type": "ping", "id": "2"}], "meta": {"count": 1}},
-                },
+                "included": [
+                    {
+                        "type": "ping",
+                        "id": "1",
+                        "links": {"self": "http://server/pings/1"},
+                        "attributes": {
+                            "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
+                            "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
+                            "message": None,
+                        },
+                        "relationships": {
+                            "createdBy": {"data": None},
+                            "updatedBy": {"data": None},
+                            "prev": {"data": None},
+                            "next": {"data": [{"type": "ping", "id": "3"}], "meta": {"count": 1}},
+                        },
+                    },
+                    {
+                        "type": "ping",
+                        "id": "2",
+                        "links": {"self": "http://server/pings/2"},
+                        "attributes": {
+                            "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
+                            "updatedAt": response.json()["included"][1]["attributes"]["updatedAt"],
+                            "message": None,
+                        },
+                        "relationships": {
+                            "createdBy": {"data": None},
+                            "updatedBy": {"data": None},
+                            "prev": {"data": {"type": "ping", "id": "3"}},
+                            "next": {"data": [], "meta": {"count": 0}},
+                        },
+                    },
+                ],
             },
-            "included": [
-                {
-                    "type": "ping",
-                    "id": "1",
-                    "links": {"self": "http://server/pings/1"},
-                    "attributes": {
-                        "createdAt": response.json()["included"][0]["attributes"]["createdAt"],
-                        "updatedAt": response.json()["included"][0]["attributes"]["updatedAt"],
-                        "message": None,
-                    },
-                    "relationships": {
-                        "createdBy": {"data": None},
-                        "updatedBy": {"data": None},
-                        "prev": {"data": None},
-                        "next": {"data": [{"type": "ping", "id": "3"}], "meta": {"count": 1}},
-                    },
-                },
-                {
-                    "type": "ping",
-                    "id": "2",
-                    "links": {"self": "http://server/pings/2"},
-                    "attributes": {
-                        "createdAt": response.json()["included"][1]["attributes"]["createdAt"],
-                        "updatedAt": response.json()["included"][1]["attributes"]["updatedAt"],
-                        "message": None,
-                    },
-                    "relationships": {
-                        "createdBy": {"data": None},
-                        "updatedBy": {"data": None},
-                        "prev": {"data": {"type": "ping", "id": "3"}},
-                        "next": {"data": [], "meta": {"count": 0}},
-                    },
-                },
-            ],
-        })
+        )
 
         self.assertEqual(self.count_models(Ping), 3)
         ping = self.get_model(Ping, 3)
@@ -264,24 +215,23 @@ class PingsApiTestCase(testing.ApiTestCase):
 
         response = self.get("http://server/pings/1")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "ping",
-                "id": "1",
-                "links": {"self": "http://server/pings/1"},
-                "attributes": {
-                    "createdAt": self.format_date(ping.created_at),
-                    "updatedAt": self.format_date(ping.updated_at),
-                    "message": None,
-                },
-                "relationships": {
-                    "createdBy": {"data": None},
-                    "updatedBy": {"data": None},
-                    "prev": {"data": None},
-                    "next": {"data": [], "meta": {"count": 0}},
-                },
+        self.assertEqual(
+            response.json(),
+            {
+                "data": {
+                    "type": "ping",
+                    "id": "1",
+                    "links": {"self": "http://server/pings/1"},
+                    "attributes": {"createdAt": self.format_date(ping.created_at), "updatedAt": self.format_date(ping.updated_at), "message": None},
+                    "relationships": {
+                        "createdBy": {"data": None},
+                        "updatedBy": {"data": None},
+                        "prev": {"data": None},
+                        "next": {"data": [], "meta": {"count": 0}},
+                    },
+                }
             },
-        })
+        )
 
     def test_get_one__nonexisting(self):
         self.expect_rollback()
@@ -298,82 +248,72 @@ class PingsApiTestCase(testing.ApiTestCase):
 
         response = self.get("http://server/pings")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
-        self.assertEqual(response.json(), {
-            "data": [
-                {
-                    "type": "ping",
-                    "id": "1",
-                    "links": {"self": "http://server/pings/1"},
-                    "attributes": {
-                        "createdAt": self.format_date(ping1.created_at),
-                        "updatedAt": self.format_date(ping1.updated_at),
-                        "message": None,
+        self.assertEqual(
+            response.json(),
+            {
+                "data": [
+                    {
+                        "type": "ping",
+                        "id": "1",
+                        "links": {"self": "http://server/pings/1"},
+                        "attributes": {"createdAt": self.format_date(ping1.created_at), "updatedAt": self.format_date(ping1.updated_at), "message": None},
+                        "relationships": {
+                            "createdBy": {"data": None},
+                            "updatedBy": {"data": None},
+                            "prev": {"data": None},
+                            "next": {"data": [{"type": "ping", "id": "2"}], "meta": {"count": 1}},
+                        },
                     },
-                    "relationships": {
-                        "createdBy": {"data": None},
-                        "updatedBy": {"data": None},
-                        "prev": {"data": None},
-                        "next": {"data": [{"type": "ping", "id": "2"}], "meta": {"count": 1}},
+                    {
+                        "type": "ping",
+                        "id": "2",
+                        "links": {"self": "http://server/pings/2"},
+                        "attributes": {"createdAt": self.format_date(ping2.created_at), "updatedAt": self.format_date(ping2.updated_at), "message": None},
+                        "relationships": {
+                            "createdBy": {"data": None},
+                            "updatedBy": {"data": None},
+                            "prev": {"data": {"type": "ping", "id": "1"}},
+                            "next": {"data": [], "meta": {"count": 0}},
+                        },
                     },
+                ],
+                "links": {
+                    "first": "http://server/pings?page%5Bnumber%5D=1",
+                    "last": "http://server/pings?page%5Bnumber%5D=2",
+                    "next": "http://server/pings?page%5Bnumber%5D=2",
+                    "prev": None,
                 },
-                {
-                    "type": "ping",
-                    "id": "2",
-                    "links": {"self": "http://server/pings/2"},
-                    "attributes": {
-                        "createdAt": self.format_date(ping2.created_at),
-                        "updatedAt": self.format_date(ping2.updated_at),
-                        "message": None,
-                    },
-                    "relationships": {
-                        "createdBy": {"data": None},
-                        "updatedBy": {"data": None},
-                        "prev": {"data": {"type": "ping", "id": "1"}},
-                        "next": {"data": [], "meta": {"count": 0}},
-                    },
-                },
-            ],
-            "links": {
-                "first": "http://server/pings?page%5Bnumber%5D=1",
-                "last": "http://server/pings?page%5Bnumber%5D=2",
-                "next": "http://server/pings?page%5Bnumber%5D=2",
-                "prev": None,
+                "meta": {"pagination": {"count": 3, "page": 1, "pages": 2}},
             },
-            "meta": {
-                "pagination": {"count": 3, "page": 1, "pages": 2},
-            },
-        })
+        )
 
         response = self.get(response.json()["links"]["next"])
-        self.assertEqual(response.json(), {
-            "data": [
-                {
-                    "type": "ping",
-                    "id": "3",
-                    "links": {"self": "http://server/pings/3"},
-                    "attributes": {
-                        "createdAt": self.format_date(ping3.created_at),
-                        "updatedAt": self.format_date(ping3.updated_at),
-                        "message": None,
-                    },
-                    "relationships": {
-                        "createdBy": {"data": None},
-                        "updatedBy": {"data": None},
-                        "prev": {"data": None},
-                        "next": {"data": [], "meta": {"count": 0}},
-                    },
+        self.assertEqual(
+            response.json(),
+            {
+                "data": [
+                    {
+                        "type": "ping",
+                        "id": "3",
+                        "links": {"self": "http://server/pings/3"},
+                        "attributes": {"createdAt": self.format_date(ping3.created_at), "updatedAt": self.format_date(ping3.updated_at), "message": None},
+                        "relationships": {
+                            "createdBy": {"data": None},
+                            "updatedBy": {"data": None},
+                            "prev": {"data": None},
+                            "next": {"data": [], "meta": {"count": 0}},
+                        },
+                    }
+                ],
+                "links": {
+                    "first": "http://server/pings?page%5Bnumber%5D=1",
+                    "last": "http://server/pings?page%5Bnumber%5D=2",
+                    "next": None,
+                    "prev": "http://server/pings?page%5Bnumber%5D=1",
                 },
-            ],
-            "links": {
-                "first": "http://server/pings?page%5Bnumber%5D=1",
-                "last": "http://server/pings?page%5Bnumber%5D=2",
-                "next": None,
-                "prev": "http://server/pings?page%5Bnumber%5D=1",
+                "meta": {"pagination": {"count": 3, "page": 2, "pages": 2}},
             },
-            "meta": {
-                "pagination": {"count": 3, "page": 2, "pages": 2},
-            },
-        })
+        )
 
     # @todo Add tests for 'filter[message]' set to null. How do we even set a query parameter to null?
 
@@ -386,51 +326,44 @@ class PingsApiTestCase(testing.ApiTestCase):
 
         response = self.get("http://server/pings?filter[message]=Hello")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
-        self.assertEqual(response.json(), {
-            "data": [
-                {
-                    "type": "ping",
-                    "id": "1",
-                    "links": {"self": "http://server/pings/1"},
-                    "attributes": {
-                        "createdAt": self.format_date(ping1.created_at),
-                        "updatedAt": self.format_date(ping1.updated_at),
-                        "message": "Hello",
+        self.assertEqual(
+            response.json(),
+            {
+                "data": [
+                    {
+                        "type": "ping",
+                        "id": "1",
+                        "links": {"self": "http://server/pings/1"},
+                        "attributes": {"createdAt": self.format_date(ping1.created_at), "updatedAt": self.format_date(ping1.updated_at), "message": "Hello"},
+                        "relationships": {
+                            "createdBy": {"data": None},
+                            "updatedBy": {"data": None},
+                            "prev": {"data": None},
+                            "next": {"data": [], "meta": {"count": 0}},
+                        },
                     },
-                    "relationships": {
-                        "createdBy": {"data": None},
-                        "updatedBy": {"data": None},
-                        "prev": {"data": None},
-                        "next": {"data": [], "meta": {"count": 0}},
+                    {
+                        "type": "ping",
+                        "id": "3",
+                        "links": {"self": "http://server/pings/3"},
+                        "attributes": {"createdAt": self.format_date(ping3.created_at), "updatedAt": self.format_date(ping3.updated_at), "message": "Hello"},
+                        "relationships": {
+                            "createdBy": {"data": None},
+                            "updatedBy": {"data": None},
+                            "prev": {"data": None},
+                            "next": {"data": [], "meta": {"count": 0}},
+                        },
                     },
+                ],
+                "links": {
+                    "first": "http://server/pings?filter%5Bmessage%5D=Hello&page%5Bnumber%5D=1",
+                    "last": "http://server/pings?filter%5Bmessage%5D=Hello&page%5Bnumber%5D=2",
+                    "next": "http://server/pings?filter%5Bmessage%5D=Hello&page%5Bnumber%5D=2",
+                    "prev": None,
                 },
-                {
-                    "type": "ping",
-                    "id": "3",
-                    "links": {"self": "http://server/pings/3"},
-                    "attributes": {
-                        "createdAt": self.format_date(ping3.created_at),
-                        "updatedAt": self.format_date(ping3.updated_at),
-                        "message": "Hello",
-                    },
-                    "relationships": {
-                        "createdBy": {"data": None},
-                        "updatedBy": {"data": None},
-                        "prev": {"data": None},
-                        "next": {"data": [], "meta": {"count": 0}},
-                    },
-                },
-            ],
-            "links": {
-                "first": "http://server/pings?filter%5Bmessage%5D=Hello&page%5Bnumber%5D=1",
-                "last": "http://server/pings?filter%5Bmessage%5D=Hello&page%5Bnumber%5D=2",
-                "next": "http://server/pings?filter%5Bmessage%5D=Hello&page%5Bnumber%5D=2",
-                "prev": None,
+                "meta": {"pagination": {"count": 3, "page": 1, "pages": 2}},
             },
-            "meta": {
-                "pagination": {"count": 3, "page": 1, "pages": 2},
-            },
-        })
+        )
 
     # @todo Add tests for 'filter[prev]' set to null
 
@@ -444,51 +377,44 @@ class PingsApiTestCase(testing.ApiTestCase):
 
         response = self.get("http://server/pings?filter[prev]=1")
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
-        self.assertEqual(response.json(), {
-            "data": [
-                {
-                    "type": "ping",
-                    "id": "2",
-                    "links": {"self": "http://server/pings/2"},
-                    "attributes": {
-                        "createdAt": self.format_date(ping2.created_at),
-                        "updatedAt": self.format_date(ping2.updated_at),
-                        "message": None,
+        self.assertEqual(
+            response.json(),
+            {
+                "data": [
+                    {
+                        "type": "ping",
+                        "id": "2",
+                        "links": {"self": "http://server/pings/2"},
+                        "attributes": {"createdAt": self.format_date(ping2.created_at), "updatedAt": self.format_date(ping2.updated_at), "message": None},
+                        "relationships": {
+                            "createdBy": {"data": None},
+                            "updatedBy": {"data": None},
+                            "prev": {"data": {"type": "ping", "id": "1"}},
+                            "next": {"data": [], "meta": {"count": 0}},
+                        },
                     },
-                    "relationships": {
-                        "createdBy": {"data": None},
-                        "updatedBy": {"data": None},
-                        "prev": {"data": {"type": "ping", "id": "1"}},
-                        "next": {"data": [], "meta": {"count": 0}},
+                    {
+                        "type": "ping",
+                        "id": "4",
+                        "links": {"self": "http://server/pings/4"},
+                        "attributes": {"createdAt": self.format_date(ping4.created_at), "updatedAt": self.format_date(ping4.updated_at), "message": None},
+                        "relationships": {
+                            "createdBy": {"data": None},
+                            "updatedBy": {"data": None},
+                            "prev": {"data": {"type": "ping", "id": "1"}},
+                            "next": {"data": [], "meta": {"count": 0}},
+                        },
                     },
+                ],
+                "links": {
+                    "first": "http://server/pings?filter%5Bprev%5D=1&page%5Bnumber%5D=1",
+                    "last": "http://server/pings?filter%5Bprev%5D=1&page%5Bnumber%5D=2",
+                    "next": "http://server/pings?filter%5Bprev%5D=1&page%5Bnumber%5D=2",
+                    "prev": None,
                 },
-                {
-                    "type": "ping",
-                    "id": "4",
-                    "links": {"self": "http://server/pings/4"},
-                    "attributes": {
-                        "createdAt": self.format_date(ping4.created_at),
-                        "updatedAt": self.format_date(ping4.updated_at),
-                        "message": None,
-                    },
-                    "relationships": {
-                        "createdBy": {"data": None},
-                        "updatedBy": {"data": None},
-                        "prev": {"data": {"type": "ping", "id": "1"}},
-                        "next": {"data": [], "meta": {"count": 0}},
-                    },
-                },
-            ],
-            "links": {
-                "first": "http://server/pings?filter%5Bprev%5D=1&page%5Bnumber%5D=1",
-                "last": "http://server/pings?filter%5Bprev%5D=1&page%5Bnumber%5D=2",
-                "next": "http://server/pings?filter%5Bprev%5D=1&page%5Bnumber%5D=2",
-                "prev": None,
+                "meta": {"pagination": {"count": 3, "page": 1, "pages": 2}},
             },
-            "meta": {
-                "pagination": {"count": 3, "page": 1, "pages": 2},
-            },
-        })
+        )
 
     def test_update_nothing(self):
         ping = self.create_model(Ping, message="Hello", prev=self.create_model(Ping, created_by=None, updated_by=None), created_by=None, updated_by=None)
@@ -496,31 +422,25 @@ class PingsApiTestCase(testing.ApiTestCase):
 
         before_update = ping.updated_at
 
-        response = self.patch("http://server/pings/2", {
-            "data": {
-                "type": "ping",
-                "id": "2",
-            },
-        })
+        response = self.patch("http://server/pings/2", {"data": {"type": "ping", "id": "2"}})
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "ping",
-                "id": "2",
-                "links": {"self": "http://server/pings/2"},
-                "attributes": {
-                    "createdAt": self.format_date(ping.created_at),
-                    "updatedAt": self.format_date(before_update),
-                    "message": "Hello",
-                },
-                "relationships": {
-                    "createdBy": {"data": None},
-                    "updatedBy": {"data": None},
-                    "prev": {"data": {"type": "ping", "id": "1"}},
-                    "next": {"data": [{"type": "ping", "id": "3"}], "meta": {"count": 1}},
-                },
+        self.assertEqual(
+            response.json(),
+            {
+                "data": {
+                    "type": "ping",
+                    "id": "2",
+                    "links": {"self": "http://server/pings/2"},
+                    "attributes": {"createdAt": self.format_date(ping.created_at), "updatedAt": self.format_date(before_update), "message": "Hello"},
+                    "relationships": {
+                        "createdBy": {"data": None},
+                        "updatedBy": {"data": None},
+                        "prev": {"data": {"type": "ping", "id": "1"}},
+                        "next": {"data": [{"type": "ping", "id": "3"}], "meta": {"count": 1}},
+                    },
+                }
             },
-        })
+        )
 
         ping = self.get_model(Ping, 2)
         self.assertEqual(ping.message, "Hello")
@@ -534,36 +454,27 @@ class PingsApiTestCase(testing.ApiTestCase):
 
         before_update = ping.updated_at
 
-        response = self.patch("http://server/pings/2", {
-            "data": {
-                "type": "ping",
-                "id": "2",
-                "attributes": {
-                    "message": "Bonjour",
-                },
-            },
-        })
+        response = self.patch("http://server/pings/2", {"data": {"type": "ping", "id": "2", "attributes": {"message": "Bonjour"}}})
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         created_at = self.parse_date(response.json()["data"]["attributes"]["createdAt"])
         updated_at = self.parse_date(response.json()["data"]["attributes"]["updatedAt"])
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "ping",
-                "id": "2",
-                "links": {"self": "http://server/pings/2"},
-                "attributes": {
-                    "createdAt": self.format_date(created_at),
-                    "updatedAt": self.format_date(updated_at),
-                    "message": "Bonjour",
-                },
-                "relationships": {
-                    "createdBy": {"data": None},
-                    "updatedBy": {"data": None},
-                    "prev": {"data": {"type": "ping", "id": "1"}},
-                    "next": {"data": [{"type": "ping", "id": "3"}], "meta": {"count": 1}},
-                },
+        self.assertEqual(
+            response.json(),
+            {
+                "data": {
+                    "type": "ping",
+                    "id": "2",
+                    "links": {"self": "http://server/pings/2"},
+                    "attributes": {"createdAt": self.format_date(created_at), "updatedAt": self.format_date(updated_at), "message": "Bonjour"},
+                    "relationships": {
+                        "createdBy": {"data": None},
+                        "updatedBy": {"data": None},
+                        "prev": {"data": {"type": "ping", "id": "1"}},
+                        "next": {"data": [{"type": "ping", "id": "3"}], "meta": {"count": 1}},
+                    },
+                }
             },
-        })
+        )
 
         ping = self.get_model(Ping, 2)
         self.assertEqual(ping.message, "Bonjour")
@@ -572,38 +483,34 @@ class PingsApiTestCase(testing.ApiTestCase):
         self.assertEqual(ping.next, [self.get_model(Ping, 3)])
 
     def test_update_message_to_none(self):
-        self.create_model(Ping, prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping, created_by=None, updated_by=None), created_by=None, updated_by=None), created_by=None, updated_by=None)
+        self.create_model(
+            Ping,
+            prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping, created_by=None, updated_by=None), created_by=None, updated_by=None),
+            created_by=None,
+            updated_by=None,
+        )
 
-        response = self.patch("http://server/pings/2", {
-            "data": {
-                "type": "ping",
-                "id": "2",
-                "attributes": {
-                    "message": None,
-                },
-            },
-        })
+        response = self.patch("http://server/pings/2", {"data": {"type": "ping", "id": "2", "attributes": {"message": None}}})
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         created_at = self.parse_date(response.json()["data"]["attributes"]["createdAt"])
         updated_at = self.parse_date(response.json()["data"]["attributes"]["updatedAt"])
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "ping",
-                "id": "2",
-                "links": {"self": "http://server/pings/2"},
-                "attributes": {
-                    "createdAt": self.format_date(created_at),
-                    "updatedAt": self.format_date(updated_at),
-                    "message": None,
-                },
-                "relationships": {
-                    "createdBy": {"data": None},
-                    "updatedBy": {"data": None},
-                    "prev": {"data": {"type": "ping", "id": "1"}},
-                    "next": {"data": [{"type": "ping", "id": "3"}], "meta": {"count": 1}},
-                },
+        self.assertEqual(
+            response.json(),
+            {
+                "data": {
+                    "type": "ping",
+                    "id": "2",
+                    "links": {"self": "http://server/pings/2"},
+                    "attributes": {"createdAt": self.format_date(created_at), "updatedAt": self.format_date(updated_at), "message": None},
+                    "relationships": {
+                        "createdBy": {"data": None},
+                        "updatedBy": {"data": None},
+                        "prev": {"data": {"type": "ping", "id": "1"}},
+                        "next": {"data": [{"type": "ping", "id": "3"}], "meta": {"count": 1}},
+                    },
+                }
             },
-        })
+        )
 
         ping = self.get_model(Ping, 2)
         self.assertEqual(ping.message, None)
@@ -611,39 +518,35 @@ class PingsApiTestCase(testing.ApiTestCase):
         self.assertEqual(ping.next, [self.get_model(Ping, 3)])
 
     def test_update_prev__some_to_some(self):
-        self.create_model(Ping, prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping, created_by=None, updated_by=None), created_by=None, updated_by=None), created_by=None, updated_by=None)
+        self.create_model(
+            Ping,
+            prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping, created_by=None, updated_by=None), created_by=None, updated_by=None),
+            created_by=None,
+            updated_by=None,
+        )
         self.create_model(Ping, created_by=None, updated_by=None)
 
-        response = self.patch("http://server/pings/2", {
-            "data": {
-                "type": "ping",
-                "id": "2",
-                "relationships": {
-                    "prev": {"data": {"type": "ping", "id": "4"}},
-                },
-            },
-        })
+        response = self.patch("http://server/pings/2", {"data": {"type": "ping", "id": "2", "relationships": {"prev": {"data": {"type": "ping", "id": "4"}}}}})
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         created_at = self.parse_date(response.json()["data"]["attributes"]["createdAt"])
         updated_at = self.parse_date(response.json()["data"]["attributes"]["updatedAt"])
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "ping",
-                "id": "2",
-                "links": {"self": "http://server/pings/2"},
-                "attributes": {
-                    "createdAt": self.format_date(created_at),
-                    "updatedAt": self.format_date(updated_at),
-                    "message": "Hello",
-                },
-                "relationships": {
-                    "createdBy": {"data": None},
-                    "updatedBy": {"data": None},
-                    "prev": {"data": {"type": "ping", "id": "4"}},
-                    "next": {"data": [{"type": "ping", "id": "3"}], "meta": {"count": 1}},
-                },
+        self.assertEqual(
+            response.json(),
+            {
+                "data": {
+                    "type": "ping",
+                    "id": "2",
+                    "links": {"self": "http://server/pings/2"},
+                    "attributes": {"createdAt": self.format_date(created_at), "updatedAt": self.format_date(updated_at), "message": "Hello"},
+                    "relationships": {
+                        "createdBy": {"data": None},
+                        "updatedBy": {"data": None},
+                        "prev": {"data": {"type": "ping", "id": "4"}},
+                        "next": {"data": [{"type": "ping", "id": "3"}], "meta": {"count": 1}},
+                    },
+                }
             },
-        })
+        )
 
         ping = self.get_model(Ping, 2)
         self.assertEqual(ping.message, "Hello")
@@ -653,38 +556,34 @@ class PingsApiTestCase(testing.ApiTestCase):
     # @todo Add test_update_prev__to_unexisting, where the new prev does not exist
 
     def test_update_prev__some_to_none(self):
-        self.create_model(Ping, prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping, created_by=None, updated_by=None), created_by=None, updated_by=None), created_by=None, updated_by=None)
+        self.create_model(
+            Ping,
+            prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping, created_by=None, updated_by=None), created_by=None, updated_by=None),
+            created_by=None,
+            updated_by=None,
+        )
 
-        response = self.patch("http://server/pings/2", {
-            "data": {
-                "type": "ping",
-                "id": "2",
-                "relationships": {
-                    "prev": {"data": None},
-                },
-            },
-        })
+        response = self.patch("http://server/pings/2", {"data": {"type": "ping", "id": "2", "relationships": {"prev": {"data": None}}}})
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         created_at = self.parse_date(response.json()["data"]["attributes"]["createdAt"])
         updated_at = self.parse_date(response.json()["data"]["attributes"]["updatedAt"])
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "ping",
-                "id": "2",
-                "links": {"self": "http://server/pings/2"},
-                "attributes": {
-                    "createdAt": self.format_date(created_at),
-                    "updatedAt": self.format_date(updated_at),
-                    "message": "Hello",
-                },
-                "relationships": {
-                    "createdBy": {"data": None},
-                    "updatedBy": {"data": None},
-                    "prev": {"data": None},
-                    "next": {"data": [{"type": "ping", "id": "3"}], "meta": {"count": 1}},
-                },
+        self.assertEqual(
+            response.json(),
+            {
+                "data": {
+                    "type": "ping",
+                    "id": "2",
+                    "links": {"self": "http://server/pings/2"},
+                    "attributes": {"createdAt": self.format_date(created_at), "updatedAt": self.format_date(updated_at), "message": "Hello"},
+                    "relationships": {
+                        "createdBy": {"data": None},
+                        "updatedBy": {"data": None},
+                        "prev": {"data": None},
+                        "next": {"data": [{"type": "ping", "id": "3"}], "meta": {"count": 1}},
+                    },
+                }
             },
-        })
+        )
 
         ping = self.get_model(Ping, 2)
         self.assertEqual(ping.message, "Hello")
@@ -695,36 +594,27 @@ class PingsApiTestCase(testing.ApiTestCase):
         self.create_model(Ping, prev=self.create_model(Ping, message="Hello", prev=None, created_by=None, updated_by=None), created_by=None, updated_by=None)
         self.create_model(Ping, created_by=None, updated_by=None)
 
-        response = self.patch("http://server/pings/1", {
-            "data": {
-                "type": "ping",
-                "id": "1",
-                "relationships": {
-                    "prev": {"data": {"type": "ping", "id": "3"}},
-                },
-            },
-        })
+        response = self.patch("http://server/pings/1", {"data": {"type": "ping", "id": "1", "relationships": {"prev": {"data": {"type": "ping", "id": "3"}}}}})
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         created_at = self.parse_date(response.json()["data"]["attributes"]["createdAt"])
         updated_at = self.parse_date(response.json()["data"]["attributes"]["updatedAt"])
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "ping",
-                "id": "1",
-                "links": {"self": "http://server/pings/1"},
-                "attributes": {
-                    "createdAt": self.format_date(created_at),
-                    "updatedAt": self.format_date(updated_at),
-                    "message": "Hello",
-                },
-                "relationships": {
-                    "createdBy": {"data": None},
-                    "updatedBy": {"data": None},
-                    "prev": {"data": {"type": "ping", "id": "3"}},
-                    "next": {"data": [{"type": "ping", "id": "2"}], "meta": {"count": 1}},
-                },
+        self.assertEqual(
+            response.json(),
+            {
+                "data": {
+                    "type": "ping",
+                    "id": "1",
+                    "links": {"self": "http://server/pings/1"},
+                    "attributes": {"createdAt": self.format_date(created_at), "updatedAt": self.format_date(updated_at), "message": "Hello"},
+                    "relationships": {
+                        "createdBy": {"data": None},
+                        "updatedBy": {"data": None},
+                        "prev": {"data": {"type": "ping", "id": "3"}},
+                        "next": {"data": [{"type": "ping", "id": "2"}], "meta": {"count": 1}},
+                    },
+                }
             },
-        })
+        )
 
         ping = self.get_model(Ping, 1)
         self.assertEqual(ping.message, "Hello")
@@ -732,39 +622,37 @@ class PingsApiTestCase(testing.ApiTestCase):
         self.assertEqual(ping.next, [self.get_model(Ping, 2)])
 
     def test_update_next(self):
-        self.create_model(Ping, prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping, created_by=None, updated_by=None), created_by=None, updated_by=None), created_by=None, updated_by=None)
+        self.create_model(
+            Ping,
+            prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping, created_by=None, updated_by=None), created_by=None, updated_by=None),
+            created_by=None,
+            updated_by=None,
+        )
         self.create_model(Ping, created_by=None, updated_by=None)
 
-        response = self.patch("http://server/pings/2", {
-            "data": {
-                "type": "ping",
-                "id": "2",
-                "relationships": {
-                    "next": {"data": [{"type": "ping", "id": "4"}]},
-                },
-            },
-        })
+        response = self.patch(
+            "http://server/pings/2", {"data": {"type": "ping", "id": "2", "relationships": {"next": {"data": [{"type": "ping", "id": "4"}]}}}}
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         created_at = self.parse_date(response.json()["data"]["attributes"]["createdAt"])
         updated_at = self.parse_date(response.json()["data"]["attributes"]["updatedAt"])
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "ping",
-                "id": "2",
-                "links": {"self": "http://server/pings/2"},
-                "attributes": {
-                    "createdAt": self.format_date(created_at),
-                    "updatedAt": self.format_date(updated_at),
-                    "message": "Hello",
-                },
-                "relationships": {
-                    "createdBy": {"data": None},
-                    "updatedBy": {"data": None},
-                    "prev": {"data": {"type": "ping", "id": "1"}},
-                    "next": {"data": [{"type": "ping", "id": "4"}], "meta": {"count": 1}},
-                },
+        self.assertEqual(
+            response.json(),
+            {
+                "data": {
+                    "type": "ping",
+                    "id": "2",
+                    "links": {"self": "http://server/pings/2"},
+                    "attributes": {"createdAt": self.format_date(created_at), "updatedAt": self.format_date(updated_at), "message": "Hello"},
+                    "relationships": {
+                        "createdBy": {"data": None},
+                        "updatedBy": {"data": None},
+                        "prev": {"data": {"type": "ping", "id": "1"}},
+                        "next": {"data": [{"type": "ping", "id": "4"}], "meta": {"count": 1}},
+                    },
+                }
             },
-        })
+        )
 
         ping = self.get_model(Ping, 2)
         self.assertEqual(ping.message, "Hello")
@@ -774,38 +662,34 @@ class PingsApiTestCase(testing.ApiTestCase):
     # @todo Add test_update_next__to_self test_update_prev__to_self (Currently trigger a 'sqlalchemy.exc.CircularDependencyError')
 
     def test_update_next_to_empty(self):
-        self.create_model(Ping, prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping, created_by=None, updated_by=None), created_by=None, updated_by=None), created_by=None, updated_by=None)
+        self.create_model(
+            Ping,
+            prev=self.create_model(Ping, message="Hello", prev=self.create_model(Ping, created_by=None, updated_by=None), created_by=None, updated_by=None),
+            created_by=None,
+            updated_by=None,
+        )
 
-        response = self.patch("http://server/pings/2", {
-            "data": {
-                "type": "ping",
-                "id": "2",
-                "relationships": {
-                    "next": {"data": []},
-                },
-            },
-        })
+        response = self.patch("http://server/pings/2", {"data": {"type": "ping", "id": "2", "relationships": {"next": {"data": []}}}})
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
         created_at = self.parse_date(response.json()["data"]["attributes"]["createdAt"])
         updated_at = self.parse_date(response.json()["data"]["attributes"]["updatedAt"])
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "ping",
-                "id": "2",
-                "links": {"self": "http://server/pings/2"},
-                "attributes": {
-                    "createdAt": self.format_date(created_at),
-                    "updatedAt": self.format_date(updated_at),
-                    "message": "Hello",
-                },
-                "relationships": {
-                    "createdBy": {"data": None},
-                    "updatedBy": {"data": None},
-                    "prev": {"data": {"type": "ping", "id": "1"}},
-                    "next": {"data": [], "meta": {"count": 0}},
-                },
+        self.assertEqual(
+            response.json(),
+            {
+                "data": {
+                    "type": "ping",
+                    "id": "2",
+                    "links": {"self": "http://server/pings/2"},
+                    "attributes": {"createdAt": self.format_date(created_at), "updatedAt": self.format_date(updated_at), "message": "Hello"},
+                    "relationships": {
+                        "createdBy": {"data": None},
+                        "updatedBy": {"data": None},
+                        "prev": {"data": {"type": "ping", "id": "1"}},
+                        "next": {"data": [], "meta": {"count": 0}},
+                    },
+                }
             },
-        })
+        )
 
         ping = self.get_model(Ping, 2)
         self.assertEqual(ping.message, "Hello")
@@ -818,23 +702,10 @@ class PingOwnershipApiTestCase(testing.ApiTestCase):
     polymorphism = {}
 
     def test_create__unauthenticated(self):
-        response = self.post(
-            "http://server/pings",
-            {
-                "data": {
-                    "type": "ping",
-                },
-            },
-        )
+        response = self.post("http://server/pings", {"data": {"type": "ping"}})
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
-        self.assertEqual(
-            response.json()["data"]["relationships"]["createdBy"],
-            {"data": None},
-        )
-        self.assertEqual(
-            response.json()["data"]["relationships"]["updatedBy"],
-            {"data": None},
-        )
+        self.assertEqual(response.json()["data"]["relationships"]["createdBy"], {"data": None})
+        self.assertEqual(response.json()["data"]["relationships"]["updatedBy"], {"data": None})
 
         ping = self.get_model(Ping, 1)
         self.assertEqual(ping.created_by, None)
@@ -846,23 +717,10 @@ class PingOwnershipApiTestCase(testing.ApiTestCase):
         self.create_model(User, username="alice", clear_text_password="alice's password")
         self.login("alice", "alice's password")
 
-        response = self.post(
-            "http://server/pings",
-            {
-                "data": {
-                    "type": "ping",
-                },
-            },
-        )
+        response = self.post("http://server/pings", {"data": {"type": "ping"}})
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.json())
-        self.assertEqual(
-            response.json()["data"]["relationships"]["createdBy"],
-            {"data": {"type": "user", "id": "ckylfa"}},
-        )
-        self.assertEqual(
-            response.json()["data"]["relationships"]["updatedBy"],
-            {"data": {"type": "user", "id": "ckylfa"}},
-        )
+        self.assertEqual(response.json()["data"]["relationships"]["createdBy"], {"data": {"type": "user", "id": "ckylfa"}})
+        self.assertEqual(response.json()["data"]["relationships"]["updatedBy"], {"data": {"type": "user", "id": "ckylfa"}})
 
         self.assertEqual(self.get_model(Ping, 1).created_by, self.get_model(User, 2))
         self.assertEqual(self.get_model(Ping, 1).updated_by, self.get_model(User, 2))
@@ -871,15 +729,7 @@ class PingOwnershipApiTestCase(testing.ApiTestCase):
         ping = self.create_model(Ping, message="Hello", created_by=None, updated_by=None)
         before_update = ping.updated_at
 
-        response = self.patch("http://server/pings/1", {
-            "data": {
-                "type": "ping",
-                "id": "2",
-                "attributes": {
-                    "message": "Bonjour",
-                },
-            },
-        })
+        response = self.patch("http://server/pings/1", {"data": {"type": "ping", "id": "2", "attributes": {"message": "Bonjour"}}})
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
 
         ping = self.get_model(Ping, 1)
@@ -895,15 +745,7 @@ class PingOwnershipApiTestCase(testing.ApiTestCase):
         ping = self.create_model(Ping, message="Hello", created_by=user, updated_by=user)
         before_update = ping.updated_at
 
-        response = self.patch("http://server/pings/1", {
-            "data": {
-                "type": "ping",
-                "id": "2",
-                "attributes": {
-                    "message": "Bonjour",
-                },
-            },
-        })
+        response = self.patch("http://server/pings/1", {"data": {"type": "ping", "id": "2", "attributes": {"message": "Bonjour"}}})
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.json())
 
         ping = self.get_model(Ping, 1)
@@ -921,15 +763,7 @@ class PingOwnershipApiTestCase(testing.ApiTestCase):
 
         self.login("alice", "alice's password")
 
-        response = self.patch("http://server/pings/1", {
-            "data": {
-                "type": "ping",
-                "id": "2",
-                "attributes": {
-                    "message": "Bonjour",
-                },
-            },
-        })
+        response = self.patch("http://server/pings/1", {"data": {"type": "ping", "id": "2", "attributes": {"message": "Bonjour"}}})
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
 
         ping = self.get_model(Ping, 1)
@@ -947,15 +781,7 @@ class PingOwnershipApiTestCase(testing.ApiTestCase):
 
         self.login("alice", "alice's password")
 
-        response = self.patch("http://server/pings/1", {
-            "data": {
-                "type": "ping",
-                "id": "2",
-                "attributes": {
-                    "message": "Bonjour",
-                },
-            },
-        })
+        response = self.patch("http://server/pings/1", {"data": {"type": "ping", "id": "2", "attributes": {"message": "Bonjour"}}})
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.json())
 
         ping = self.get_model(Ping, 1)
@@ -974,15 +800,7 @@ class PingOwnershipApiTestCase(testing.ApiTestCase):
 
         self.login("bob", "bob's password")
 
-        response = self.patch("http://server/pings/1", {
-            "data": {
-                "type": "ping",
-                "id": "2",
-                "attributes": {
-                    "message": "Bonjour",
-                },
-            },
-        })
+        response = self.patch("http://server/pings/1", {"data": {"type": "ping", "id": "2", "attributes": {"message": "Bonjour"}}})
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN, response.json())
 
         ping = self.get_model(Ping, 1)

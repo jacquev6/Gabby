@@ -40,6 +40,7 @@ assert parsed_database_url.scheme == "postgresql+psycopg2"
 
 parsed_database_backups_url = urlparse(settings.DATABASE_BACKUPS_URL)
 
+
 @main.command()
 def backup_database():
     now = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -50,6 +51,7 @@ def backup_database():
 
     pg_dump = subprocess.run(
         [
+            # fmt: off
             "pg_dump",
             "--host", parsed_database_url.hostname,
             "--username", parsed_database_url.username,
@@ -57,6 +59,7 @@ def backup_database():
             "--dbname", parsed_database_url.path[1:],
             "--file", "-",
             "--create", "--column-inserts", "--quote-all-identifiers",
+            # fmt: on
         ],
         env=dict(os.environ, PGPASSWORD=parsed_database_url.password),
         check=True,
@@ -129,18 +132,20 @@ def restore_database(backup_url, yes, patch_according_to_settings):
         sql = re.sub(r" Owner: \w+", f" Owner: {parsed_database_url.username}", sql)
         sql = re.sub(r"-- Name: \w+; Type: DATABASE;", f"-- Name: {parsed_database_url.path[1:]}; Type: DATABASE;", sql)
         # Postgres commands
-        sql = re.sub(r"connect \"\w+\"", f"connect \"{parsed_database_url.path[1:]}\"", sql)
+        sql = re.sub(r"connect \"\w+\"", f'connect "{parsed_database_url.path[1:]}"', sql)
         # Actual SQL
-        sql = re.sub(r" OWNER TO \"\w+\";", f" OWNER TO \"{parsed_database_url.username}\";", sql)
-        sql = re.sub(r"DATABASE \"\w+\"", f"DATABASE \"{parsed_database_url.path[1:]}\"", sql)
+        sql = re.sub(r" OWNER TO \"\w+\";", f' OWNER TO "{parsed_database_url.username}";', sql)
+        sql = re.sub(r"DATABASE \"\w+\"", f'DATABASE "{parsed_database_url.path[1:]}"', sql)
 
     subprocess.run(
         [
+            # fmt: off
             "psql",
             "--host", parsed_placeholder_database_url.hostname,
             "--username", parsed_placeholder_database_url.username,
             "--no-password",
             "--dbname", parsed_placeholder_database_url.path[1:],
+            # fmt: on
         ],
         env=dict(os.environ, PGPASSWORD=parsed_placeholder_database_url.password),
         check=True,
@@ -166,12 +171,14 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
     # Waste data to avoid issues with copyrighted material (extracted from textbooks)
     def waste_char(c):
         return {
+            # fmt: off
             # Keep "abcdef" unchanged for lists (hoping no list is longer than 6 items)
             # Keep "ou" unchanged for French separator2
             "I": "A", "Y": "A",
             "G": "B", "H": "F", "J": "B", "K": "F", "L": "B", "M": "B", "N": "B", "P": "F", "Q": "B", "R": "B", "S": "C", "T": "B", "V": "F", "W": "F", "X": "B", "Z": "C",
             "i": "a", "y": "a",
             "g": "b", "h": "f", "j": "b", "k": "f", "l": "b", "m": "b", "n": "b", "p": "f", "q": "b", "r": "b", "s": "c", "t": "b", "v": "f", "w": "f", "x": "b", "z": "c",
+            # fmt: on
         }.get(c, c)
 
     def waste_string(s):
@@ -180,16 +187,8 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
     def waste_delta(delta):
         attributes = delta.attributes
         if "choices2" in attributes:
-            attributes = {
-                "choices2": {
-                    k: waste_string(v)
-                    for k, v in attributes["choices2"].items()
-                }
-            }
-        return deltas.TextInsertOp(
-            insert=waste_string(delta.insert),
-            attributes=attributes,
-        )
+            attributes = {"choices2": {k: waste_string(v) for k, v in attributes["choices2"].items()}}
+        return deltas.TextInsertOp(insert=waste_string(delta.insert), attributes=attributes)
 
     def waste_deltas(deltas):
         return [waste_delta(delta) for delta in deltas]
@@ -284,13 +283,21 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
     database_engine = database_utils.create_engine(settings.DATABASE_URL)
 
     with orm.Session(database_engine) as session:
-        for batch_index, exercises_batch in enumerate(itertools.batched(limit_query(session.query(orm_models.Exercise).order_by(orm_models.Exercise.id)), tests_per_file)):
+        for batch_index, exercises_batch in enumerate(
+            itertools.batched(limit_query(session.query(orm_models.Exercise).order_by(orm_models.Exercise.id)), tests_per_file)
+        ):
             test = "\n".join(gen(batch_index, exercises_batch))
             if format:
                 # Black does not have a Python API, so use it as a command-line tool.
                 # https://black.readthedocs.io/en/stable/faq.html#does-black-have-an-api
                 t0 = time.perf_counter()
-                test = subprocess.run(["black", "--line-length", "120", "-"], universal_newlines=True, input=test, check=True, capture_output=True).stdout
+                test = subprocess.run(
+                    ["black", "--line-length", "160", "--skip-magic-trailing-comma", "--fast", "-"],
+                    universal_newlines=True,
+                    input=test,
+                    check=True,
+                    capture_output=True,
+                ).stdout
                 print(f"Formatted batch {batch_index} in {time.perf_counter() - t0:.2f}s", file=sys.stderr)
             with open(f"gabby/{output_module}/tests_{batch_index:04}.py", "w") as f:
                 f.write(test)

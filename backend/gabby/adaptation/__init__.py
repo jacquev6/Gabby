@@ -139,10 +139,7 @@ class _Adapter:
 
         if exercise.text_reference != deltas.empty:
             pagelets.append(
-                self.make_pagelet(
-                    list(self.remove_empty_paragraphs(self.adapt_instructions(self.make_annotated_section(exercise.text_reference)))),
-                    [],
-                )
+                self.make_pagelet(list(self.remove_empty_paragraphs(self.adapt_instructions(self.make_annotated_section(exercise.text_reference)))), [])
             )
 
         self.adapted = renderable.Exercise(number=exercise.number, textbook_page=exercise.textbook_page, pagelets=pagelets)
@@ -151,14 +148,7 @@ class _Adapter:
         begin = 0
         end = 0
 
-        section = AnnotatedSection(
-            text="",
-            choices=[],
-            mcq_placeholders=[],
-            manual_items=[],
-            mcq_fields=[],
-            formats=[],
-        )
+        section = AnnotatedSection(text="", choices=[], mcq_placeholders=[], manual_items=[], mcq_fields=[], formats=[])
 
         for delta in section_deltas:
             if delta.kind == "text":
@@ -632,10 +622,7 @@ class _Adapter:
 
         return renderable.AnySequence(
             kind="sequence",
-            contents=[
-                renderable.AnySequence(kind="sequence", contents=original_sentence),
-                renderable.AnySequence(kind="sequence", contents=repeated_sentence),
-            ],
+            contents=[renderable.AnySequence(kind="sequence", contents=original_sentence), renderable.AnySequence(kind="sequence", contents=repeated_sentence)],
             vertical=True,
         )
 
@@ -897,8 +884,7 @@ class AdaptationTestCase(unittest.TestCase):
                         paragraphs = "\n        ".join(
                             line
                             for line in json.dumps(
-                                getattr(pagelet, section_name).model_dump(by_alias=True, exclude_defaults=True)["paragraphs"],
-                                indent=2,
+                                getattr(pagelet, section_name).model_dump(by_alias=True, exclude_defaults=True)["paragraphs"], indent=2
                             ).splitlines()
                         )
                         if paragraphs in seen_paragraphs:
@@ -938,13 +924,13 @@ class AdaptationTestCase(unittest.TestCase):
             expected_instructions = None if expected_pagelet is None else expected_pagelet.instructions.paragraphs
             if actual_instructions != expected_instructions:
                 self.fail(
-                    f"pagelet {pagelet_index} instructions paragraphs are:\n{self.renderable_repr(actual_instructions)}\ninstead of:\n{self.renderable_repr(expected_instructions)}",
+                    f"pagelet {pagelet_index} instructions paragraphs are:\n{self.renderable_repr(actual_instructions)}\ninstead of:\n{self.renderable_repr(expected_instructions)}"
                 )
             actual_wording = None if actual_pagelet is None else actual_pagelet.wording.paragraphs
             expected_wording = None if expected_pagelet is None else expected_pagelet.wording.paragraphs
             if actual_wording != expected_wording:
                 self.fail(
-                    f"pagelet {pagelet_index} wording paragraphs are:\n{self.renderable_repr(actual_wording)}\ninstead of:\n{self.renderable_repr(expected_wording)}",
+                    f"pagelet {pagelet_index} wording paragraphs are:\n{self.renderable_repr(actual_wording)}\ninstead of:\n{self.renderable_repr(expected_wording)}"
                 )
         if actual_adapted != expected_adapted:
             self.fail(f"adapted is:\n{self.renderable_repr(actual_adapted)}\ninstead of:\n{self.renderable_repr(expected_adapted)}")

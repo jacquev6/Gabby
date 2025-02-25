@@ -14,13 +14,17 @@ class Choices2(PydanticBase):
     # This field's serialization alias has inconsistent casing. Fixing it will require a data migration.
     mcq_field_uid: Annotated[str | None, PydanticField(serialization_alias="mcqFieldUid", validation_alias=AliasChoices("mcqFieldUid", "mcq_field_uid"))] = None
 
+
 class TextInsertOpAttributes(PydanticBase):
     italic: bool = False
     bold: bool = False
     choices2: Choices2 | None = None
-    mcq_placeholder: Annotated[bool, PydanticField(serialization_alias="mcq-placeholder", validation_alias=AliasChoices("mcq-placeholder", "mcq_placeholder"))] = False
+    mcq_placeholder: Annotated[
+        bool, PydanticField(serialization_alias="mcq-placeholder", validation_alias=AliasChoices("mcq-placeholder", "mcq_placeholder"))
+    ] = False
     manual_item: Annotated[bool, PydanticField(serialization_alias="manual-item", validation_alias=AliasChoices("manual-item", "manual_item"))] = False
     sel: int | None = None
+
 
 class TextInsertOp(PydanticBase):
     kind: Annotated[Literal["text"], PydanticField(exclude=True)] = "text"
@@ -32,7 +36,9 @@ class McqFieldEmbedInsertOpInsert(PydanticBase):
     kind: Annotated[Literal["mcq-field"], PydanticField(exclude=True)] = "mcq-field"
     mcq_field: Annotated[str, PydanticField(serialization_alias="mcq-field", validation_alias=AliasChoices("mcq-field", "mcq_field"))]
 
+
 EmbedInsertOpInsert = McqFieldEmbedInsertOpInsert
+
 
 class EmbedInsertOp(PydanticBase):
     kind: Annotated[Literal["embed"], PydanticField(exclude=True)] = "embed"
@@ -45,6 +51,7 @@ Deltas = list[TextInsertOp | EmbedInsertOp]
 def to_list(deltas: Deltas):
     return [d.model_dump(by_alias=True, exclude_defaults=True) for d in deltas]
 
+
 empty = [TextInsertOp(insert="\n", attributes={})]
 
 empty_as_list = to_list(empty)
@@ -53,7 +60,4 @@ empty_as_string = '[{"insert": "\\n", "attributes": {}}]'
 
 
 def make(deltas):
-    return [
-        TextInsertOp(**d) if isinstance(d["insert"], str) else EmbedInsertOp(**d)
-        for d in deltas
-    ]
+    return [TextInsertOp(**d) if isinstance(d["insert"], str) else EmbedInsertOp(**d) for d in deltas]

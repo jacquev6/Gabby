@@ -15,9 +15,6 @@ assert not context.is_offline_mode()
 connectable = database_utils.create_engine(settings.DATABASE_URL)
 
 with connectable.connect() as connection:
-    context.configure(
-        connection=connection,
-        target_metadata=database_utils.OrmBase.metadata,
-    )
+    context.configure(connection=connection, target_metadata=database_utils.OrmBase.metadata)
     with context.begin_transaction():
         context.run_migrations()

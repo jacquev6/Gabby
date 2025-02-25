@@ -16,12 +16,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[
-                    d.TextInsertOp(insert="instructions\n", attributes={}),
-                ],
-                wording=[
-                    d.TextInsertOp(insert="The wording of this exercise is a single sentence.\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="The wording of this exercise is a single sentence.\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -92,9 +88,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                     d.TextInsertOp(insert="jkl", attributes={"sel": 4}),
                     d.TextInsertOp(insert="\n", attributes={}),
                 ],
-                wording=[
-                    d.TextInsertOp(insert="wording\n", attributes={}),
-                ],
+                wording=[d.TextInsertOp(insert="wording\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -154,13 +148,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[
-                    d.TextInsertOp(insert="abc", attributes={"sel": 1}),
-                    d.TextInsertOp(insert="\n", attributes={}),
-                ],
-                wording=[
-                    d.TextInsertOp(insert="wording\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="abc", attributes={"sel": 1}), d.TextInsertOp(insert="\n", attributes={})],
+                wording=[d.TextInsertOp(insert="wording\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -202,12 +191,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[
-                    d.TextInsertOp(insert="instructions\nare\n\non\n\nmultiple\nlines\n", attributes={}),
-                ],
-                wording=[
-                    d.TextInsertOp(insert="wording\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="instructions\nare\n\non\n\nmultiple\nlines\n", attributes={})],
+                wording=[d.TextInsertOp(insert="wording\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -259,12 +244,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[
-                    d.TextInsertOp(insert="instructions\n", attributes={}),
-                ],
-                wording=[
-                    d.TextInsertOp(insert="wording is\n\non\n\nmultiple lines\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="wording is\n\non\n\nmultiple lines\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -318,12 +299,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[
-                    d.TextInsertOp(insert="{tag|abc}\n", attributes={}),
-                ],
-                wording=[
-                    d.TextInsertOp(insert="{tag|def}\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="{tag|abc}\n", attributes={})],
+                wording=[d.TextInsertOp(insert="{tag|def}\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -383,12 +360,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[
-                    d.TextInsertOp(insert="   abc   \n", attributes={}),
-                ],
-                wording=[
-                    d.TextInsertOp(insert="   def   \n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="   abc   \n", attributes={})],
+                wording=[d.TextInsertOp(insert="   def   \n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -428,18 +401,10 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[
-                    d.TextInsertOp(insert="instructions\n", attributes={}),
-                ],
-                wording=[
-                    d.TextInsertOp(insert="wording\n", attributes={}),
-                ],
-                example=[
-                    d.TextInsertOp(insert="This is the example.\n", attributes={}),
-                ],
-                clue=[
-                    d.TextInsertOp(insert="This is the clue.\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="wording\n", attributes={})],
+                example=[d.TextInsertOp(insert="This is the example.\n", attributes={})],
+                clue=[d.TextInsertOp(insert="This is the clue.\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -507,12 +472,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[
-                    d.TextInsertOp(insert="instructions\n", attributes={}),
-                ],
-                wording=[
-                    d.TextInsertOp(insert="wording\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="wording\n", attributes={})],
                 example=[
                     d.TextInsertOp(insert="abc", attributes={"sel": 1}),
                     d.TextInsertOp(insert=" ", attributes={}),
@@ -586,12 +547,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[
-                    d.TextInsertOp(insert="Selectionne les articles.\n", attributes={}),
-                ],
-                wording=[
-                    d.TextInsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="Selectionne les articles.\n", attributes={})],
+                wording=[d.TextInsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -675,12 +632,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[
-                    d.TextInsertOp(insert="Selectionne les articles.\n", attributes={}),
-                ],
-                wording=[
-                    d.TextInsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="Selectionne les articles.\n", attributes={})],
+                wording=[d.TextInsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -762,12 +715,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[
-                    d.TextInsertOp(insert="Selectionne les articles.\n", attributes={}),
-                ],
-                wording=[
-                    d.TextInsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="Selectionne les articles.\n", attributes={})],
+                wording=[d.TextInsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -849,12 +798,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[
-                    d.TextInsertOp(insert="Selectionne les articles.\n", attributes={}),
-                ],
-                wording=[
-                    d.TextInsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="Selectionne les articles.\n", attributes={})],
+                wording=[d.TextInsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -938,12 +883,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[
-                    d.TextInsertOp(insert="Selectionne les articles.\n", attributes={}),
-                ],
-                wording=[
-                    d.TextInsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="Selectionne les articles.\n", attributes={})],
+                wording=[d.TextInsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -1025,12 +966,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[
-                    d.TextInsertOp(insert="Selectionne les articles.\n", attributes={}),
-                ],
-                wording=[
-                    d.TextInsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="Selectionne les articles.\n", attributes={})],
+                wording=[d.TextInsertOp(insert="La maison est belle. L'école est fermée. L’automobile est verte.\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(

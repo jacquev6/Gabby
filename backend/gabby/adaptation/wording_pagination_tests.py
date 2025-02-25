@@ -411,11 +411,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                     ),
                     r.Pagelet(
                         instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.Section(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="d")]),
-                            ]
-                        ),
+                        wording=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="d")])]),
                     ),
                 ],
             ),
@@ -454,27 +450,15 @@ class WordingPaginationTestCase(AdaptationTestCase):
                         instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
                         wording=r.Section(
                             paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="worda"),
-                                    ]
-                                ),
+                                r.Paragraph(contents=[r.Text(kind="text", text="worda")]),
                                 r.Paragraph(contents=[r.Text(kind="text", text="wordb")]),
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="wordc"),
-                                    ]
-                                ),
+                                r.Paragraph(contents=[r.Text(kind="text", text="wordc")]),
                             ]
                         ),
                     ),
                     r.Pagelet(
                         instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.Section(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="wordd")]),
-                            ]
-                        ),
+                        wording=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="wordd")])]),
                     ),
                 ],
             ),
@@ -535,11 +519,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                     ),
                     r.Pagelet(
                         instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.Section(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="wordd")]),
-                            ]
-                        ),
+                        wording=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="wordd")])]),
                     ),
                 ],
             ),
@@ -579,19 +559,9 @@ class WordingPaginationTestCase(AdaptationTestCase):
                         instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
                         wording=r.Section(
                             paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="word"),
-                                        r.Text(kind="text", text=","),
-                                    ]
-                                ),
+                                r.Paragraph(contents=[r.Text(kind="text", text="word"), r.Text(kind="text", text=",")]),
                                 r.Paragraph(contents=[r.Text(kind="text", text="word")]),
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="word"),
-                                        r.Text(kind="text", text="!"),
-                                    ]
-                                ),
+                                r.Paragraph(contents=[r.Text(kind="text", text="word"), r.Text(kind="text", text="!")]),
                             ]
                         ),
                     ),
@@ -738,7 +708,7 @@ class WordingPaginationTestCase(AdaptationTestCase):
                                         r.Text(kind="text", text="pas"),
                                         r.Text(kind="text", text="."),
                                     ]
-                                ),
+                                )
                             ]
                         ),
                     ),
@@ -785,27 +755,12 @@ class WordingPaginationTestCase(AdaptationTestCase):
                         instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Instructions")])]),
                         wording=r.Section(
                             paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="This"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                    ],
-                                ),
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="the"),
-                                    ],
-                                ),
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="wording"),
-                                        r.Text(kind="text", text="."),
-                                    ],
-                                ),
-                            ],
+                                r.Paragraph(contents=[r.Text(kind="text", text="This"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="is")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="the")]),
+                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Text(kind="text", text=".")]),
+                            ]
                         ),
-                    ),
+                    )
                 ],
             ),
         )

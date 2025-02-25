@@ -25,21 +25,11 @@ def add(session, class_, **kwds):
 
 
 def create_admin_user_fixture(session):
-    admin = User(
-        username="admin",
-        clear_text_password="password",
-        created_by_id=1,
-        updated_by_id=1,
-    )
+    admin = User(username="admin", clear_text_password="password", created_by_id=1, updated_by_id=1)
     session.add(admin)
     session.flush()
     assert admin.id == 1
-    add(
-        session,
-        UserEmailAddress,
-        user=admin,
-        address="jacquev6+gabby-dev-admin@gmail.com",
-    )
+    add(session, UserEmailAddress, user=admin, address="jacquev6+gabby-dev-admin@gmail.com")
     return admin
 
 
@@ -53,54 +43,13 @@ def get_or_create_admin(session):
 def create_test_users_fixture(session):
     admin = get_or_create_admin(session)
     # @todo Understand why using the relationships instead of the ids results in a not-null violation
-    alice = add(
-        session,
-        User,
-        username="alice",
-        clear_text_password="alice-password",
-        created_by_id=admin.id,
-        updated_by_id=admin.id,
-    )
-    add(
-        session,
-        UserEmailAddress,
-        user=alice,
-        address="jacquev6+gabby-dev-alice@gmail.com",
-    )
-    bob = add(
-        session,
-        User,
-        username=None,
-        clear_text_password="bob-password",
-        created_by_id=admin.id,
-        updated_by_id=admin.id,
-    )
-    add(
-        session,
-        UserEmailAddress,
-        user=bob,
-        address="jacquev6+gabby-dev-bob-1@gmail.com",
-    )
-    add(
-        session,
-        UserEmailAddress,
-        user=bob,
-        address="jacquev6+gabby-dev-bob-2@gmail.com",
-    )
-    charles = add(
-        session,
-        User,
-        username=None,
-        clear_text_password="charles-password",
-        created_by_id=admin.id,
-        updated_by_id=admin.id,
-    )
-    add(
-        session,
-        UserEmailAddress,
-        user=charles,
-        address="jacquev6+gabby-dev-charles@gmail.com",
-    )
+    alice = add(session, User, username="alice", clear_text_password="alice-password", created_by_id=admin.id, updated_by_id=admin.id)
+    add(session, UserEmailAddress, user=alice, address="jacquev6+gabby-dev-alice@gmail.com")
+    bob = add(session, User, username=None, clear_text_password="bob-password", created_by_id=admin.id, updated_by_id=admin.id)
+    add(session, UserEmailAddress, user=bob, address="jacquev6+gabby-dev-bob-1@gmail.com")
+    add(session, UserEmailAddress, user=bob, address="jacquev6+gabby-dev-bob-2@gmail.com")
+    charles = add(session, User, username=None, clear_text_password="charles-password", created_by_id=admin.id, updated_by_id=admin.id)
+    add(session, UserEmailAddress, user=charles, address="jacquev6+gabby-dev-charles@gmail.com")
 
 
 def create_test_pings_fixture(session):
@@ -154,14 +103,7 @@ def create_test_pings_fixture(session):
 
 def create_empty_project_fixture(session):
     admin = get_or_create_admin(session)
-    add(
-        session,
-        Project,
-        title="Test project",
-        description="This is a test project, created empty in a fixture.",
-        created_by=admin,
-        updated_by=admin,
-    )
+    add(session, Project, title="Test project", description="This is a test project, created empty in a fixture.", created_by=admin, updated_by=admin)
 
 
 def create_test_exercises_fixture(session):
@@ -171,51 +113,20 @@ def create_test_exercises_fixture(session):
 
 def create_test_exercises_1(session, admin):
     pdffile1 = add(
-        session,
-        PdfFile,
-        bytes_count=484714,
-        pages_count=2,
-        sha256="f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c",
-        created_by=admin,
+        session, PdfFile, bytes_count=484714, pages_count=2, sha256="f8e399a0130a4ec30821821664972e7ad3cf94bc7335db13c1d381494427707c", created_by=admin
     )
     add(session, PdfFileNaming, pdf_file=pdffile1, name="test.pdf", created_by=admin)
     project1 = add(
-        session,
-        Project,
-        title="Premier projet de test",
-        description="Ce projet contient des exercices d'un seul manuel.",
-        created_by=admin,
-        updated_by=admin,
+        session, Project, title="Premier projet de test", description="Ce projet contient des exercices d'un seul manuel.", created_by=admin, updated_by=admin
     )
     project2 = add(
-        session,
-        Project,
-        title="Deuxième projet de test",
-        description="Ce projet contient des exercices originaux.",
-        created_by=admin,
-        updated_by=admin,
+        session, Project, title="Deuxième projet de test", description="Ce projet contient des exercices originaux.", created_by=admin, updated_by=admin
     )
     textbook1 = add(
-        session,
-        Textbook,
-        project=project1,
-        title="Français CE2",
-        publisher="Slabeuf",
-        year=2021,
-        isbn="1234567890123",
-        created_by=admin,
-        updated_by=admin,
+        session, Textbook, project=project1, title="Français CE2", publisher="Slabeuf", year=2021, isbn="1234567890123", created_by=admin, updated_by=admin
     )
     add(
-        session,
-        Section,
-        textbook=textbook1,
-        pdf_file=pdffile1,
-        textbook_start_page=6,
-        pdf_file_start_page=1,
-        pages_count=2,
-        created_by=admin,
-        updated_by=admin,
+        session, Section, textbook=textbook1, pdf_file=pdffile1, textbook_start_page=6, pdf_file_start_page=1, pages_count=2, created_by=admin, updated_by=admin
     )
     add(
         session,
@@ -239,25 +150,14 @@ def create_test_exercises_1(session, admin):
             deltas.TextInsertOp(insert="Complète avec : ", attributes={}),
             deltas.TextInsertOp(
                 insert="le, une, un, des, tu, elles, ils",
-                attributes={
-                    "choices2": {
-                        "start": "",
-                        "separator1": ",",
-                        "separator2": "",
-                        "stop": "",
-                        "placeholder": "...",
-                    }
-                },
+                attributes={"choices2": {"start": "", "separator1": ",", "separator2": "", "stop": "", "placeholder": "..."}},
             ),
             deltas.TextInsertOp(insert=".\r\nPuis, souligne les verbes.\n", attributes={}),
         ],
         example=deltas.empty,
         clue=[deltas.TextInsertOp(insert="Il peut y avoir plusieurs solutions.\n", attributes={})],
         wording=[
-            deltas.TextInsertOp(
-                insert="... vide\r\n... vident\r\n... dépenses\r\n... dépensent\r\n... savon\r\n... savons\r\n... commande\n",
-                attributes={},
-            )
+            deltas.TextInsertOp(insert="... vide\r\n... vident\r\n... dépenses\r\n... dépensent\r\n... savon\r\n... savons\r\n... commande\n", attributes={})
         ],
         adaptation=Adaptation(
             kind="multiple-choices",
@@ -295,25 +195,10 @@ def create_test_exercises_1(session, admin):
             )
         ],
         number="4",
-        instructions=[
-            deltas.TextInsertOp(
-                insert="Écris une phrase en respectant l'ordre des classes grammaticales indiquées.\n",
-                attributes={},
-            )
-        ],
-        example=[
-            deltas.TextInsertOp(
-                insert="pronom personnel / verbe / déterminant / nom commun :\r\nJe mange une pomme.\n",
-                attributes={},
-            )
-        ],
+        instructions=[deltas.TextInsertOp(insert="Écris une phrase en respectant l'ordre des classes grammaticales indiquées.\n", attributes={})],
+        example=[deltas.TextInsertOp(insert="pronom personnel / verbe / déterminant / nom commun :\r\nJe mange une pomme.\n", attributes={})],
         clue=[deltas.TextInsertOp(insert="\n", attributes={})],
-        wording=[
-            deltas.TextInsertOp(
-                insert="nom propre / verbe / déterminant / adjectif / nom commun\n",
-                attributes={},
-            )
-        ],
+        wording=[deltas.TextInsertOp(insert="nom propre / verbe / déterminant / adjectif / nom commun\n", attributes={})],
         created_by=admin,
         updated_by=admin,
     )
@@ -335,12 +220,7 @@ def create_test_exercises_1(session, admin):
             )
         ],
         number="9",
-        instructions=[
-            deltas.TextInsertOp(
-                insert="Recopie l’intrus qui se cache dans chaque liste et écris sa classe.\n",
-                attributes={},
-            )
-        ],
+        instructions=[deltas.TextInsertOp(insert="Recopie l’intrus qui se cache dans chaque liste et écris sa classe.\n", attributes={})],
         example=[deltas.TextInsertOp(insert="\n", attributes={})],
         clue=[deltas.TextInsertOp(insert="\n", attributes={})],
         wording=[
@@ -387,12 +267,7 @@ def create_test_exercises_1(session, admin):
         textbook=None,
         textbook_page=None,
         number="L3",
-        instructions=[
-            deltas.TextInsertOp(
-                insert="Prendre le temps de faire aussi des choses banales.\n",
-                attributes={},
-            )
-        ],
+        instructions=[deltas.TextInsertOp(insert="Prendre le temps de faire aussi des choses banales.\n", attributes={})],
         example=[deltas.TextInsertOp(insert="\n", attributes={})],
         clue=[deltas.TextInsertOp(insert="\n", attributes={})],
         wording=[deltas.TextInsertOp(insert="\n", attributes={})],
@@ -473,25 +348,14 @@ def create_test_exercises_2(session, admin):
                 attributes={},
             )
         ],
-        text_reference=[
-            deltas.TextInsertOp(
-                insert="Mon quotidien, pour les 10-14 ans, www.monquotidien.fr, 13 septembre 2014.\n",
-                attributes={},
-            ),
-        ],
+        text_reference=[deltas.TextInsertOp(insert="Mon quotidien, pour les 10-14 ans, www.monquotidien.fr, 13 septembre 2014.\n", attributes={})],
         adaptation=Adaptation(
             kind="generic",
             wording_paragraphs_per_pagelet=3,
             single_item_per_paragraph=False,
             placeholder_for_fill_with_free_text=None,
-            items=api_models.TokensItems(
-                kind="tokens",
-                words=True,
-                punctuation=True,
-            ),
-            items_are_selectable=api_models.Selectable(
-                colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-            ),
+            items=api_models.TokensItems(kind="tokens", words=True, punctuation=True),
+            items_are_selectable=api_models.Selectable(colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"]),
             items_are_boxed=False,
             items_have_mcq_beside=False,
             items_have_mcq_below=False,
@@ -539,20 +403,10 @@ def create_test_exercises_2(session, admin):
             ),
         ],
         number="11",
-        instructions=[
-            deltas.TextInsertOp(
-                insert="Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.\n",
-                attributes={},
-            )
-        ],
+        instructions=[deltas.TextInsertOp(insert="Ajoute le suffixe –eur aux verbes.\nIndique la classe des mots fabriqués.\n", attributes={})],
         example=[deltas.TextInsertOp(insert="\n", attributes={})],
         clue=[deltas.TextInsertOp(insert="\n", attributes={})],
-        wording=[
-            deltas.TextInsertOp(
-                insert="nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\ninventer ➞ … ◆ livrer ➞ …\n",
-                attributes={},
-            )
-        ],
+        wording=[deltas.TextInsertOp(insert="nager ➞ … ◆ tracter ➞ … ◆ manger ➞ … ◆\ninventer ➞ … ◆ livrer ➞ …\n", attributes={})],
         adaptation=Adaptation(
             kind="fill-with-free-text",
             wording_paragraphs_per_pagelet=None,
@@ -592,16 +446,7 @@ def create_test_exercises_2(session, admin):
         instructions=[
             deltas.TextInsertOp(insert="Réponds par ", attributes={}),
             deltas.TextInsertOp(
-                insert="vrai ou faux",
-                attributes={
-                    "choices2": {
-                        "start": "",
-                        "separator1": "ou",
-                        "separator2": "",
-                        "stop": "",
-                        "placeholder": "@",
-                    },
-                },
+                insert="vrai ou faux", attributes={"choices2": {"start": "", "separator1": "ou", "separator2": "", "stop": "", "placeholder": "@"}}
             ),
             deltas.TextInsertOp(insert=".\n", attributes={}),
         ],
@@ -719,41 +564,15 @@ def create_test_exercises_3(session, admin):
             deltas.TextInsertOp(insert=" et ", attributes={}),
             deltas.TextInsertOp(
                 insert="(il pleuvra / il pleut / il pleuvait)",
-                attributes={
-                    "choices2": {
-                        "start": "(",
-                        "separator1": "/",
-                        "separator2": "",
-                        "stop": ")",
-                        "placeholder": "",
-                    }
-                },
+                attributes={"choices2": {"start": "(", "separator1": "/", "separator2": "", "stop": ")", "placeholder": ""}},
             ),
             deltas.TextInsertOp(insert=".\nc. Aujourd'hui il fait @1 et il @2. ", attributes={}),
             deltas.TextInsertOp(
-                insert="(gris / beau)",
-                attributes={
-                    "choices2": {
-                        "start": "(",
-                        "separator1": "/",
-                        "separator2": "",
-                        "stop": ")",
-                        "placeholder": "@1",
-                    }
-                },
+                insert="(gris / beau)", attributes={"choices2": {"start": "(", "separator1": "/", "separator2": "", "stop": ")", "placeholder": "@1"}}
             ),
             deltas.TextInsertOp(insert=" ", attributes={}),
             deltas.TextInsertOp(
-                insert="[pleut * pleuvra]",
-                attributes={
-                    "choices2": {
-                        "start": "[",
-                        "separator1": "*",
-                        "separator2": "",
-                        "stop": "]",
-                        "placeholder": "@2",
-                    }
-                },
+                insert="[pleut * pleuvra]", attributes={"choices2": {"start": "[", "separator1": "*", "separator2": "", "stop": "]", "placeholder": "@2"}}
             ),
             deltas.TextInsertOp(insert="\n\n", attributes={}),
         ],
@@ -786,23 +605,9 @@ def create_empty_textbook(session, stem):
     with open(demo_pdf_path, "rb") as f:
         pages_count = len(PyPDF2.PdfReader(f).pages)
     admin = get_or_create_admin(session)
-    pdffile1 = add(
-        session,
-        PdfFile,
-        bytes_count=bytes_count,
-        pages_count=pages_count,
-        sha256=sha256,
-        created_by=admin,
-    )
+    pdffile1 = add(session, PdfFile, bytes_count=bytes_count, pages_count=pages_count, sha256=sha256, created_by=admin)
     add(session, PdfFileNaming, pdf_file=pdffile1, name=f"{stem}.pdf", created_by=admin)
-    project1 = add(
-        session,
-        Project,
-        title=f"{stem.capitalize()} project",
-        description="",
-        created_by=admin,
-        updated_by=admin,
-    )
+    project1 = add(session, Project, title=f"{stem.capitalize()} project", description="", created_by=admin, updated_by=admin)
     textbook1 = add(
         session,
         Textbook,
@@ -2888,27 +2693,9 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                             r.MultipleChoicesInput(
                                                 kind="multipleChoicesInput",
                                                 choices=[
-                                                    [
-                                                        r.Text(kind="text", text="il"),
-                                                        r.Whitespace(
-                                                            kind="whitespace",
-                                                        ),
-                                                        r.Text(kind="text", text="pleuvra"),
-                                                    ],
-                                                    [
-                                                        r.Text(kind="text", text="il"),
-                                                        r.Whitespace(
-                                                            kind="whitespace",
-                                                        ),
-                                                        r.Text(kind="text", text="pleut"),
-                                                    ],
-                                                    [
-                                                        r.Text(kind="text", text="il"),
-                                                        r.Whitespace(
-                                                            kind="whitespace",
-                                                        ),
-                                                        r.Text(kind="text", text="pleuvait"),
-                                                    ],
+                                                    [r.Text(kind="text", text="il"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="pleuvra")],
+                                                    [r.Text(kind="text", text="il"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="pleut")],
+                                                    [r.Text(kind="text", text="il"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="pleuvait")],
                                                 ],
                                             ),
                                             r.Text(kind="text", text="."),
@@ -2928,8 +2715,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                             r.Text(kind="text", text="fait"),
                                             r.Whitespace(kind="whitespace"),
                                             r.MultipleChoicesInput(
-                                                kind="multipleChoicesInput",
-                                                choices=[[r.Text(kind="text", text="gris")], [r.Text(kind="text", text="beau")]],
+                                                kind="multipleChoicesInput", choices=[[r.Text(kind="text", text="gris")], [r.Text(kind="text", text="beau")]]
                                             ),
                                             r.Whitespace(kind="whitespace"),
                                             r.Text(kind="text", text="et"),

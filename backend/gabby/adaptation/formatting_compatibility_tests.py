@@ -15,22 +15,10 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                     d.TextInsertOp(insert="The instructions.", attributes={"bold": True, "italic": True}),
                     d.TextInsertOp(insert="\n", attributes={}),
                 ],
-                wording=[
-                    d.TextInsertOp(insert="The wording.", attributes={"bold": True, "italic": True}),
-                    d.TextInsertOp(insert="\n", attributes={}),
-                ],
-                example=[
-                    d.TextInsertOp(insert="The example.", attributes={"bold": True, "italic": True}),
-                    d.TextInsertOp(insert="\n", attributes={}),
-                ],
-                clue=[
-                    d.TextInsertOp(insert="The clue.", attributes={"bold": True, "italic": True}),
-                    d.TextInsertOp(insert="\n", attributes={}),
-                ],
-                text_reference=[
-                    d.TextInsertOp(insert="The reference.", attributes={"bold": True, "italic": True}),
-                    d.TextInsertOp(insert="\n", attributes={}),
-                ],
+                wording=[d.TextInsertOp(insert="The wording.", attributes={"bold": True, "italic": True}), d.TextInsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="The example.", attributes={"bold": True, "italic": True}), d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="The clue.", attributes={"bold": True, "italic": True}), d.TextInsertOp(insert="\n", attributes={})],
+                text_reference=[d.TextInsertOp(insert="The reference.", attributes={"bold": True, "italic": True}), d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -117,18 +105,9 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[
-                    d.TextInsertOp(insert="The instructions.", attributes={"bold": True, "sel": 1}),
-                    d.TextInsertOp(insert="\n", attributes={}),
-                ],
-                example=[
-                    d.TextInsertOp(insert="The example.", attributes={"bold": True, "sel": 1}),
-                    d.TextInsertOp(insert="\n", attributes={}),
-                ],
-                clue=[
-                    d.TextInsertOp(insert="The clue.", attributes={"bold": True, "sel": 1}),
-                    d.TextInsertOp(insert="\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="The instructions.", attributes={"bold": True, "sel": 1}), d.TextInsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="The example.", attributes={"bold": True, "sel": 1}), d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="The clue.", attributes={"bold": True, "sel": 1}), d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -189,18 +168,9 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[
-                    d.TextInsertOp(insert="The instructions.", attributes={"italic": True, "sel": 1}),
-                    d.TextInsertOp(insert="\n", attributes={}),
-                ],
-                example=[
-                    d.TextInsertOp(insert="The example.", attributes={"italic": True, "sel": 1}),
-                    d.TextInsertOp(insert="\n", attributes={}),
-                ],
-                clue=[
-                    d.TextInsertOp(insert="The clue.", attributes={"italic": True, "sel": 1}),
-                    d.TextInsertOp(insert="\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="The instructions.", attributes={"italic": True, "sel": 1}), d.TextInsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="The example.", attributes={"italic": True, "sel": 1}), d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="The clue.", attributes={"italic": True, "sel": 1}), d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -263,22 +233,18 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 textbook_page=None,
                 instructions=[
                     d.TextInsertOp(
-                        insert="alpha, b",
-                        attributes={"choices2": {"start": "", "separator1": ",", "separator2": "ou", "stop": "", "placeholder": "..."}},
+                        insert="alpha, b", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "ou", "stop": "", "placeholder": "..."}}
                     ),
                     d.TextInsertOp(
                         insert="rav",
                         attributes={"choices2": {"start": "", "separator1": ",", "separator2": "ou", "stop": "", "placeholder": "..."}, "bold": True},
                     ),
                     d.TextInsertOp(
-                        insert="o ou charlie",
-                        attributes={"choices2": {"start": "", "separator1": ",", "separator2": "ou", "stop": "", "placeholder": "..."}},
+                        insert="o ou charlie", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "ou", "stop": "", "placeholder": "..."}}
                     ),
                     d.TextInsertOp(insert="\n", attributes={}),
                 ],
-                wording=[
-                    d.TextInsertOp(insert="...\n", attributes={}),
-                ],
+                wording=[d.TextInsertOp(insert="...\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -305,25 +271,15 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                 r.Paragraph(
                                     contents=[
                                         r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
-                                        r.Whitespace(
-                                            kind="whitespace",
-                                        ),
+                                        r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",
-                                            contents=[
-                                                r.Text(kind="text", text="b"),
-                                                r.Text(kind="text", bold=True, text="rav"),
-                                                r.Text(kind="text", text="o"),
-                                            ],
+                                            contents=[r.Text(kind="text", text="b"), r.Text(kind="text", bold=True, text="rav"), r.Text(kind="text", text="o")],
                                             boxed=True,
                                         ),
-                                        r.Whitespace(
-                                            kind="whitespace",
-                                        ),
+                                        r.Whitespace(kind="whitespace"),
                                         r.Text(kind="text", text="ou"),
-                                        r.Whitespace(
-                                            kind="whitespace",
-                                        ),
+                                        r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="charlie")], boxed=True),
                                     ]
                                 )
@@ -337,11 +293,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                             kind="multipleChoicesInput",
                                             choices=[
                                                 [r.Text(kind="text", text="alpha")],
-                                                [
-                                                    r.Text(kind="text", text="b"),
-                                                    r.Text(kind="text", bold=True, text="rav"),
-                                                    r.Text(kind="text", text="o"),
-                                                ],
+                                                [r.Text(kind="text", text="b"), r.Text(kind="text", bold=True, text="rav"), r.Text(kind="text", text="o")],
                                                 [r.Text(kind="text", text="charlie")],
                                             ],
                                         )
@@ -361,22 +313,17 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 textbook_page=None,
                 instructions=[
                     d.TextInsertOp(
-                        insert="alpha, b",
-                        attributes={"choices2": {"start": "", "separator1": ",", "separator2": "ou", "stop": "", "placeholder": ""}},
+                        insert="alpha, b", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "ou", "stop": "", "placeholder": ""}}
                     ),
                     d.TextInsertOp(
-                        insert="rav",
-                        attributes={"choices2": {"start": "", "separator1": ",", "separator2": "ou", "stop": "", "placeholder": ""}, "bold": True},
+                        insert="rav", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "ou", "stop": "", "placeholder": ""}, "bold": True}
                     ),
                     d.TextInsertOp(
-                        insert="o ou charlie",
-                        attributes={"choices2": {"start": "", "separator1": ",", "separator2": "ou", "stop": "", "placeholder": ""}},
+                        insert="o ou charlie", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "ou", "stop": "", "placeholder": ""}}
                     ),
                     d.TextInsertOp(insert="\n", attributes={}),
                 ],
-                wording=[
-                    d.TextInsertOp(insert="blah\n", attributes={}),
-                ],
+                wording=[d.TextInsertOp(insert="blah\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -448,8 +395,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 wording=[
                     d.TextInsertOp(insert="... ", attributes={}),
                     d.TextInsertOp(
-                        insert="(alpha, b",
-                        attributes={"choices2": {"start": "(", "separator1": ",", "separator2": "ou", "stop": ")", "placeholder": "..."}},
+                        insert="(alpha, b", attributes={"choices2": {"start": "(", "separator1": ",", "separator2": "ou", "stop": ")", "placeholder": "..."}}
                     ),
                     d.TextInsertOp(
                         insert="rav",
@@ -491,11 +437,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                             kind="multipleChoicesInput",
                                             choices=[
                                                 [r.Text(kind="text", text="alpha")],
-                                                [
-                                                    r.Text(kind="text", text="b"),
-                                                    r.Text(kind="text", bold=True, text="rav"),
-                                                    r.Text(kind="text", text="o"),
-                                                ],
+                                                [r.Text(kind="text", text="b"), r.Text(kind="text", bold=True, text="rav"), r.Text(kind="text", text="o")],
                                                 [r.Text(kind="text", text="charlie")],
                                             ],
                                         )
@@ -515,16 +457,13 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 textbook_page=None,
                 wording=[
                     d.TextInsertOp(
-                        insert="alpha, b",
-                        attributes={"choices2": {"start": "", "separator1": ",", "separator2": "ou", "stop": "", "placeholder": ""}},
+                        insert="alpha, b", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "ou", "stop": "", "placeholder": ""}}
                     ),
                     d.TextInsertOp(
-                        insert="rav",
-                        attributes={"choices2": {"start": "", "separator1": ",", "separator2": "ou", "stop": "", "placeholder": ""}, "bold": True},
+                        insert="rav", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "ou", "stop": "", "placeholder": ""}, "bold": True}
                     ),
                     d.TextInsertOp(
-                        insert="o ou charlie",
-                        attributes={"choices2": {"start": "", "separator1": ",", "separator2": "ou", "stop": "", "placeholder": ""}},
+                        insert="o ou charlie", attributes={"choices2": {"start": "", "separator1": ",", "separator2": "ou", "stop": "", "placeholder": ""}}
                     ),
                     d.TextInsertOp(insert="\n", attributes={}),
                 ],
@@ -558,11 +497,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                             kind="multipleChoicesInput",
                                             choices=[
                                                 [r.Text(kind="text", text="alpha")],
-                                                [
-                                                    r.Text(kind="text", text="b"),
-                                                    r.Text(kind="text", bold=True, text="rav"),
-                                                    r.Text(kind="text", text="o"),
-                                                ],
+                                                [r.Text(kind="text", text="b"), r.Text(kind="text", bold=True, text="rav"), r.Text(kind="text", text="o")],
                                                 [r.Text(kind="text", text="charlie")],
                                             ],
                                         )
@@ -583,8 +518,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 instructions=[
                     d.TextInsertOp(insert="Instructions ", attributes={}),
                     d.TextInsertOp(
-                        insert="alpha ou bravo",
-                        attributes={"choices2": {"start": "", "separator1": "ou", "separator2": "", "stop": "", "placeholder": ""}},
+                        insert="alpha ou bravo", attributes={"choices2": {"start": "", "separator1": "ou", "separator2": "", "stop": "", "placeholder": ""}}
                     ),
                     d.TextInsertOp(insert="\n", attributes={}),
                 ],
@@ -1193,9 +1127,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                     ),
                     d.TextInsertOp(insert="\n", attributes={}),
                 ],
-                wording=[
-                    d.TextInsertOp(insert="...\n", attributes={}),
-                ],
+                wording=[d.TextInsertOp(insert="...\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -1265,9 +1197,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                     ),
                     d.TextInsertOp(insert="\n", attributes={}),
                 ],
-                wording=[
-                    d.TextInsertOp(insert="...\n", attributes={}),
-                ],
+                wording=[d.TextInsertOp(insert="...\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -1337,9 +1267,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                     ),
                     d.TextInsertOp(insert="\n", attributes={}),
                 ],
-                wording=[
-                    d.TextInsertOp(insert="...\n", attributes={}),
-                ],
+                wording=[d.TextInsertOp(insert="...\n", attributes={})],
                 adaptation=Adaptation(
                     kind="generic",
                     wording_paragraphs_per_pagelet=3,
@@ -1442,7 +1370,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                                 [r.Text(kind="text", text="bravo")],
                                                 [r.Text(kind="text", text="charlie")],
                                             ],
-                                        ),
+                                        )
                                     ]
                                 )
                             ]
@@ -1497,7 +1425,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                                 [r.Text(kind="text", text="bravo")],
                                                 [r.Text(kind="text", text="charlie")],
                                             ],
-                                        ),
+                                        )
                                     ]
                                 )
                             ]
@@ -1552,7 +1480,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                                 [r.Text(kind="text", text="bravo")],
                                                 [r.Text(kind="text", text="charlie")],
                                             ],
-                                        ),
+                                        )
                                     ]
                                 )
                             ]
@@ -1570,8 +1498,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 instructions=[
                     d.TextInsertOp(insert="Instructions ", attributes={}),
                     d.TextInsertOp(
-                        insert="alpha ou bravo",
-                        attributes={"choices2": {"start": "", "separator1": "ou", "separator2": "", "stop": "", "placeholder": ""}},
+                        insert="alpha ou bravo", attributes={"choices2": {"start": "", "separator1": "ou", "separator2": "", "stop": "", "placeholder": ""}}
                     ),
                     d.TextInsertOp(insert="\n", attributes={}),
                 ],
@@ -1666,8 +1593,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 instructions=[
                     d.TextInsertOp(insert="Instructions ", attributes={}),
                     d.TextInsertOp(
-                        insert="alpha ou bravo",
-                        attributes={"choices2": {"start": "", "separator1": "ou", "separator2": "", "stop": "", "placeholder": ""}},
+                        insert="alpha ou bravo", attributes={"choices2": {"start": "", "separator1": "ou", "separator2": "", "stop": "", "placeholder": ""}}
                     ),
                     d.TextInsertOp(insert="\n", attributes={}),
                 ],
@@ -1762,8 +1688,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 instructions=[
                     d.TextInsertOp(insert="Instructions ", attributes={}),
                     d.TextInsertOp(
-                        insert="alpha ou bravo",
-                        attributes={"choices2": {"start": "", "separator1": "ou", "separator2": "", "stop": "", "placeholder": ""}},
+                        insert="alpha ou bravo", attributes={"choices2": {"start": "", "separator1": "ou", "separator2": "", "stop": "", "placeholder": ""}}
                     ),
                     d.TextInsertOp(insert="\n", attributes={}),
                 ],

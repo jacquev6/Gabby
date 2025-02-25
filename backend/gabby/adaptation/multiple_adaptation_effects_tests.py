@@ -23,9 +23,7 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                     ),
                     d.TextInsertOp(insert="\n", attributes={}),
                 ],
-                wording=[
-                    d.TextInsertOp(insert="The wording of this ... is a @@@ sentence.\n", attributes={}),
-                ],
+                wording=[d.TextInsertOp(insert="The wording of this ... is a @@@ sentence.\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(

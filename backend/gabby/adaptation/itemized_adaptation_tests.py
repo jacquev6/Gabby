@@ -909,9 +909,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     d.TextInsertOp(insert="jkl", attributes={"sel": 4}),
                     d.TextInsertOp(insert="\n", attributes={}),
                 ],
-                wording=[
-                    d.TextInsertOp(insert="wording\n", attributes={}),
-                ],
+                wording=[d.TextInsertOp(insert="wording\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -2577,7 +2575,7 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                     d.TextInsertOp(insert=")\n", attributes={}),
                 ],
                 wording=[
-                    d.TextInsertOp(insert="a. les tables / les chaises / les fauteuils\nb. les enfants / les personnes âgées / les adultes\n", attributes={}),
+                    d.TextInsertOp(insert="a. les tables / les chaises / les fauteuils\nb. les enfants / les personnes âgées / les adultes\n", attributes={})
                 ],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],

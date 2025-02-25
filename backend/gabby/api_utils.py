@@ -5,14 +5,8 @@ from .wrapping import OrmWrapper, wrap, unwrap
 
 
 def create_item(session, model, **kwargs):
-    kwargs = {
-        key: unwrap(value) if isinstance(value, OrmWrapper) else value
-        for key, value in kwargs.items()
-    }
-    kwargs = {
-        key: [unwrap(v) if isinstance(v, OrmWrapper) else v for v in value] if isinstance(value, list) else value
-        for key, value in kwargs.items()
-    }
+    kwargs = {key: unwrap(value) if isinstance(value, OrmWrapper) else value for key, value in kwargs.items()}
+    kwargs = {key: [unwrap(v) if isinstance(v, OrmWrapper) else v for v in value] if isinstance(value, list) else value for key, value in kwargs.items()}
     item = model(**kwargs)
     session.add(item)
     try:
@@ -33,12 +27,7 @@ def get_page(session, query, first_index, page_size):
         count_query = count_query.where(query.whereclause)
 
     count = session.scalar(count_query)
-    items = [
-        wrap(item)
-        for (item,) in session.execute(
-            query.offset(first_index).limit(page_size)
-        )
-    ]
+    items = [wrap(item) for (item,) in session.execute(query.offset(first_index).limit(page_size))]
     return (count, items)
 
 
@@ -55,4 +44,3 @@ def delete_item(session, item):
         session.flush()
     except sql.exc.IntegrityError as e:
         raise HTTPException(status_code=400, detail=e.orig.diag.constraint_name)
-

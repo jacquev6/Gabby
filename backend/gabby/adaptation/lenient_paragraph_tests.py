@@ -145,11 +145,9 @@ class LenientParagraphTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[
-                    d.TextInsertOp(insert="instructions\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="instructions\n", attributes={})],
                 wording=[
-                    d.TextInsertOp(insert="This is a strict paragraph, with... some punctuation.\n\nAnd this, is a... lenient paragraph\n", attributes={}),
+                    d.TextInsertOp(insert="This is a strict paragraph, with... some punctuation.\n\nAnd this, is a... lenient paragraph\n", attributes={})
                 ],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
@@ -228,11 +226,9 @@ class LenientParagraphTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[
-                    d.TextInsertOp(insert="instructions\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="instructions\n", attributes={})],
                 wording=[
-                    d.TextInsertOp(insert="This is a strict paragraph, with... some punctuation.\n\nAnd this, is a... lenient paragraph\n", attributes={}),
+                    d.TextInsertOp(insert="This is a strict paragraph, with... some punctuation.\n\nAnd this, is a... lenient paragraph\n", attributes={})
                 ],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
@@ -311,11 +307,9 @@ class LenientParagraphTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[
-                    d.TextInsertOp(insert="instructions\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="instructions\n", attributes={})],
                 wording=[
-                    d.TextInsertOp(insert="This is a ... strict paragraph. With some punctuation.\n\nAnd this, is a ... lenient paragraph\n", attributes={}),
+                    d.TextInsertOp(insert="This is a ... strict paragraph. With some punctuation.\n\nAnd this, is a ... lenient paragraph\n", attributes={})
                 ],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
@@ -404,7 +398,7 @@ class LenientParagraphTestCase(AdaptationTestCase):
                     d.TextInsertOp(insert=".\n", attributes={}),
                 ],
                 wording=[
-                    d.TextInsertOp(insert="This is a ... strict paragraph. With some punctuation.\n\nAnd this, is a ... lenient paragraph\n", attributes={}),
+                    d.TextInsertOp(insert="This is a ... strict paragraph. With some punctuation.\n\nAnd this, is a ... lenient paragraph\n", attributes={})
                 ],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],

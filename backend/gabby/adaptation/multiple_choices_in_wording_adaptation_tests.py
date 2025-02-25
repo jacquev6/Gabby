@@ -16,9 +16,7 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[
-                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="Choose wisely.\n", attributes={})],
                 wording=[
                     d.TextInsertOp(insert="A ", attributes={}),
                     d.TextInsertOp(insert="a/b/c", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": ""}}),
@@ -95,22 +93,11 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[
-                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="Choose wisely.\n", attributes={})],
                 wording=[
                     d.TextInsertOp(insert="A ", attributes={}),
                     d.TextInsertOp(
-                        insert="(blah/blih)",
-                        attributes={
-                            "choices2": {
-                                "start": "(",
-                                "separator1": "/",
-                                "separator2": "",
-                                "stop": ")",
-                                "placeholder": "",
-                            },
-                        },
+                        insert="(blah/blih)", attributes={"choices2": {"start": "(", "separator1": "/", "separator2": "", "stop": ")", "placeholder": ""}}
                     ),
                     d.TextInsertOp(insert=".\n", attributes={}),
                 ],
@@ -175,22 +162,12 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[
-                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="Choose wisely.\n", attributes={})],
                 wording=[
                     d.TextInsertOp(insert="A ", attributes={}),
                     d.TextInsertOp(
                         insert="  (  blah  /  blih  )  ",
-                        attributes={
-                            "choices2": {
-                                "start": "(",
-                                "separator1": "/",
-                                "separator2": "",
-                                "stop": ")",
-                                "placeholder": "",
-                            },
-                        },
+                        attributes={"choices2": {"start": "(", "separator1": "/", "separator2": "", "stop": ")", "placeholder": ""}},
                     ),
                     d.TextInsertOp(insert=".\n", attributes={}),
                 ],
@@ -255,22 +232,11 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[
-                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="Choose wisely.\n", attributes={})],
                 wording=[
                     d.TextInsertOp(insert="A ", attributes={}),
                     d.TextInsertOp(
-                        insert="blah/blih",
-                        attributes={
-                            "choices2": {
-                                "start": "",
-                                "separator1": "/",
-                                "separator2": "",
-                                "stop": "",
-                                "placeholder": "",
-                            },
-                        },
+                        insert="blah/blih", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "", "stop": "", "placeholder": ""}}
                     ),
                     d.TextInsertOp(insert=".\n", attributes={}),
                 ],
@@ -335,22 +301,11 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[
-                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="Choose wisely.\n", attributes={})],
                 wording=[
                     d.TextInsertOp(insert="A ", attributes={}),
                     d.TextInsertOp(
-                        insert="blah / blih",
-                        attributes={
-                            "choices2": {
-                                "start": "",
-                                "separator1": "",
-                                "separator2": "",
-                                "stop": "",
-                                "placeholder": "",
-                            },
-                        },
+                        insert="blah / blih", attributes={"choices2": {"start": "", "separator1": "", "separator2": "", "stop": "", "placeholder": ""}}
                     ),
                     d.TextInsertOp(insert=".\n", attributes={}),
                 ],
@@ -400,13 +355,9 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                                             choices=[
                                                 [
                                                     r.Text(kind="text", text="blah"),
-                                                    r.Whitespace(
-                                                        kind="whitespace",
-                                                    ),
+                                                    r.Whitespace(kind="whitespace"),
                                                     r.Text(kind="text", text="/"),
-                                                    r.Whitespace(
-                                                        kind="whitespace",
-                                                    ),
+                                                    r.Whitespace(kind="whitespace"),
                                                     r.Text(kind="text", text="blih"),
                                                 ]
                                             ],
@@ -426,22 +377,11 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[
-                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="Choose wisely.\n", attributes={})],
                 wording=[
                     d.TextInsertOp(insert="A ", attributes={}),
                     d.TextInsertOp(
-                        insert="((blah//blih))",
-                        attributes={
-                            "choices2": {
-                                "start": "((",
-                                "separator1": "//",
-                                "separator2": "",
-                                "stop": "))",
-                                "placeholder": "",
-                            },
-                        },
+                        insert="((blah//blih))", attributes={"choices2": {"start": "((", "separator1": "//", "separator2": "", "stop": "))", "placeholder": ""}}
                     ),
                     d.TextInsertOp(insert=".\n", attributes={}),
                 ],
@@ -506,22 +446,11 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[
-                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="Choose wisely.\n", attributes={})],
                 wording=[
                     d.TextInsertOp(insert="A ", attributes={}),
                     d.TextInsertOp(
-                        insert="{blah|blih}",
-                        attributes={
-                            "choices2": {
-                                "start": "{",
-                                "separator1": "|",
-                                "separator2": "",
-                                "stop": "}",
-                                "placeholder": "",
-                            },
-                        },
+                        insert="{blah|blih}", attributes={"choices2": {"start": "{", "separator1": "|", "separator2": "", "stop": "}", "placeholder": ""}}
                     ),
                     d.TextInsertOp(insert=".\n", attributes={}),
                 ],
@@ -586,22 +515,11 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[
-                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="Choose wisely.\n", attributes={})],
                 wording=[
                     d.TextInsertOp(insert="The sky is @@. ", attributes={}),
                     d.TextInsertOp(
-                        insert="(blue/red)",
-                        attributes={
-                            "choices2": {
-                                "start": "(",
-                                "separator1": "/",
-                                "separator2": "",
-                                "stop": ")",
-                                "placeholder": "@@",
-                            },
-                        },
+                        insert="(blue/red)", attributes={"choices2": {"start": "(", "separator1": "/", "separator2": "", "stop": ")", "placeholder": "@@"}}
                     ),
                     d.TextInsertOp(insert=" \n", attributes={}),
                 ],
@@ -670,21 +588,10 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[
-                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="Choose wisely.\n", attributes={})],
                 wording=[
                     d.TextInsertOp(
-                        insert="(blue/red)",
-                        attributes={
-                            "choices2": {
-                                "start": "(",
-                                "separator1": "/",
-                                "separator2": "",
-                                "stop": ")",
-                                "placeholder": "...",
-                            },
-                        },
+                        insert="(blue/red)", attributes={"choices2": {"start": "(", "separator1": "/", "separator2": "", "stop": ")", "placeholder": "..."}}
                     ),
                     d.TextInsertOp(insert=" The sky is ....\n", attributes={}),
                 ],
@@ -753,21 +660,10 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[
-                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="Choose wisely.\n", attributes={})],
                 wording=[
                     d.TextInsertOp(
-                        insert="(blue/yellow)",
-                        attributes={
-                            "choices2": {
-                                "start": "(",
-                                "separator1": "/",
-                                "separator2": "",
-                                "stop": ")",
-                                "placeholder": "...",
-                            },
-                        },
+                        insert="(blue/yellow)", attributes={"choices2": {"start": "(", "separator1": "/", "separator2": "", "stop": ")", "placeholder": "..."}}
                     ),
                     d.TextInsertOp(insert=" The sky is ..., the sun is ....\n", attributes={}),
                 ],
@@ -849,34 +745,14 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[
-                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="Choose wisely.\n", attributes={})],
                 wording=[
                     d.TextInsertOp(
-                        insert="(blue/red)",
-                        attributes={
-                            "choices2": {
-                                "start": "(",
-                                "separator1": "/",
-                                "separator2": "",
-                                "stop": ")",
-                                "placeholder": "@1",
-                            },
-                        },
+                        insert="(blue/red)", attributes={"choices2": {"start": "(", "separator1": "/", "separator2": "", "stop": ")", "placeholder": "@1"}}
                     ),
                     d.TextInsertOp(insert=" ", attributes={}),
                     d.TextInsertOp(
-                        insert="[green*yellow]",
-                        attributes={
-                            "choices2": {
-                                "start": "[",
-                                "separator1": "*",
-                                "separator2": "",
-                                "stop": "]",
-                                "placeholder": "@2",
-                            },
-                        },
+                        insert="[green*yellow]", attributes={"choices2": {"start": "[", "separator1": "*", "separator2": "", "stop": "]", "placeholder": "@2"}}
                     ),
                     d.TextInsertOp(insert=" The sky is @1, the sun is @2.\n", attributes={}),
                 ],
@@ -958,35 +834,15 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[
-                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="Choose wisely.\n", attributes={})],
                 wording=[
                     d.TextInsertOp(insert="The sky is @@. ", attributes={}),
                     d.TextInsertOp(
-                        insert="(blue/red)",
-                        attributes={
-                            "choices2": {
-                                "start": "(",
-                                "separator1": "/",
-                                "separator2": "",
-                                "stop": ")",
-                                "placeholder": "@@",
-                            },
-                        },
+                        insert="(blue/red)", attributes={"choices2": {"start": "(", "separator1": "/", "separator2": "", "stop": ")", "placeholder": "@@"}}
                     ),
                     d.TextInsertOp(insert="\n\nThe sun is @@. ", attributes={}),
                     d.TextInsertOp(
-                        insert="(green/yellow)",
-                        attributes={
-                            "choices2": {
-                                "start": "(",
-                                "separator1": "/",
-                                "separator2": "",
-                                "stop": ")",
-                                "placeholder": "@@",
-                            },
-                        },
+                        insert="(green/yellow)", attributes={"choices2": {"start": "(", "separator1": "/", "separator2": "", "stop": ")", "placeholder": "@@"}}
                     ),
                     d.TextInsertOp(insert="\n", attributes={}),
                 ],
@@ -1071,35 +927,15 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[
-                    d.TextInsertOp(insert="Choose wisely.\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="Choose wisely.\n", attributes={})],
                 wording=[
                     d.TextInsertOp(insert="The sky is @1, ", attributes={}),
                     d.TextInsertOp(
-                        insert="(blue/red)",
-                        attributes={
-                            "choices2": {
-                                "start": "(",
-                                "separator1": "/",
-                                "separator2": "",
-                                "stop": ")",
-                                "placeholder": "@1",
-                            },
-                        },
+                        insert="(blue/red)", attributes={"choices2": {"start": "(", "separator1": "/", "separator2": "", "stop": ")", "placeholder": "@1"}}
                     ),
                     d.TextInsertOp(insert=" ", attributes={}),
                     d.TextInsertOp(
-                        insert="[green*yellow]",
-                        attributes={
-                            "choices2": {
-                                "start": "[",
-                                "separator1": "*",
-                                "separator2": "",
-                                "stop": "]",
-                                "placeholder": "@2",
-                            },
-                        },
+                        insert="[green*yellow]", attributes={"choices2": {"start": "[", "separator1": "*", "separator2": "", "stop": "]", "placeholder": "@2"}}
                     ),
                     d.TextInsertOp(insert=" the sun is @2.\n", attributes={}),
                 ],

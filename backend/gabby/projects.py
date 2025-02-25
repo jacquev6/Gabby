@@ -22,8 +22,7 @@ class Project(OrmBase, CreatedUpdatedByAtMixin):
 
     textbooks: orm.Mapped[list["Textbook"]] = orm.relationship(back_populates="project")
     exercises: orm.Mapped[list["Exercise"]] = orm.relationship(
-        back_populates="project",
-        order_by="[Exercise.textbook_id, Exercise.textbook_page, Exercise.number]",
+        back_populates="project", order_by="[Exercise.textbook_id, Exercise.textbook_page, Exercise.number]"
     )
 
 
@@ -37,56 +36,23 @@ class ProjectsResource:
 
     sqids = make_sqids(singular_name)
 
-    def create_item(
-        self,
-        title,
-        description,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
-        return create_item(
-            session, Project,
-            title=title,
-            description=description,
-            created_by=authenticated_user,
-            updated_by=authenticated_user,
-        )
+    def create_item(self, title, description, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
+        return create_item(session, Project, title=title, description=description, created_by=authenticated_user, updated_by=authenticated_user)
 
-    def get_item(
-        self,
-        id,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
+    def get_item(self, id, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
         return get_item(session, Project, ProjectsResource.sqids.decode(id)[0])
 
-    def get_page(
-        self,
-        first_index,
-        page_size,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
+    def get_page(self, first_index, page_size, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
         query = sql.select(Project)
         return get_page(session, query, first_index, page_size)
 
     @contextmanager
-    def save_item(
-        self,
-        item,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
+    def save_item(self, item, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
         yield
         item.updated_by = authenticated_user
         save_item(session, item)
 
-    def delete_item(
-        self,
-        item,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
+    def delete_item(self, item, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
         delete_item(session, item)
 
 

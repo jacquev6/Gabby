@@ -31,10 +31,7 @@ def upgrade():
             adaptation["settings"].setdefault("items_are_boxed", False)
             adaptation["settings"].setdefault("items_have_mcq_beside", False)
             adaptation["settings"].setdefault("items_have_mcq_below", False)
-            adaptation["settings"].setdefault("items_have_predefined_mcq", {
-                "grammatical_gender": False,
-                "grammatical_number": False,
-            })
+            adaptation["settings"].setdefault("items_have_predefined_mcq", {"grammatical_gender": False, "grammatical_number": False})
             adaptation["settings"].setdefault("items_are_repeated_with_mcq", False)
             adaptation["settings"].setdefault("show_arrow_before_mcq_fields", False)
             adaptation["settings"].setdefault("show_mcq_choices_by_default", False)

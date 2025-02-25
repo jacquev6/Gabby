@@ -16,12 +16,8 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[
-                    d.TextInsertOp(insert="instructions\n", attributes={}),
-                ],
-                wording=[
-                    d.TextInsertOp(insert="The wording of this ... is a ... sentence.\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="The wording of this ... is a ... sentence.\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -82,12 +78,8 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=None,
-                instructions=[
-                    d.TextInsertOp(insert="instructions\n", attributes={}),
-                ],
-                wording=[
-                    d.TextInsertOp(insert="@ a @\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="@ a @\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -135,12 +127,8 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[
-                    d.TextInsertOp(insert="instructions\nare\n\non\n\nmultiple\nlines\n", attributes={}),
-                ],
-                wording=[
-                    d.TextInsertOp(insert="wording\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="instructions\nare\n\non\n\nmultiple\nlines\n", attributes={})],
+                wording=[d.TextInsertOp(insert="wording\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -186,12 +174,8 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[
-                    d.TextInsertOp(insert="instructions\n", attributes={}),
-                ],
-                wording=[
-                    d.TextInsertOp(insert="foo toto : ...\n\nbar : ...\n\nbaz : ...\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="foo toto : ...\n\nbar : ...\n\nbaz : ...\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -259,12 +243,8 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[
-                    d.TextInsertOp(insert="{tag|abc}\n", attributes={}),
-                ],
-                wording=[
-                    d.TextInsertOp(insert="{tag|def}\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="{tag|abc}\n", attributes={})],
+                wording=[d.TextInsertOp(insert="{tag|def}\n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -324,12 +304,8 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[
-                    d.TextInsertOp(insert="   abc   \n", attributes={}),
-                ],
-                wording=[
-                    d.TextInsertOp(insert="   def   \n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="   abc   \n", attributes={})],
+                wording=[d.TextInsertOp(insert="   def   \n", attributes={})],
                 example=[d.TextInsertOp(insert="\n", attributes={})],
                 clue=[d.TextInsertOp(insert="\n", attributes={})],
                 adaptation=Adaptation(
@@ -365,18 +341,10 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
             e.Exercise(
                 number="number",
                 textbook_page=42,
-                instructions=[
-                    d.TextInsertOp(insert="instructions\n", attributes={}),
-                ],
-                wording=[
-                    d.TextInsertOp(insert="This @ is the wording.\n", attributes={}),
-                ],
-                example=[
-                    d.TextInsertOp(insert="This @ is the example.\n", attributes={}),
-                ],
-                clue=[
-                    d.TextInsertOp(insert="This @ is the clue.\n", attributes={}),
-                ],
+                instructions=[d.TextInsertOp(insert="instructions\n", attributes={})],
+                wording=[d.TextInsertOp(insert="This @ is the wording.\n", attributes={})],
+                example=[d.TextInsertOp(insert="This @ is the example.\n", attributes={})],
+                clue=[d.TextInsertOp(insert="This @ is the clue.\n", attributes={})],
                 adaptation=Adaptation(
                     kind="fill-with-free-text",
                     wording_paragraphs_per_pagelet=3,

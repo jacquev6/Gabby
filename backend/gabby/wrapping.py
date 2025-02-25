@@ -7,6 +7,7 @@ from sqlalchemy.orm import DeclarativeBase, collections
 # @todo Consider removing wrappers entierly: they might not be required with SQLAlchemy
 # @todo Consider supporting client-provided hooks (per concrete class) for setattr and getattr in fastjsonapi to make the interface more flexible
 
+
 class OrmWrapper:
     __slots__ = ["_wrapped"]
 
@@ -53,6 +54,8 @@ def make_sqids(name):
     # print(f"IDs of the first few {name}s:", " ".join(sqids.encode([i]) for i in range(1, 10)), flush=True)
     # @todo Return a wrapper that checks if the sqid is "canonical" (cf. https://sqids.org/faq#valid-ids)
     return sqids
+
+
 # IDs of the first few exercises: wbqloc bylced jkrudc ufefwu orxbzq ahbwey vodhqn dymwin xnyegk
 # IDs of the first few pdf_file_namings: tnahml wmyxrm yogtxq oexfhs bnqavf rhjojh pdbrtv uqodzk jgtoux
 # IDs of the first few projects: xkopqm fryrbl ztmcex dillfm oqwpdb pbiqru handbn whkaxt tlfeqv
@@ -71,6 +74,7 @@ def orm_wrapper_with_sqids(sqids):
 
 
 _wrappers = {}
+
 
 def set_wrapper(type, base_wrapper):
     class Wrapper(base_wrapper):

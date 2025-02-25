@@ -32,31 +32,16 @@ def downgrade():
         "adaptations",
         sa.Column("id", sa.INTEGER(), autoincrement=True, nullable=False),
         sa.Column("kind", sa.VARCHAR(length=16), autoincrement=False, nullable=False),
-        sa.Column(
-            "created_at",
-            postgresql.TIMESTAMP(timezone=True),
-            server_default=sa.text("now()"),
-            autoincrement=False,
-            nullable=False,
-        ),
+        sa.Column("created_at", postgresql.TIMESTAMP(timezone=True), server_default=sa.text("now()"), autoincrement=False, nullable=False),
         sa.Column("created_by_id", sa.INTEGER(), autoincrement=False, nullable=False),
-        sa.Column(
-            "updated_at",
-            postgresql.TIMESTAMP(timezone=True),
-            server_default=sa.text("now()"),
-            autoincrement=False,
-            nullable=False,
-        ),
+        sa.Column("updated_at", postgresql.TIMESTAMP(timezone=True), server_default=sa.text("now()"), autoincrement=False, nullable=False),
         sa.Column("updated_by_id", sa.INTEGER(), autoincrement=False, nullable=False),
         sa.ForeignKeyConstraint(["created_by_id"], ["users.id"], name="adaptations_created_by_id_fkey"),
         sa.ForeignKeyConstraint(["updated_by_id"], ["users.id"], name="adaptations_updated_by_id_fkey"),
         sa.PrimaryKeyConstraint("id", name="adaptations_pkey"),
     )
     op.add_column("exercises", sa.Column("adaptation_id", sa.INTEGER(), autoincrement=False, nullable=True))
-    op.add_column(
-        "exercises",
-        sa.Column("bounding_rectangle", postgresql.JSON(astext_type=sa.Text()), autoincrement=False, nullable=True),
-    )
+    op.add_column("exercises", sa.Column("bounding_rectangle", postgresql.JSON(astext_type=sa.Text()), autoincrement=False, nullable=True))
     op.create_foreign_key("exercises_adaptation_id_fkey", "exercises", "adaptations", ["adaptation_id"], ["id"])
     op.create_unique_constraint("exercises_adaptation_id_key", "exercises", ["adaptation_id"])
     op.create_table(
@@ -83,26 +68,12 @@ def downgrade():
         sa.Column("id", sa.INTEGER(), autoincrement=True, nullable=False),
         sa.Column("exercise_id", sa.INTEGER(), autoincrement=False, nullable=False),
         sa.Column("event", sa.VARCHAR(), autoincrement=False, nullable=False),
-        sa.Column(
-            "created_at",
-            postgresql.TIMESTAMP(timezone=True),
-            server_default=sa.text("now()"),
-            autoincrement=False,
-            nullable=False,
-        ),
+        sa.Column("created_at", postgresql.TIMESTAMP(timezone=True), server_default=sa.text("now()"), autoincrement=False, nullable=False),
         sa.Column("created_by_id", sa.INTEGER(), autoincrement=False, nullable=False),
-        sa.Column(
-            "updated_at",
-            postgresql.TIMESTAMP(timezone=True),
-            server_default=sa.text("now()"),
-            autoincrement=False,
-            nullable=False,
-        ),
+        sa.Column("updated_at", postgresql.TIMESTAMP(timezone=True), server_default=sa.text("now()"), autoincrement=False, nullable=False),
         sa.Column("updated_by_id", sa.INTEGER(), autoincrement=False, nullable=False),
         sa.ForeignKeyConstraint(["created_by_id"], ["users.id"], name="extraction_events_created_by_id_fkey"),
-        sa.ForeignKeyConstraint(
-            ["exercise_id"], ["exercises.id"], name="extraction_events_exercise_id_fkey", ondelete="CASCADE"
-        ),
+        sa.ForeignKeyConstraint(["exercise_id"], ["exercises.id"], name="extraction_events_exercise_id_fkey", ondelete="CASCADE"),
         sa.ForeignKeyConstraint(["updated_by_id"], ["users.id"], name="extraction_events_updated_by_id_fkey"),
         sa.PrimaryKeyConstraint("id", name="extraction_events_pkey"),
     )
