@@ -1,3 +1,4 @@
+import MonocolorSection from './MonocolorSection.vue'
 import TricolorSection from './TricolorSection.vue'
 
 describe('TricolorSection for MultipleAdaptationEffectsTestCase', () => {
@@ -6,7 +7,7 @@ describe('TricolorSection for MultipleAdaptationEffectsTestCase', () => {
   })
 
   it('renders gabby.adaptation.multiple_adaptation_effects_tests.MultipleAdaptationEffectsTestCase.test_fill_with_free_text_and_multiple_choices_in_instructions pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -52,8 +53,7 @@ describe('TricolorSection for MultipleAdaptationEffectsTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -147,7 +147,6 @@ describe('TricolorSection for MultipleAdaptationEffectsTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -155,7 +154,7 @@ describe('TricolorSection for MultipleAdaptationEffectsTestCase', () => {
   })
 
   it('renders gabby.adaptation.multiple_adaptation_effects_tests.MultipleAdaptationEffectsTestCase.test_many_adaptations_in_same_exercise pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -208,8 +207,7 @@ describe('TricolorSection for MultipleAdaptationEffectsTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -291,7 +289,6 @@ describe('TricolorSection for MultipleAdaptationEffectsTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -299,7 +296,7 @@ describe('TricolorSection for MultipleAdaptationEffectsTestCase', () => {
   })
 
   it('renders gabby.adaptation.multiple_adaptation_effects_tests.MultipleAdaptationEffectsTestCase.test_multiple_choices_in_instructions_and_wording pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -356,8 +353,7 @@ describe('TricolorSection for MultipleAdaptationEffectsTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -463,7 +459,6 @@ describe('TricolorSection for MultipleAdaptationEffectsTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })

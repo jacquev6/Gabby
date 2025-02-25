@@ -1,3 +1,4 @@
+import MonocolorSection from './MonocolorSection.vue'
 import TricolorSection from './TricolorSection.vue'
 
 describe('TricolorSection for LenientParagraphTestCase', () => {
@@ -6,7 +7,7 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
   })
 
   it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_bold_and_italic pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -112,8 +113,7 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -228,7 +228,6 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -236,7 +235,7 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
   })
 
   it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_fill_with_free_text pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -249,8 +248,7 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -388,7 +386,6 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -396,7 +393,7 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
   })
 
   it('renders gabby.adaptation.lenient_paragraph_tests.LenientParagraphTestCase.test_multiple_choices pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -446,8 +443,7 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -613,7 +609,6 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -899,7 +894,6 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -1145,7 +1139,6 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })

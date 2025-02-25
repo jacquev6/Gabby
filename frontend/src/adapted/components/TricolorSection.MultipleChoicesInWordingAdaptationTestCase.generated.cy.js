@@ -1,3 +1,4 @@
+import MonocolorSection from './MonocolorSection.vue'
 import TricolorSection from './TricolorSection.vue'
 
 describe('TricolorSection for MultipleChoicesInWordingAdaptationTestCase', () => {
@@ -6,7 +7,7 @@ describe('TricolorSection for MultipleChoicesInWordingAdaptationTestCase', () =>
   })
 
   it('renders gabby.adaptation.multiple_choices_in_wording_adaptation_tests.MultipleChoicesInWordingAdaptationTestCase.test_choices2_with_empty_separator pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -30,8 +31,7 @@ describe('TricolorSection for MultipleChoicesInWordingAdaptationTestCase', () =>
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -85,7 +85,6 @@ describe('TricolorSection for MultipleChoicesInWordingAdaptationTestCase', () =>
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -131,7 +130,6 @@ describe('TricolorSection for MultipleChoicesInWordingAdaptationTestCase', () =>
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -191,7 +189,6 @@ describe('TricolorSection for MultipleChoicesInWordingAdaptationTestCase', () =>
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -296,7 +293,6 @@ describe('TricolorSection for MultipleChoicesInWordingAdaptationTestCase', () =>
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -375,7 +371,6 @@ describe('TricolorSection for MultipleChoicesInWordingAdaptationTestCase', () =>
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -481,7 +476,6 @@ describe('TricolorSection for MultipleChoicesInWordingAdaptationTestCase', () =>
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -586,7 +580,6 @@ describe('TricolorSection for MultipleChoicesInWordingAdaptationTestCase', () =>
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })

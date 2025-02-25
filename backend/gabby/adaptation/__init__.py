@@ -886,30 +886,33 @@ class AdaptationTestCase(unittest.TestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         def generate() -> Iterable[str]:
+            yield "import MonocolorSection from './MonocolorSection.vue'"
             yield "import TricolorSection from './TricolorSection.vue'"
             yield ""
             yield f"describe('TricolorSection for {cls.__name__}', () => " "{"
             yield "  beforeEach(() => {"
             yield "    cy.viewport(1000, 100)"
             yield "  })"
-            seen_paragraphs = set()
+            seen_keys = set()
             for test_id, adapted in cls.tests_to_generate:
                 for pagelet_index, pagelet in enumerate(adapted.pagelets):
                     for section_index, section in enumerate(pagelet.sections):
+                        if section.paragraphs == []:
+                            continue
                         paragraphs = "\n        ".join(
                             line for line in json.dumps(section.model_dump(by_alias=True, exclude_defaults=True)["paragraphs"], indent=2).splitlines()
                         )
-                        if paragraphs in seen_paragraphs:
+                        key = (paragraphs, section.centered, section.tricolored)
+                        if key in seen_keys:
                             continue
-                        seen_paragraphs.add(paragraphs)
+                        seen_keys.add(key)
                         yield ""
                         yield f"  it('renders {test_id} pagelet {pagelet_index} section {section_index}', () => " "{"
-                        yield "    cy.mount(TricolorSection, {"
+                        yield f"    cy.mount({'Tricolor' if section.tricolored else 'Monocolor'}Section, " + "{"
                         yield "      props: {"
                         yield f"        paragraphs: {paragraphs},"
                         yield "        first: false,"
-                        yield "        centered: false,"  # @todo Set to section.centered
-                        yield "        tricolored: false,"  # @todo Set to section.tricolored
+                        yield f"        centered: {'true' if section.centered else 'false'},"
                         yield "        modelValue: {},"
                         yield "      },"
                         yield "    })"

@@ -1,3 +1,4 @@
+import MonocolorSection from './MonocolorSection.vue'
 import TricolorSection from './TricolorSection.vue'
 
 describe('TricolorSection for ManualMcqFieldsAdaptationTestCase', () => {
@@ -6,7 +7,7 @@ describe('TricolorSection for ManualMcqFieldsAdaptationTestCase', () => {
   })
 
   it('renders gabby.adaptation.manual_mcq_fields_adaptation_tests.ManualMcqFieldsAdaptationTestCase.test_simplest pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -58,8 +59,7 @@ describe('TricolorSection for ManualMcqFieldsAdaptationTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -100,7 +100,6 @@ describe('TricolorSection for ManualMcqFieldsAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })

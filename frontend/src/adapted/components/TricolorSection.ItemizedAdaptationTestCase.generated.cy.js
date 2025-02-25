@@ -1,3 +1,4 @@
+import MonocolorSection from './MonocolorSection.vue'
 import TricolorSection from './TricolorSection.vue'
 
 describe('TricolorSection for ItemizedAdaptationTestCase', () => {
@@ -6,7 +7,7 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
   })
 
   it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_boxed_words pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -19,8 +20,7 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -95,7 +95,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -254,7 +253,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -415,7 +413,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -514,7 +511,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -522,7 +518,7 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
   })
 
   it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_letters pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -581,8 +577,7 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -732,7 +727,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -841,7 +835,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -950,7 +943,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -1276,7 +1268,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -1284,7 +1275,7 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
   })
 
   it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_mcq_below_separated_items pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -1394,8 +1385,7 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -1692,7 +1682,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -1859,7 +1848,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -2084,7 +2072,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -2222,7 +2209,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -2325,7 +2311,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -2428,7 +2413,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -2706,7 +2690,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -2861,7 +2844,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -3068,7 +3050,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -3167,7 +3148,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -3175,7 +3155,7 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
   })
 
   it('renders gabby.adaptation.itemized_adaptation_tests.ItemizedAdaptationTestCase.test_sel_tags pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -3212,8 +3192,7 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -3245,7 +3224,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -3472,7 +3450,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -3543,7 +3520,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -3612,7 +3588,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -3683,7 +3658,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -3865,7 +3839,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -4051,7 +4024,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -4172,7 +4144,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -4366,7 +4337,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -4491,7 +4461,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -4685,7 +4654,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -4810,7 +4778,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -4901,7 +4868,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -4988,7 +4954,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -5099,7 +5064,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })

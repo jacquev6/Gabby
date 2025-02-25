@@ -1,3 +1,4 @@
+import MonocolorSection from './MonocolorSection.vue'
 import TricolorSection from './TricolorSection.vue'
 
 describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', () => {
@@ -6,7 +7,7 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
   })
 
   it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2 pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -56,8 +57,7 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -126,7 +126,6 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -134,7 +133,7 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
   })
 
   it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_empty_separator pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -171,8 +170,7 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -243,7 +241,6 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -251,7 +248,7 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
   })
 
   it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_oxford_comma pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -327,8 +324,7 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -421,7 +417,6 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -429,7 +424,7 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
   })
 
   it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_choices2_with_successive_separators pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -492,8 +487,7 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -574,7 +568,6 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -582,7 +575,7 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
   })
 
   it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_chose_a_single_letter_to_complete_a_word pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -653,8 +646,7 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -725,7 +717,6 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -733,7 +724,7 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
   })
 
   it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_example_and_clue pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -943,8 +934,7 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -952,7 +942,7 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
   })
 
   it('renders gabby.adaptation.multiple_choices_in_instructions_adaptation_tests.MultipleChoicesInInstructionsAdaptationTestCase.test_two_choices2 pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -1042,8 +1032,7 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -1153,7 +1142,6 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })

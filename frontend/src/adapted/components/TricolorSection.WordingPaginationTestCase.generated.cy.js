@@ -1,21 +1,9 @@
+import MonocolorSection from './MonocolorSection.vue'
 import TricolorSection from './TricolorSection.vue'
 
 describe('TricolorSection for WordingPaginationTestCase', () => {
   beforeEach(() => {
     cy.viewport(1000, 100)
-  })
-
-  it('renders gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_empty pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
-      props: {
-        paragraphs: [],
-        first: false,
-        centered: false,
-        tricolored: false,
-        modelValue: {},
-      },
-    })
-    cy.screenshot('gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_empty.0.0')
   })
 
   it('renders gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_full_pagelet pagelet 0 section 1', () => {
@@ -70,7 +58,6 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -78,7 +65,7 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
   })
 
   it('renders gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_manual_and_automated_pagination pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -107,8 +94,7 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -152,7 +138,6 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -211,7 +196,6 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -240,7 +224,6 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -344,7 +327,6 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -352,7 +334,7 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
   })
 
   it('renders gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_letter_per_paragraph pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -365,8 +347,7 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -404,7 +385,6 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -426,7 +406,6 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -434,7 +413,7 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
   })
 
   it('renders gabby.adaptation.wording_pagination_tests.WordingPaginationTestCase.test_one_manual_item_per_paragraph pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -447,8 +426,7 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -497,7 +475,6 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -543,7 +520,6 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -565,7 +541,6 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -633,7 +608,6 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -699,7 +673,6 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -746,7 +719,6 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -784,7 +756,6 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -806,7 +777,6 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -866,7 +836,6 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -940,7 +909,6 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -962,7 +930,6 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -991,7 +958,6 @@ describe('TricolorSection for WordingPaginationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })

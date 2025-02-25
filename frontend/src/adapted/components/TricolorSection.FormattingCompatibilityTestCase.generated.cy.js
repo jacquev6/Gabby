@@ -1,3 +1,4 @@
+import MonocolorSection from './MonocolorSection.vue'
 import TricolorSection from './TricolorSection.vue'
 
 describe('TricolorSection for FormattingCompatibilityTestCase', () => {
@@ -6,7 +7,7 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
   })
 
   it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -92,8 +93,7 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -134,7 +134,6 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -142,7 +141,7 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
   })
 
   it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic pagelet 1 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -175,24 +174,10 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
     cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic.1.0')
-  })
-
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__letters pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
-      props: {
-        paragraphs: [],
-        first: false,
-        centered: false,
-        tricolored: false,
-        modelValue: {},
-      },
-    })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__letters.0.0')
   })
 
   it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__letters pagelet 0 section 1', () => {
@@ -338,7 +323,6 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -388,7 +372,6 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -453,7 +436,6 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -514,7 +496,6 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -581,7 +562,6 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -636,7 +616,6 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -644,7 +623,7 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
   })
 
   it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_mcq_placeholder pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -690,8 +669,7 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -780,7 +758,6 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -788,7 +765,7 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
   })
 
   it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_one_choice_in_choices2_in_instructions_with_mcq_beside_words pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -849,8 +826,7 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -907,7 +883,6 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -957,7 +932,6 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -965,7 +939,7 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
   })
 
   it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_choices2_with_one_line_end_in_instructions pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -1017,8 +991,7 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -1059,7 +1032,6 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -1112,7 +1084,6 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -1199,7 +1170,6 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -1207,7 +1177,7 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
   })
 
   it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_sel_and_bold pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -1293,8 +1263,7 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -1302,7 +1271,7 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
   })
 
   it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_sel_and_italic pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -1388,8 +1357,7 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })

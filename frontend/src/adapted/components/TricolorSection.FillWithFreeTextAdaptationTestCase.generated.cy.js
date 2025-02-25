@@ -1,3 +1,4 @@
+import MonocolorSection from './MonocolorSection.vue'
 import TricolorSection from './TricolorSection.vue'
 
 describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
@@ -6,7 +7,7 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
   })
 
   it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_example_and_clue pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -99,8 +100,7 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -153,7 +153,6 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -161,7 +160,7 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
   })
 
   it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_multiple_lines_in_instructions pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -204,8 +203,7 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -227,7 +225,6 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -235,7 +232,7 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
   })
 
   it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_multiple_lines_in_wording pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -248,8 +245,7 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -333,7 +329,6 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -413,7 +408,6 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -447,7 +441,6 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -455,7 +448,7 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
   })
 
   it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_strip_whitespace pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -468,8 +461,7 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -491,7 +483,6 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -499,7 +490,7 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
   })
 
   it('renders gabby.adaptation.fill_with_free_text_adaptation_tests.FillWithFreeTextAdaptationTestCase.test_unknown_tags pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -528,8 +519,7 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -567,7 +557,6 @@ describe('TricolorSection for FillWithFreeTextAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })

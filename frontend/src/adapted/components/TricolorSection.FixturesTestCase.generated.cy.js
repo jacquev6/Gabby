@@ -1,3 +1,4 @@
+import MonocolorSection from './MonocolorSection.vue'
 import TricolorSection from './TricolorSection.vue'
 
 describe('TricolorSection for FixturesTestCase', () => {
@@ -6,7 +7,7 @@ describe('TricolorSection for FixturesTestCase', () => {
   })
 
   it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_01 pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -219,8 +220,7 @@ describe('TricolorSection for FixturesTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -408,7 +408,6 @@ describe('TricolorSection for FixturesTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -596,7 +595,6 @@ describe('TricolorSection for FixturesTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -668,7 +666,6 @@ describe('TricolorSection for FixturesTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -676,7 +673,7 @@ describe('TricolorSection for FixturesTestCase', () => {
   })
 
   it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_02 pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -867,8 +864,7 @@ describe('TricolorSection for FixturesTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -960,7 +956,6 @@ describe('TricolorSection for FixturesTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -968,7 +963,7 @@ describe('TricolorSection for FixturesTestCase', () => {
   })
 
   it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_03 pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -1070,8 +1065,7 @@ describe('TricolorSection for FixturesTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -1268,7 +1262,6 @@ describe('TricolorSection for FixturesTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -1276,7 +1269,7 @@ describe('TricolorSection for FixturesTestCase', () => {
   })
 
   it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_04 pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -1314,29 +1307,15 @@ describe('TricolorSection for FixturesTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
     cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_04.0.0')
   })
 
-  it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_04 pagelet 0 section 1', () => {
-    cy.mount(TricolorSection, {
-      props: {
-        paragraphs: [],
-        first: false,
-        centered: false,
-        tricolored: false,
-        modelValue: {},
-      },
-    })
-    cy.screenshot('gabby.fixtures.FixturesTestCase.test_adapt_exercise_04.0.1')
-  })
-
   it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_05 pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -1382,8 +1361,7 @@ describe('TricolorSection for FixturesTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -1391,7 +1369,7 @@ describe('TricolorSection for FixturesTestCase', () => {
   })
 
   it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_06 pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -1464,8 +1442,7 @@ describe('TricolorSection for FixturesTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -1473,7 +1450,7 @@ describe('TricolorSection for FixturesTestCase', () => {
   })
 
   it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_07 pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -1604,8 +1581,7 @@ describe('TricolorSection for FixturesTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -2765,7 +2741,6 @@ describe('TricolorSection for FixturesTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -2773,7 +2748,7 @@ describe('TricolorSection for FixturesTestCase', () => {
   })
 
   it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_07 pagelet 1 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -2890,7 +2865,6 @@ describe('TricolorSection for FixturesTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -2898,7 +2872,7 @@ describe('TricolorSection for FixturesTestCase', () => {
   })
 
   it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_08 pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -3001,8 +2975,7 @@ describe('TricolorSection for FixturesTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -3146,7 +3119,6 @@ describe('TricolorSection for FixturesTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -3154,7 +3126,7 @@ describe('TricolorSection for FixturesTestCase', () => {
   })
 
   it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_09 pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -3211,8 +3183,7 @@ describe('TricolorSection for FixturesTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -3418,7 +3389,6 @@ describe('TricolorSection for FixturesTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -3624,7 +3594,6 @@ describe('TricolorSection for FixturesTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -3935,7 +3904,6 @@ describe('TricolorSection for FixturesTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -4216,7 +4184,6 @@ describe('TricolorSection for FixturesTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -4658,7 +4625,6 @@ describe('TricolorSection for FixturesTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -4666,7 +4632,7 @@ describe('TricolorSection for FixturesTestCase', () => {
   })
 
   it('renders gabby.fixtures.FixturesTestCase.test_adapt_exercise_11 pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -4679,8 +4645,7 @@ describe('TricolorSection for FixturesTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -5030,7 +4995,6 @@ describe('TricolorSection for FixturesTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })

@@ -1,3 +1,4 @@
+import MonocolorSection from './MonocolorSection.vue'
 import TricolorSection from './TricolorSection.vue'
 
 describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
@@ -6,7 +7,7 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
   })
 
   it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_example_and_clue pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -85,8 +86,7 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -116,7 +116,6 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -124,7 +123,7 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
   })
 
   it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_example_and_clue_with_sel_tags pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -170,8 +169,7 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -203,7 +201,6 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -211,7 +208,7 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
   })
 
   it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_french_elision_of_articles__punctuation_only pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -242,8 +239,7 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -396,7 +392,6 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -539,7 +534,6 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -788,7 +782,6 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -991,7 +984,6 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -1200,7 +1192,6 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -1385,7 +1376,6 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -1393,7 +1383,7 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
   })
 
   it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_multiple_lines_in_instructions pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -1436,8 +1426,7 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -1445,7 +1434,7 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
   })
 
   it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_multiple_lines_in_wording pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -1458,8 +1447,7 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -1551,7 +1539,6 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -1559,7 +1546,7 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
   })
 
   it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_sel_tags pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -1596,8 +1583,7 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -1605,7 +1591,7 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
   })
 
   it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_single_color pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -1619,8 +1605,7 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -1783,7 +1768,6 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -1791,7 +1775,7 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
   })
 
   it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_strip_whitespace pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -1804,8 +1788,7 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -1835,7 +1818,6 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
@@ -1843,7 +1825,7 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
   })
 
   it('renders gabby.adaptation.select_things_adaptation_tests.SelectThingsAdaptationTestCase.test_unknown_tags pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -1872,8 +1854,7 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -1927,7 +1908,6 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })

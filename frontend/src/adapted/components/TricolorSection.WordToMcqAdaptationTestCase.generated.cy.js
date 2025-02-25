@@ -1,3 +1,4 @@
+import MonocolorSection from './MonocolorSection.vue'
 import TricolorSection from './TricolorSection.vue'
 
 describe('TricolorSection for WordToMcqAdaptationTestCase', () => {
@@ -6,7 +7,7 @@ describe('TricolorSection for WordToMcqAdaptationTestCase', () => {
   })
 
   it('renders gabby.adaptation.word_to_mcq_adaptation_tests.WordToMcqAdaptationTestCase.test_words_in_sentences pagelet 0 section 0', () => {
-    cy.mount(TricolorSection, {
+    cy.mount(MonocolorSection, {
       props: {
         paragraphs: [
           {
@@ -65,8 +66,7 @@ describe('TricolorSection for WordToMcqAdaptationTestCase', () => {
           }
         ],
         first: false,
-        centered: false,
-        tricolored: false,
+        centered: true,
         modelValue: {},
       },
     })
@@ -341,7 +341,6 @@ describe('TricolorSection for WordToMcqAdaptationTestCase', () => {
         ],
         first: false,
         centered: false,
-        tricolored: false,
         modelValue: {},
       },
     })
