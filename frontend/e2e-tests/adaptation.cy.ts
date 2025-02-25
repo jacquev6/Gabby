@@ -378,4 +378,16 @@ describe('Gabby', () => {
     cy.get('button:contains("Full screen")').click()
     screenshot('bold-in-mcq-placeholder-2')
   })
+
+  it("doesn't show vertical borders around line breaks in boxed items", () => {
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+
+    cy.get('label:contains("Wording") + .ql-container > .ql-editor').type('This is a short sentence in a rectangle. This one is broken up in two half-rectangles. And this one spans three lines, so its middle part only has top and bottom borders.', {delay: 0})
+
+    cy.get('div:contains("Sentences") > input').check()
+    cy.get('div:contains("Boxed") > input').check()
+
+    cy.get('button:contains("Full screen")').click()
+    screenshot('no-vertical-border-around-line-breaks')
+  })
 })

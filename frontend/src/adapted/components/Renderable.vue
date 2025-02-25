@@ -98,6 +98,6 @@ span.bold {
 
 span.boxed {
   padding: 4px 0;
-  outline: 2px solid black;
+  border: 2px solid black;
 }
 </style>
