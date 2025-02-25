@@ -39,8 +39,8 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -68,7 +68,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                 ),
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -81,9 +81,9 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                             ]
                         ),
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -131,8 +131,8 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -160,7 +160,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                 ),
                             ]
                         ),
-                        wording=r.Section(paragraphs=[]),
+                        wording=r.LegacySection(paragraphs=[]),
                     )
                 ],
             ),
@@ -194,8 +194,8 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -223,7 +223,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                 ),
                             ]
                         ),
-                        wording=r.Section(paragraphs=[]),
+                        wording=r.LegacySection(paragraphs=[]),
                     )
                 ],
             ),
@@ -268,8 +268,8 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -288,7 +288,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                 )
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -347,8 +347,8 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -367,7 +367,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                 )
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -430,9 +430,9 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -490,9 +490,9 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -552,8 +552,8 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -568,7 +568,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                 )
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -640,9 +640,9 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -700,9 +700,9 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -755,9 +755,9 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -805,9 +805,9 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -866,9 +866,9 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -928,9 +928,9 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -983,9 +983,9 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -1038,9 +1038,9 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -1093,9 +1093,9 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -1151,8 +1151,8 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -1167,7 +1167,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                 )
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -1221,8 +1221,8 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -1237,7 +1237,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                 )
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -1291,8 +1291,8 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -1307,7 +1307,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                 )
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -1360,9 +1360,9 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -1415,9 +1415,9 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -1470,9 +1470,9 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -1530,8 +1530,8 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -1546,7 +1546,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                 )
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -1625,8 +1625,8 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -1641,7 +1641,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                 )
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -1720,8 +1720,8 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -1736,7 +1736,7 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                 )
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[

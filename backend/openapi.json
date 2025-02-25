@@ -342,7 +342,7 @@
           },
           "pagelets": {
             "items": {
-              "$ref": "#/components/schemas/Pagelet_"
+              "$ref": "#/components/schemas/Pagelet"
             },
             "title": "Pagelets",
             "type": "array"
@@ -574,12 +574,12 @@
         "title": "PageMeta",
         "type": "object"
       },
-      "Pagelet_": {
+      "Pagelet": {
         "additionalProperties": false,
         "properties": {
           "sections": {
             "items": {
-              "$ref": "#/components/schemas/Section_"
+              "$ref": "#/components/schemas/Section"
             },
             "title": "Sections",
             "type": "array"
@@ -588,7 +588,7 @@
         "required": [
           "sections"
         ],
-        "title": "Pagelet_",
+        "title": "Pagelet",
         "type": "object"
       },
       "Pagination": {
@@ -791,7 +791,7 @@
         "title": "PredefinedMcq",
         "type": "object"
       },
-      "Section_": {
+      "Section": {
         "additionalProperties": false,
         "properties": {
           "centered": {
@@ -815,7 +815,7 @@
           "centered",
           "tricolored"
         ],
-        "title": "Section_",
+        "title": "Section",
         "type": "object"
       },
       "Selectable": {

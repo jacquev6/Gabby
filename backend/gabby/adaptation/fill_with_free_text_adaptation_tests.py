@@ -40,9 +40,9 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -102,9 +102,9 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -151,8 +151,8 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[r.Text(kind="text", text="instructions"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="are")]
@@ -163,7 +163,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                                 ),
                             ]
                         ),
-                        wording=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="wording")])]),
+                        wording=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="wording")])]),
                     )
                 ],
             ),
@@ -198,9 +198,9 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -267,8 +267,8 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -281,7 +281,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                                 )
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -328,9 +328,9 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="abc")])]),
-                        wording=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="def")])]),
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="abc")])]),
+                        wording=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="def")])]),
                     )
                 ],
             ),
@@ -365,8 +365,8 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
                                 r.Paragraph(
@@ -399,7 +399,7 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                                 ),
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[

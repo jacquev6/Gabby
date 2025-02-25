@@ -70,9 +70,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="12",
                 textbook_page=33,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -98,7 +98,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -157,9 +157,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -185,7 +185,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -293,9 +293,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="13",
                 textbook_page=33,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -325,7 +325,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -375,9 +375,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -407,7 +407,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -493,9 +493,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="14",
                 textbook_page=33,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -547,7 +547,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -622,9 +622,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -676,7 +676,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -791,9 +791,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="15",
                 textbook_page=33,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -819,7 +819,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(paragraphs=[], centered=False, tricolored=True),
+                            r.Section(paragraphs=[], centered=False, tricolored=True),
                         ]
                     )
                 ],
@@ -886,9 +886,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="A boa de boueb",
                 textbook_page=33,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -942,7 +942,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(paragraphs=[], centered=False, tricolored=True),
+                            r.Section(paragraphs=[], centered=False, tricolored=True),
                         ]
                     )
                 ],
@@ -1009,10 +1009,10 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="Aubodacbée",
                 textbook_page=33,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Aubodacbée")])], centered=True, tricolored=False),
-                            r.Section_(
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Aubodacbée")])], centered=True, tricolored=False),
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1150,9 +1150,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="4",
                 textbook_page=34,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1194,7 +1194,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1256,9 +1256,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1300,7 +1300,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1390,9 +1390,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="5",
                 textbook_page=34,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1440,7 +1440,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1574,9 +1574,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="6",
                 textbook_page=35,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1615,7 +1615,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1729,9 +1729,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1770,7 +1770,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1861,9 +1861,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1902,7 +1902,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1982,9 +1982,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="7",
                 textbook_page=35,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -2029,7 +2029,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -2165,9 +2165,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="8",
                 textbook_page=35,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -2217,7 +2217,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -2290,9 +2290,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -2342,7 +2342,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -2450,9 +2450,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="9",
                 textbook_page=35,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -2531,7 +2531,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -2670,9 +2670,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="10",
                 textbook_page=35,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -2736,7 +2736,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -2801,9 +2801,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -2867,7 +2867,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -2991,9 +2991,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="11",
                 textbook_page=35,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -3047,7 +3047,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -3116,9 +3116,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -3172,7 +3172,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -3287,9 +3287,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="12",
                 textbook_page=35,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -3321,7 +3321,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -3398,9 +3398,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -3432,7 +3432,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -3550,9 +3550,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="13",
                 textbook_page=35,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -3614,7 +3614,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -3743,9 +3743,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="14",
                 textbook_page=35,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -3811,7 +3811,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(paragraphs=[], centered=False, tricolored=True),
+                            r.Section(paragraphs=[], centered=False, tricolored=True),
                         ]
                     )
                 ],
@@ -3878,9 +3878,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="A boa de boueb",
                 textbook_page=35,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(contents=[r.Text(kind="text", text="Ababbabbec"), r.Text(kind="text", text=".")]),
                                     r.Paragraph(
@@ -3911,7 +3911,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -4019,10 +4019,10 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="Aubodacbée",
                 textbook_page=35,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Aubodacbée")])], centered=True, tricolored=False),
-                            r.Section_(
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Aubodacbée")])], centered=True, tricolored=False),
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -4168,9 +4168,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="4",
                 textbook_page=36,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -4198,7 +4198,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -4260,9 +4260,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -4290,7 +4290,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -4434,9 +4434,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="5",
                 textbook_page=37,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -4458,7 +4458,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -4525,9 +4525,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -4549,7 +4549,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -4666,9 +4666,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="6",
                 textbook_page=37,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -4686,7 +4686,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -4798,9 +4798,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="7",
                 textbook_page=37,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -4842,7 +4842,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -4901,9 +4901,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -4945,7 +4945,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -5081,9 +5081,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="8",
                 textbook_page=37,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -5109,7 +5109,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -5253,9 +5253,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="9",
                 textbook_page=37,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -5298,7 +5298,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -5417,9 +5417,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -5462,7 +5462,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -5598,9 +5598,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="10",
                 textbook_page=37,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -5641,7 +5641,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(paragraphs=[], centered=False, tricolored=True),
+                            r.Section(paragraphs=[], centered=False, tricolored=True),
                         ]
                     )
                 ],
@@ -5708,9 +5708,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="11",
                 textbook_page=37,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -5754,7 +5754,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -5815,9 +5815,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -5861,7 +5861,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -5950,9 +5950,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="12",
                 textbook_page=37,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -6048,7 +6048,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -6134,9 +6134,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -6232,7 +6232,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -6314,9 +6314,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -6412,7 +6412,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -6514,9 +6514,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="13",
                 textbook_page=37,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -6542,7 +6542,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -6656,9 +6656,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="14",
                 textbook_page=37,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -6718,7 +6718,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -6789,9 +6789,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -6851,7 +6851,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -6946,9 +6946,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="A boa de boueb",
                 textbook_page=37,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -7032,7 +7032,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(paragraphs=[], centered=False, tricolored=True),
+                            r.Section(paragraphs=[], centered=False, tricolored=True),
                         ]
                     )
                 ],
@@ -7099,10 +7099,10 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="Aubodacbée",
                 textbook_page=37,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Aubodacbée")])], centered=True, tricolored=False),
-                            r.Section_(
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Aubodacbée")])], centered=True, tricolored=False),
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -7222,9 +7222,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="4",
                 textbook_page=38,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -7291,7 +7291,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -7416,9 +7416,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="5",
                 textbook_page=38,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -7448,7 +7448,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -7489,9 +7489,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -7521,7 +7521,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -7626,9 +7626,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="6",
                 textbook_page=39,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -7658,7 +7658,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -7711,9 +7711,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -7743,7 +7743,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -7828,9 +7828,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="7",
                 textbook_page=39,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -7856,7 +7856,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -7939,9 +7939,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -7967,7 +7967,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -8090,9 +8090,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="8",
                 textbook_page=39,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -8141,7 +8141,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -8194,9 +8194,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -8245,7 +8245,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -8291,9 +8291,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -8342,7 +8342,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -8393,9 +8393,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -8444,7 +8444,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -8516,9 +8516,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -8567,7 +8567,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -8685,9 +8685,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="9",
                 textbook_page=39,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -8721,7 +8721,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -8771,9 +8771,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -8807,7 +8807,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -8938,9 +8938,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="10",
                 textbook_page=39,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -9033,7 +9033,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -9103,9 +9103,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -9198,7 +9198,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -9323,9 +9323,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="11",
                 textbook_page=39,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -9353,7 +9353,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -9415,9 +9415,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -9445,7 +9445,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -9575,9 +9575,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="12",
                 textbook_page=39,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -9633,7 +9633,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(paragraphs=[], centered=False, tricolored=True),
+                            r.Section(paragraphs=[], centered=False, tricolored=True),
                         ]
                     )
                 ],
@@ -9700,9 +9700,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="13",
                 textbook_page=39,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -9736,7 +9736,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -9809,9 +9809,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -9845,7 +9845,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -9950,9 +9950,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="A boa de boueb",
                 textbook_page=39,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -9987,7 +9987,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(paragraphs=[], centered=False, tricolored=True),
+                            r.Section(paragraphs=[], centered=False, tricolored=True),
                         ]
                     )
                 ],
@@ -10054,10 +10054,10 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="Aubodacbée",
                 textbook_page=39,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Aubodacbée")])], centered=True, tricolored=False),
-                            r.Section_(
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Aubodacbée")])], centered=True, tricolored=False),
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -10192,9 +10192,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="4",
                 textbook_page=40,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -10287,7 +10287,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(paragraphs=[], centered=False, tricolored=True),
+                            r.Section(paragraphs=[], centered=False, tricolored=True),
                         ]
                     )
                 ],
@@ -10354,9 +10354,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="5",
                 textbook_page=40,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -10388,7 +10388,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -10429,9 +10429,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -10463,7 +10463,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -10506,9 +10506,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -10540,7 +10540,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -10625,9 +10625,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="6",
                 textbook_page=41,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -10647,7 +10647,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -10726,9 +10726,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -10748,7 +10748,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -10835,9 +10835,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="7",
                 textbook_page=41,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -10886,7 +10886,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -10960,9 +10960,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -11011,7 +11011,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -11105,9 +11105,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="8",
                 textbook_page=41,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -11146,7 +11146,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -11241,9 +11241,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -11282,7 +11282,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -11406,9 +11406,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                 number="9",
                 textbook_page=41,
                 pagelets=[
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -11434,7 +11434,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -11494,9 +11494,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -11522,7 +11522,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -11578,9 +11578,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                             ),
                         ]
                     ),
-                    r.Pagelet_(
+                    r.Pagelet(
                         sections=[
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -11606,7 +11606,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                                 centered=True,
                                 tricolored=False,
                             ),
-                            r.Section_(
+                            r.Section(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[

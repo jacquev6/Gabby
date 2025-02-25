@@ -139,9 +139,9 @@ class _Adapter:
 
         if exercise.text_reference != deltas.empty:
             pagelets.append(
-                renderable.Pagelet_(
+                renderable.Pagelet(
                     sections=[
-                        renderable.Section_(
+                        renderable.Section(
                             paragraphs=list(self.adapt_text_reference(self.make_annotated_section(exercise.text_reference))), centered=False, tricolored=False
                         )
                     ]
@@ -851,7 +851,7 @@ class _Adapter:
 
     def make_pagelets(
         self, wording_paragraphs_per_pagelet: int | None, instructions: list[renderable.Paragraph], wording: list[list[renderable.Paragraph]]
-    ) -> Iterable[renderable.Pagelet_]:
+    ) -> Iterable[renderable.Pagelet]:
         for manual_wording_pagelet in wording:
             has_yielded = False
             current_paragraphs = []
@@ -864,11 +864,11 @@ class _Adapter:
             if len(current_paragraphs) > 0 or not has_yielded:
                 yield self.make_pagelet(instructions, current_paragraphs)
 
-    def make_pagelet(self, instructions: list[renderable.Paragraph], wording: list[renderable.Paragraph]) -> renderable.Pagelet_:
-        return renderable.Pagelet_(
+    def make_pagelet(self, instructions: list[renderable.Paragraph], wording: list[renderable.Paragraph]) -> renderable.Pagelet:
+        return renderable.Pagelet(
             sections=[
-                renderable.Section_(paragraphs=instructions, centered=True, tricolored=False),
-                renderable.Section_(paragraphs=wording, centered=False, tricolored=True),
+                renderable.Section(paragraphs=instructions, centered=True, tricolored=False),
+                renderable.Section(paragraphs=wording, centered=False, tricolored=True),
             ]
         )
 

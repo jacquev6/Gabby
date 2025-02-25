@@ -60,8 +60,8 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -98,7 +98,7 @@ class LenientParagraphTestCase(AdaptationTestCase):
                                 ),
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -171,9 +171,9 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -252,9 +252,9 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -333,9 +333,9 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -422,8 +422,8 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -439,7 +439,7 @@ class LenientParagraphTestCase(AdaptationTestCase):
                                 )
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[

@@ -40,9 +40,9 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -111,8 +111,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -127,7 +127,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                                 )
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -172,9 +172,9 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", highlighted="red", text="abc")])]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", highlighted="red", text="abc")])]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="wording")])]
@@ -215,8 +215,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[r.Text(kind="text", text="instructions"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="are")]
@@ -227,7 +227,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                                 ),
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="wording")])]
@@ -268,9 +268,9 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -323,8 +323,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -337,7 +337,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                                 )
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -384,9 +384,9 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="abc")])]),
-                        wording=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="abc")])]),
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(contents=[r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="def")])])
                             ]
@@ -425,8 +425,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
                                 r.Paragraph(
@@ -455,7 +455,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                                 ),
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="wording")])]
@@ -506,8 +506,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
                                 r.Paragraph(
@@ -526,7 +526,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                                 ),
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -571,8 +571,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -586,7 +586,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                                 )
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -656,8 +656,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -671,7 +671,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                                 )
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -739,8 +739,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -754,7 +754,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                                 )
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -822,8 +822,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -837,7 +837,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                                 )
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -907,8 +907,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -922,7 +922,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                                 )
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -990,8 +990,8 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.Pagelet(
-                        instructions=r.Section(
+                    r.LegacyPagelet(
+                        instructions=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[
@@ -1005,7 +1005,7 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                                 )
                             ]
                         ),
-                        wording=r.Section(
+                        wording=r.LegacySection(
                             paragraphs=[
                                 r.Paragraph(
                                     contents=[

@@ -260,7 +260,7 @@ export interface components {
       /** Number */
       number: string;
       /** Pagelets */
-      pagelets: components["schemas"]["Pagelet_"][];
+      pagelets: components["schemas"]["Pagelet"][];
       /** Textbook Page */
       textbook_page: number | null;
     };
@@ -346,10 +346,10 @@ export interface components {
     PageMeta: {
       pagination: components["schemas"]["Pagination"];
     };
-    /** Pagelet_ */
-    Pagelet_: {
+    /** Pagelet */
+    Pagelet: {
       /** Sections */
-      sections: components["schemas"]["Section_"][];
+      sections: components["schemas"]["Section"][];
     };
     /** Pagination */
     Pagination: {
@@ -415,8 +415,8 @@ export interface components {
       /** Grammatical Number */
       grammatical_number: boolean;
     };
-    /** Section_ */
-    Section_: {
+    /** Section */
+    Section: {
       /** Centered */
       centered: boolean;
       /** Paragraphs */

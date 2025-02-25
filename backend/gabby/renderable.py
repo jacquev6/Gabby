@@ -66,33 +66,33 @@ class Paragraph(PydanticBase):
     contents: list[AnyRenderable]
 
 
-class Section_(PydanticBase):
+class Section(PydanticBase):
     paragraphs: list[Paragraph]
     centered: bool
     tricolored: bool
 
 
 # @todo Remove this legacy adapter
-def Section(paragraphs: list[Paragraph]) -> Section_:
-    return Section_(paragraphs=paragraphs, centered=False, tricolored=False)
+def LegacySection(paragraphs: list[Paragraph]) -> Section:
+    return Section(paragraphs=paragraphs, centered=False, tricolored=False)
 
 
-class Pagelet_(PydanticBase):
-    sections: list[Section_]
+class Pagelet(PydanticBase):
+    sections: list[Section]
 
 
 # @todo Remove this legacy adapter
-def Pagelet(*, instructions: Section_, wording: Section_) -> Pagelet_:
+def LegacyPagelet(*, instructions: Section, wording: Section) -> Pagelet:
     assert instructions.centered is False
     instructions.centered = True
     assert instructions.tricolored is False
     assert wording.centered is False
     assert wording.tricolored is False
     wording.tricolored = True
-    return Pagelet_(sections=[instructions, wording])
+    return Pagelet(sections=[instructions, wording])
 
 
 class Exercise(PydanticBase):
     number: str
     textbook_page: int | None
-    pagelets: list[Pagelet_]
+    pagelets: list[Pagelet]

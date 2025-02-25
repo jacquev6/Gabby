@@ -671,8 +671,8 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     number="3",
                     textbook_page=6,
                     pagelets=[
-                        r.Pagelet(
-                            instructions=r.Section(
+                        r.LegacyPagelet(
+                            instructions=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -731,7 +731,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                     ),
                                 ]
                             ),
-                            wording=r.Section(
+                            wording=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -793,8 +793,8 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                 ]
                             ),
                         ),
-                        r.Pagelet(
-                            instructions=r.Section(
+                        r.LegacyPagelet(
+                            instructions=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -853,7 +853,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                     ),
                                 ]
                             ),
-                            wording=r.Section(
+                            wording=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -915,8 +915,8 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                 ]
                             ),
                         ),
-                        r.Pagelet(
-                            instructions=r.Section(
+                        r.LegacyPagelet(
+                            instructions=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -975,7 +975,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                     ),
                                 ]
                             ),
-                            wording=r.Section(
+                            wording=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1015,8 +1015,8 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     number="4",
                     textbook_page=6,
                     pagelets=[
-                        r.Pagelet(
-                            instructions=r.Section(
+                        r.LegacyPagelet(
+                            instructions=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1078,7 +1078,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                     ),
                                 ]
                             ),
-                            wording=r.Section(
+                            wording=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1124,8 +1124,8 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     number="9",
                     textbook_page=7,
                     pagelets=[
-                        r.Pagelet(
-                            instructions=r.Section(
+                        r.LegacyPagelet(
+                            instructions=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1159,7 +1159,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                     )
                                 ]
                             ),
-                            wording=r.Section(
+                            wording=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1240,8 +1240,8 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     number="L1",
                     textbook_page=None,
                     pagelets=[
-                        r.Pagelet(
-                            instructions=r.Section(
+                        r.LegacyPagelet(
+                            instructions=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1257,7 +1257,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                     )
                                 ]
                             ),
-                            wording=r.Section(paragraphs=[]),
+                            wording=r.LegacySection(paragraphs=[]),
                         )
                     ],
                 ),
@@ -1275,8 +1275,8 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     number="L2",
                     textbook_page=None,
                     pagelets=[
-                        r.Pagelet(
-                            instructions=r.Section(
+                        r.LegacyPagelet(
+                            instructions=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1294,7 +1294,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                     )
                                 ]
                             ),
-                            wording=r.Section(paragraphs=[]),
+                            wording=r.LegacySection(paragraphs=[]),
                         )
                     ],
                 ),
@@ -1312,8 +1312,8 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     number="L3",
                     textbook_page=None,
                     pagelets=[
-                        r.Pagelet(
-                            instructions=r.Section(
+                        r.LegacyPagelet(
+                            instructions=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1339,7 +1339,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                     )
                                 ]
                             ),
-                            wording=r.Section(paragraphs=[]),
+                            wording=r.LegacySection(paragraphs=[]),
                         )
                     ],
                 ),
@@ -1357,8 +1357,8 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     number="7",
                     textbook_page=7,
                     pagelets=[
-                        r.Pagelet(
-                            instructions=r.Section(
+                        r.LegacyPagelet(
+                            instructions=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1398,7 +1398,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                     )
                                 ]
                             ),
-                            wording=r.Section(
+                            wording=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1793,9 +1793,9 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                 ]
                             ),
                         ),
-                        r.Pagelet_(
+                        r.Pagelet(
                             sections=[
-                                r.Section_(
+                                r.Section(
                                     paragraphs=[
                                         r.Paragraph(
                                             contents=[
@@ -1852,8 +1852,8 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     number="11",
                     textbook_page=7,
                     pagelets=[
-                        r.Pagelet(
-                            instructions=r.Section(
+                        r.LegacyPagelet(
+                            instructions=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1890,7 +1890,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                     ),
                                 ]
                             ),
-                            wording=r.Section(
+                            wording=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1955,8 +1955,8 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     number="8",
                     textbook_page=7,
                     pagelets=[
-                        r.Pagelet(
-                            instructions=r.Section(
+                        r.LegacyPagelet(
+                            instructions=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -1974,7 +1974,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                     )
                                 ]
                             ),
-                            wording=r.Section(
+                            wording=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -2042,8 +2042,8 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                 ]
                             ),
                         ),
-                        r.Pagelet(
-                            instructions=r.Section(
+                        r.LegacyPagelet(
+                            instructions=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -2061,7 +2061,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                     )
                                 ]
                             ),
-                            wording=r.Section(
+                            wording=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -2145,8 +2145,8 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     number="7b",
                     textbook_page=7,
                     pagelets=[
-                        r.Pagelet(
-                            instructions=r.Section(
+                        r.LegacyPagelet(
+                            instructions=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -2186,7 +2186,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                     )
                                 ]
                             ),
-                            wording=r.Section(
+                            wording=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -2292,8 +2292,8 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                 ]
                             ),
                         ),
-                        r.Pagelet(
-                            instructions=r.Section(
+                        r.LegacyPagelet(
+                            instructions=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -2333,7 +2333,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                     )
                                 ]
                             ),
-                            wording=r.Section(
+                            wording=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -2427,8 +2427,8 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                 ]
                             ),
                         ),
-                        r.Pagelet(
-                            instructions=r.Section(
+                        r.LegacyPagelet(
+                            instructions=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -2468,7 +2468,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                     )
                                 ]
                             ),
-                            wording=r.Section(
+                            wording=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
@@ -2632,9 +2632,9 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                     number="1",
                     textbook_page=5,
                     pagelets=[
-                        r.Pagelet(
-                            instructions=r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="...")])]),
-                            wording=r.Section(
+                        r.LegacyPagelet(
+                            instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="...")])]),
+                            wording=r.LegacySection(
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
