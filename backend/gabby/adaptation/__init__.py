@@ -139,7 +139,13 @@ class _Adapter:
 
         if exercise.text_reference != deltas.empty:
             pagelets.append(
-                self.make_pagelet(list(self.remove_empty_paragraphs(self.adapt_instructions(self.make_annotated_section(exercise.text_reference)))), [])
+                renderable.Pagelet_(
+                    sections=[
+                        renderable.Section_(
+                            paragraphs=list(self.adapt_text_reference(self.make_annotated_section(exercise.text_reference))), centered=False, tricolored=False
+                        )
+                    ]
+                )
             )
 
         self.adapted = renderable.Exercise(number=exercise.number, textbook_page=exercise.textbook_page, pagelets=pagelets)
@@ -702,6 +708,11 @@ class _Adapter:
             )
         else:
             yield from r
+
+    def adapt_text_reference(self, reference: AnnotatedSection) -> Iterable[renderable.Paragraph]:
+        begin, end = self.strip(reference, 0, len(reference.text))
+
+        yield renderable.Paragraph(contents=list(self.adapt_formatted_text(reference, begin, end)))
 
     def adapt_formatted_text(
         self, section: AnnotatedSection, begin: int, end: int, additional_format_parameters: dict[str, Any] = {}

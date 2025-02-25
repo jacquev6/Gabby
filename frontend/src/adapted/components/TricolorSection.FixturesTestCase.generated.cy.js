@@ -2843,11 +2843,7 @@ describe('TricolorSection for FixturesTestCase', () => {
               {
                 "kind": "text",
                 "text": "."
-              }
-            ]
-          },
-          {
-            "contents": [
+              },
               {
                 "kind": "text",
                 "text": "monquotidien"
@@ -2855,11 +2851,7 @@ describe('TricolorSection for FixturesTestCase', () => {
               {
                 "kind": "text",
                 "text": "."
-              }
-            ]
-          },
-          {
-            "contents": [
+              },
               {
                 "kind": "text",
                 "text": "fr"

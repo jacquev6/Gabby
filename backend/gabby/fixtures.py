@@ -1793,48 +1793,48 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                 ]
                             ),
                         ),
-                        r.Pagelet(
-                            instructions=r.Section(
-                                paragraphs=[
-                                    r.Paragraph(
-                                        contents=[
-                                            r.Text(kind="text", text="Mon"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="quotidien"),
-                                            r.Text(kind="text", text=","),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="pour"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="les"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="10"),
-                                            r.Text(kind="text", text="-"),
-                                            r.Text(kind="text", text="14"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="ans"),
-                                            r.Text(kind="text", text=","),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="www"),
-                                            r.Text(kind="text", text="."),
-                                        ]
-                                    ),
-                                    r.Paragraph(contents=[r.Text(kind="text", text="monquotidien"), r.Text(kind="text", text=".")]),
-                                    r.Paragraph(
-                                        contents=[
-                                            r.Text(kind="text", text="fr"),
-                                            r.Text(kind="text", text=","),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="13"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="septembre"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="2014"),
-                                            r.Text(kind="text", text="."),
-                                        ]
-                                    ),
-                                ]
-                            ),
-                            wording=r.Section(paragraphs=[]),
+                        r.Pagelet_(
+                            sections=[
+                                r.Section_(
+                                    paragraphs=[
+                                        r.Paragraph(
+                                            contents=[
+                                                r.Text(kind="text", text="Mon"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="quotidien"),
+                                                r.Text(kind="text", text=","),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="pour"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="les"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="10"),
+                                                r.Text(kind="text", text="-"),
+                                                r.Text(kind="text", text="14"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="ans"),
+                                                r.Text(kind="text", text=","),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="www"),
+                                                r.Text(kind="text", text="."),
+                                                r.Text(kind="text", text="monquotidien"),
+                                                r.Text(kind="text", text="."),
+                                                r.Text(kind="text", text="fr"),
+                                                r.Text(kind="text", text=","),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="13"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="septembre"),
+                                                r.Whitespace(kind="whitespace"),
+                                                r.Text(kind="text", text="2014"),
+                                                r.Text(kind="text", text="."),
+                                            ]
+                                        )
+                                    ],
+                                    centered=False,
+                                    tricolored=False,
+                                )
+                            ]
                         ),
                     ],
                 ),

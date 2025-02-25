@@ -182,7 +182,7 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
     cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic.1.0')
   })
 
-  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic pagelet 1 section 1', () => {
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__letters pagelet 0 section 0', () => {
     cy.mount(TricolorSection, {
       props: {
         paragraphs: [],
@@ -192,7 +192,7 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic.1.1')
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__letters.0.0')
   })
 
   it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_in_automated_items__letters pagelet 0 section 1', () => {

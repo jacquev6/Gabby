@@ -12955,10 +12955,7 @@ class DatabaseAsUnitTests0005(AdaptationTestCase):
                                             r.Text(kind="text", text="babcfe"),
                                             r.Whitespace(kind="whitespace"),
                                             r.Text(kind="text", text="?"),
-                                        ]
-                                    ),
-                                    r.Paragraph(
-                                        contents=[
+                                            r.Whitespace(kind="whitespace"),
                                             r.Text(kind="text", text="»"),
                                             r.Whitespace(kind="whitespace"),
                                             r.Text(kind="text", text="6"),
@@ -12970,11 +12967,10 @@ class DatabaseAsUnitTests0005(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.Text(kind="text", text="bbad"),
                                             r.Text(kind="text", text="."),
-                                        ]
-                                    ),
-                                    r.Paragraph(contents=[r.Text(kind="text", text="C"), r.Text(kind="text", text=".")]),
-                                    r.Paragraph(
-                                        contents=[
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="C"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
                                             r.Text(kind="text", text="Bbabcfabd"),
                                             r.Text(kind="text", text=","),
                                             r.Whitespace(kind="whitespace"),
@@ -12990,12 +12986,11 @@ class DatabaseAsUnitTests0005(AdaptationTestCase):
                                             r.Text(kind="text", text="2010"),
                                             r.Text(kind="text", text="."),
                                         ]
-                                    ),
+                                    )
                                 ],
-                                centered=True,
+                                centered=False,
                                 tricolored=False,
-                            ),
-                            r.Section_(paragraphs=[], centered=False, tricolored=True),
+                            )
                         ]
                     ),
                 ],

@@ -81,20 +81,23 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                             ]
                         ),
                     ),
-                    r.Pagelet(
-                        instructions=r.Section(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", bold=True, italic=True, text="The"),
-                                        r.Whitespace(kind="whitespace", bold=True, italic=True),
-                                        r.Text(kind="text", bold=True, italic=True, text="reference"),
-                                        r.Text(kind="text", bold=True, italic=True, text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=r.Section(paragraphs=[]),
+                    r.Pagelet_(
+                        sections=[
+                            r.Section_(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", bold=True, italic=True, text="The"),
+                                            r.Whitespace(kind="whitespace", bold=True, italic=True),
+                                            r.Text(kind="text", bold=True, italic=True, text="reference"),
+                                            r.Text(kind="text", bold=True, italic=True, text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=False,
+                            )
+                        ]
                     ),
                 ],
             ),
