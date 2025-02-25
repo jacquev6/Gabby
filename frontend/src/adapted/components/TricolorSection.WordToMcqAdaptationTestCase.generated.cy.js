@@ -29,10 +29,6 @@ describe('TricolorSection for WordToMcqAdaptationTestCase', () => {
                 "boxed": true
               },
               {
-                "kind": "text",
-                "text": ","
-              },
-              {
                 "kind": "whitespace"
               },
               {

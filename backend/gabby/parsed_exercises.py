@@ -552,7 +552,6 @@ class ParsedExerciseApiTestCase(LoggedInApiTestCase):
                                     {"kind": "text", "text": "Blah"},
                                     {"kind": "whitespace"},
                                     {"kind": "passiveSequence", "contents": [{"kind": "text", "text": "n"}], "boxed": True},
-                                    {"kind": "text", "text": ","},
                                     {"kind": "whitespace"},
                                     {"kind": "passiveSequence", "contents": [{"kind": "text", "text": "u"}], "boxed": True},
                                     {"kind": "whitespace"},

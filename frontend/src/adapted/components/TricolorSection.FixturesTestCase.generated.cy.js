@@ -43,10 +43,6 @@ describe('TricolorSection for FixturesTestCase', () => {
                 "boxed": true
               },
               {
-                "kind": "text",
-                "text": ","
-              },
-              {
                 "kind": "whitespace"
               },
               {
@@ -58,10 +54,6 @@ describe('TricolorSection for FixturesTestCase', () => {
                   }
                 ],
                 "boxed": true
-              },
-              {
-                "kind": "text",
-                "text": ","
               },
               {
                 "kind": "whitespace"
@@ -77,10 +69,6 @@ describe('TricolorSection for FixturesTestCase', () => {
                 "boxed": true
               },
               {
-                "kind": "text",
-                "text": ","
-              },
-              {
                 "kind": "whitespace"
               },
               {
@@ -94,10 +82,6 @@ describe('TricolorSection for FixturesTestCase', () => {
                 "boxed": true
               },
               {
-                "kind": "text",
-                "text": ","
-              },
-              {
                 "kind": "whitespace"
               },
               {
@@ -109,10 +93,6 @@ describe('TricolorSection for FixturesTestCase', () => {
                   }
                 ],
                 "boxed": true
-              },
-              {
-                "kind": "text",
-                "text": ","
               },
               {
                 "kind": "whitespace"

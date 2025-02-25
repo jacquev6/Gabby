@@ -768,10 +768,6 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
                 "boxed": true
               },
               {
-                "kind": "text",
-                "text": ","
-              },
-              {
                 "kind": "whitespace"
               },
               {
@@ -938,10 +934,6 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
                   }
                 ],
                 "boxed": true
-              },
-              {
-                "kind": "text",
-                "text": ","
               },
               {
                 "kind": "whitespace"

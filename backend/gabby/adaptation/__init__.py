@@ -760,7 +760,6 @@ class _Adapter:
         first = True
         for choice in choice_locations[:-1]:
             if not first:
-                yield renderable.Text(kind="text", text=",")
                 yield renderable.Whitespace(kind="whitespace")
             first = False
             yield renderable.PassiveSequence(

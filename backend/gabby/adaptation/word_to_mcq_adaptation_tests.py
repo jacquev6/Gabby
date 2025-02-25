@@ -58,7 +58,6 @@ class WordToMcqAdaptationTestCase(AdaptationTestCase):
                                         r.Text(kind="text", text="Instructions"),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
-                                        r.Text(kind="text", text=","),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
                                         r.Whitespace(kind="whitespace"),

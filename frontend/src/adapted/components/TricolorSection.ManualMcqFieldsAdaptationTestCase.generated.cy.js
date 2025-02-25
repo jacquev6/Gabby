@@ -22,10 +22,6 @@ describe('TricolorSection for ManualMcqFieldsAdaptationTestCase', () => {
                 "boxed": true
               },
               {
-                "kind": "text",
-                "text": ","
-              },
-              {
                 "kind": "whitespace"
               },
               {

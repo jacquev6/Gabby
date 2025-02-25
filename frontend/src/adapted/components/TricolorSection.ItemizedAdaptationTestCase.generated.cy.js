@@ -530,10 +530,6 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "boxed": true
               },
               {
-                "kind": "text",
-                "text": ","
-              },
-              {
                 "kind": "whitespace"
               },
               {

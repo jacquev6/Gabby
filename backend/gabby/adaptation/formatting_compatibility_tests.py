@@ -305,7 +305,6 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                 r.Paragraph(
                                     contents=[
                                         r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
-                                        r.Text(kind="text", text=","),
                                         r.Whitespace(
                                             kind="whitespace",
                                         ),
@@ -404,7 +403,6 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                 r.Paragraph(
                                     contents=[
                                         r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
-                                        r.Text(kind="text", text=","),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",
@@ -1224,7 +1222,6 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                 r.Paragraph(
                                     contents=[
                                         r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
-                                        r.Text(kind="text", text=","),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
                                         r.Whitespace(kind="whitespace"),
@@ -1297,7 +1294,6 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                 r.Paragraph(
                                     contents=[
                                         r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
-                                        r.Text(kind="text", text=","),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
                                         r.Whitespace(kind="whitespace"),
@@ -1370,7 +1366,6 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                 r.Paragraph(
                                     contents=[
                                         r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
-                                        r.Text(kind="text", text=","),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
                                         r.Whitespace(kind="whitespace"),

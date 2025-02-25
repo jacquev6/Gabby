@@ -553,7 +553,6 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             ],
                                             boxed=True,
                                         ),
-                                        r.Text(kind="text", text=","),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",
@@ -564,7 +563,6 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             ],
                                             boxed=True,
                                         ),
-                                        r.Text(kind="text", text=","),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",
@@ -577,7 +575,6 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             ],
                                             boxed=True,
                                         ),
-                                        r.Text(kind="text", text=","),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",
@@ -588,7 +585,6 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             ],
                                             boxed=True,
                                         ),
-                                        r.Text(kind="text", text=","),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",
@@ -881,7 +877,6 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             ],
                                             boxed=True,
                                         ),
-                                        r.Text(kind="text", text=","),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",
@@ -892,7 +887,6 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             ],
                                             boxed=True,
                                         ),
-                                        r.Text(kind="text", text=","),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",
@@ -905,7 +899,6 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             ],
                                             boxed=True,
                                         ),
-                                        r.Text(kind="text", text=","),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",
@@ -916,7 +909,6 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             ],
                                             boxed=True,
                                         ),
-                                        r.Text(kind="text", text=","),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",
@@ -16200,7 +16192,6 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             contents=[r.Text(kind="text", text="cb")],
                                             boxed=True,
                                         ),
-                                        r.Text(kind="text", text=","),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",
@@ -16390,7 +16381,6 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             contents=[r.Text(kind="text", text="cb")],
                                             boxed=True,
                                         ),
-                                        r.Text(kind="text", text=","),
                                         r.Whitespace(kind="whitespace"),
                                         r.PassiveSequence(
                                             kind="passiveSequence",

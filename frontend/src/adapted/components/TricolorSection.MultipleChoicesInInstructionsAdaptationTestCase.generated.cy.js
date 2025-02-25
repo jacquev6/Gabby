@@ -262,10 +262,6 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
                 "boxed": true
               },
               {
-                "kind": "text",
-                "text": ","
-              },
-              {
                 "kind": "whitespace"
               },
               {
@@ -277,10 +273,6 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
                   }
                 ],
                 "boxed": true
-              },
-              {
-                "kind": "text",
-                "text": ","
               },
               {
                 "kind": "whitespace"
@@ -440,10 +432,6 @@ describe('TricolorSection for MultipleChoicesInInstructionsAdaptationTestCase', 
                   }
                 ],
                 "boxed": true
-              },
-              {
-                "kind": "text",
-                "text": ","
               },
               {
                 "kind": "whitespace"
