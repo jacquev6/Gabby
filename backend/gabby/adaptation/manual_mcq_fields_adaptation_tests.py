@@ -41,38 +41,44 @@ class ManualMcqFieldsAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="ou"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="charlie")], boxed=True),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[
-                                                [r.Text(kind="text", text="alpha")],
-                                                [r.Text(kind="text", text="bravo")],
-                                                [r.Text(kind="text", text="charlie")],
-                                            ],
-                                        )
-                                    ]
-                                )
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ou"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="charlie")], boxed=True),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[
+                                                    [r.Text(kind="text", text="alpha")],
+                                                    [r.Text(kind="text", text="bravo")],
+                                                    [r.Text(kind="text", text="charlie")],
+                                                ],
+                                            )
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),

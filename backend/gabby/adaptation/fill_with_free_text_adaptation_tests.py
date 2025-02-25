@@ -40,34 +40,38 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="The"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="wording"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="of"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="this"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.FreeTextInput(kind="freeTextInput"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="a"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.FreeTextInput(kind="freeTextInput"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="sentence"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])], centered=True, tricolored=False),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="The"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="wording"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="of"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="this"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.FreeTextInput(kind="freeTextInput"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="is"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="a"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.FreeTextInput(kind="freeTextInput"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="sentence"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -102,21 +106,25 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.FreeTextInput(kind="freeTextInput"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="a"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.FreeTextInput(kind="freeTextInput"),
-                                    ]
-                                )
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])], centered=True, tricolored=False),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.FreeTextInput(kind="freeTextInput"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="a"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.FreeTextInput(kind="freeTextInput"),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -151,19 +159,23 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[r.Text(kind="text", text="instructions"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="are")]
-                                ),
-                                r.Paragraph(contents=[r.Text(kind="text", text="on")]),
-                                r.Paragraph(
-                                    contents=[r.Text(kind="text", text="multiple"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="lines")]
-                                ),
-                            ]
-                        ),
-                        wording=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="wording")])]),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[r.Text(kind="text", text="instructions"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="are")]
+                                    ),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="on")]),
+                                    r.Paragraph(
+                                        contents=[r.Text(kind="text", text="multiple"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="lines")]
+                                    ),
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="wording")])], centered=False, tricolored=True),
+                        ]
                     )
                 ],
             ),
@@ -198,41 +210,45 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="foo"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="toto"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text=":"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.FreeTextInput(kind="freeTextInput"),
-                                    ]
-                                ),
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="bar"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text=":"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.FreeTextInput(kind="freeTextInput"),
-                                    ]
-                                ),
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="baz"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text=":"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.FreeTextInput(kind="freeTextInput"),
-                                    ]
-                                ),
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])], centered=True, tricolored=False),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="foo"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="toto"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text=":"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.FreeTextInput(kind="freeTextInput"),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="bar"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text=":"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.FreeTextInput(kind="freeTextInput"),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="baz"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text=":"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.FreeTextInput(kind="freeTextInput"),
+                                        ]
+                                    ),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -267,33 +283,39 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="{"),
-                                        r.Text(kind="text", text="tag"),
-                                        r.Text(kind="text", text="|"),
-                                        r.Text(kind="text", text="abc"),
-                                        r.Text(kind="text", text="}"),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="{"),
-                                        r.Text(kind="text", text="tag"),
-                                        r.Text(kind="text", text="|"),
-                                        r.Text(kind="text", text="def"),
-                                        r.Text(kind="text", text="}"),
-                                    ]
-                                )
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="{"),
+                                            r.Text(kind="text", text="tag"),
+                                            r.Text(kind="text", text="|"),
+                                            r.Text(kind="text", text="abc"),
+                                            r.Text(kind="text", text="}"),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="{"),
+                                            r.Text(kind="text", text="tag"),
+                                            r.Text(kind="text", text="|"),
+                                            r.Text(kind="text", text="def"),
+                                            r.Text(kind="text", text="}"),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -328,9 +350,11 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="abc")])]),
-                        wording=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="def")])]),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="abc")])], centered=True, tricolored=False),
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="def")])], centered=False, tricolored=True),
+                        ]
                     )
                 ],
             ),
@@ -365,58 +389,64 @@ class FillWithFreeTextAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="This"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="@"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="the"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="example"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                ),
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="This"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="@"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="the"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="clue"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                ),
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="This"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.FreeTextInput(kind="freeTextInput"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="the"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="wording"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="This"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="@"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="is"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="the"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="example"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="This"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="@"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="is"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="the"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="clue"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="This"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.FreeTextInput(kind="freeTextInput"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="is"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="the"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="wording"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),

@@ -60,81 +60,87 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="This"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="a"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", bold=True, text="strict"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="instructions"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", italic=True, text="paragraph"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                ),
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="And"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="this"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="a"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", bold=True, text="lenient"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="instructions"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", italic=True, text="paragraph"),
-                                    ]
-                                ),
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="This"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="a"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", bold=True, text="strict"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="wording"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", italic=True, text="paragraph"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                ),
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="And"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="this"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="a"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", bold=True, text="lenient"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="wording"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", italic=True, text="paragraph"),
-                                    ]
-                                ),
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="This"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="is"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="a"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", bold=True, text="strict"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="instructions"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", italic=True, text="paragraph"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="And"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="this"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="is"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="a"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", bold=True, text="lenient"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="instructions"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", italic=True, text="paragraph"),
+                                        ]
+                                    ),
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="This"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="is"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="a"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", bold=True, text="strict"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="wording"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", italic=True, text="paragraph"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="And"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="this"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="is"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="a"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", bold=True, text="lenient"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="wording"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", italic=True, text="paragraph"),
+                                        ]
+                                    ),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -171,51 +177,55 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="This")]),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="is")]),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="a")]),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="strict")]),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="paragraph")]),
-                                        r.Text(kind="text", text=","),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="with")]),
-                                        r.Text(kind="text", text="..."),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="some")]),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="punctuation")]),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                ),
-                                r.Paragraph(
-                                    contents=[
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="And")]),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="this")]),
-                                        r.Text(kind="text", text=","),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="is")]),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="a")]),
-                                        r.Text(kind="text", text="..."),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="lenient")]),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="paragraph")]),
-                                    ]
-                                ),
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])], centered=True, tricolored=False),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="This")]),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="is")]),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="a")]),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="strict")]),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="paragraph")]),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="with")]),
+                                            r.Text(kind="text", text="..."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="some")]),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="punctuation")]),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="And")]),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="this")]),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="is")]),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="a")]),
+                                            r.Text(kind="text", text="..."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="lenient")]),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="paragraph")]),
+                                        ]
+                                    ),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -252,51 +262,55 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="This")]),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="is")]),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="a")]),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="strict")]),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="paragraph")]),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=",")]),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="with")]),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="...")]),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="some")]),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="punctuation")]),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
-                                    ]
-                                ),
-                                r.Paragraph(
-                                    contents=[
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="And")]),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="this")]),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=",")]),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="is")]),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="a")]),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="...")]),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="lenient")]),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="paragraph")]),
-                                    ]
-                                ),
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])], centered=True, tricolored=False),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="This")]),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="is")]),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="a")]),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="strict")]),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="paragraph")]),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=",")]),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="with")]),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="...")]),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="some")]),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="punctuation")]),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="And")]),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="this")]),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=",")]),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="is")]),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="a")]),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="...")]),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="lenient")]),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="paragraph")]),
+                                        ]
+                                    ),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -333,53 +347,57 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="This"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="a"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.FreeTextInput(kind="freeTextInput"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="strict"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="paragraph"),
-                                        r.Text(kind="text", text="."),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="With"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="some"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="punctuation"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                ),
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="And"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="this"),
-                                        r.Text(kind="text", text=","),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="a"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.FreeTextInput(kind="freeTextInput"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="lenient"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="paragraph"),
-                                    ]
-                                ),
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])], centered=True, tricolored=False),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="This"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="is"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="a"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.FreeTextInput(kind="freeTextInput"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="strict"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="paragraph"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="With"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="some"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="punctuation"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="And"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="this"),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="is"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="a"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.FreeTextInput(kind="freeTextInput"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="lenient"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="paragraph"),
+                                        ]
+                                    ),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -422,76 +440,82 @@ class LenientParagraphTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="Choose"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="ou"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="This"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="a"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="alpha")], [r.Text(kind="text", text="bravo")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="strict"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="paragraph"),
-                                        r.Text(kind="text", text="."),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="With"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="some"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="punctuation"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                ),
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="And"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="this"),
-                                        r.Text(kind="text", text=","),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="a"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="alpha")], [r.Text(kind="text", text="bravo")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="lenient"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="paragraph"),
-                                    ]
-                                ),
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Choose"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ou"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="This"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="is"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="a"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="alpha")], [r.Text(kind="text", text="bravo")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="strict"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="paragraph"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="With"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="some"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="punctuation"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="And"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="this"),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="is"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="a"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="alpha")], [r.Text(kind="text", text="bravo")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="lenient"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="paragraph"),
+                                        ]
+                                    ),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),

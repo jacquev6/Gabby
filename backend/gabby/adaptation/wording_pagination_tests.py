@@ -34,7 +34,9 @@ class WordingPaginationTestCase(AdaptationTestCase):
             r.Exercise(
                 number="number",
                 textbook_page=None,
-                pagelets=[r.LegacyPagelet(instructions=r.LegacySection(paragraphs=[]), wording=r.LegacySection(paragraphs=[]))],
+                pagelets=[
+                    r.Pagelet(sections=[r.Section(paragraphs=[], centered=True, tricolored=False), r.Section(paragraphs=[], centered=False, tricolored=True)])
+                ],
             ),
         )
 
@@ -67,9 +69,11 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(paragraphs=[]),
-                        wording=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="wording")])]),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(paragraphs=[], centered=True, tricolored=False),
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="wording")])], centered=False, tricolored=True),
+                        ]
                     )
                 ],
             ),
@@ -104,15 +108,19 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(paragraphs=[]),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="1")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="2")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="3")]),
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(paragraphs=[], centered=True, tricolored=False),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="1")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="2")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="3")]),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -147,34 +155,46 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="example")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="1")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="2")]),
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="example")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="1")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="2")]),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     ),
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="example")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="3")])
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="example")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="3")])
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     ),
                 ],
             ),
@@ -209,24 +229,30 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="example")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="1")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="2")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="3")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="4")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="5")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="6")]),
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="example")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="1")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="2")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="3")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="4")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="5")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="6")]),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -261,37 +287,49 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="example")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="1")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="2")]),
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="example")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="1")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="2")]),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     ),
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="example")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="3")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="4")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="5")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="6")]),
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="example")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="3")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="4")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="5")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="6")]),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     ),
                 ],
             ),
@@ -326,50 +364,68 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="example")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="1")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="2")]),
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="example")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="1")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="2")]),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     ),
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="example")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="3")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="4")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="5")]),
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="example")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="3")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="4")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="5")]),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     ),
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="example")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="6")])
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(contents=[r.Text(kind="text", text="instructions")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="example")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="clue")]),
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="6")])
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     ),
                 ],
             ),
@@ -404,19 +460,25 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="a")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="b")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="c")]),
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])], centered=True, tricolored=False),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(contents=[r.Text(kind="text", text="a")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="b")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="c")]),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     ),
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="d")])]),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])], centered=True, tricolored=False),
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="d")])], centered=False, tricolored=True),
+                        ]
                     ),
                 ],
             ),
@@ -451,19 +513,25 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="worda")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="wordb")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="wordc")]),
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])], centered=True, tricolored=False),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(contents=[r.Text(kind="text", text="worda")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wordb")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wordc")]),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     ),
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="wordd")])]),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])], centered=True, tricolored=False),
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="wordd")])], centered=False, tricolored=True),
+                        ]
                     ),
                 ],
             ),
@@ -498,33 +566,39 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="a"),
-                                        r.Text(kind="text", text="."),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="worda"),
-                                    ]
-                                ),
-                                r.Paragraph(contents=[r.Text(kind="text", text="wordb")]),
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="b"),
-                                        r.Text(kind="text", text="."),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="wordc"),
-                                    ]
-                                ),
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])], centered=True, tricolored=False),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="a"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="worda"),
+                                        ]
+                                    ),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wordb")]),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="b"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="wordc"),
+                                        ]
+                                    ),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     ),
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="wordd")])]),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])], centered=True, tricolored=False),
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="wordd")])], centered=False, tricolored=True),
+                        ]
                     ),
                 ],
             ),
@@ -560,19 +634,25 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="word"), r.Text(kind="text", text=",")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="word")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="word"), r.Text(kind="text", text="!")]),
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])], centered=True, tricolored=False),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(contents=[r.Text(kind="text", text="word"), r.Text(kind="text", text=",")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="word")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="word"), r.Text(kind="text", text="!")]),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     ),
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="word")])]),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])], centered=True, tricolored=False),
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="word")])], centered=False, tricolored=True),
+                        ]
                     ),
                 ],
             ),
@@ -608,35 +688,41 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="a"),
-                                        r.Text(kind="text", text="."),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="word"),
-                                        r.Text(kind="text", text=","),
-                                    ]
-                                ),
-                                r.Paragraph(contents=[r.Text(kind="text", text="word")]),
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="b"),
-                                        r.Text(kind="text", text="."),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="word"),
-                                        r.Text(kind="text", text="!"),
-                                    ]
-                                ),
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])], centered=True, tricolored=False),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="a"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="word"),
+                                            r.Text(kind="text", text=","),
+                                        ]
+                                    ),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="word")]),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="b"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="word"),
+                                            r.Text(kind="text", text="!"),
+                                        ]
+                                    ),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     ),
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="word")])]),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])], centered=True, tricolored=False),
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="word")])], centered=False, tricolored=True),
+                        ]
                     ),
                 ],
             ),
@@ -671,51 +757,59 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="Il"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="fait"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="beau"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                ),
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="Il"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="fait"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="chaud"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                ),
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])], centered=True, tricolored=False),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Il"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="fait"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="beau"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Il"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="fait"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="chaud"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     ),
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])]),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="Il"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="ne"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="pleut"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="pas"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="instructions")])], centered=True, tricolored=False),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Il"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ne"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="pleut"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="pas"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     ),
                 ],
             ),
@@ -756,15 +850,19 @@ class WordingPaginationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Instructions")])]),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(contents=[r.Text(kind="text", text="This"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="is")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="the")]),
-                                r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Text(kind="text", text=".")]),
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Instructions")])], centered=True, tricolored=False),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(contents=[r.Text(kind="text", text="This"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="is")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="the")]),
+                                    r.Paragraph(contents=[r.Text(kind="text", text="wording"), r.Text(kind="text", text=".")]),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),

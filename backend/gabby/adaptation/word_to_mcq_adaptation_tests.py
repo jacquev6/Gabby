@@ -50,148 +50,154 @@ class WordToMcqAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="Instructions"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="ou"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="charlie")], boxed=True),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="a"),
-                                        r.Text(kind="text", text="."),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.AnySequence(
-                                            kind="sequence",
-                                            contents=[
-                                                r.AnySequence(
-                                                    kind="sequence",
-                                                    contents=[
-                                                        r.Text(kind="text", text="Firsta"),
-                                                        r.Whitespace(kind="whitespace"),
-                                                        r.Text(kind="text", text="firstb", highlighted="#ffff00"),
-                                                        r.Whitespace(kind="whitespace"),
-                                                        r.Text(kind="text", text="firstc"),
-                                                    ],
-                                                ),
-                                                r.AnySequence(
-                                                    kind="sequence",
-                                                    contents=[
-                                                        r.Text(kind="text", text="Firsta"),
-                                                        r.Whitespace(kind="whitespace"),
-                                                        r.MultipleChoicesInput(
-                                                            kind="multipleChoicesInput",
-                                                            choices=[
-                                                                [r.Text(kind="text", text="alpha")],
-                                                                [r.Text(kind="text", text="bravo")],
-                                                                [r.Text(kind="text", text="charlie")],
-                                                            ],
-                                                        ),
-                                                        r.Whitespace(kind="whitespace"),
-                                                        r.Text(kind="text", text="firstc"),
-                                                    ],
-                                                ),
-                                            ],
-                                            vertical=True,
-                                        ),
-                                    ]
-                                ),
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="b"),
-                                        r.Text(kind="text", text="."),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.AnySequence(
-                                            kind="sequence",
-                                            contents=[
-                                                r.AnySequence(
-                                                    kind="sequence",
-                                                    contents=[
-                                                        r.Text(kind="text", text="Seconda", highlighted="#ffff00"),
-                                                        r.Whitespace(kind="whitespace"),
-                                                        r.Text(kind="text", text="secondb"),
-                                                        r.Whitespace(kind="whitespace"),
-                                                        r.Text(kind="text", text="secondc"),
-                                                    ],
-                                                ),
-                                                r.AnySequence(
-                                                    kind="sequence",
-                                                    contents=[
-                                                        r.MultipleChoicesInput(
-                                                            kind="multipleChoicesInput",
-                                                            choices=[
-                                                                [r.Text(kind="text", text="alpha")],
-                                                                [r.Text(kind="text", text="bravo")],
-                                                                [r.Text(kind="text", text="charlie")],
-                                                            ],
-                                                        ),
-                                                        r.Whitespace(kind="whitespace"),
-                                                        r.Text(kind="text", text="secondb"),
-                                                        r.Whitespace(kind="whitespace"),
-                                                        r.Text(kind="text", text="secondc"),
-                                                    ],
-                                                ),
-                                            ],
-                                            vertical=True,
-                                        ),
-                                    ]
-                                ),
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="c"),
-                                        r.Text(kind="text", text="."),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.AnySequence(
-                                            kind="sequence",
-                                            contents=[
-                                                r.AnySequence(
-                                                    kind="sequence",
-                                                    contents=[
-                                                        r.Text(kind="text", text="Thirda"),
-                                                        r.Whitespace(kind="whitespace"),
-                                                        r.Text(kind="text", text="thirdb"),
-                                                        r.Whitespace(kind="whitespace"),
-                                                        r.Text(kind="text", text="thirdc", highlighted="#ffff00"),
-                                                    ],
-                                                ),
-                                                r.AnySequence(
-                                                    kind="sequence",
-                                                    contents=[
-                                                        r.Text(kind="text", text="Thirda"),
-                                                        r.Whitespace(kind="whitespace"),
-                                                        r.Text(kind="text", text="thirdb"),
-                                                        r.Whitespace(kind="whitespace"),
-                                                        r.MultipleChoicesInput(
-                                                            kind="multipleChoicesInput",
-                                                            choices=[
-                                                                [r.Text(kind="text", text="alpha")],
-                                                                [r.Text(kind="text", text="bravo")],
-                                                                [r.Text(kind="text", text="charlie")],
-                                                            ],
-                                                        ),
-                                                    ],
-                                                ),
-                                            ],
-                                            vertical=True,
-                                        ),
-                                    ]
-                                ),
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Instructions"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ou"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="charlie")], boxed=True),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="a"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.AnySequence(
+                                                kind="sequence",
+                                                contents=[
+                                                    r.AnySequence(
+                                                        kind="sequence",
+                                                        contents=[
+                                                            r.Text(kind="text", text="Firsta"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="firstb", highlighted="#ffff00"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="firstc"),
+                                                        ],
+                                                    ),
+                                                    r.AnySequence(
+                                                        kind="sequence",
+                                                        contents=[
+                                                            r.Text(kind="text", text="Firsta"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.MultipleChoicesInput(
+                                                                kind="multipleChoicesInput",
+                                                                choices=[
+                                                                    [r.Text(kind="text", text="alpha")],
+                                                                    [r.Text(kind="text", text="bravo")],
+                                                                    [r.Text(kind="text", text="charlie")],
+                                                                ],
+                                                            ),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="firstc"),
+                                                        ],
+                                                    ),
+                                                ],
+                                                vertical=True,
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="b"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.AnySequence(
+                                                kind="sequence",
+                                                contents=[
+                                                    r.AnySequence(
+                                                        kind="sequence",
+                                                        contents=[
+                                                            r.Text(kind="text", text="Seconda", highlighted="#ffff00"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="secondb"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="secondc"),
+                                                        ],
+                                                    ),
+                                                    r.AnySequence(
+                                                        kind="sequence",
+                                                        contents=[
+                                                            r.MultipleChoicesInput(
+                                                                kind="multipleChoicesInput",
+                                                                choices=[
+                                                                    [r.Text(kind="text", text="alpha")],
+                                                                    [r.Text(kind="text", text="bravo")],
+                                                                    [r.Text(kind="text", text="charlie")],
+                                                                ],
+                                                            ),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="secondb"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="secondc"),
+                                                        ],
+                                                    ),
+                                                ],
+                                                vertical=True,
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="c"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.AnySequence(
+                                                kind="sequence",
+                                                contents=[
+                                                    r.AnySequence(
+                                                        kind="sequence",
+                                                        contents=[
+                                                            r.Text(kind="text", text="Thirda"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="thirdb"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="thirdc", highlighted="#ffff00"),
+                                                        ],
+                                                    ),
+                                                    r.AnySequence(
+                                                        kind="sequence",
+                                                        contents=[
+                                                            r.Text(kind="text", text="Thirda"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="thirdb"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.MultipleChoicesInput(
+                                                                kind="multipleChoicesInput",
+                                                                choices=[
+                                                                    [r.Text(kind="text", text="alpha")],
+                                                                    [r.Text(kind="text", text="bravo")],
+                                                                    [r.Text(kind="text", text="charlie")],
+                                                                ],
+                                                            ),
+                                                        ],
+                                                    ),
+                                                ],
+                                                vertical=True,
+                                            ),
+                                        ]
+                                    ),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),

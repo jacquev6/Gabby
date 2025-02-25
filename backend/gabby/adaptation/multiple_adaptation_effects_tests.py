@@ -46,52 +46,58 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="instructions"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="short")], boxed=True),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="ou"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="long")], boxed=True),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="The"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="wording"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="of"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="this"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.FreeTextInput(kind="freeTextInput"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="a"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="short")], [r.Text(kind="text", text="long")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="sentence"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="instructions"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="short")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ou"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="long")], boxed=True),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="The"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="wording"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="of"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="this"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.FreeTextInput(kind="freeTextInput"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="is"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="a"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="short")], [r.Text(kind="text", text="long")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="sentence"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -138,57 +144,63 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="Choose"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="wisely"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="ou"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="A"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="a")], [r.Text(kind="text", text="b")], [r.Text(kind="text", text="c")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="B"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="d")], [r.Text(kind="text", text="e")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="C"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="alpha")], [r.Text(kind="text", text="bravo")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Choose"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="wisely"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ou"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="A"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="a")], [r.Text(kind="text", text="b")], [r.Text(kind="text", text="c")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="B"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="d")], [r.Text(kind="text", text="e")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="C"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="alpha")], [r.Text(kind="text", text="bravo")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -237,50 +249,56 @@ class MultipleAdaptationEffectsTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=None,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="Choose"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="wisely"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="ou"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.SelectableInput(
-                                            kind="selectableInput", colors=["red", "yellow"], boxed=True, contents=[r.Text(kind="text", text="Hello")]
-                                        ),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="alpha")], [r.Text(kind="text", text="bravo")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="charlie")], [r.Text(kind="text", text="delta")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.FreeTextInput(kind="freeTextInput"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Choose"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="wisely"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="alpha")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ou"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bravo")], boxed=True),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red", "yellow"], boxed=True, contents=[r.Text(kind="text", text="Hello")]
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="alpha")], [r.Text(kind="text", text="bravo")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="charlie")], [r.Text(kind="text", text="delta")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.FreeTextInput(kind="freeTextInput"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),

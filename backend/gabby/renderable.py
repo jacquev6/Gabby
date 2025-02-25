@@ -72,24 +72,8 @@ class Section(PydanticBase):
     tricolored: bool
 
 
-# @todo Remove this legacy adapter
-def LegacySection(paragraphs: list[Paragraph]) -> Section:
-    return Section(paragraphs=paragraphs, centered=False, tricolored=False)
-
-
 class Pagelet(PydanticBase):
     sections: list[Section]
-
-
-# @todo Remove this legacy adapter
-def LegacyPagelet(*, instructions: Section, wording: Section) -> Pagelet:
-    assert instructions.centered is False
-    instructions.centered = True
-    assert instructions.tricolored is False
-    assert wording.centered is False
-    assert wording.tricolored is False
-    wording.tricolored = True
-    return Pagelet(sections=[instructions, wording])
 
 
 class Exercise(PydanticBase):

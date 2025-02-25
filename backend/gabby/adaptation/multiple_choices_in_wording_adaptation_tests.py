@@ -46,43 +46,49 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="Choose"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="wisely"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="A"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="a")], [r.Text(kind="text", text="b")], [r.Text(kind="text", text="c")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="B"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="d")], [r.Text(kind="text", text="e")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Choose"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="wisely"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="A"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="a")], [r.Text(kind="text", text="b")], [r.Text(kind="text", text="c")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="B"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="d")], [r.Text(kind="text", text="e")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -123,35 +129,41 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="Choose"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="wisely"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="A"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="blah")], [r.Text(kind="text", text="blih")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Choose"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="wisely"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="A"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="blah")], [r.Text(kind="text", text="blih")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -193,35 +205,41 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="Choose"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="wisely"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="A"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="blah")], [r.Text(kind="text", text="blih")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Choose"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="wisely"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="A"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="blah")], [r.Text(kind="text", text="blih")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -262,35 +280,41 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="Choose"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="wisely"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="A"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="blah")], [r.Text(kind="text", text="blih")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Choose"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="wisely"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="A"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="blah")], [r.Text(kind="text", text="blih")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -331,42 +355,48 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="Choose"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="wisely"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="A"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[
-                                                [
-                                                    r.Text(kind="text", text="blah"),
-                                                    r.Whitespace(kind="whitespace"),
-                                                    r.Text(kind="text", text="/"),
-                                                    r.Whitespace(kind="whitespace"),
-                                                    r.Text(kind="text", text="blih"),
-                                                ]
-                                            ],
-                                        ),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Choose"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="wisely"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="A"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[
+                                                    [
+                                                        r.Text(kind="text", text="blah"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", text="/"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", text="blih"),
+                                                    ]
+                                                ],
+                                            ),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -407,35 +437,41 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="Choose"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="wisely"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="A"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="blah")], [r.Text(kind="text", text="blih")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Choose"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="wisely"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="A"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="blah")], [r.Text(kind="text", text="blih")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -476,35 +512,41 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="Choose"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="wisely"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="A"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="blah")], [r.Text(kind="text", text="blih")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Choose"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="wisely"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="A"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="blah")], [r.Text(kind="text", text="blih")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -545,39 +587,45 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="Choose"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="wisely"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="The"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="sky"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="blue")], [r.Text(kind="text", text="red")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Choose"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="wisely"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="The"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="sky"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="is"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="blue")], [r.Text(kind="text", text="red")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -617,39 +665,45 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="Choose"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="wisely"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="The"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="sky"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="blue")], [r.Text(kind="text", text="red")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Choose"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="wisely"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="The"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="sky"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="is"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="blue")], [r.Text(kind="text", text="red")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -689,52 +743,58 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="Choose"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="wisely"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="The"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="sky"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="blue")], [r.Text(kind="text", text="yellow")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Text(kind="text", text=","),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="the"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="sun"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="blue")], [r.Text(kind="text", text="yellow")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Choose"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="wisely"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="The"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="sky"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="is"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="blue")], [r.Text(kind="text", text="yellow")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="the"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="sun"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="is"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="blue")], [r.Text(kind="text", text="yellow")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -778,52 +838,58 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="Choose"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="wisely"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="The"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="sky"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="blue")], [r.Text(kind="text", text="red")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Text(kind="text", text=","),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="the"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="sun"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="green")], [r.Text(kind="text", text="yellow")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Choose"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="wisely"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="The"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="sky"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="is"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="blue")], [r.Text(kind="text", text="red")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="the"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="sun"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="is"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="green")], [r.Text(kind="text", text="yellow")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -868,55 +934,61 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="Choose"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="wisely"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="The"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="sky"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="blue")], [r.Text(kind="text", text="red")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                ),
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="The"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="sun"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="green")], [r.Text(kind="text", text="yellow")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                ),
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Choose"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="wisely"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="The"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="sky"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="is"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="blue")], [r.Text(kind="text", text="red")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="The"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="sun"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="is"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="green")], [r.Text(kind="text", text="yellow")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
@@ -961,52 +1033,58 @@ class MultipleChoicesInWordingAdaptationTestCase(AdaptationTestCase):
                 number="number",
                 textbook_page=42,
                 pagelets=[
-                    r.LegacyPagelet(
-                        instructions=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="Choose"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="wisely"),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
-                        wording=r.LegacySection(
-                            paragraphs=[
-                                r.Paragraph(
-                                    contents=[
-                                        r.Text(kind="text", text="The"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="sky"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="blue")], [r.Text(kind="text", text="red")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Text(kind="text", text=","),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="the"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="sun"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.Text(kind="text", text="is"),
-                                        r.Whitespace(kind="whitespace"),
-                                        r.MultipleChoicesInput(
-                                            kind="multipleChoicesInput",
-                                            choices=[[r.Text(kind="text", text="green")], [r.Text(kind="text", text="yellow")]],
-                                            show_choices_by_default=False,
-                                        ),
-                                        r.Text(kind="text", text="."),
-                                    ]
-                                )
-                            ]
-                        ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Choose"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="wisely"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="The"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="sky"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="is"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="blue")], [r.Text(kind="text", text="red")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="the"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="sun"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="is"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="green")], [r.Text(kind="text", text="yellow")]],
+                                                show_choices_by_default=False,
+                                            ),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
                     )
                 ],
             ),
