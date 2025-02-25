@@ -10,4 +10,4 @@ backend/all-tests.sh
 
 frontend/all-tests.sh
 
-./end-to-end-tests.sh --no-console
+./end-to-end-tests.sh

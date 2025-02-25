@@ -7,4 +7,4 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 
 
 ./type-check.sh
-./unit-tests.sh --no-console
+./unit-tests.sh
