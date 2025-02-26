@@ -928,8 +928,9 @@ class AdaptationTestCase(unittest.TestCase):
 
         return super().tearDownClass()
 
-    def do_test(self, exercise: exercises.Exercise, expected_adapted: renderable.Exercise) -> None:
-        self.tests_to_generate.append((self.id(), expected_adapted))
+    def do_test(self, exercise: exercises.Exercise, expected_adapted: renderable.Exercise | None) -> None:
+        if expected_adapted is not None:
+            self.tests_to_generate.append((self.id(), expected_adapted))
 
         actual_adapted = exercise.make_adapted()
         if actual_adapted != expected_adapted:
@@ -937,7 +938,8 @@ class AdaptationTestCase(unittest.TestCase):
 
             print(f"actual_adapted at {calling_frame.filename}:{calling_frame.lineno}:", self.renderable_repr(actual_adapted))
 
-        self.assertEqual(actual_adapted is None, expected_adapted is None)
+        self.assertIsNotNone(expected_adapted)
+        assert expected_adapted is not None
         for pagelet_index, (actual_pagelet, expected_pagelet) in enumerate(itertools.zip_longest(actual_adapted.pagelets, expected_adapted.pagelets)):
             self.assertEqual(actual_pagelet is None, expected_pagelet is None)
             for section_index, (actual_section, expected_section) in enumerate(itertools.zip_longest(actual_pagelet.sections, expected_pagelet.sections)):
