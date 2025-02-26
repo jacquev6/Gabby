@@ -197,6 +197,17 @@ const selfRef = ref<HTMLDivElement | null>(null)
             <BButton secondary sm @click="model.inProgress = {kind: 'nothing'}">{{ $t('choicesSettingsCancel') }}</BButton>
           </div>
         </div>
+
+        <div
+          v-if="model.inProgress.kind === 'repeatedWithMcqCreation'"
+          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); cursor: initial;"
+          @mousedown="e => e.stopPropagation()" @touchstart="e => e.stopPropagation()"
+        >
+          <div style="position: absolute; top: 50px; left: 10%; width: 80%; background-color: white; padding: 1em;">
+            {{ $t('repeatedWithMcqCreationInstructions') }}
+            <BButton secondary sm @click="model.inProgress = {kind: 'nothing'}">{{ $t('repeatedWithMcqCreationFinished') }}</BButton>
+          </div>
+        </div>
       </div>
     </div>
     <div class="handle"></div>

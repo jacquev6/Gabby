@@ -2,7 +2,7 @@
 import Quill from 'quill/core'
 
 import { InlineBlot, InlineEmbed } from '$frontend/components/Quill.vue'
-import type { CustomDeltas } from './ExerciseFieldsForm.vue'
+import type { CustomDeltas, InProgress } from './ExerciseFieldsForm.vue'
 import ContextMenu from '$frontend/components/ContextMenu.vue'
 import deepCopy from 'deep-copy'
 import deepEqual from 'deep-equal'
@@ -15,14 +15,14 @@ export class Choices2Blot extends InlineBlot {
   static override blotName = 'choices2'
   static override tagName = 'choices2-blot'
 
-  static override create(settings: {start: string, separator1: string, separator2: string, stop: string, placeholder: string, justCreated?: boolean}) {
-    const needsInitialEdit = settings.justCreated
-    delete settings.justCreated
+  static override create(settings: {start: string, separator1: string, separator2: string, stop: string, placeholder: string, nextInProgressAfterCreation?: InProgress}) {
+    const nextInProgressAfterCreation = settings.nextInProgressAfterCreation
+    delete settings.nextInProgressAfterCreation
 
     const node = super.create()
     node.setAttribute('data-gabby-settings', JSON.stringify(settings))
 
-    function editSettings(initial: boolean = false) {
+    function editSettings(initial: boolean = false, next: InProgress = {kind: 'nothing'}) {
       model.value.inProgress = {
         kind: 'multipleChoicesEdition',
         settings: JSON.parse(node.getAttribute('data-gabby-settings')!),
@@ -54,6 +54,7 @@ export class Choices2Blot extends InlineBlot {
           },
           {deep: true},
         ),
+        next
       }
 
       console.assert(choices2ContextMenu.value !== null)
@@ -65,8 +66,8 @@ export class Choices2Blot extends InlineBlot {
       editSettings()
     })
 
-    if (needsInitialEdit) {
-      editSettings(true)
+    if (nextInProgressAfterCreation !== undefined) {
+      editSettings(true, nextInProgressAfterCreation)
     }
 
     return node
@@ -100,6 +101,7 @@ function doneEditingChoices2() {
     && model.value.inProgress.settings.separator1 !== ''
     && model.value.inProgress.settings.stop !== ''
     && model.value.inProgress.settings.mcqFieldUid === null
+    && model.value.inProgress.next.kind === 'nothing'
     // @todo Don't replicate if current selection doesn't match start separator and stop
   if (needsReplication) {
     console.log('Replicating choices')
@@ -144,7 +146,7 @@ function doneEditingChoices2() {
     model.value.wording = newWording
     console.log('Replicating choices: new wording:', newWording)
   }
-  model.value.inProgress = {kind: 'nothing'}
+  model.value.inProgress = model.value.inProgress.next
 }
 
 export class McqField extends InlineEmbed {
@@ -225,6 +227,7 @@ const repeatedWithMcq = computed({
     model.value.adaptationSettings.itemized.effects.repeatedWithMcq = value
     if (value) {
       model.value.adaptationSettings.itemized.items = deepCopy(defaultAdaptationSettings.itemized.items)
+      model.value.inProgress = {kind: 'repeatedWithMcqCreation'}
     }
   },
 })

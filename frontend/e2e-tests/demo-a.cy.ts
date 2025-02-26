@@ -905,8 +905,16 @@ describe('Gabby', () => {
 
     cy.get('div:contains("Double: word → MCQ") > input').check()
     cy.get('div:contains("Sentences") > input').should('be.checked')
+    screenshot('double--word-to-mcq', 'edit-1')
 
-    cy.get('button:contains("Multiple choices")').click()
+    cy.get('@wording').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 20, node, 28)
+    })
+    cy.wait(100)
+    screenshot('double--word-to-mcq', 'edit-2')
+
     cy.get('@instructions').find('p').then($el => {
       const node = $el[0].firstChild
       console.assert(node !== null)
@@ -918,27 +926,28 @@ describe('Gabby', () => {
     cy.get('label:contains("Separators") + input').should('have.value', ',')
     cy.get('input[data-cy="second-mcq-separator"]').should('have.value', '')
     cy.get('label:contains("Placeholder") + input').should('have.value', '')
+    screenshot('double--word-to-mcq', 'edit-3')
     cy.get('button:contains("OK")').click()
+    screenshot('double--word-to-mcq', 'edit-4')
 
-    cy.get('@wording').find('p').then($el => {
-      const node = $el[0].firstChild
-      console.assert(node !== null)
-      selectRange(node, 20, node, 28)
-    })
-    cy.get('button[data-cy="format-mcq-placeholder"]').click()
     cy.get('@wording').find('p').then($el => {
       const node = $el[1].firstChild
       console.assert(node !== null)
       selectRange(node, 21, node, 25)
     })
-    cy.get('button[data-cy="format-mcq-placeholder"]').click()
+    cy.wait(100)
+    screenshot('double--word-to-mcq', 'edit-5')
+
     cy.get('@wording').find('p').then($el => {
       const node = $el[2].firstChild
       console.assert(node !== null)
       selectRange(node, 15, node, 19)
     })
-    cy.get('button[data-cy="format-mcq-placeholder"]').click()
-    screenshot('double--word-to-mcq', 'edit-1')
+    cy.wait(100)
+    screenshot('double--word-to-mcq', 'edit-6')
+
+    cy.get('button:contains("Done")').click()
+    screenshot('double--word-to-mcq', 'edit-7')
 
     cy.get('button:contains("Save then back")').click()
     visit('/project-xkopqm')

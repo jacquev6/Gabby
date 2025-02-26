@@ -70,29 +70,33 @@ export type Model = MakeModelOptions & {
       }
     }
   }
-  inProgress:
-    {
-      kind: 'nothing'
-    } | {
-      kind: 'multipleChoicesCreation'
-    } | {
-      kind: 'multipleChoicesEdition'
-      initial: boolean
-      stopWatching(): void
-      deleted: boolean
-      delete(): void
-      settings: {
-        start: string
-        stop: string
-        separator1: string
-        separator2: string
-        placeholder: string
-        mcqFieldUid: string | null
-      }
-    } | {
-      kind: 'newMcqField'
-      uid: string
-    }
+  inProgress: InProgress
+}
+
+export type InProgress = {
+  kind: 'nothing'
+} | {
+  kind: 'multipleChoicesCreation'
+} | {
+  kind: 'multipleChoicesEdition'
+  initial: boolean
+  stopWatching(): void
+  deleted: boolean
+  delete(): void
+  settings: {
+    start: string
+    stop: string
+    separator1: string
+    separator2: string
+    placeholder: string
+    mcqFieldUid: string | null
+  }
+  next: InProgress
+} | {
+  kind: 'newMcqField'
+  uid: string
+} | {
+  kind: 'repeatedWithMcqCreation'
 }
 
 // Colors provided by the client, in display order
@@ -518,62 +522,83 @@ const selBlotColors = computed(() => {
   return Object.fromEntries(model.value.adaptationSettings.itemized.effects.selectable.allColors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
 })
 
+
+function guessSettings(deltas: CustomDeltas, range: {index: number, length: number}, baseSettings: {mcqFieldUid: string | null, nextInProgressAfterCreation: InProgress}) {
+  const selected = deltas.map(delta => delta.insert).join('').slice(range.index, range.index + range.length)
+
+  const [start, stop] = (() => {
+    for (const [start, stop] of [['(', ')'], ['[', ']']]) {
+      if (selected.startsWith(start) && selected.endsWith(stop)) {
+        return [start, stop]
+      }
+    }
+    return ['', '']
+  })()
+
+  const separator1 = (() => {
+    for (const separator of ['/', '|', ',', '*', '◆', '●', '-', '–', '—']) {
+      if (selected.includes(separator)) {
+        return separator
+      }
+    }
+    for (const separator of ['ou']) {
+      if (selected.includes(' ' + separator + ' ')) {
+        return separator
+      }
+    }
+    return ''
+  })()
+
+  const separator2 = (() => {
+    for (const separator of ['ou']) {
+      if (separator1 !== separator && selected.includes(' ' + separator + ' ')) {
+        return separator
+      }
+    }
+    return ''
+  })()
+
+  return {
+    start,
+    stop,
+    separator1,
+    separator2,
+    placeholder: '',
+    ...baseSettings,
+  }
+}
+
 function selectionChangeInInstructionsOrWording(fieldName: 'instructions' | 'wording', range: {index: number, length: number}) {
-  console.assert(wordingEditor.value !== null)
-  console.assert(wordingEditor.value.quill !== null)
+  console.assert(model.value.inProgress.kind === 'multipleChoicesCreation')
+
+  toggle('choices2', guessSettings(model.value[fieldName], range, {mcqFieldUid: null, nextInProgressAfterCreation: {kind: 'nothing'}}))
+}
+
+function selectionChangeInInstructions(range: {index: number, length: number}) {
   console.assert(instructionsEditor.value !== null)
   console.assert(instructionsEditor.value.quill !== null)
 
-  function guessSettings(deltas: CustomDeltas, baseSettings: {mcqFieldUid: string | null}) {
-    const selected = deltas.map(delta => delta.insert).join('').slice(range.index, range.index + range.length)
-
-    const [start, stop] = (() => {
-      for (const [start, stop] of [['(', ')'], ['[', ']']]) {
-        if (selected.startsWith(start) && selected.endsWith(stop)) {
-          return [start, stop]
-        }
-      }
-      return ['', '']
-    })()
-
-    const separator1 = (() => {
-      for (const separator of ['/', '|', ',', '*', '◆', '●', '-', '–', '—']) {
-        if (selected.includes(separator)) {
-          return separator
-        }
-      }
-      for (const separator of ['ou']) {
-        if (selected.includes(' ' + separator + ' ')) {
-          return separator
-        }
-      }
-      return ''
-    })()
-
-    const separator2 = (() => {
-      for (const separator of ['ou']) {
-        if (separator1 !== separator && selected.includes(' ' + separator + ' ')) {
-          return separator
-        }
-      }
-      return ''
-    })()
-
-    return {
-      start,
-      stop,
-      separator1,
-      separator2,
-      placeholder: '',
-      justCreated: true,
-      ...baseSettings,
+  if (model.value.inProgress.kind === 'multipleChoicesCreation') {
+    selectionChangeInInstructionsOrWording('instructions', range)
+  } else if (model.value.inProgress.kind === 'newMcqField') {
+    if (range.length !== 0) {
+      instructionsEditor.value.toggle('choices2', guessSettings(model.value.instructions, range, {mcqFieldUid: model.value.inProgress.uid, nextInProgressAfterCreation: {kind: 'nothing'}}))
+    }
+  } else if (model.value.inProgress.kind === 'repeatedWithMcqCreation') {
+    if (range.length !== 0) {
+      instructionsEditor.value.toggle('choices2', guessSettings(model.value.instructions, range, {mcqFieldUid: null, nextInProgressAfterCreation: model.value.inProgress}))
     }
   }
+}
+
+function selectionChangeInWording(range: {index: number, length: number}) {
+  console.assert(wordingEditor.value !== null)
+  console.assert(wordingEditor.value.quill !== null)
 
   if (model.value.inProgress.kind === 'multipleChoicesCreation') {
-    toggle('choices2', guessSettings(model.value[fieldName], {mcqFieldUid: null}))
+    selectionChangeInInstructionsOrWording('wording', range)
   } else if (model.value.inProgress.kind === 'newMcqField') {
-    if (fieldName === 'wording' && range.length === 0) {
+    if (range.length === 0) {
       // Add space after?
       if (![' ', '\n'].includes(wordingEditor.value.quill.getText(range.index, 1))) {
         wordingEditor.value.quill.insertText(range.index, ' ', 'user')
@@ -585,18 +610,12 @@ function selectionChangeInInstructionsOrWording(fieldName: 'instructions' | 'wor
         wordingEditor.value.quill.insertText(range.index, ' ', 'user')
         wordingEditor.value.quill.setSelection(range.index + 1, 0, 'silent')
       }
-    } else if (fieldName === 'instructions' && range.length !== 0) {
-      instructionsEditor.value.toggle('choices2', guessSettings(model.value[fieldName], {mcqFieldUid: model.value.inProgress.uid}))
+    }
+  } else if (model.value.inProgress.kind === 'repeatedWithMcqCreation') {
+    if (range.length !== 0) {
+      wordingEditor.value.toggle('mcq-placeholder', true)
     }
   }
-}
-
-function selectionChangeInInstructions(range: {index: number, length: number}) {
-  selectionChangeInInstructionsOrWording('instructions', range)
-}
-
-function selectionChangeInWording(range: {index: number, length: number}) {
-  selectionChangeInInstructionsOrWording('wording', range)
 }
 
 defineExpose({

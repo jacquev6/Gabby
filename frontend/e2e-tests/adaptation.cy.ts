@@ -334,8 +334,6 @@ describe('Gabby', () => {
     cy.get('@instructions').click().type('{selectAll}Choisis le bon verbe conjugué disez/dites.', {delay: 0})
     cy.get('@wording').click().type('{selectAll}Vous (dire) toujours la vérité.', {delay: 0})
 
-    cy.get('div:contains("Double: word → MCQ") > input').check()
-
     cy.get('@wording').find('p').then($el => {
       const node = $el[0].firstChild
       console.assert(node !== null)
@@ -343,6 +341,7 @@ describe('Gabby', () => {
     })
     cy.get('button[data-cy="format-bold"]').click()
 
+    cy.get('div:contains("Double: word → MCQ") > input').check()
     cy.get('@wording').find('p').then($el => {
       const startNode = $el[0].firstChild
       console.assert(startNode !== null)
@@ -350,10 +349,10 @@ describe('Gabby', () => {
       console.assert(endNode !== null)
       selectRange(startNode, 5, endNode, 3)
     })
-    cy.get('button:contains("Word → MCQ")').click()
     cy.get('mcq-placeholder-blot > bold-blot').should('exist')
     cy.get('bold-blot > mcq-placeholder-blot').should('not.exist')
     cy.get('@wording').find('mcq-placeholder-blot').should('have.length', 1)
+    cy.get('button:contains("Done")').click()
 
     cy.get('mcq-placeholder-blot').then($el => {
       const node = $el[0].lastChild

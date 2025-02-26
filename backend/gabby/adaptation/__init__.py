@@ -114,13 +114,19 @@ class _Adapter:
         if exercise.adaptation.items_are_repeated_with_mcq:
             assert exercise.adaptation.items is None
             self.sentences_are_items = True
-            self.mcq_for_repeated_items = None
             for choices in instructions_section.choices:
                 if choices[1].placeholder == "" and choices[1].mcq_field_uid is None:
-                    self.mcq_for_repeated_items = self.make_multiple_choices_input(
+                    self.mcq_for_repeated_items: renderable.MultipleChoicesInput | None = self.make_multiple_choices_input(
                         instructions_section, choices[0].begin, choices[0].end, choices[1], fixed_case=False
                     )
                     break
+            else:
+                self.mcq_for_repeated_items = renderable.MultipleChoicesInput(
+                    kind="multipleChoicesInput",
+                    show_arrow_before=self.show_arrow_before_mcq_fields,
+                    choices=[],
+                    show_choices_by_default=self.show_mcq_choices_by_default,
+                )
         else:
             self.mcq_for_repeated_items = None
 
