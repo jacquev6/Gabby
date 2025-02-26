@@ -67,9 +67,9 @@ class ManualMcqFieldsAdaptationTestCase(AdaptationTestCase):
                                             r.MultipleChoicesInput(
                                                 kind="multipleChoicesInput",
                                                 choices=[
-                                                    [r.Text(kind="text", text="alpha")],
-                                                    [r.Text(kind="text", text="bravo")],
-                                                    [r.Text(kind="text", text="charlie")],
+                                                    [r.Text(kind="text", text="Alpha")],
+                                                    [r.Text(kind="text", text="Bravo")],
+                                                    [r.Text(kind="text", text="Charlie")],
                                                 ],
                                             )
                                         ]

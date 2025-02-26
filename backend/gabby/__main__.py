@@ -225,6 +225,7 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
             .replace("show_arrow_before=False", "")
             .replace("show_choices_by_default=False", "")
             .replace("vertical=False", "")
+            .replace("fixed_case=True", "")
         )
         while (new_s := s.replace(", , ", ", ").replace(", )", ")")) != s:
             s = new_s

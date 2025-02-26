@@ -78,19 +78,19 @@ describe('TricolorSection for ManualMcqFieldsAdaptationTestCase', () => {
                   [
                     {
                       "kind": "text",
-                      "text": "alpha"
+                      "text": "Alpha"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "bravo"
+                      "text": "Bravo"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "charlie"
+                      "text": "Charlie"
                     }
                   ]
                 ]

@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from typing import Literal
+from typing import Annotated, Literal
 
-from mydantic import PydanticBase
+from mydantic import PydanticBase, PydanticField
 
 
 class Whitespace(PydanticBase):
@@ -41,6 +41,7 @@ class MultipleChoicesInput(PydanticBase):
     show_arrow_before: bool = False
     choices: list[list[PassiveRenderable]]
     show_choices_by_default: bool = False
+    fixed_case: Annotated[bool, PydanticField(exclude=True)] = True
 
 
 class SelectableInput(PydanticBase):

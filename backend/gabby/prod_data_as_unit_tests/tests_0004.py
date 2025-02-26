@@ -4220,7 +4220,7 @@ class DatabaseAsUnitTests0004(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.MultipleChoicesInput(
                                                 kind="multipleChoicesInput",
-                                                choices=[[r.Text(kind="text", text="bb")], [r.Text(kind="text", text="bb")], [r.Text(kind="text", text="bb")]],
+                                                choices=[[r.Text(kind="text", text="Bb")], [r.Text(kind="text", text="Bb")], [r.Text(kind="text", text="Bb")]],
                                             ),
                                             r.Text(kind="text", text="abbeb"),
                                             r.Whitespace(kind="whitespace"),

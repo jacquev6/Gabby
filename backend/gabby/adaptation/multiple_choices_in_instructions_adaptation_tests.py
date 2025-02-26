@@ -978,3 +978,422 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
                 ],
             ),
         )
+
+    def test_start_choices_with_capital_letter_at_sentence_beginning__one_sentence_per_paragraph(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[
+                    d.TextInsertOp(insert="Choisis parmi ", attributes={}),
+                    d.TextInsertOp(
+                        insert="le / la / les", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "/", "stop": "", "placeholder": "..."}}
+                    ),
+                    d.TextInsertOp(insert=".\n", attributes={}),
+                ],
+                wording=[
+                    d.TextInsertOp(insert="... chien mange ... croquettes.\n... chats chassent ... souris.\n... vaches produisent ... lait.\n", attributes={})
+                ],
+                adaptation=Adaptation(
+                    kind="multiple-choices",
+                    wording_paragraphs_per_pagelet=None,
+                    single_item_per_paragraph=False,
+                    placeholder_for_fill_with_free_text=None,
+                    items=None,
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                    items_are_repeated_with_mcq=False,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=True,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Choisis"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="parmi"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="le")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="la")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ou"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="les")], boxed=True),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="Le")], [r.Text(kind="text", text="La")], [r.Text(kind="text", text="Les")]],
+                                                show_choices_by_default=True,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="chien"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="mange"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="le")], [r.Text(kind="text", text="la")], [r.Text(kind="text", text="les")]],
+                                                show_choices_by_default=True,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="croquettes"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="Le")], [r.Text(kind="text", text="La")], [r.Text(kind="text", text="Les")]],
+                                                show_choices_by_default=True,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="chats"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="chassent"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="le")], [r.Text(kind="text", text="la")], [r.Text(kind="text", text="les")]],
+                                                show_choices_by_default=True,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="souris"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="Le")], [r.Text(kind="text", text="La")], [r.Text(kind="text", text="Les")]],
+                                                show_choices_by_default=True,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="vaches"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="produisent"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="le")], [r.Text(kind="text", text="la")], [r.Text(kind="text", text="les")]],
+                                                show_choices_by_default=True,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="lait"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
+                    )
+                ],
+            ),
+            viewport_height=700,
+        )
+
+    def test_start_choices_with_capital_letter_at_sentence_beginning__one_sentence_list_item(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[
+                    d.TextInsertOp(insert="Choisis parmi ", attributes={}),
+                    d.TextInsertOp(
+                        insert="le / la / les", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "/", "stop": "", "placeholder": "..."}}
+                    ),
+                    d.TextInsertOp(insert=".\n", attributes={}),
+                ],
+                wording=[
+                    d.TextInsertOp(
+                        insert="a. ... chien mange ... croquettes.\nb. ... chats chassent ... souris.\nc. ... vaches produisent ... lait.\n", attributes={}
+                    )
+                ],
+                adaptation=Adaptation(
+                    kind="multiple-choices",
+                    wording_paragraphs_per_pagelet=None,
+                    single_item_per_paragraph=False,
+                    placeholder_for_fill_with_free_text=None,
+                    items=None,
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                    items_are_repeated_with_mcq=False,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=True,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Choisis"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="parmi"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="le")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="la")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ou"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="les")], boxed=True),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="a"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="Le")], [r.Text(kind="text", text="La")], [r.Text(kind="text", text="Les")]],
+                                                show_choices_by_default=True,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="chien"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="mange"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="le")], [r.Text(kind="text", text="la")], [r.Text(kind="text", text="les")]],
+                                                show_choices_by_default=True,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="croquettes"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="b"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="Le")], [r.Text(kind="text", text="La")], [r.Text(kind="text", text="Les")]],
+                                                show_choices_by_default=True,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="chats"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="chassent"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="le")], [r.Text(kind="text", text="la")], [r.Text(kind="text", text="les")]],
+                                                show_choices_by_default=True,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="souris"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="c"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="Le")], [r.Text(kind="text", text="La")], [r.Text(kind="text", text="Les")]],
+                                                show_choices_by_default=True,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="vaches"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="produisent"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="le")], [r.Text(kind="text", text="la")], [r.Text(kind="text", text="les")]],
+                                                show_choices_by_default=True,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="lait"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
+                    )
+                ],
+            ),
+            viewport_height=700,
+        )
+
+    def test_start_choices_with_capital_letter_at_sentence_beginning__several_sentences_in_one_paragraph(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[
+                    d.TextInsertOp(insert="Choisis parmi ", attributes={}),
+                    d.TextInsertOp(
+                        insert="le / la / les", attributes={"choices2": {"start": "", "separator1": "/", "separator2": "/", "stop": "", "placeholder": "..."}}
+                    ),
+                    d.TextInsertOp(insert=".\n", attributes={}),
+                ],
+                wording=[
+                    d.TextInsertOp(insert="... chien mange ... croquettes. ... chats chassent ... souris. ... vaches produisent ... lait.\n", attributes={})
+                ],
+                adaptation=Adaptation(
+                    kind="multiple-choices",
+                    wording_paragraphs_per_pagelet=None,
+                    single_item_per_paragraph=False,
+                    placeholder_for_fill_with_free_text=None,
+                    items=None,
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                    items_are_repeated_with_mcq=False,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=True,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Choisis"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="parmi"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="le")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="la")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ou"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="les")], boxed=True),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="Le")], [r.Text(kind="text", text="La")], [r.Text(kind="text", text="Les")]],
+                                                show_choices_by_default=True,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="chien"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="mange"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="le")], [r.Text(kind="text", text="la")], [r.Text(kind="text", text="les")]],
+                                                show_choices_by_default=True,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="croquettes"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="Le")], [r.Text(kind="text", text="La")], [r.Text(kind="text", text="Les")]],
+                                                show_choices_by_default=True,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="chats"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="chassent"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="le")], [r.Text(kind="text", text="la")], [r.Text(kind="text", text="les")]],
+                                                show_choices_by_default=True,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="souris"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="Le")], [r.Text(kind="text", text="La")], [r.Text(kind="text", text="Les")]],
+                                                show_choices_by_default=True,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="vaches"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="produisent"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="le")], [r.Text(kind="text", text="la")], [r.Text(kind="text", text="les")]],
+                                                show_choices_by_default=True,
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="lait"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
+                    )
+                ],
+            ),
+            viewport_height=500,
+        )

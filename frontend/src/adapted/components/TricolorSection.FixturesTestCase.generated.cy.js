@@ -239,43 +239,43 @@ describe('TricolorSection for FixturesTestCase', () => {
                   [
                     {
                       "kind": "text",
-                      "text": "le"
+                      "text": "Le"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "une"
+                      "text": "Une"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "un"
+                      "text": "Un"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "des"
+                      "text": "Des"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "tu"
+                      "text": "Tu"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "elles"
+                      "text": "Elles"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "ils"
+                      "text": "Ils"
                     }
                   ]
                 ]
@@ -297,43 +297,43 @@ describe('TricolorSection for FixturesTestCase', () => {
                   [
                     {
                       "kind": "text",
-                      "text": "le"
+                      "text": "Le"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "une"
+                      "text": "Une"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "un"
+                      "text": "Un"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "des"
+                      "text": "Des"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "tu"
+                      "text": "Tu"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "elles"
+                      "text": "Elles"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "ils"
+                      "text": "Ils"
                     }
                   ]
                 ]
@@ -355,43 +355,43 @@ describe('TricolorSection for FixturesTestCase', () => {
                   [
                     {
                       "kind": "text",
-                      "text": "le"
+                      "text": "Le"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "une"
+                      "text": "Une"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "un"
+                      "text": "Un"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "des"
+                      "text": "Des"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "tu"
+                      "text": "Tu"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "elles"
+                      "text": "Elles"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "ils"
+                      "text": "Ils"
                     }
                   ]
                 ]
@@ -426,43 +426,43 @@ describe('TricolorSection for FixturesTestCase', () => {
                   [
                     {
                       "kind": "text",
-                      "text": "le"
+                      "text": "Le"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "une"
+                      "text": "Une"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "un"
+                      "text": "Un"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "des"
+                      "text": "Des"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "tu"
+                      "text": "Tu"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "elles"
+                      "text": "Elles"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "ils"
+                      "text": "Ils"
                     }
                   ]
                 ]
@@ -484,43 +484,43 @@ describe('TricolorSection for FixturesTestCase', () => {
                   [
                     {
                       "kind": "text",
-                      "text": "le"
+                      "text": "Le"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "une"
+                      "text": "Une"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "un"
+                      "text": "Un"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "des"
+                      "text": "Des"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "tu"
+                      "text": "Tu"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "elles"
+                      "text": "Elles"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "ils"
+                      "text": "Ils"
                     }
                   ]
                 ]
@@ -542,43 +542,43 @@ describe('TricolorSection for FixturesTestCase', () => {
                   [
                     {
                       "kind": "text",
-                      "text": "le"
+                      "text": "Le"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "une"
+                      "text": "Une"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "un"
+                      "text": "Un"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "des"
+                      "text": "Des"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "tu"
+                      "text": "Tu"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "elles"
+                      "text": "Elles"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "ils"
+                      "text": "Ils"
                     }
                   ]
                 ]
@@ -613,43 +613,43 @@ describe('TricolorSection for FixturesTestCase', () => {
                   [
                     {
                       "kind": "text",
-                      "text": "le"
+                      "text": "Le"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "une"
+                      "text": "Une"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "un"
+                      "text": "Un"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "des"
+                      "text": "Des"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "tu"
+                      "text": "Tu"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "elles"
+                      "text": "Elles"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "ils"
+                      "text": "Ils"
                     }
                   ]
                 ]
@@ -3245,13 +3245,13 @@ describe('TricolorSection for FixturesTestCase', () => {
                   [
                     {
                       "kind": "text",
-                      "text": "vrai"
+                      "text": "Vrai"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "faux"
+                      "text": "Faux"
                     }
                   ]
                 ]
@@ -3309,13 +3309,13 @@ describe('TricolorSection for FixturesTestCase', () => {
                   [
                     {
                       "kind": "text",
-                      "text": "vrai"
+                      "text": "Vrai"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "faux"
+                      "text": "Faux"
                     }
                   ]
                 ]
@@ -3373,13 +3373,13 @@ describe('TricolorSection for FixturesTestCase', () => {
                   [
                     {
                       "kind": "text",
-                      "text": "vrai"
+                      "text": "Vrai"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "faux"
+                      "text": "Faux"
                     }
                   ]
                 ]
@@ -3450,13 +3450,13 @@ describe('TricolorSection for FixturesTestCase', () => {
                   [
                     {
                       "kind": "text",
-                      "text": "vrai"
+                      "text": "Vrai"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "faux"
+                      "text": "Faux"
                     }
                   ]
                 ]
@@ -3514,13 +3514,13 @@ describe('TricolorSection for FixturesTestCase', () => {
                   [
                     {
                       "kind": "text",
-                      "text": "vrai"
+                      "text": "Vrai"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "faux"
+                      "text": "Faux"
                     }
                   ]
                 ]
@@ -3578,13 +3578,13 @@ describe('TricolorSection for FixturesTestCase', () => {
                   [
                     {
                       "kind": "text",
-                      "text": "vrai"
+                      "text": "Vrai"
                     }
                   ],
                   [
                     {
                       "kind": "text",
-                      "text": "faux"
+                      "text": "Faux"
                     }
                   ]
                 ]

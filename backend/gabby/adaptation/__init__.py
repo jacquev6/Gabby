@@ -21,7 +21,8 @@ from .. import renderable
 
 
 def adapt(exercise: exercises.Exercise) -> renderable.Exercise:
-    return _Adapter(exercise).adapted
+    # Roundtrip to dict: remove internal attributes like 'MultipleChoicesInput.fixed_case'
+    return renderable.Exercise(**_Adapter(exercise).adapted.model_dump(exclude_unset=True))
 
 
 class McqDefinition(PydanticBase):
@@ -116,7 +117,9 @@ class _Adapter:
             self.mcq_for_repeated_items = None
             for choices in instructions_section.choices:
                 if choices[1].placeholder == "" and choices[1].mcq_field_uid is None:
-                    self.mcq_for_repeated_items = self.make_multiple_choices_input(instructions_section, choices[0].begin, choices[0].end, choices[1])
+                    self.mcq_for_repeated_items = self.make_multiple_choices_input(
+                        instructions_section, choices[0].begin, choices[0].end, choices[1], fixed_case=False
+                    )
                     break
         else:
             self.mcq_for_repeated_items = None
@@ -204,8 +207,8 @@ class _Adapter:
 
         for _, (b, e) in self.split(r"(\s*\n\s*\n\s*)", instructions, begin, end):
             if b < e:
-                for paragraph in self.adapt_instructions_paragraph(instructions, b, e):
-                    yield renderable.Paragraph(contents=list(self.strip_whitespace_renderables(paragraph)))
+                for sentence in self.split_into_sentences(self.adapt_instructions_paragraph(instructions, b, e)):
+                    yield renderable.Paragraph(contents=list(self.strip_whitespace_renderables(sentence)))
             begin = e
 
         assert begin == end, (begin, end)
@@ -249,36 +252,17 @@ class _Adapter:
 
         assert begin == end, (begin, end)
 
-    def adapt_instructions_paragraph(self, instructions: AnnotatedSection, begin: int, end: int) -> Iterable[Iterable[renderable.AnyRenderable]]:
-        assert begin < end, (begin, end)
+    def split_into_sentences(self, paragraph: Iterable[renderable.AnyRenderable]) -> Iterable[list[renderable.AnyRenderable]]:
+        sentence: list[renderable.AnyRenderable] = []
+        for r in paragraph:
+            sentence.append(r)
+            if isinstance(r, renderable.Text) and r.text in [".", "!", "?", "…", "..."]:
+                yield sentence
+                sentence = []
+        if len(sentence) > 0:
+            yield sentence
 
-        for b, e in self.fix_instructions_sentence_candidates(instructions, list(self.make_instructions_sentence_candidates(instructions, begin, end))):
-            yield self.adapt_instructions_sentence(instructions, b, e)
-            begin = e
-
-        assert begin == end, (begin, end)
-
-    def make_instructions_sentence_candidates(self, instructions: AnnotatedSection, begin: int, end: int) -> Iterable[tuple[int, int]]:
-        paragraph_begin = begin
-        for match in re.finditer(r".*?(:?\.\.\.|[.!?…])\s*", instructions.text[paragraph_begin:end], flags=re.DOTALL):
-            assert match.start() == begin - paragraph_begin
-            yield (paragraph_begin + match.start(), paragraph_begin + match.end())
-            begin = paragraph_begin + match.end()
-        if begin < end:
-            yield (begin, end)
-
-    def fix_instructions_sentence_candidates(self, instructions: AnnotatedSection, sentence_candidates: list[tuple[int, int]]) -> Iterable[tuple[int, int]]:
-        current_begin = None
-        for begin, end in sentence_candidates:
-            if current_begin is None:
-                current_begin = begin
-            if not any(choice[0].begin < end <= choice[0].end for choice in instructions.choices):
-                yield (current_begin, end)
-                current_begin = None
-        if current_begin is not None:
-            yield (current_begin, end)
-
-    def adapt_instructions_sentence(self, instructions: AnnotatedSection, begin: int, end: int) -> Iterable[renderable.AnyRenderable]:
+    def adapt_instructions_paragraph(self, instructions: AnnotatedSection, begin: int, end: int) -> Iterable[renderable.AnyRenderable]:
         assert begin < end, (begin, end)
 
         while begin < end:
@@ -309,12 +293,12 @@ class _Adapter:
 
         for choices in instructions.choices:
             if choices[1].placeholder != "":
-                yield choices[1].placeholder, [self.make_multiple_choices_input(instructions, choices[0].begin, choices[0].end, choices[1])]
+                yield choices[1].placeholder, [self.make_multiple_choices_input(instructions, choices[0].begin, choices[0].end, choices[1], fixed_case=False)]
 
     def make_global_mcq_fields(self, instructions: AnnotatedSection) -> Iterable[tuple[str, list[renderable.AnyRenderable]]]:
         for choices in instructions.choices:
             if choices[1].mcq_field_uid is not None:
-                yield choices[1].mcq_field_uid, [self.make_multiple_choices_input(instructions, choices[0].begin, choices[0].end, choices[1])]
+                yield choices[1].mcq_field_uid, [self.make_multiple_choices_input(instructions, choices[0].begin, choices[0].end, choices[1], fixed_case=False)]
 
     def adapt_wording(self, wording: AnnotatedSection) -> Iterable[Iterable[renderable.Paragraph]]:
         begin, end = self.strip(wording, 0, len(wording.text))
@@ -328,7 +312,7 @@ class _Adapter:
         if end != begin:
             for _, (b, e) in self.split(r"(\s*\n\s*)", wording, begin, end):
                 for _, group in itertools.groupby(self.adapt_wording_paragraph(wording, b, e), key=lambda p: p[0]):
-                    yield renderable.Paragraph(contents=list(self.strip_whitespace_renderables(p[1] for p in group)))
+                    yield renderable.Paragraph(contents=list(self.strip_whitespace_renderables(self.capitalize_sentences(p[1] for p in group))))
                 begin = e
 
         assert begin == end, (begin, end)
@@ -339,7 +323,9 @@ class _Adapter:
         placeholders = dict(self.global_placeholders)
         for choices in wording.choices:
             if choices[0].begin >= begin and choices[0].end <= end and choices[1].placeholder != "":
-                placeholders[choices[1].placeholder] = [self.make_multiple_choices_input(wording, choices[0].begin, choices[0].end, choices[1])]
+                placeholders[choices[1].placeholder] = [
+                    self.make_multiple_choices_input(wording, choices[0].begin, choices[0].end, choices[1], fixed_case=False)
+                ]
 
         paragraph_index = 0
 
@@ -487,6 +473,33 @@ class _Adapter:
             after_list += 1
 
         return after_list
+
+    def capitalize_sentences(self, sentences: Iterable[renderable.AnyRenderable]) -> Iterable[renderable.AnyRenderable]:
+        for sentence in self.split_into_sentences(sentences):
+            while len(sentence) > 0 and isinstance(sentence[0], renderable.Whitespace):
+                yield sentence.pop(0)
+            if len(sentence) > 0:
+                yield self.capitalize(sentence.pop(0))
+            yield from sentence
+
+    def capitalize(self, r: renderable.AnyRenderable) -> renderable.AnyRenderable:
+        if isinstance(r, renderable.MultipleChoicesInput) and not r.fixed_case:
+            choices: list[list[renderable.PassiveRenderable]] = []
+            for choice in r.choices:
+                choices.append([])
+                if len(choice) > 0:
+                    choice0 = choice[0]
+                    if isinstance(choice0, renderable.Text):
+                        choice0 = renderable.Text(
+                            kind="text", text=choice0.text.capitalize(), bold=choice0.bold, italic=choice0.italic, highlighted=choice0.highlighted
+                        )
+                    choices[-1].append(choice0)
+                    choices[-1].extend(choice[1:])
+            return renderable.MultipleChoicesInput(
+                kind="multipleChoicesInput", show_arrow_before=r.show_arrow_before, choices=choices, show_choices_by_default=r.show_choices_by_default
+            )
+        else:
+            return r
 
     def adapt_itemized_letters(self, wording: AnnotatedSection, begin: int, end: int, paragraph_index: int) -> Iterable[tuple[int, renderable.AnyRenderable]]:
         assert self.letters_are_items
@@ -771,7 +784,9 @@ class _Adapter:
             kind="passiveSequence", contents=list(self.adapt_formatted_text(instructions, choice_locations[-1].begin, choice_locations[-1].end)), boxed=True
         )
 
-    def make_multiple_choices_input(self, section: AnnotatedSection, begin: int, end: int, choices: deltas.Choices2) -> renderable.MultipleChoicesInput:
+    def make_multiple_choices_input(
+        self, section: AnnotatedSection, begin: int, end: int, choices: deltas.Choices2, *, fixed_case: bool = True
+    ) -> renderable.MultipleChoicesInput:
         choice_locations = self.extract_choice_locations(section, begin, end, choices)
 
         return renderable.MultipleChoicesInput(
@@ -779,6 +794,7 @@ class _Adapter:
             choices=[list(self.adapt_formatted_text(section, choice.begin, choice.end)) for choice in choice_locations],
             show_arrow_before=self.show_arrow_before_mcq_fields,
             show_choices_by_default=self.show_mcq_choices_by_default,
+            fixed_case=fixed_case,
         )
 
     def extract_choice_locations(self, section: AnnotatedSection, begin: int, end: int, choices: deltas.Choices2) -> list[Interval]:
@@ -876,7 +892,7 @@ class _Adapter:
 class AdaptationTestCase(unittest.TestCase):
     maxDiff = None
     generate_frontend_tests = True
-    tests_to_generate: list[tuple[str, renderable.Exercise]]
+    tests_to_generate: list[tuple[str, int | None, renderable.Exercise]]
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -894,7 +910,7 @@ class AdaptationTestCase(unittest.TestCase):
             yield "    cy.viewport(1000, 100)"
             yield "  })"
             seen_keys = set()
-            for test_id, adapted in cls.tests_to_generate:
+            for test_id, viewport_height, adapted in cls.tests_to_generate:
                 for pagelet_index, pagelet in enumerate(adapted.pagelets):
                     for section_index, section in enumerate(pagelet.sections):
                         if section.paragraphs == []:
@@ -908,6 +924,8 @@ class AdaptationTestCase(unittest.TestCase):
                         seen_keys.add(key)
                         yield ""
                         yield f"  it('renders {test_id} pagelet {pagelet_index} section {section_index}', () => " "{"
+                        if viewport_height is not None:
+                            yield f"    cy.viewport(1000, {viewport_height})"
                         yield f"    cy.mount({'Tricolor' if section.tricolored else 'Monocolor'}Section, " + "{"
                         yield "      props: {"
                         yield f"        paragraphs: {paragraphs},"
@@ -928,9 +946,9 @@ class AdaptationTestCase(unittest.TestCase):
 
         return super().tearDownClass()
 
-    def do_test(self, exercise: exercises.Exercise, expected_adapted: renderable.Exercise | None) -> None:
+    def do_test(self, exercise: exercises.Exercise, expected_adapted: renderable.Exercise | None, viewport_height: int | None = None) -> None:
         if expected_adapted is not None:
-            self.tests_to_generate.append((self.id(), expected_adapted))
+            self.tests_to_generate.append((self.id(), viewport_height, expected_adapted))
 
         actual_adapted = exercise.make_adapted()
         if actual_adapted != expected_adapted:

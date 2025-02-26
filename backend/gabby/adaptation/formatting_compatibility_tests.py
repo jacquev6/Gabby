@@ -316,9 +316,9 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                             r.MultipleChoicesInput(
                                                 kind="multipleChoicesInput",
                                                 choices=[
-                                                    [r.Text(kind="text", text="alpha")],
-                                                    [r.Text(kind="text", text="b"), r.Text(kind="text", bold=True, text="rav"), r.Text(kind="text", text="o")],
-                                                    [r.Text(kind="text", text="charlie")],
+                                                    [r.Text(kind="text", text="Alpha")],
+                                                    [r.Text(kind="text", text="B"), r.Text(kind="text", bold=True, text="rav"), r.Text(kind="text", text="o")],
+                                                    [r.Text(kind="text", text="Charlie")],
                                                 ],
                                             )
                                         ]
@@ -474,9 +474,9 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                             r.MultipleChoicesInput(
                                                 kind="multipleChoicesInput",
                                                 choices=[
-                                                    [r.Text(kind="text", text="alpha")],
-                                                    [r.Text(kind="text", text="b"), r.Text(kind="text", bold=True, text="rav"), r.Text(kind="text", text="o")],
-                                                    [r.Text(kind="text", text="charlie")],
+                                                    [r.Text(kind="text", text="Alpha")],
+                                                    [r.Text(kind="text", text="B"), r.Text(kind="text", bold=True, text="rav"), r.Text(kind="text", text="o")],
+                                                    [r.Text(kind="text", text="Charlie")],
                                                 ],
                                             )
                                         ]
@@ -1269,9 +1269,9 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                             r.MultipleChoicesInput(
                                                 kind="multipleChoicesInput",
                                                 choices=[
-                                                    [r.Text(kind="text", text="alpha")],
-                                                    [r.Text(kind="text", text="bravo")],
-                                                    [r.Text(kind="text", text="charlie")],
+                                                    [r.Text(kind="text", text="Alpha")],
+                                                    [r.Text(kind="text", text="Bravo")],
+                                                    [r.Text(kind="text", text="Charlie")],
                                                 ],
                                             )
                                         ]
@@ -1345,9 +1345,9 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                             r.MultipleChoicesInput(
                                                 kind="multipleChoicesInput",
                                                 choices=[
-                                                    [r.Text(kind="text", text="alpha")],
-                                                    [r.Text(kind="text", text="bravo")],
-                                                    [r.Text(kind="text", text="charlie")],
+                                                    [r.Text(kind="text", text="Alpha")],
+                                                    [r.Text(kind="text", text="Bravo")],
+                                                    [r.Text(kind="text", text="Charlie")],
                                                 ],
                                             )
                                         ]
@@ -1421,9 +1421,9 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                             r.MultipleChoicesInput(
                                                 kind="multipleChoicesInput",
                                                 choices=[
-                                                    [r.Text(kind="text", text="alpha")],
-                                                    [r.Text(kind="text", text="bravo")],
-                                                    [r.Text(kind="text", text="charlie")],
+                                                    [r.Text(kind="text", text="Alpha")],
+                                                    [r.Text(kind="text", text="Bravo")],
+                                                    [r.Text(kind="text", text="Charlie")],
                                                 ],
                                             )
                                         ]
