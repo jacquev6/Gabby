@@ -1,4 +1,4 @@
-import { loadFixtures, login, notBusy, traceRectangle, visit, selectRange } from "./utils"
+import { loadFixtures, login, notBusy, traceRectangle, visit, selectRange, pressEnter } from "./utils"
 
 
 describe('Gabby', () => {
@@ -76,7 +76,6 @@ describe('Gabby', () => {
       console.assert(node !== null)
       selectRange(node, 18, node, 34)
     })
-    cy.get('button:contains("OK")').should('exist')
     cy.get('label:contains("Start") + input').should('have.value', '')
     cy.get('label:contains("Stop") + input').should('have.value', '')
     cy.get('label:contains("Separators") + input').should('have.value', '/')
@@ -84,7 +83,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Placeholder") + input').click().type('...')
     cy.get('label:contains("Placeholder") + input').should('be.focused').blur()
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-2', {clearSel: false})
-    cy.get('button:contains("OK")').click()
+    pressEnter()
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-3')
 
     cy.get('button:contains("Multiple choices")').click()
@@ -94,7 +93,6 @@ describe('Gabby', () => {
       console.assert(node !== null)
       selectRange(node, 16, node, 35)
     })
-    cy.get('button:contains("OK")').should('exist')
     cy.get('label:contains("Start") + input').should('have.value', '')
     cy.get('label:contains("Stop") + input').should('have.value', '')
     cy.get('label:contains("Separators") + input').should('have.value', '*')
@@ -102,7 +100,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Placeholder") + input').click().type('@@@')
     cy.get('label:contains("Placeholder") + input').should('be.focused').blur()
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-5', {clearSel: false})
-    cy.get('button:contains("OK")').click()
+    pressEnter()
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-6')
 
     cy.get('button:contains("Save then back")').click()

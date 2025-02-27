@@ -1,19 +1,5 @@
-import { loadFixtures, login, visit, selectRange } from './utils'
+import { loadFixtures, login, visit, selectRange, pressEscape, pressEnter } from './utils'
 
-
-function pressKey(key: string) {
-  cy.document().trigger('keydown', {key})
-  cy.wait(100)
-  cy.document().trigger('keyup', {key})
-}
-
-function pressEscape() {
-  pressKey('Escape')
-}
-
-function pressEnter() {
-  pressKey('Enter')
-}
 
 describe('Gabby', () => {
   before(console.clear)
@@ -96,7 +82,8 @@ describe('Gabby', () => {
     pressEscape()
     cy.get('button:contains("Exit full screen")').should('not.exist')
 
-    cy.get('button:contains("OK")').should('exist').click()
+    cy.get('label:contains("Start")').should('exist')
+    pressEnter()
 
     cy.get('button:contains("Full screen")').click()
     cy.get('button:contains("Exit full screen")').should('exist')

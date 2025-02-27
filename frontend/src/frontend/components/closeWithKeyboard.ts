@@ -23,19 +23,13 @@ export default function closeWithKeyboard(close: Thunk, options: Options = {}): 
 
   const index = nextClosableIndex++
   closables[index] = {withEscape, withEnter, close}
-  console.log('inserted', index)
 
   return () => {
     delete closables[index]
-    console.log('deleted', index)
   }
 }
 
 const { escape, enter } = useMagicKeys()
-
-watch(enter, pressed => {
-  console.log('enter', pressed)
-})
 
 watch([escape, enter], ([escape, enter]) => {
   if (Object.keys(closables).length > 0) {

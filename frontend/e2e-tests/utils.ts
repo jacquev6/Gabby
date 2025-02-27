@@ -74,3 +74,17 @@ export function selectRange(startNode: Node, startOffset: number, endNode: Node,
     })
   })
 }
+
+export function pressKey(key: string) {
+  cy.document().trigger('keydown', {key})
+  cy.wait(100)
+  cy.document().trigger('keyup', {key})
+}
+
+export function pressEscape() {
+  pressKey('Escape')
+}
+
+export function pressEnter() {
+  pressKey('Enter')
+}

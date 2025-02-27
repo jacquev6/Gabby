@@ -1,4 +1,4 @@
-import { loadFixtures, login, notBusy, visit, selectRange } from './utils'
+import { loadFixtures, login, notBusy, visit, selectRange, pressEnter } from './utils'
 
 
 function screenshot(screenshotName: string, options: {clearSel: boolean} = {clearSel: true}) {
@@ -37,7 +37,7 @@ describe('Gabby', () => {
       selectRange(node, 0, node, 53)
     })
     cy.get('label:contains("Placeholder") + input').click().should('be.enabled').type('...')
-    cy.get('button:contains("OK")').click()
+    pressEnter()
 
     cy.get('button:contains("Full screen")').click()
     cy.get('span.main').eq(0).click()
@@ -63,7 +63,7 @@ describe('Gabby', () => {
       selectRange(node, 0, node, 73)
     })
     cy.get('label:contains("Placeholder") + input').click().should('be.enabled').type('...')
-    cy.get('button:contains("OK")').click()
+    pressEnter()
 
     cy.get('button:contains("Full screen")').click()
     cy.get('span.main').eq(0).click()
@@ -177,7 +177,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Start") + input').should('have.value', '(')
     cy.get('label:contains("Stop") + input').should('have.value', ')')
     cy.get('label:contains("Placeholder") + input').click().type('…')
-    cy.get('button:contains("OK")').click()
+    pressEnter()
 
     cy.get('button:contains("Full screen")').click()
     screenshot('similar-mcqs-1')
@@ -202,7 +202,7 @@ describe('Gabby', () => {
     })
     cy.get('label:contains("Separators") + input').should('have.value', 'ou')
     cy.get('label:contains("Placeholder") + input').click().type('...')
-    cy.get('button:contains("OK")').click()
+    pressEnter()
     cy.get('div:contains("Show choices by default") > input').click()
     cy.get('span[title="2 lines per page"]').click()
     cy.get('button:contains("Full screen")').click()
@@ -235,7 +235,7 @@ describe('Gabby', () => {
     })
     cy.get('label:contains("Separators") + input').should('have.value', 'ou')
     cy.get('label:contains("Placeholder") + input').click().type('...')
-    cy.get('button:contains("OK")').click()
+    pressEnter()
     cy.get('div:contains("Show choices by default") > input').click()
     cy.get('span[title="2 lines per page"]').click()
     cy.get('button:contains("Full screen")').click()
@@ -290,7 +290,7 @@ describe('Gabby', () => {
     })
     cy.get('label:contains("Separators") + input').should('have.value', '/')
     cy.get('label:contains("Placeholder") + input').click().type('...')
-    cy.get('button:contains("OK")').click()
+    pressEnter()
     cy.get('choices2-blot > italic-blot').should('exist')
     cy.get('italic-blot > choices2-blot').should('not.exist')
     cy.get('@instructions').click()
@@ -355,7 +355,8 @@ describe('Gabby', () => {
       console.assert(node !== null)
       selectRange(node, 30, node, 41)
     })
-    cy.get('button:contains("OK")').click()
+    cy.wait(100)  // @todo Understand why this wait is needed. (We have many other similar situations where it's not needed)
+    pressEnter()
 
     cy.get('span.main').click()
     screenshot('bold-in-mcq-placeholder-1')
