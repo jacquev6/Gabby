@@ -13,11 +13,12 @@ const style = computed(() => ({
 </script>
 
 <template>
-  <span :style :class="{boxed_: boxed}"><slot></slot></span>
+  <span :style :class="{boxed}"><slot></slot></span>
 </template>
 
 <style scoped>
-span.boxed_ {
-  outline: black solid 3px;
+span.boxed {
+  padding: 4px;
+  border: 2px solid black;
 }
 </style>

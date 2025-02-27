@@ -97,7 +97,7 @@ span.bold {
 }
 
 span.boxed {
-  padding: 4px 0;
+  padding: 4px;
   border: 2px solid black;
 }
 </style>
