@@ -59,3 +59,18 @@ export function traceRectangle(alias: string, x1: number, y1: number, x2: number
     }
   })
 }
+
+export function selectRange(startNode: Node, startOffset: number, endNode: Node, endOffset: number) {
+  cy.window().then(window => {
+    cy.document().then(document => {
+      var range = document.createRange()
+      range.setStart(startNode, startOffset)
+      range.setEnd(endNode, endOffset)
+
+      var sel = window.getSelection()
+      console.assert(sel !== null)
+      sel.removeAllRanges()
+      sel.addRange(range)
+    })
+  })
+}

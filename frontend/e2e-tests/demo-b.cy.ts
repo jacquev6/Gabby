@@ -1,4 +1,4 @@
-import { loadFixtures, login, notBusy, traceRectangle, visit } from "./utils"
+import { loadFixtures, login, notBusy, traceRectangle, visit, selectRange } from "./utils"
 
 
 describe('Gabby', () => {
@@ -17,21 +17,6 @@ describe('Gabby', () => {
     cy.get('label:contains("Adaptation type") + select').as('adaptationType')
     cy.get('label:contains("Instructions") + div.ql-container div.ql-editor').as('instructions')
     cy.get('label:contains("Wording") + div.ql-container div.ql-editor').as('wording')
-  }
-
-  function selectRange(startNode: Node, startOffset: number, endNode: Node, endOffset: number) {
-    cy.window().then(window => {
-      cy.document().then(document => {
-        var range = document.createRange()
-        range.setStart(startNode, startOffset)
-        range.setEnd(endNode, endOffset)
-
-        var sel = window.getSelection()
-        console.assert(sel !== null)
-        sel.removeAllRanges()
-        sel.addRange(range)
-      })
-    })
   }
 
   function screenshot(testName: string, screenshotName: string, options: {clearSel: boolean} = {clearSel: true}) {

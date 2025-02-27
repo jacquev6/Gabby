@@ -1,20 +1,5 @@
-import { loadFixtures, login, notBusy, visit } from './utils'
+import { loadFixtures, login, notBusy, visit, selectRange } from './utils'
 
-
-function selectRange(startNode: Node, startOffset: number, endNode: Node, endOffset: number) {
-  cy.window().then(window => {
-    cy.document().then(document => {
-      var range = document.createRange()
-      range.setStart(startNode, startOffset)
-      range.setEnd(endNode, endOffset)
-
-      var sel = window.getSelection()
-      console.assert(sel !== null)
-      sel.removeAllRanges()
-      sel.addRange(range)
-    })
-  })
-}
 
 function pressEscape() {
   cy.document().trigger('keydown', {key: 'Escape'})
