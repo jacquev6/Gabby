@@ -3,6 +3,8 @@ import { useFloating, arrow, shift } from '@floating-ui/vue'
 import { computed, ref, watch } from 'vue'
 import { useElementBounding } from '@vueuse/core'
 
+import closeOnEscape from './closeOnEscape'
+
 
 const props = defineProps<{
   backdropCovers1: string
@@ -20,13 +22,20 @@ const floatingContainer = ref<HTMLElement | null>(null)
 const floatingArrow = ref<HTMLElement | null>(null)
 const floatingContent = ref<HTMLElement | null>(null)
 
+let cancelClosingOnEscape: (() => void) | null = null
+
 function show(ref: HTMLElement) {
   inDom.value = true
   floatingReference.value = ref
+  console.assert(cancelClosingOnEscape === null)
+  cancelClosingOnEscape = closeOnEscape(hide)
 }
 
 function hide() {
   inDom.value = false
+  console.assert(cancelClosingOnEscape !== null)
+  cancelClosingOnEscape()
+  cancelClosingOnEscape = null
 }
 
 watch(floatingContent, floatingContent => {

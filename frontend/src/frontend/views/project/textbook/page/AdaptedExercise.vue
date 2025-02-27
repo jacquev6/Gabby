@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, watch, provide } from 'vue'
-import { useWindowSize, useElementBounding, useMagicKeys } from '@vueuse/core'
+import { useWindowSize, useElementBounding } from '@vueuse/core'
 
 import type { Exercise } from '$adapted/types'
 import { BButton } from '$frontend/components/opinion/bootstrap'
 import ExerciseComponent from '$adapted/components/Exercise.vue'
 import PageletsNavigationControls from '$adapted/components/PageletsNavigationControls.vue'
+import closeOnEscape from '$frontend/components/closeOnEscape'
 
 
 const props = defineProps<{
@@ -32,6 +33,21 @@ const container = ref<HTMLElement | null>(null)
 const { width: containerWidth } = useElementBounding(container)
 
 const fullScreen = ref(false)
+
+let cancelClosingOnEscape: (() => void) | null = null
+
+function show() {
+  fullScreen.value = true
+  console.assert(cancelClosingOnEscape === null)
+  cancelClosingOnEscape = closeOnEscape(hide)
+}
+
+function hide() {
+  fullScreen.value = false
+  console.assert(cancelClosingOnEscape !== null)
+  cancelClosingOnEscape()
+  cancelClosingOnEscape = null
+}
 
 const containerStyle  = computed(() => {
   if (container.value === null) {
@@ -77,14 +93,6 @@ const previewStyle = computed(() => {
 
 const preview = ref<HTMLElement | null>(null)
 provide('adaptedExerciseBackdropCovers', preview)
-
-const { escape } = useMagicKeys()
-watch(escape, pressed => {
-  if (pressed && fullScreen.value) {
-    fullScreen.value = false
-  }
-})
-
 </script>
 
 <template>
@@ -103,7 +111,7 @@ watch(escape, pressed => {
 
       <div v-if="fullScreen" style="position: relative;">
         <div style="position: absolute; left: 50%; transform: translate(-50%, 0); bottom: 1rem; z-index: 40;">
-          <BButton secondary sm @click="fullScreen = false">{{ $t('exitFullScreen') }}</BButton>
+          <BButton secondary sm @click="hide">{{ $t('exitFullScreen') }}</BButton>
         </div>
       </div>
     </div>
@@ -118,6 +126,6 @@ watch(escape, pressed => {
     >
       {{ $t('eraseAnswers') }}
     </BButton>
-    <BButton secondary sm @click="fullScreen = true">{{ $t('fullScreen') }}</BButton>
+    <BButton secondary sm @click="show">{{ $t('fullScreen') }}</BButton>
   </p>
 </template>
