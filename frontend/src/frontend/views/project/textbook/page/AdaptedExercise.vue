@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, provide } from 'vue'
-import { useWindowSize, useElementBounding } from '@vueuse/core'
+import { useWindowSize, useElementBounding, useMagicKeys } from '@vueuse/core'
 
 import type { Exercise } from '$adapted/types'
 import { BButton } from '$frontend/components/opinion/bootstrap'
@@ -77,6 +77,14 @@ const previewStyle = computed(() => {
 
 const preview = ref<HTMLElement | null>(null)
 provide('adaptedExerciseBackdropCovers', preview)
+
+const { escape } = useMagicKeys()
+watch(escape, pressed => {
+  if (pressed && fullScreen.value) {
+    fullScreen.value = false
+  }
+})
+
 </script>
 
 <template>
