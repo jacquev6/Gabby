@@ -71,7 +71,7 @@ const backdropCovers = inject<string>('adaptedExerciseBackdropCovers', 'body')
 
 <template>
   <span v-bind="$attrs" style="display: inline flow-root; vertical-align: top">
-    <template v-if="showArrowBefore">⮕</template>
+    <template v-if="showArrowBefore">→</template>
     <span ref="reference" class="main" :class="{open: showChoices}" @click="showChoices = !showChoices">
       <template v-if="model !== undefined">
         <Renderable v-for="node in choices[model]" :node :inStack="true" v-model="unusedModels" :modelKey="[0]" />
