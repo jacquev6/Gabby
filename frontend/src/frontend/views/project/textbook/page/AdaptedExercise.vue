@@ -6,7 +6,7 @@ import type { Exercise } from '$adapted/types'
 import { BButton } from '$frontend/components/opinion/bootstrap'
 import ExerciseComponent from '$adapted/components/Exercise.vue'
 import PageletsNavigationControls from '$adapted/components/PageletsNavigationControls.vue'
-import closeOnEscape from '$frontend/components/closeOnEscape'
+import closeWithKeyboard from '$/frontend/components/closeWithKeyboard'
 
 
 const props = defineProps<{
@@ -39,7 +39,7 @@ let cancelClosingOnEscape: (() => void) | null = null
 function show() {
   fullScreen.value = true
   console.assert(cancelClosingOnEscape === null)
-  cancelClosingOnEscape = closeOnEscape(hide)
+  cancelClosingOnEscape = closeWithKeyboard(hide)
 }
 
 function hide() {

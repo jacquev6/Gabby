@@ -1,10 +1,18 @@
 import { loadFixtures, login, visit, selectRange } from './utils'
 
 
-function pressEscape() {
-  cy.document().trigger('keydown', {key: 'Escape'})
+function pressKey(key: string) {
+  cy.document().trigger('keydown', {key})
   cy.wait(100)
-  cy.document().trigger('keyup', {key: 'Escape'})
+  cy.document().trigger('keyup', {key})
+}
+
+function pressEscape() {
+  pressKey('Escape')
+}
+
+function pressEnter() {
+  pressKey('Enter')
 }
 
 describe('Gabby', () => {
@@ -16,7 +24,7 @@ describe('Gabby', () => {
     cy.viewport(1000, 1000)
   })
 
-  it('closes the QCM settings dialog for an existing exercise', () => {
+  it('closes the QCM settings dialog for an existing exercise with escape', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/exercise-xnyegk')
 
     cy.get('label:contains("Start")').should('not.exist')
@@ -26,6 +34,20 @@ describe('Gabby', () => {
     cy.get('label:contains("Start")').should('exist')
 
     pressEscape()
+
+    cy.get('label:contains("Start")').should('not.exist')
+  })
+
+  it('closes the QCM settings dialog for an existing exercise with enter', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-7/exercise-xnyegk')
+
+    cy.get('label:contains("Start")').should('not.exist')
+
+    cy.get('choices2-blot').rightclick()
+
+    cy.get('label:contains("Start")').should('exist')
+
+    pressEnter()
 
     cy.get('label:contains("Start")').should('not.exist')
   })

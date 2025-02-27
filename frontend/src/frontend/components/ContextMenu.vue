@@ -3,7 +3,7 @@ import { useFloating, arrow, shift } from '@floating-ui/vue'
 import { computed, ref, watch } from 'vue'
 import { useElementBounding } from '@vueuse/core'
 
-import closeOnEscape from './closeOnEscape'
+import closeWithKeyboard from './closeWithKeyboard'
 
 
 const props = defineProps<{
@@ -28,7 +28,7 @@ function show(ref: HTMLElement) {
   inDom.value = true
   floatingReference.value = ref
   console.assert(cancelClosingOnEscape === null)
-  cancelClosingOnEscape = closeOnEscape(hide)
+  cancelClosingOnEscape = closeWithKeyboard(hide, {withEscape: true, withEnter: true})
 }
 
 function hide() {
