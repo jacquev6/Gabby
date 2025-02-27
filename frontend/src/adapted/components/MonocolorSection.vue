@@ -41,6 +41,6 @@ p {
 }
 
 p.first {
-  margin-top: -24px;
+  margin-top: -19px;
 }
 </style>
