@@ -71,7 +71,7 @@ defineExpose({
   <div style="position: relative; font-family: Arial, sans-serif;">
     <template v-for="section, sectionIndex in pagelet.sections">
       <template v-if="section.tricolored">
-        <div style="padding: 6px">
+        <div style="padding-left: 6px; padding-right: 6px;">
           <TricolorSection :paragraphs="section.paragraphs" :centered="section.centered" :first="sectionIndex == 0" v-model="models[pageletIndex].wording" />
         </div>
       </template>
