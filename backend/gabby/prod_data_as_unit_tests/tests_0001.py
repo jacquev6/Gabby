@@ -3,7 +3,7 @@
 from .. import exercises as e
 from .. import renderable as r
 from ..adaptation import AdaptationTestCase
-from ..api_models import Adaptation, CharactersItems, TokensItems, SentencesItems, ManualItems, Selectable, PredefinedMcq
+from ..api_models import Adaptation, CharactersItems, TokensItems, SentencesItems, ManualItems, SeparatedItems, Selectable, PredefinedMcq
 from ..deltas import TextInsertOp, TextInsertOpAttributes, Choices2
 
 

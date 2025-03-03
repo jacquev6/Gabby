@@ -3,7 +3,7 @@
 from .. import exercises as e
 from .. import renderable as r
 from ..adaptation import AdaptationTestCase
-from ..api_models import Adaptation, CharactersItems, TokensItems, SentencesItems, ManualItems, Selectable, PredefinedMcq
+from ..api_models import Adaptation, CharactersItems, TokensItems, SentencesItems, ManualItems, SeparatedItems, Selectable, PredefinedMcq
 from ..deltas import TextInsertOp, TextInsertOpAttributes, Choices2
 
 
@@ -11433,9 +11433,26 @@ class DatabaseAsUnitTests0005(AdaptationTestCase):
                 instructions=[
                     TextInsertOp(
                         kind="text",
-                        insert="Béfobdc fab fbaa ou faub.\n",
+                        insert="Béfobdc fab ",
                         attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
-                    )
+                    ),
+                    TextInsertOp(
+                        kind="text",
+                        insert="fbaa ou faub",
+                        attributes=TextInsertOpAttributes(
+                            italic=False,
+                            bold=False,
+                            choices2=Choices2(start="", separator1="ou", separator2="", stop="", placeholder="", mcq_field_uid=None),
+                            mcq_placeholder=False,
+                            manual_item=False,
+                            sel=None,
+                        ),
+                    ),
+                    TextInsertOp(
+                        kind="text",
+                        insert=".\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    ),
                 ],
                 wording=[
                     TextInsertOp(
@@ -11470,14 +11487,14 @@ class DatabaseAsUnitTests0005(AdaptationTestCase):
                     wording_paragraphs_per_pagelet=None,
                     single_item_per_paragraph=False,
                     placeholder_for_fill_with_free_text=None,
-                    items=None,
+                    items=SentencesItems(kind="sentences"),
                     items_are_selectable=None,
                     items_are_boxed=False,
                     items_have_mcq_beside=False,
-                    items_have_mcq_below=False,
+                    items_have_mcq_below=True,
                     items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
                     items_are_repeated_with_mcq=False,
-                    show_arrow_before_mcq_fields=False,
+                    show_arrow_before_mcq_fields=True,
                     show_mcq_choices_by_default=False,
                 ),
             ),
@@ -11495,11 +11512,11 @@ class DatabaseAsUnitTests0005(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.Text(kind="text", text="fab"),
                                             r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="fbaa"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="fbaa")], boxed=True),
                                             r.Whitespace(kind="whitespace"),
                                             r.Text(kind="text", text="ou"),
                                             r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="faub"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="faub")], boxed=True),
                                             r.Text(kind="text", text="."),
                                         ]
                                     )
@@ -11514,33 +11531,49 @@ class DatabaseAsUnitTests0005(AdaptationTestCase):
                                             r.Text(kind="text", text="a"),
                                             r.Text(kind="text", text="."),
                                             r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="Ca"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="ub"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="bob"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="ecb"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="baccubab"),
-                                            r.Text(kind="text", text=","),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="ab"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="feub"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="êbbe"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="au"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="fbubaeb"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="ou"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="au"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="cabbubaeb"),
-                                            r.Text(kind="text", text="."),
+                                            r.AnySequence(
+                                                kind="sequence",
+                                                contents=[
+                                                    r.AnySequence(
+                                                        kind="sequence",
+                                                        contents=[
+                                                            r.Text(kind="text", text="Ca"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="ub"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="bob"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="ecb"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="baccubab"),
+                                                            r.Text(kind="text", text=","),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="ab"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="feub"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="êbbe"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="au"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="fbubaeb"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="ou"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="au"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="cabbubaeb"),
+                                                            r.Text(kind="text", text="."),
+                                                        ],
+                                                    ),
+                                                    r.MultipleChoicesInput(
+                                                        kind="multipleChoicesInput",
+                                                        show_arrow_before=True,
+                                                        choices=[[r.Text(kind="text", text="fbaa")], [r.Text(kind="text", text="faub")]],
+                                                    ),
+                                                ],
+                                                vertical=True,
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -11548,18 +11581,34 @@ class DatabaseAsUnitTests0005(AdaptationTestCase):
                                             r.Text(kind="text", text="b"),
                                             r.Text(kind="text", text="."),
                                             r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="Ub"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="bob"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="ecb"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="baccubab"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="ou"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="fébabab"),
-                                            r.Text(kind="text", text="."),
+                                            r.AnySequence(
+                                                kind="sequence",
+                                                contents=[
+                                                    r.AnySequence(
+                                                        kind="sequence",
+                                                        contents=[
+                                                            r.Text(kind="text", text="Ub"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="bob"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="ecb"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="baccubab"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="ou"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="fébabab"),
+                                                            r.Text(kind="text", text="."),
+                                                        ],
+                                                    ),
+                                                    r.MultipleChoicesInput(
+                                                        kind="multipleChoicesInput",
+                                                        show_arrow_before=True,
+                                                        choices=[[r.Text(kind="text", text="fbaa")], [r.Text(kind="text", text="faub")]],
+                                                    ),
+                                                ],
+                                                vertical=True,
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -11567,30 +11616,46 @@ class DatabaseAsUnitTests0005(AdaptationTestCase):
                                             r.Text(kind="text", text="c"),
                                             r.Text(kind="text", text="."),
                                             r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="Be"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="bobbbe"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="abdabue"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="ca"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="ub"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="bob"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="ecb"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="au"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="cabbubaeb"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="ou"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="au"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="fbubaeb"),
-                                            r.Text(kind="text", text="."),
+                                            r.AnySequence(
+                                                kind="sequence",
+                                                contents=[
+                                                    r.AnySequence(
+                                                        kind="sequence",
+                                                        contents=[
+                                                            r.Text(kind="text", text="Be"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="bobbbe"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="abdabue"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="ca"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="ub"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="bob"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="ecb"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="au"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="cabbubaeb"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="ou"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="au"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="fbubaeb"),
+                                                            r.Text(kind="text", text="."),
+                                                        ],
+                                                    ),
+                                                    r.MultipleChoicesInput(
+                                                        kind="multipleChoicesInput",
+                                                        show_arrow_before=True,
+                                                        choices=[[r.Text(kind="text", text="fbaa")], [r.Text(kind="text", text="faub")]],
+                                                    ),
+                                                ],
+                                                vertical=True,
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -11598,26 +11663,42 @@ class DatabaseAsUnitTests0005(AdaptationTestCase):
                                             r.Text(kind="text", text="d"),
                                             r.Text(kind="text", text="."),
                                             r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="Be"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="bobbbe"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="abdabue"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="bue"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="be"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="bob"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="ecb"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="fobcébebb"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="au"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="fbubaeb"),
-                                            r.Text(kind="text", text="."),
+                                            r.AnySequence(
+                                                kind="sequence",
+                                                contents=[
+                                                    r.AnySequence(
+                                                        kind="sequence",
+                                                        contents=[
+                                                            r.Text(kind="text", text="Be"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="bobbbe"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="abdabue"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="bue"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="be"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="bob"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="ecb"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="fobcébebb"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="au"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="fbubaeb"),
+                                                            r.Text(kind="text", text="."),
+                                                        ],
+                                                    ),
+                                                    r.MultipleChoicesInput(
+                                                        kind="multipleChoicesInput",
+                                                        show_arrow_before=True,
+                                                        choices=[[r.Text(kind="text", text="fbaa")], [r.Text(kind="text", text="faub")]],
+                                                    ),
+                                                ],
+                                                vertical=True,
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -11625,28 +11706,44 @@ class DatabaseAsUnitTests0005(AdaptationTestCase):
                                             r.Text(kind="text", text="e"),
                                             r.Text(kind="text", text="."),
                                             r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="Be"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="débebbababb"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="abdabue"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="be"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="bebbe"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="eb"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="be"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="bobbbe"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="d"),
-                                            r.Text(kind="text", text="’"),
-                                            r.Text(kind="text", text="ub"),
-                                            r.Whitespace(kind="whitespace"),
-                                            r.Text(kind="text", text="bob"),
-                                            r.Text(kind="text", text="."),
+                                            r.AnySequence(
+                                                kind="sequence",
+                                                contents=[
+                                                    r.AnySequence(
+                                                        kind="sequence",
+                                                        contents=[
+                                                            r.Text(kind="text", text="Be"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="débebbababb"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="abdabue"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="be"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="bebbe"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="eb"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="be"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="bobbbe"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="d"),
+                                                            r.Text(kind="text", text="’"),
+                                                            r.Text(kind="text", text="ub"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="bob"),
+                                                            r.Text(kind="text", text="."),
+                                                        ],
+                                                    ),
+                                                    r.MultipleChoicesInput(
+                                                        kind="multipleChoicesInput",
+                                                        show_arrow_before=True,
+                                                        choices=[[r.Text(kind="text", text="fbaa")], [r.Text(kind="text", text="faub")]],
+                                                    ),
+                                                ],
+                                                vertical=True,
+                                            ),
                                         ]
                                     ),
                                 ],
@@ -13953,6 +14050,1790 @@ class DatabaseAsUnitTests0005(AdaptationTestCase):
                                             ),
                                         ]
                                     ),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
+                    ),
+                ],
+            ),
+        )
+
+    def test_exercise_0304(self):
+        self.do_test(
+            e.Exercise(
+                number="3",
+                textbook_page=150,
+                instructions=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="Foub cfabue bob, écbac cob bebbe eb cob bobbbe.\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    )
+                ],
+                wording=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="a. cbacce ◆ cacfobc ◆ foub ◆ beb ◆ foubec\nb. bobbabbec ◆ cbaebbec ◆ cabebdbaeb ◆ baècec ◆ abfabée ◆ acbafabé ◆ bébaebc ◆ ababaéc\nc. œab ◆ eaub ◆ baèfbe ◆ boac ◆ bobd\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    )
+                ],
+                example=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="fbûbec ➞ fébabab, fbubaeb\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    )
+                ],
+                clue=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    )
+                ],
+                text_reference=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    )
+                ],
+                adaptation=Adaptation(
+                    kind="generic",
+                    wording_paragraphs_per_pagelet=None,
+                    single_item_per_paragraph=True,
+                    placeholder_for_fill_with_free_text=None,
+                    items=SeparatedItems(kind="separated", separator="◆"),
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=True, grammatical_number=True),
+                    items_are_repeated_with_mcq=False,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="3",
+                textbook_page=150,
+                pagelets=[
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Foub"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="cfabue"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bob"),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="écbac"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="cob"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bebbe"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="eb"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="cob"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bobbbe"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="fbûbec"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="➞"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="fébabab"),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="fbubaeb"),
+                                        ]
+                                    ),
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="a"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="cbacce"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                show_arrow_before=True,
+                                                choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="cacfobc"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                show_arrow_before=True,
+                                                choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="foub"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                show_arrow_before=True,
+                                                choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="beb"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                show_arrow_before=True,
+                                                choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="foubec"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                show_arrow_before=True,
+                                                choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="b"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bobbabbec"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                show_arrow_before=True,
+                                                choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="cbaebbec"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                show_arrow_before=True,
+                                                choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="cabebdbaeb"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                show_arrow_before=True,
+                                                choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="baècec"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                show_arrow_before=True,
+                                                choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="abfabée"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                show_arrow_before=True,
+                                                choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="acbafabé"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                show_arrow_before=True,
+                                                choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="bébaebc"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                show_arrow_before=True,
+                                                choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="ababaéc"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                show_arrow_before=True,
+                                                choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="c"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="œab"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                show_arrow_before=True,
+                                                choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="eaub"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                show_arrow_before=True,
+                                                choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="baèfbe"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                show_arrow_before=True,
+                                                choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="boac"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                show_arrow_before=True,
+                                                choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                            ),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="bobd"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                show_arrow_before=True,
+                                                choices=[[r.Text(kind="text", text="féminin")], [r.Text(kind="text", text="masculin")]],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[[r.Text(kind="text", text="singulier")], [r.Text(kind="text", text="pluriel")]],
+                                            ),
+                                        ]
+                                    ),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
+                    )
+                ],
+            ),
+        )
+
+    def test_exercise_0305(self):
+        self.do_test(
+            e.Exercise(
+                number="3",
+                textbook_page=167,
+                instructions=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="Becofae cfabue bacbe eb cuffbababb be bob bua b’ecb fac fobbé d’ub badacab eb d’ub cuffabe.\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    )
+                ],
+                wording=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="a. fabababaob ◆ afaabaob ◆ fabubaob ◆ faob\nb. bûbe ◆ boabube ◆ baaube ◆ bebaube ◆ ébbababbube\nc. bafoab ◆ bacoab ◆ accoudoab ◆ abbocoab ◆ bobcoab\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    )
+                ],
+                example=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    )
+                ],
+                clue=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    )
+                ],
+                text_reference=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    )
+                ],
+                adaptation=Adaptation(
+                    kind="generic",
+                    wording_paragraphs_per_pagelet=None,
+                    single_item_per_paragraph=False,
+                    placeholder_for_fill_with_free_text=None,
+                    items=SeparatedItems(kind="separated", separator="◆"),
+                    items_are_selectable=None,
+                    items_are_boxed=True,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                    items_are_repeated_with_mcq=False,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="3",
+                textbook_page=167,
+                pagelets=[
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Becofae"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="cfabue"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bacbe"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="eb"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="cuffbababb"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="be"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bob"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bua"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="b"),
+                                            r.Text(kind="text", text="’"),
+                                            r.Text(kind="text", text="ecb"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="fac"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="fobbé"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="d"),
+                                            r.Text(kind="text", text="’"),
+                                            r.Text(kind="text", text="ub"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="badacab"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="eb"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="d"),
+                                            r.Text(kind="text", text="’"),
+                                            r.Text(kind="text", text="ub"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="cuffabe"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="a"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="fabababaob")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="afaabaob")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="fabubaob")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="faob")], boxed=True),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="b"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bûbe")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="boabube")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="baaube")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bebaube")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="ébbababbube")], boxed=True),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="c"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bafoab")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bacoab")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="accoudoab")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="abbocoab")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bobcoab")], boxed=True),
+                                        ]
+                                    ),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
+                    )
+                ],
+            ),
+        )
+
+    def test_exercise_0306(self):
+        self.do_test(
+            e.Exercise(
+                number="7",
+                textbook_page=45,
+                instructions=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="Becofae cfabue ffbace afec ba fobbe du febbe bua cobfaebb.\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    )
+                ],
+                wording=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="a. Auboubd’fua, be caeb ecb bbac eb ",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    ),
+                    TextInsertOp(
+                        kind="text",
+                        insert="(ab fbeub/ ab fbeufaab/ab fbeufba)",
+                        attributes=TextInsertOpAttributes(
+                            italic=False,
+                            bold=False,
+                            choices2=Choices2(start="(", separator1="/", separator2="", stop=")", placeholder="", mcq_field_uid=None),
+                            mcq_placeholder=False,
+                            manual_item=False,
+                            sel=None,
+                        ),
+                    ),
+                    TextInsertOp(
+                        kind="text",
+                        insert=".\nb. Faeb, ",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    ),
+                    TextInsertOp(
+                        kind="text",
+                        insert="( be cfebcfe/b’aa cfebcfé/be cfebcfebaa)",
+                        attributes=TextInsertOpAttributes(
+                            italic=False,
+                            bold=False,
+                            choices2=Choices2(start="(", separator1="/", separator2="", stop=")", placeholder="", mcq_field_uid=None),
+                            mcq_placeholder=False,
+                            manual_item=False,
+                            sel=None,
+                        ),
+                    ),
+                    TextInsertOp(
+                        kind="text",
+                        insert=" bob cfaeb febdabb ube feube.\nc. Ba fbocfaabe foac ",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    ),
+                    TextInsertOp(
+                        kind="text",
+                        insert="( be be cuac/be b’aa cuafa/ be be cuafbaa)",
+                        attributes=TextInsertOpAttributes(
+                            italic=False,
+                            bold=False,
+                            choices2=Choices2(start="(", separator1="/", separator2="", stop=")", placeholder="", mcq_field_uid=None),
+                            mcq_placeholder=False,
+                            manual_item=False,
+                            sel=None,
+                        ),
+                    ),
+                    TextInsertOp(
+                        kind="text",
+                        insert=" foub be fac be febdbe.\nd. B’abbée fbocfaabe, ",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    ),
+                    TextInsertOp(
+                        kind="text",
+                        insert="(bu afaac/bu ac/bu aubac)",
+                        attributes=TextInsertOpAttributes(
+                            italic=False,
+                            bold=False,
+                            choices2=Choices2(start="(", separator1="/", separator2="", stop=")", placeholder="", mcq_field_uid=None),
+                            mcq_placeholder=False,
+                            manual_item=False,
+                            sel=None,
+                        ),
+                    ),
+                    TextInsertOp(
+                        kind="text",
+                        insert=" beuf abc.\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    ),
+                ],
+                example=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    )
+                ],
+                clue=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    )
+                ],
+                text_reference=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    )
+                ],
+                adaptation=Adaptation(
+                    kind="generic",
+                    wording_paragraphs_per_pagelet=None,
+                    single_item_per_paragraph=False,
+                    placeholder_for_fill_with_free_text=None,
+                    items=None,
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                    items_are_repeated_with_mcq=False,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="7",
+                textbook_page=45,
+                pagelets=[
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Becofae"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="cfabue"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ffbace"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="afec"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ba"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="fobbe"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="du"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="febbe"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bua"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="cobfaebb"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="a"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="Auboubd"),
+                                            r.Text(kind="text", text="’"),
+                                            r.Text(kind="text", text="fua"),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="be"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="caeb"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ecb"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bbac"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="eb"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[
+                                                    [r.Text(kind="text", text="ab"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="fbeub")],
+                                                    [r.Text(kind="text", text="ab"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="fbeufaab")],
+                                                    [r.Text(kind="text", text="ab"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="fbeufba")],
+                                                ],
+                                            ),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="b"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="Faeb"),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[
+                                                    [r.Text(kind="text", text="be"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="cfebcfe")],
+                                                    [
+                                                        r.Text(kind="text", text="b"),
+                                                        r.Text(kind="text", text="’"),
+                                                        r.Text(kind="text", text="aa"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", text="cfebcfé"),
+                                                    ],
+                                                    [r.Text(kind="text", text="be"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="cfebcfebaa")],
+                                                ],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bob"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="cfaeb"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="febdabb"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ube"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="feube"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="c"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="Ba"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="fbocfaabe"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="foac"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[
+                                                    [
+                                                        r.Text(kind="text", text="be"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", text="be"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", text="cuac"),
+                                                    ],
+                                                    [
+                                                        r.Text(kind="text", text="be"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", text="b"),
+                                                        r.Text(kind="text", text="’"),
+                                                        r.Text(kind="text", text="aa"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", text="cuafa"),
+                                                    ],
+                                                    [
+                                                        r.Text(kind="text", text="be"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", text="be"),
+                                                        r.Whitespace(kind="whitespace"),
+                                                        r.Text(kind="text", text="cuafbaa"),
+                                                    ],
+                                                ],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="foub"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="be"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="fac"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="be"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="febdbe"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="d"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="B"),
+                                            r.Text(kind="text", text="’"),
+                                            r.Text(kind="text", text="abbée"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="fbocfaabe"),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[
+                                                    [r.Text(kind="text", text="bu"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="afaac")],
+                                                    [r.Text(kind="text", text="bu"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="ac")],
+                                                    [r.Text(kind="text", text="bu"), r.Whitespace(kind="whitespace"), r.Text(kind="text", text="aubac")],
+                                                ],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="beuf"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="abc"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
+                    )
+                ],
+            ),
+        )
+
+    def test_exercise_0307(self):
+        self.do_test(
+            e.Exercise(
+                number="5",
+                textbook_page=17,
+                instructions=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="Cobfbèbe bec ffbacec afec bec bobc de bébabaob bua babbuebb : ",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    ),
+                    TextInsertOp(
+                        kind="text",
+                        insert="b’, be, ba",
+                        attributes=TextInsertOpAttributes(
+                            italic=False,
+                            bold=False,
+                            choices2=Choices2(start="", separator1=",", separator2="", stop="", placeholder="...", mcq_field_uid=None),
+                            mcq_placeholder=False,
+                            manual_item=False,
+                            sel=None,
+                        ),
+                    ),
+                    TextInsertOp(
+                        kind="text",
+                        insert=".\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    ),
+                ],
+                wording=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="a. Eb cebbbe-fabbe, ob ... bboufe ... foabubec ... bâbabebbc bécebbc.\nb. Ce buabbaeb ... a fac ébé bébofé.\nc. Bec abbeubbec ... cobb fac becbaubéc.\nd. Ab ...a a fac beaucouf d’abbbec dabc cebbe fabbe.\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    )
+                ],
+                example=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    )
+                ],
+                clue=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    )
+                ],
+                text_reference=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    )
+                ],
+                adaptation=Adaptation(
+                    kind="generic",
+                    wording_paragraphs_per_pagelet=None,
+                    single_item_per_paragraph=False,
+                    placeholder_for_fill_with_free_text=None,
+                    items=None,
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                    items_are_repeated_with_mcq=False,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="5",
+                textbook_page=17,
+                pagelets=[
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Cobfbèbe"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bec"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ffbacec"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="afec"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bec"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bobc"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="de"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bébabaob"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bua"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="babbuebb"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text=":"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(
+                                                kind="passiveSequence", contents=[r.Text(kind="text", text="b"), r.Text(kind="text", text="’")], boxed=True
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="be")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ou"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="ba")], boxed=True),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="a"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="Eb"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="cebbbe"),
+                                            r.Text(kind="text", text="-"),
+                                            r.Text(kind="text", text="fabbe"),
+                                            r.Text(kind="text", text=","),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ob"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[
+                                                    [r.Text(kind="text", text="b"), r.Text(kind="text", text="’")],
+                                                    [r.Text(kind="text", text="be")],
+                                                    [r.Text(kind="text", text="ba")],
+                                                ],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bboufe"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[
+                                                    [r.Text(kind="text", text="b"), r.Text(kind="text", text="’")],
+                                                    [r.Text(kind="text", text="be")],
+                                                    [r.Text(kind="text", text="ba")],
+                                                ],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="foabubec"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[
+                                                    [r.Text(kind="text", text="b"), r.Text(kind="text", text="’")],
+                                                    [r.Text(kind="text", text="be")],
+                                                    [r.Text(kind="text", text="ba")],
+                                                ],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bâbabebbc"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bécebbc"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="b"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="Ce"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="buabbaeb"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[
+                                                    [r.Text(kind="text", text="b"), r.Text(kind="text", text="’")],
+                                                    [r.Text(kind="text", text="be")],
+                                                    [r.Text(kind="text", text="ba")],
+                                                ],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="a"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="fac"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ébé"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bébofé"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="c"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="Bec"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="abbeubbec"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[
+                                                    [r.Text(kind="text", text="b"), r.Text(kind="text", text="’")],
+                                                    [r.Text(kind="text", text="be")],
+                                                    [r.Text(kind="text", text="ba")],
+                                                ],
+                                            ),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="cobb"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="fac"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="becbaubéc"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="d"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="Ab"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.MultipleChoicesInput(
+                                                kind="multipleChoicesInput",
+                                                choices=[
+                                                    [r.Text(kind="text", text="b"), r.Text(kind="text", text="’")],
+                                                    [r.Text(kind="text", text="be")],
+                                                    [r.Text(kind="text", text="ba")],
+                                                ],
+                                            ),
+                                            r.Text(kind="text", text="a"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="a"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="fac"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="beaucouf"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="d"),
+                                            r.Text(kind="text", text="’"),
+                                            r.Text(kind="text", text="abbbec"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="dabc"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="cebbe"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="fabbe"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
+                    )
+                ],
+            ),
+        )
+
+    def test_exercise_0309(self):
+        self.do_test(
+            e.Exercise(
+                number="11",
+                textbook_page=173,
+                instructions=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="Bebfbace cfabue bob eb bbac fab ub abbobabe de ba bacbe. ",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    ),
+                    TextInsertOp(
+                        kind="text",
+                        insert="abbafeb ◆ ebboubeb ◆ abbébaeub ◆ bobb",
+                        attributes=TextInsertOpAttributes(
+                            italic=False,
+                            bold=False,
+                            choices2=Choices2(start="", separator1="◆", separator2="", stop="", placeholder="", mcq_field_uid=None),
+                            mcq_placeholder=False,
+                            manual_item=False,
+                            sel=None,
+                        ),
+                    ),
+                    TextInsertOp(
+                        kind="text",
+                        insert="\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    ),
+                ],
+                wording=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="a. Bec babbobc cobb abbebdabc à b’",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    ),
+                    TextInsertOp(
+                        kind="text",
+                        insert="ebbébaeub",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=True, manual_item=False, sel=None),
+                    ),
+                    TextInsertOp(
+                        kind="text",
+                        insert=" !\nb. Dac-bouc b’feube à babuebbe bu febcec ",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    ),
+                    TextInsertOp(
+                        kind="text",
+                        insert="fabbab",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=True, manual_item=False, sel=None),
+                    ),
+                    TextInsertOp(
+                        kind="text",
+                        insert=".\nc. Be babcfabd de baccu cfoacab de ",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    ),
+                    TextInsertOp(
+                        kind="text",
+                        insert="déboubeb ",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=True, manual_item=False, sel=None),
+                    ),
+                    TextInsertOp(
+                        kind="text",
+                        insert="cec baccuc foub baeub bec fbécebbeb.\nd. Ab fbéfèbe fobbeb ub fabbabob ",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    ),
+                    TextInsertOp(
+                        kind="text",
+                        insert="coubb",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=True, manual_item=False, sel=None),
+                    ),
+                    TextInsertOp(
+                        kind="text",
+                        insert=".\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    ),
+                ],
+                example=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    )
+                ],
+                clue=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    )
+                ],
+                text_reference=[
+                    TextInsertOp(
+                        kind="text",
+                        insert="\n",
+                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                    )
+                ],
+                adaptation=Adaptation(
+                    kind="generic",
+                    wording_paragraphs_per_pagelet=1,
+                    single_item_per_paragraph=False,
+                    placeholder_for_fill_with_free_text=None,
+                    items=None,
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                    items_are_repeated_with_mcq=True,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="11",
+                textbook_page=173,
+                pagelets=[
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Bebfbace"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="cfabue"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bob"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="eb"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bbac"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="fab"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ub"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="abbobabe"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="de"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ba"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bacbe"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="abbafeb")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="ebboubeb")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="abbébaeub")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ou"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bobb")], boxed=True),
+                                        ]
+                                    ),
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="a"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.AnySequence(
+                                                kind="sequence",
+                                                contents=[
+                                                    r.AnySequence(
+                                                        kind="sequence",
+                                                        contents=[
+                                                            r.Text(kind="text", text="Bec"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="babbobc"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="cobb"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="abbebdabc"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="à"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="b"),
+                                                            r.Text(kind="text", text="’"),
+                                                            r.Text(kind="text", highlighted="#ffff00", text="ebbébaeub"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="!"),
+                                                        ],
+                                                    ),
+                                                    r.AnySequence(
+                                                        kind="sequence",
+                                                        contents=[
+                                                            r.Text(kind="text", text="→"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="Bec"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="babbobc"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="cobb"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="abbebdabc"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="à"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="b"),
+                                                            r.Text(kind="text", text="’"),
+                                                            r.MultipleChoicesInput(
+                                                                kind="multipleChoicesInput",
+                                                                choices=[
+                                                                    [r.Text(kind="text", text="abbafeb")],
+                                                                    [r.Text(kind="text", text="ebboubeb")],
+                                                                    [r.Text(kind="text", text="abbébaeub")],
+                                                                    [r.Text(kind="text", text="bobb")],
+                                                                ],
+                                                            ),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="!"),
+                                                        ],
+                                                    ),
+                                                ],
+                                                vertical=True,
+                                            ),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
+                    ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Bebfbace"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="cfabue"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bob"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="eb"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bbac"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="fab"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ub"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="abbobabe"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="de"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ba"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bacbe"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="abbafeb")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="ebboubeb")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="abbébaeub")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ou"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bobb")], boxed=True),
+                                        ]
+                                    ),
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="b"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.AnySequence(
+                                                kind="sequence",
+                                                contents=[
+                                                    r.AnySequence(
+                                                        kind="sequence",
+                                                        contents=[
+                                                            r.Text(kind="text", text="Dac"),
+                                                            r.Text(kind="text", text="-"),
+                                                            r.Text(kind="text", text="bouc"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="b"),
+                                                            r.Text(kind="text", text="’"),
+                                                            r.Text(kind="text", text="feube"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="à"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="babuebbe"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="bu"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="febcec"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", highlighted="#ffff00", text="fabbab"),
+                                                            r.Text(kind="text", text="."),
+                                                        ],
+                                                    ),
+                                                    r.AnySequence(
+                                                        kind="sequence",
+                                                        contents=[
+                                                            r.Text(kind="text", text="→"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="Dac"),
+                                                            r.Text(kind="text", text="-"),
+                                                            r.Text(kind="text", text="bouc"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="b"),
+                                                            r.Text(kind="text", text="’"),
+                                                            r.Text(kind="text", text="feube"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="à"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="babuebbe"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="bu"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="febcec"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.MultipleChoicesInput(
+                                                                kind="multipleChoicesInput",
+                                                                choices=[
+                                                                    [r.Text(kind="text", text="abbafeb")],
+                                                                    [r.Text(kind="text", text="ebboubeb")],
+                                                                    [r.Text(kind="text", text="abbébaeub")],
+                                                                    [r.Text(kind="text", text="bobb")],
+                                                                ],
+                                                            ),
+                                                            r.Text(kind="text", text="."),
+                                                        ],
+                                                    ),
+                                                ],
+                                                vertical=True,
+                                            ),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
+                    ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Bebfbace"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="cfabue"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bob"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="eb"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bbac"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="fab"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ub"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="abbobabe"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="de"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ba"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bacbe"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="abbafeb")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="ebboubeb")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="abbébaeub")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ou"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bobb")], boxed=True),
+                                        ]
+                                    ),
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="c"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.AnySequence(
+                                                kind="sequence",
+                                                contents=[
+                                                    r.AnySequence(
+                                                        kind="sequence",
+                                                        contents=[
+                                                            r.Text(kind="text", text="Be"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="babcfabd"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="de"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="baccu"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="cfoacab"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="de"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", highlighted="#ffff00", text="déboubeb"),
+                                                            r.Whitespace(kind="whitespace", highlighted="#ffff00"),
+                                                            r.Text(kind="text", text="cec"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="baccuc"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="foub"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="baeub"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="bec"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="fbécebbeb"),
+                                                            r.Text(kind="text", text="."),
+                                                        ],
+                                                    ),
+                                                    r.AnySequence(
+                                                        kind="sequence",
+                                                        contents=[
+                                                            r.Text(kind="text", text="→"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="Be"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="babcfabd"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="de"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="baccu"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="cfoacab"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="de"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.MultipleChoicesInput(
+                                                                kind="multipleChoicesInput",
+                                                                choices=[
+                                                                    [r.Text(kind="text", text="abbafeb")],
+                                                                    [r.Text(kind="text", text="ebboubeb")],
+                                                                    [r.Text(kind="text", text="abbébaeub")],
+                                                                    [r.Text(kind="text", text="bobb")],
+                                                                ],
+                                                            ),
+                                                            r.Text(kind="text", text="cec"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="baccuc"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="foub"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="baeub"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="bec"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="fbécebbeb"),
+                                                            r.Text(kind="text", text="."),
+                                                        ],
+                                                    ),
+                                                ],
+                                                vertical=True,
+                                            ),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
+                    ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Bebfbace"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="cfabue"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bob"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="eb"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bbac"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="fab"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ub"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="abbobabe"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="de"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ba"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="bacbe"),
+                                            r.Text(kind="text", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="abbafeb")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="ebboubeb")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="abbébaeub")], boxed=True),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="ou"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.PassiveSequence(kind="passiveSequence", contents=[r.Text(kind="text", text="bobb")], boxed=True),
+                                        ]
+                                    ),
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="d"),
+                                            r.Text(kind="text", text="."),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.AnySequence(
+                                                kind="sequence",
+                                                contents=[
+                                                    r.AnySequence(
+                                                        kind="sequence",
+                                                        contents=[
+                                                            r.Text(kind="text", text="Ab"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="fbéfèbe"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="fobbeb"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="ub"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="fabbabob"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", highlighted="#ffff00", text="coubb"),
+                                                            r.Text(kind="text", text="."),
+                                                        ],
+                                                    ),
+                                                    r.AnySequence(
+                                                        kind="sequence",
+                                                        contents=[
+                                                            r.Text(kind="text", text="→"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="Ab"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="fbéfèbe"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="fobbeb"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="ub"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.Text(kind="text", text="fabbabob"),
+                                                            r.Whitespace(kind="whitespace"),
+                                                            r.MultipleChoicesInput(
+                                                                kind="multipleChoicesInput",
+                                                                choices=[
+                                                                    [r.Text(kind="text", text="abbafeb")],
+                                                                    [r.Text(kind="text", text="ebboubeb")],
+                                                                    [r.Text(kind="text", text="abbébaeub")],
+                                                                    [r.Text(kind="text", text="bobb")],
+                                                                ],
+                                                            ),
+                                                            r.Text(kind="text", text="."),
+                                                        ],
+                                                    ),
+                                                ],
+                                                vertical=True,
+                                            ),
+                                        ]
+                                    )
                                 ],
                                 centered=False,
                                 tricolored=True,

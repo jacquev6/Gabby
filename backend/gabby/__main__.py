@@ -187,7 +187,7 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
     def waste_delta(delta):
         attributes = delta.attributes
         if "choices2" in attributes:
-            attributes = {"choices2": {k: waste_string(v) for k, v in attributes["choices2"].items()}}
+            attributes = {"choices2": {k: waste_string(v) if v is not None else None for k, v in attributes["choices2"].items()}}
         return deltas.TextInsertOp(insert=waste_string(delta.insert), attributes=attributes)
 
     def waste_deltas(deltas):
@@ -218,6 +218,7 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
             .replace("MultipleChoicesInput(", "r.MultipleChoicesInput(")
             .replace("SelectableInput(", "r.SelectableInput(")
             .replace("PassiveSequence(", "r.PassiveSequence(")
+            .replace("AnySequence(", "r.AnySequence(")
             .replace("bold=False", "")
             .replace("italic=False", "")
             .replace("highlighted=None", "")
@@ -237,7 +238,7 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
         yield "from .. import exercises as e"
         yield "from .. import renderable as r"
         yield "from ..adaptation import AdaptationTestCase"
-        yield "from ..api_models import Adaptation, CharactersItems, TokensItems, SentencesItems, ManualItems, Selectable, PredefinedMcq"
+        yield "from ..api_models import Adaptation, CharactersItems, TokensItems, SentencesItems, ManualItems, SeparatedItems, Selectable, PredefinedMcq"
         yield "from ..deltas import TextInsertOp, TextInsertOpAttributes, Choices2"
         yield ""
         yield ""
