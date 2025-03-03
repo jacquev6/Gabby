@@ -55,9 +55,11 @@ import { BButton, BLabeledCheckbox } from '$frontend/components/opinion/bootstra
 import DistributionToggles from './DistributionToggles.vue'
 import ExerciseToolsColumnSection from './ExerciseToolsColumnSection.vue'
 import OptionalInput from '$frontend/components/OptionalInput.vue'
+import FloatingColorPicker from '$frontend/components/FloatingColorPicker.vue'
+import { allColorsForSelectableEffect } from './ExerciseFieldsForm.vue'
 
 
-defineProps<{
+const props = defineProps<{
   textbook: Textbook
   fields: InstanceType<typeof ExerciseFieldsForm> | null
   resetUndoRedo: number
@@ -86,9 +88,27 @@ const fillWithFreeTextPlaceholder = computed({
 })
 
 const selfRef = ref<HTMLDivElement | null>(null)
+
+const colorPicker = ref<InstanceType<typeof FloatingColorPicker> | null>(null)
+const highlightingColor = ref(allColorsForSelectableEffect[0])
+
+async function chooseHighlightingColor(event: MouseEvent) {
+  console.assert(colorPicker.value !== null)
+  props.fields
+  colorPicker.value.show(event.target as HTMLElement)
+}
 </script>
 
 <template>
+  <FloatingColorPicker
+    v-if="selfRef !== null"
+    ref="colorPicker"
+    v-model="highlightingColor"
+    :colors="allColorsForSelectableEffect"
+    backdropCovers1="#left-col-2"
+    backdropCovers2="#gutter-2"
+  />
+
   <div ref="selfRef" class="h-100 overflow-hidden d-flex flex-row position-relative" id="gutter-2">
     <div class="handle"></div>
     <div class="h-100 overflow-auto flex-fill" data-cy="gutter-2">
@@ -131,10 +151,13 @@ const selfRef = ref<HTMLDivElement | null>(null)
                   sm secondary
                   :disabled="fields.focusedWysiwygField == null"
                   :class="{active: fields.currentWysiwygFormat.highlighted}"
-                  @click="fields.toggle('highlighted', '#ffff00')"
+                  @click="fields.toggle('highlighted', highlightingColor)"
                   data-cy="format-highlighted"
+                  @contextmenu.prevent="chooseHighlightingColor"
                 >
-                  <img :style="{height: '1.25em'}" src="/highlighter.png" />
+                  <span :style="{backgroundColor: highlightingColor}" style="padding: 3px">
+                    <img :style="{height: '1.25em'}" src="/highlighter.png" />
+                  </span>
                 </BButton>
               </p>
 

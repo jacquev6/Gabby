@@ -428,4 +428,26 @@ describe('Gabby', () => {
     cy.get('sel-blot').should('have.length', 1)
     cy.get('highlighted-blot').should('not.exist')
   })
+
+  it('highlights with the color chosen', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    setAliases()
+
+    cy.get('@instructions').type('foo')
+
+    cy.get('@highlighted').rightclick()
+    cy.get('span.color').eq(4).click()
+    const purple = 'rgb(212, 156, 255)'
+    cy.get('@highlighted').find('span').should('have.css', 'background-color', purple)
+
+    cy.get('@instructions').find('p').then(el => {
+      const node = el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 0, node, 3)
+    })
+    cy.get('@highlighted').click()
+
+    cy.get('highlighted-blot').should('have.css', 'background-color', purple)
+    cy.get('span.tricolorable').should('have.css', 'background-color', purple)
+  })
 })
