@@ -257,6 +257,7 @@ const repeatedWithMcq = computed({
     <BLabeledCheckbox :label="$t('showArrowBeforeMultipleChoices')" v-model="showArrowBeforeMcqFields" :disabled="hasPredefinedMcq" />
     <BLabeledCheckbox :label="$t('multipleChoicesBesideEachItem')" v-model="hasMcqBeside" :disabled="!hasItems || hasPredefinedMcq" />
     <BLabeledCheckbox :label="$t('multipleChoicesBelowEachItem')" v-model="hasMcqBelow" :disabled="!hasItems || hasPredefinedMcq" />
+    <BButton primary sm>{{ $t('applyChoicesToAllMcqFields') }}</BButton>
     <BLabeledCheckbox :label="$t('multipleChoicesGender')" v-model="model.adaptationSettings.itemized.effects.hasGenderMcq" :disabled="!hasItems" />
     <BLabeledCheckbox :label="$t('multipleChoicesNumber')" v-model="model.adaptationSettings.itemized.effects.hasNumberMcq" :disabled="!hasItems" />
     <BLabeledCheckbox :label="$t('multipleChoicesRepeatedWithMcq')" v-model="repeatedWithMcq" />

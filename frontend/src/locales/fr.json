@@ -156,6 +156,7 @@
   "showArrowBeforeMultipleChoices": "Précédé d'une flèche",
   "multipleChoicesBesideEachItem": "À coté de chaque item",
   "multipleChoicesBelowEachItem": "En dessous de chaque item",
+  "applyChoicesToAllMcqFields": "Appliquer les choix à tous les champs QCM",
   "multipleChoicesGender": "Genre",
   "multipleChoicesNumber": "Nombre",
   "multipleChoicesRepeatedWithMcq": "Double : mot → QCM",

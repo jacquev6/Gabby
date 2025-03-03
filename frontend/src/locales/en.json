@@ -156,6 +156,7 @@
   "showArrowBeforeMultipleChoices": "Preceded by an arrow",
   "multipleChoicesBesideEachItem": "Beside each item",
   "multipleChoicesBelowEachItem": "Below each item",
+  "applyChoicesToAllMcqFields": "Apply choices to all MCQ fields",
   "multipleChoicesGender": "Gender",
   "multipleChoicesNumber": "Number",
   "multipleChoicesRepeatedWithMcq": "Double: word → MCQ",
