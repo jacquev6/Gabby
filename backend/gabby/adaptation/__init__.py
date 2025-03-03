@@ -616,7 +616,7 @@ class _Adapter:
         assert self.mcq_for_repeated_items is not None
 
         original_sentence: list[renderable.AnyRenderable] = []
-        repeated_sentence: list[renderable.AnyRenderable] = []
+        repeated_sentence: list[renderable.AnyRenderable] = [renderable.Text(kind="text", text="→"), renderable.Whitespace(kind="whitespace")]
 
         while begin < end:
             next_mcq_placeholder: Interval | None = None

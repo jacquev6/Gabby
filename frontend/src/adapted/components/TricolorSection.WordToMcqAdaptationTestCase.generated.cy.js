@@ -122,6 +122,13 @@ describe('TricolorSection for WordToMcqAdaptationTestCase', () => {
                     "contents": [
                       {
                         "kind": "text",
+                        "text": "\u2192"
+                      },
+                      {
+                        "kind": "whitespace"
+                      },
+                      {
+                        "kind": "text",
                         "text": "Firsta"
                       },
                       {
@@ -207,6 +214,13 @@ describe('TricolorSection for WordToMcqAdaptationTestCase', () => {
                   {
                     "kind": "sequence",
                     "contents": [
+                      {
+                        "kind": "text",
+                        "text": "\u2192"
+                      },
+                      {
+                        "kind": "whitespace"
+                      },
                       {
                         "kind": "multipleChoicesInput",
                         "choices": [
@@ -294,6 +308,13 @@ describe('TricolorSection for WordToMcqAdaptationTestCase', () => {
                   {
                     "kind": "sequence",
                     "contents": [
+                      {
+                        "kind": "text",
+                        "text": "\u2192"
+                      },
+                      {
+                        "kind": "whitespace"
+                      },
                       {
                         "kind": "text",
                         "text": "Thirda"

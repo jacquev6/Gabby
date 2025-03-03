@@ -94,6 +94,8 @@ class WordToMcqAdaptationTestCase(AdaptationTestCase):
                                                     r.AnySequence(
                                                         kind="sequence",
                                                         contents=[
+                                                            r.Text(kind="text", text="→"),
+                                                            r.Whitespace(kind="whitespace"),
                                                             r.Text(kind="text", text="Firsta"),
                                                             r.Whitespace(kind="whitespace"),
                                                             r.MultipleChoicesInput(
@@ -134,6 +136,8 @@ class WordToMcqAdaptationTestCase(AdaptationTestCase):
                                                     r.AnySequence(
                                                         kind="sequence",
                                                         contents=[
+                                                            r.Text(kind="text", text="→"),
+                                                            r.Whitespace(kind="whitespace"),
                                                             r.MultipleChoicesInput(
                                                                 kind="multipleChoicesInput",
                                                                 choices=[
@@ -174,6 +178,8 @@ class WordToMcqAdaptationTestCase(AdaptationTestCase):
                                                     r.AnySequence(
                                                         kind="sequence",
                                                         contents=[
+                                                            r.Text(kind="text", text="→"),
+                                                            r.Whitespace(kind="whitespace"),
                                                             r.Text(kind="text", text="Thirda"),
                                                             r.Whitespace(kind="whitespace"),
                                                             r.Text(kind="text", text="thirdb"),

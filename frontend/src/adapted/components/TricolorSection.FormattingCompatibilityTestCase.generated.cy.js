@@ -722,6 +722,13 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
                     "contents": [
                       {
                         "kind": "text",
+                        "text": "\u2192"
+                      },
+                      {
+                        "kind": "whitespace"
+                      },
+                      {
+                        "kind": "text",
                         "text": "Blah"
                       },
                       {
@@ -1221,6 +1228,13 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
                   {
                     "kind": "sequence",
                     "contents": [
+                      {
+                        "kind": "text",
+                        "text": "\u2192"
+                      },
+                      {
+                        "kind": "whitespace"
+                      },
                       {
                         "kind": "text",
                         "text": "Blah"

@@ -634,6 +634,8 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                                     r.AnySequence(
                                                         kind="sequence",
                                                         contents=[
+                                                            r.Text(kind="text", text="→"),
+                                                            r.Whitespace(kind="whitespace"),
                                                             r.Text(kind="text", text="Blah"),
                                                             r.Whitespace(kind="whitespace"),
                                                             r.MultipleChoicesInput(
@@ -1692,6 +1694,8 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                                     r.AnySequence(
                                                         kind="sequence",
                                                         contents=[
+                                                            r.Text(kind="text", text="→"),
+                                                            r.Whitespace(kind="whitespace"),
                                                             r.Text(kind="text", text="Blah"),
                                                             r.Whitespace(kind="whitespace"),
                                                             r.MultipleChoicesInput(
@@ -1793,6 +1797,8 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                                     r.AnySequence(
                                                         kind="sequence",
                                                         contents=[
+                                                            r.Text(kind="text", text="→"),
+                                                            r.Whitespace(kind="whitespace"),
                                                             r.Text(kind="text", text="Blah"),
                                                             r.Whitespace(kind="whitespace"),
                                                             r.MultipleChoicesInput(
@@ -1894,6 +1900,8 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
                                                     r.AnySequence(
                                                         kind="sequence",
                                                         contents=[
+                                                            r.Text(kind="text", text="→"),
+                                                            r.Whitespace(kind="whitespace"),
                                                             r.Text(kind="text", text="Blah"),
                                                             r.Whitespace(kind="whitespace"),
                                                             r.MultipleChoicesInput(
