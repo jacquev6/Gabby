@@ -231,6 +231,40 @@ const repeatedWithMcq = computed({
     }
   },
 })
+
+function applyMcqChoicesToAllFields() {
+  const uid = (() => {
+    for (const op of model.value.instructions) {
+      if (typeof op.insert === 'string') {
+        console.assert('attributes' in op)
+        if (op.attributes.choices2 !== undefined && op.attributes.choices2 !== null && op.attributes.choices2.mcqFieldUid !== undefined && op.attributes.choices2.mcqFieldUid !== null) {
+          return op.attributes.choices2.mcqFieldUid
+        }
+      }
+    }
+
+    for (const op of model.value.instructions) {
+      if (typeof op.insert === 'string') {
+        console.assert('attributes' in op)
+        if (op.attributes.choices2 !== undefined && op.attributes.choices2 !== null && op.attributes.choices2.placeholder === '') {
+          const uid = `mcq-${ Math.floor(Math.random() * 4000000000) }`
+          op.attributes.choices2.mcqFieldUid = uid
+          return uid
+        }
+      }
+    }
+
+    return null
+  })()
+
+  if (uid !== null) {
+    for (const op of model.value.wording) {
+      if (typeof op.insert === 'object' && 'mcq-field' in op.insert) {
+        op.insert['mcq-field'] = uid
+      }
+    }
+  }
+}
 </script>
 
 <template>
@@ -257,7 +291,7 @@ const repeatedWithMcq = computed({
     <BLabeledCheckbox :label="$t('showArrowBeforeMultipleChoices')" v-model="showArrowBeforeMcqFields" :disabled="hasPredefinedMcq" />
     <BLabeledCheckbox :label="$t('multipleChoicesBesideEachItem')" v-model="hasMcqBeside" :disabled="!hasItems || hasPredefinedMcq" />
     <BLabeledCheckbox :label="$t('multipleChoicesBelowEachItem')" v-model="hasMcqBelow" :disabled="!hasItems || hasPredefinedMcq" />
-    <BButton primary sm>{{ $t('applyChoicesToAllMcqFields') }}</BButton>
+    <BButton primary sm @click="applyMcqChoicesToAllFields">{{ $t('applyChoicesToAllMcqFields') }}</BButton>
     <BLabeledCheckbox :label="$t('multipleChoicesGender')" v-model="model.adaptationSettings.itemized.effects.hasGenderMcq" :disabled="!hasItems" />
     <BLabeledCheckbox :label="$t('multipleChoicesNumber')" v-model="model.adaptationSettings.itemized.effects.hasNumberMcq" :disabled="!hasItems" />
     <BLabeledCheckbox :label="$t('multipleChoicesRepeatedWithMcq')" v-model="repeatedWithMcq" />
