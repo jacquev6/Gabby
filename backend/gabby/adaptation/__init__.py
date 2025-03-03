@@ -47,6 +47,7 @@ class AnnotatedSection(PydanticBase):
     class Format(PydanticBase):
         bold: bool
         italic: bool
+        highlighted: str | None
         sel: int | None
 
     text: str
@@ -188,11 +189,13 @@ class _Adapter:
                     else:
                         section.manual_items[-1].end = end
 
-                if delta.attributes.bold or delta.attributes.italic or delta.attributes.sel is not None:
+                if delta.attributes.bold or delta.attributes.italic or delta.attributes.highlighted is not None or delta.attributes.sel is not None:
                     section.formats.append(
                         (
                             Interval(begin=begin, end=end),
-                            AnnotatedSection.Format(bold=delta.attributes.bold, italic=delta.attributes.italic, sel=delta.attributes.sel),
+                            AnnotatedSection.Format(
+                                bold=delta.attributes.bold, italic=delta.attributes.italic, highlighted=delta.attributes.highlighted, sel=delta.attributes.sel
+                            ),
                         )
                     )
 
@@ -743,7 +746,9 @@ class _Adapter:
                 if part is None:
                     continue
                 (b, e) = part
-                character_formats: list[AnnotatedSection.Format] = [AnnotatedSection.Format(bold=False, italic=False, sel=None) for _ in range(b, e)]
+                character_formats: list[AnnotatedSection.Format] = [
+                    AnnotatedSection.Format(bold=False, italic=False, highlighted=None, sel=None) for _ in range(b, e)
+                ]
                 for interval, format in section.formats:
                     if interval.begin < e and interval.end > b:
                         for i in range(max(interval.begin, b), min(interval.end, e)):
@@ -757,6 +762,8 @@ class _Adapter:
                         format_parameters["italic"] = True
                     if format.sel is not None and len(self.colors_for_selectable_items) > format.sel - 1:
                         format_parameters["highlighted"] = self.colors_for_selectable_items[format.sel - 1]
+                    if format.highlighted is not None:
+                        format_parameters["highlighted"] = format.highlighted
 
                     text = "".join(c[1] for c in characters)
                     if part_index == 0:

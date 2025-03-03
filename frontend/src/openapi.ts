@@ -512,6 +512,8 @@ export interface components {
        */
       bold?: boolean;
       choices2?: components["schemas"]["Choices2"] | null;
+      /** Highlighted */
+      highlighted?: string | null;
       /**
        * Italic
        * @default false

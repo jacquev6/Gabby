@@ -1,6 +1,5 @@
 <script lang="ts">
-import { InlineBlot } from '$frontend/components/Quill.vue'
-import { basicBlots } from '$frontend/components/WysiwygEditor.vue'
+import { InlineBlot, BoldBlot, ItalicBlot, HighlightedBlot } from '$frontend/components/Quill.vue'
 import { Choices2Blot, McqField } from './MultipleChoicesTools.vue'
 import { SelBlot } from './SelectableEffectTools.vue'
 
@@ -16,7 +15,9 @@ class McqPlaceholderBlot extends InlineBlot {
 }
 
 export const wysiwygBlots = [
-  ...basicBlots,
+  BoldBlot,
+  ItalicBlot,
+  HighlightedBlot,
   SelBlot,
   Choices2Blot,
   McqField,
@@ -26,17 +27,18 @@ export const wysiwygBlots = [
 
 export const wysiwygContagiousFormats = ['choices2']
 
-const basicFormats = ['bold', 'italic']
-
 export const wysiwygCompatibleFormats = [
-  [...basicFormats, 'sel'],
-  [...basicFormats, 'choices2'],
-  [...basicFormats, 'mcq-placeholder'],
-  [...basicFormats, 'manual-item'],
+  ['bold', 'italic', 'sel'],
+  ['bold', 'italic', 'sel', 'choices2'],
+  ['bold', 'italic', 'sel', 'mcq-placeholder'],
+  ['bold', 'italic', 'sel', 'manual-item'],
+  ['bold', 'italic', 'highlighted', 'choices2'],
+  ['bold', 'italic', 'highlighted', 'mcq-placeholder'],
+  ['bold', 'italic', 'highlighted', 'manual-item'],
 ]
 
 // Formats on the left are nested inside formats on the right. Embeds shall not be in this list.
-export const wysiwygFormatsNestingOrder = ['bold', 'italic', 'sel', 'choices2', 'manual-item', 'mcq-placeholder']
+export const wysiwygFormatsNestingOrder = ['bold', 'italic', 'highlighted', 'sel', 'choices2', 'manual-item', 'mcq-placeholder']
 </script>
 
 <script setup lang="ts">
@@ -125,6 +127,15 @@ const selfRef = ref<HTMLDivElement | null>(null)
                   @click="fields.toggle('italic')"
                   data-cy="format-italic"
                 ><img :style="{height: '1.25em'}" src="/italic.svg" /></BButton>
+                <BButton
+                  sm secondary
+                  :disabled="fields.focusedWysiwygField == null"
+                  :class="{active: fields.currentWysiwygFormat.highlighted}"
+                  @click="fields.toggle('highlighted', '#ffff00')"
+                  data-cy="format-highlighted"
+                >
+                  <img :style="{height: '1.25em'}" src="/highlighter.png" />
+                </BButton>
               </p>
 
               <p v-if="hasItems && model.adaptationSettings.itemized.effects.isSelectable">

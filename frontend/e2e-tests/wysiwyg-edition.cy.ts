@@ -1,4 +1,4 @@
-import { loadFixtures, login, notBusy, visit } from './utils'
+import { loadFixtures, login, notBusy, visit, selectRange } from './utils'
 
 
 function setAliases() {
@@ -16,6 +16,7 @@ function setAliases() {
 
   cy.get('button[data-cy="format-bold"]').as('bold')
   cy.get('button[data-cy="format-italic"]').as('italic')
+  cy.get('button[data-cy="format-highlighted"]').as('highlighted')
 }
 
 describe('Gabby', () => {
@@ -65,7 +66,7 @@ describe('Gabby', () => {
     cy.get('@italic').should('be.disabled')
   })
 
-  it('allows bold and italic in all fields', () => {
+  it('allows basic formatting in all fields', () => {
     visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
     setAliases()
     cy.get('@number').type('test')
@@ -78,19 +79,32 @@ describe('Gabby', () => {
       cy.get(fieldAlias).click().type('{selectAll}plain', {delay: 0})
       cy.get('@bold').click()
       cy.get(fieldAlias).type('bold', {delay: 0})
-      cy.get('@italic').click()
-      cy.get(fieldAlias).type('both', {delay: 0})
       cy.get('@bold').click()
+
+      cy.get('@italic').click()
       cy.get(fieldAlias).type('italic', {delay: 0})
+      cy.get('@italic').click()
+
+      cy.get('@highlighted').click()
+      cy.get(fieldAlias).type('highlighted', {delay: 0})
+      cy.get('@highlighted').click()
+
+      cy.get('@bold').click()
+      cy.get('@italic').click()
+      cy.get('@highlighted').click()
+      cy.get(fieldAlias).type('all', {delay: 0})
       notBusy()
-      cy.get(fieldAlias).should('contain.text', 'plainboldbothitalic')
+      cy.get(fieldAlias).should('contain.text', 'plainbolditalichighlightedall')
       cy.get('bold-blot:contains("bold")').should('exist')
       cy.get('italic-blot:contains("italic")').should('exist')
-      cy.get('bold-blot:contains("both")').should('exist')
-      cy.get('italic-blot:contains("both")').should('exist')
+      cy.get('highlighted-blot:contains("highlighted")').should('exist')
+      cy.get('bold-blot:contains("all")').should('exist')
+      cy.get('italic-blot:contains("all")').should('exist')
+      cy.get('highlighted-blot:contains("all")').should('exist')
+
       cy.get('div:has(>h1:contains("Adapted exercise")) span.italic:contains("italic")').should('exist')
       cy.get('div:has(>h1:contains("Adapted exercise")) span.bold:contains("bold")').should('exist')
-      cy.get('div:has(>h1:contains("Adapted exercise")) span.bold.italic:contains("both")').should('exist')
+      cy.get('div:has(>h1:contains("Adapted exercise")) span.bold.italic:contains("all")').should('exist').should('have.css', 'background-color', 'rgb(255, 255, 0)')
 
       cy.get(fieldAlias).type('{selectAll}X', {delay: 0})
       notBusy()
@@ -368,5 +382,50 @@ describe('Gabby', () => {
     cy.get(':contains("Manual selection") >input').check()
 
     cy.get('manual-item-blot').should('not.exist')
+  })
+
+  it('keeps sel and highlighted incompatible', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    setAliases()
+
+    cy.get('@instructions').type('foo')
+    cy.get('div:contains("Words") >input').check()
+    cy.get('div:contains("Selectable") >input').check()
+    cy.get('button[data-cy="format-color-2"]').as("sel-button")
+
+    cy.get('sel-blot').should('not.exist')
+    cy.get('highlighted-blot').should('not.exist')
+
+    cy.get('@instructions').find('p').then(el => {
+      const node = el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 0, node, 3)
+    })
+    cy.get('@sel-button').click()
+
+    cy.get('sel-blot').should('have.length', 1)
+    cy.get('highlighted-blot').should('not.exist')
+
+    cy.get('@instructions').find('p').then(el => {
+      console.assert(el[0].firstChild !== null)
+      const node = el[0].firstChild.firstChild
+      console.assert(node !== null)
+      selectRange(node, 0, node, 3)
+    })
+    cy.get('@highlighted').click()
+
+    cy.get('sel-blot').should('not.exist')
+    cy.get('highlighted-blot').should('have.length', 1)
+
+    cy.get('@instructions').find('p').then(el => {
+      console.assert(el[0].firstChild !== null)
+      const node = el[0].firstChild.firstChild
+      console.assert(node !== null)
+      selectRange(node, 0, node, 3)
+    })
+    cy.get('@sel-button').click()
+
+    cy.get('sel-blot').should('have.length', 1)
+    cy.get('highlighted-blot').should('not.exist')
   })
 })

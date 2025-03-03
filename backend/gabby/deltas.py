@@ -18,6 +18,7 @@ class Choices2(PydanticBase):
 class TextInsertOpAttributes(PydanticBase):
     italic: bool = False
     bold: bool = False
+    highlighted: str | None = None
     choices2: Choices2 | None = None
     mcq_placeholder: Annotated[
         bool, PydanticField(serialization_alias="mcq-placeholder", validation_alias=AliasChoices("mcq-placeholder", "mcq_placeholder"))

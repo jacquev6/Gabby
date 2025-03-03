@@ -60,6 +60,9 @@ Window size: {{ windowWidth }}x{{ windowHeight }}
             </pre>
           </div>
         </div>
+        <div>
+          <p><a href="https://www.flaticon.com/free-icons/highlighter" title="highlighter icons">Highlighter icons created by Freepik - Flaticon</a></p>
+        </div>
       </div>
     </template>
     <template #footer>

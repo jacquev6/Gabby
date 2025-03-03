@@ -61,6 +61,24 @@ export class ItalicBlot extends InlineBlot {
   static override blotName = 'italic'
   static override tagName = 'italic-blot'
 }
+
+export class HighlightedBlot extends InlineBlot {
+  static override blotName = 'highlighted'
+  static override tagName = 'highlighted-blot'
+
+  static override create(color: string) {
+    let node = super.create()
+    node.setAttribute('data-highlighted', color)
+    node.setAttribute('style', `background-color: ${color}`)
+    return node
+  }
+
+  static override formats(node: HTMLElement) {
+    const data = node.getAttribute('data-highlighted')
+    console.assert(data !== null)
+    return data
+  }
+}
 </script>
 
 <script setup lang="ts">

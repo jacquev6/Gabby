@@ -1017,6 +1017,17 @@
               }
             ]
           },
+          "highlighted": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Highlighted"
+          },
           "italic": {
             "default": false,
             "title": "Italic",
