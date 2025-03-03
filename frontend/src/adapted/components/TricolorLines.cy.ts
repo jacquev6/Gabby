@@ -92,4 +92,54 @@ describe('TricolorLines', () => {
     cy.get('span:contains("M")').last().should('have.css', 'color', color1)
     cy.get('span:contains("N")').last().should('have.css', 'color', color2)
   })
+
+  it('colors stacks', () => {
+    cy.viewport(400, 200)
+
+    cy.mount(TricolorLines, {slots: {default: `
+      <p>
+        <span class="tricolorable">aeio</span>
+        <span>&nbsp;&nbsp;<wbr></span>
+        <span style="display: inline-block; vertical-align: top">
+          <p style="margin:0;"><span class="tricolorable">blehp</span></p>
+          <p style="margin:0;"><span class="tricolorable">toto</span></p>
+        </span>
+        <span>&nbsp;&nbsp;<wbr></span>
+        <span class="tricolorable">MEpq</span>
+        <span>&nbsp;&nbsp;<wbr></span>
+        <span style="display: inline-block; vertical-align: top">
+          <p style="margin:0;"><span class="tricolorable">blohp</span></p>
+          <p style="margin:0;"><span class="tricolorable">tutu</span></p>
+          <p style="margin:0;"><span class="tricolorable">tete</span></p>
+        </span>
+        <span>&nbsp;&nbsp;<wbr></span>
+        <span class="tricolorable">bluh</span>
+      </p>
+    `}})
+
+    cy.get('span:contains("aeio")').last().should('have.css', 'color', color1)
+    cy.get('span:contains("bleh")').last().should('have.css', 'color', color1)
+    cy.get('span:contains("MEpq")').last().should('have.css', 'color', color1)
+    cy.get('span:contains("bloh")').last().should('have.css', 'color', color1)
+    cy.get('span:contains("bluh")').last().should('have.css', 'color', color1)
+    cy.get('span:contains("toto")').last().should('have.css', 'color', color2)
+    cy.get('span:contains("tutu")').last().should('have.css', 'color', color2)
+    cy.get('span:contains("tete")').last().should('have.css', 'color', color3)
+  })
+
+  it('colors elements with different heights', () => {
+    cy.mount(TricolorLines, {slots: {default: `
+      <p>
+        <span class="tricolorable">standard</span>
+        <span>&nbsp;&nbsp;<wbr></span>
+        <span class="tricolorable" style="font-size: 0.8em">small</span>
+        <span>&nbsp;&nbsp;<wbr></span>
+        <span class="tricolorable" style="font-size: 1.2em">large</span>
+      </p>
+    `}})
+
+    cy.get('span:contains("standard")').last().should('have.css', 'color', color1)
+    cy.get('span:contains("small")').last().should('have.css', 'color', color1)
+    cy.get('span:contains("large")').last().should('have.css', 'color', color1)
+  })
 })

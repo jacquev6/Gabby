@@ -74,7 +74,7 @@ const backdropCovers = inject<string>('adaptedExerciseBackdropCovers', 'body')
     <template v-if="showArrowBefore">→</template>
     <span ref="reference" class="main" :class="{open: showChoices}" @click="showChoices = !showChoices">
       <template v-if="model !== undefined">
-        <Renderable v-for="node in choices[model]" :node :inStack="true" v-model="unusedModels" :modelKey="[0]" />
+        <Renderable v-for="node in choices[model]" :node :nested="true" v-model="unusedModels" :modelKey="[0]" />
       </template>
       <template v-else>
         {{ placeholder }}
@@ -98,7 +98,7 @@ const backdropCovers = inject<string>('adaptedExerciseBackdropCovers', 'body')
           <p v-for="choicesLine in choicesLines" class="choicesLine">
             <template v-for="(choice, i) in choicesLine">
               <span v-if="i !== 0">&nbsp;&nbsp;</span><span class="choice" :class="`choice${choice.colorIndex}`"@click="set(choice.index)">
-                <Renderable v-for="node in choice.content" :node :inStack="true" v-model="unusedModels" :modelKey="[0]" />
+                <Renderable v-for="node in choice.content" :node :nested="true" v-model="unusedModels" :modelKey="[0]" />
               </span>
             </template>
           </p>

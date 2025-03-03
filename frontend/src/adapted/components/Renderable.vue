@@ -9,19 +9,19 @@ import Renderable from './Renderable.vue'
 import SelectableText from './SelectableText.vue'
 
 
-const props = withDefaults(defineProps<{
+const props = defineProps<{
   node: Paragraph['contents'][number]
   modelKey: number[]
-  inStack?: boolean
-}>(), {
-  inStack: false,
-})
+  nested: boolean
+}>()
 
 const models = defineModel<Record<string, any/* @todo Type */>>({
   required: true,
 })
 
 const modelKey = computed(() => `model-${props.modelKey.join('-')}`)
+
+const tricolorable = computed(() => !props.nested)
 </script>
 
 <template>
@@ -33,7 +33,7 @@ const modelKey = computed(() => `model-${props.modelKey.join('-')}`)
   </template>
   <template v-else-if="node.kind === 'text'">
     <span
-      :class="{bold: node.bold, italic: node.italic, tricolorable: !inStack}"
+      :class="{bold: node.bold, italic: node.italic, tricolorable}"
       :style="node.highlighted !== null ? {background: node.highlighted} : {}"
     >
       {{ node.text }}
@@ -41,15 +41,15 @@ const modelKey = computed(() => `model-${props.modelKey.join('-')}`)
   </template>
   <template v-else-if="node.kind === 'passiveSequence'">
     <span :class="{boxed: node.boxed}">
-      <Renderable v-for="(sub, index) in node.contents" :node="sub" v-model="models" :modelKey="[...props.modelKey, index]" />
+      <Renderable v-for="(sub, index) in node.contents" :node="sub" v-model="models" :modelKey="[...props.modelKey, index]" :nested />
     </span>
   </template>
   <template v-else-if="node.kind === 'freeTextInput'">
-    <FreeTextInput :class="{tricolorable: !inStack}" v-model="models[modelKey]" />
+    <FreeTextInput :class="{tricolorable}" v-model="models[modelKey]" />
   </template>
   <template v-else-if="node.kind === 'multipleChoicesInput'">
     <MultipleChoicesInput
-      :class="{tricolorable: !inStack}"
+      :class="{tricolorable}"
       v-model="models[modelKey]"
       :choices="node.choices"
       placeholder="...."
@@ -63,17 +63,17 @@ const modelKey = computed(() => `model-${props.modelKey.join('-')}`)
       :boxed="!!node.boxed"
       :colors="node.colors"
     >
-      <Renderable v-for="(sub, index) in node.contents" :node="sub" v-model="models" :modelKey="[...props.modelKey, index]" />
+      <Renderable v-for="(sub, index) in node.contents" :node="sub" v-model="models" :modelKey="[...props.modelKey, index]" :nested />
     </SelectableText>
   </template>
   <template v-else-if="node.kind === 'sequence'">
     <template v-if="node.vertical">
       <span style="display: inline-block; vertical-align: top;">
-        <p v-for="(sub, index) in node.contents"><Renderable :node="sub" v-model="models" :modelKey="[...props.modelKey, index]" :inStack="index > 0" /></p>
+        <p v-for="(sub, index) in node.contents"><Renderable :node="sub" v-model="models" :modelKey="[...props.modelKey, index]" :nested /></p>
       </span>
     </template>
     <template v-else>
-      <Renderable v-for="(sub, index) in node.contents" :node="sub" v-model="models" :modelKey="[...props.modelKey, index]" />
+      <Renderable v-for="(sub, index) in node.contents" :node="sub" v-model="models" :modelKey="[...props.modelKey, index]" :nested />
     </template>
   </template>
   <template v-else>
