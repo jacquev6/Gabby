@@ -311,4 +311,13 @@ describe('Gabby', () => {
     cy.get('div.backdrop').click()
     cy.get('span.choice1').should('not.exist')
   })
+
+  it('does not crash when blanking the page number', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
+
+    cy.get('label:contains("Page")').eq(1).next().type('{backspace}').should('have.value', '')
+    // Just check something to make sure the page did not show the "A bug happened" message
+    cy.get('label:contains("Page")').eq(1).next().type('7')
+    cy.get(':contains("not the one displayed")').should('exist')
+  })
 })
