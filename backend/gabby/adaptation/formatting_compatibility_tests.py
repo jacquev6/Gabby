@@ -109,6 +109,241 @@ class FormattingCompatibilityTestCase(AdaptationTestCase):
             ),
         )
 
+    def test_bold_and_highlighted(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions=[
+                    d.TextInsertOp(insert="Before ", attributes={}),
+                    d.TextInsertOp(insert="the instructions", attributes={"bold": True, "highlighted": "lightblue"}),
+                    d.TextInsertOp(insert=" after\n", attributes={}),
+                ],
+                wording=[
+                    d.TextInsertOp(insert="Before ", attributes={}),
+                    d.TextInsertOp(insert="the wording", attributes={"bold": True, "highlighted": "lightblue"}),
+                    d.TextInsertOp(insert=" after\n", attributes={}),
+                ],
+                example=[
+                    d.TextInsertOp(insert="Before ", attributes={}),
+                    d.TextInsertOp(insert="the example", attributes={"bold": True, "highlighted": "lightblue"}),
+                    d.TextInsertOp(insert=" after\n", attributes={}),
+                ],
+                clue=[
+                    d.TextInsertOp(insert="Before ", attributes={}),
+                    d.TextInsertOp(insert="the clue", attributes={"bold": True, "highlighted": "lightblue"}),
+                    d.TextInsertOp(insert=" after\n", attributes={}),
+                ],
+                text_reference=[
+                    d.TextInsertOp(insert="Before ", attributes={}),
+                    d.TextInsertOp(insert="the reference", attributes={"bold": True, "highlighted": "lightblue"}),
+                    d.TextInsertOp(insert=" after\n", attributes={}),
+                ],
+                adaptation=Adaptation(
+                    kind="generic",
+                    wording_paragraphs_per_pagelet=3,
+                    single_item_per_paragraph=False,
+                    placeholder_for_fill_with_free_text=None,
+                    items=None,
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                    items_are_repeated_with_mcq=False,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                pagelets=[
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Before"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", bold=True, highlighted="lightblue", text="the"),
+                                            r.Whitespace(kind="whitespace", bold=True, highlighted="lightblue"),
+                                            r.Text(kind="text", bold=True, highlighted="lightblue", text="instructions"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="after"),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Before"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", bold=True, highlighted="lightblue", text="the"),
+                                            r.Whitespace(kind="whitespace", bold=True, highlighted="lightblue"),
+                                            r.Text(kind="text", bold=True, highlighted="lightblue", text="example"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="after"),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Before"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", bold=True, highlighted="lightblue", text="the"),
+                                            r.Whitespace(kind="whitespace", bold=True, highlighted="lightblue"),
+                                            r.Text(kind="text", bold=True, highlighted="lightblue", text="clue"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="after"),
+                                        ]
+                                    ),
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Before"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", bold=True, highlighted="lightblue", text="the"),
+                                            r.Whitespace(kind="whitespace", bold=True, highlighted="lightblue"),
+                                            r.Text(kind="text", bold=True, highlighted="lightblue", text="wording"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="after"),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
+                    ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", text="Before"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", bold=True, highlighted="lightblue", text="the"),
+                                            r.Whitespace(kind="whitespace", bold=True, highlighted="lightblue"),
+                                            r.Text(kind="text", bold=True, highlighted="lightblue", text="reference"),
+                                            r.Whitespace(kind="whitespace"),
+                                            r.Text(kind="text", text="after"),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=False,
+                            )
+                        ]
+                    ),
+                ],
+            ),
+        )
+
+    def test_fully_highlighted(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=None,
+                instructions=[d.TextInsertOp(insert="The instructions.", attributes={"highlighted": "lightblue"}), d.TextInsertOp(insert="\n", attributes={})],
+                wording=[d.TextInsertOp(insert="The wording.", attributes={"highlighted": "lightblue"}), d.TextInsertOp(insert="\n", attributes={})],
+                example=[d.TextInsertOp(insert="The example.", attributes={"highlighted": "lightblue"}), d.TextInsertOp(insert="\n", attributes={})],
+                clue=[d.TextInsertOp(insert="The clue.", attributes={"highlighted": "lightblue"}), d.TextInsertOp(insert="\n", attributes={})],
+                text_reference=[d.TextInsertOp(insert="The reference.", attributes={"highlighted": "lightblue"}), d.TextInsertOp(insert="\n", attributes={})],
+                adaptation=Adaptation(
+                    kind="generic",
+                    wording_paragraphs_per_pagelet=3,
+                    single_item_per_paragraph=False,
+                    placeholder_for_fill_with_free_text=None,
+                    items=None,
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                    items_are_repeated_with_mcq=False,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=None,
+                pagelets=[
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", highlighted="lightblue", text="The"),
+                                            r.Whitespace(kind="whitespace", highlighted="lightblue"),
+                                            r.Text(kind="text", highlighted="lightblue", text="instructions"),
+                                            r.Text(kind="text", highlighted="lightblue", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", highlighted="lightblue", text="The"),
+                                            r.Whitespace(kind="whitespace", highlighted="lightblue"),
+                                            r.Text(kind="text", highlighted="lightblue", text="example"),
+                                            r.Text(kind="text", highlighted="lightblue", text="."),
+                                        ]
+                                    ),
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", highlighted="lightblue", text="The"),
+                                            r.Whitespace(kind="whitespace", highlighted="lightblue"),
+                                            r.Text(kind="text", highlighted="lightblue", text="clue"),
+                                            r.Text(kind="text", highlighted="lightblue", text="."),
+                                        ]
+                                    ),
+                                ],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", highlighted="lightblue", text="The"),
+                                            r.Whitespace(kind="whitespace", highlighted="lightblue"),
+                                            r.Text(kind="text", highlighted="lightblue", text="wording"),
+                                            r.Text(kind="text", highlighted="lightblue", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=True,
+                            ),
+                        ]
+                    ),
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[
+                                    r.Paragraph(
+                                        contents=[
+                                            r.Text(kind="text", highlighted="lightblue", text="The"),
+                                            r.Whitespace(kind="whitespace", highlighted="lightblue"),
+                                            r.Text(kind="text", highlighted="lightblue", text="reference"),
+                                            r.Text(kind="text", highlighted="lightblue", text="."),
+                                        ]
+                                    )
+                                ],
+                                centered=False,
+                                tricolored=False,
+                            )
+                        ]
+                    ),
+                ],
+            ),
+        )
+
     def test_sel_and_bold(self):
         self.do_test(
             e.Exercise(

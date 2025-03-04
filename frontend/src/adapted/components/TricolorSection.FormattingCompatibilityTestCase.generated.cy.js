@@ -6,6 +6,220 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
     cy.viewport(1000, 100)
   })
 
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_highlighted pagelet 0 section 0', () => {
+    cy.mount(MonocolorSection, {
+      props: {
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "Before"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "bold": true,
+                "highlighted": "lightblue",
+                "text": "the"
+              },
+              {
+                "kind": "whitespace",
+                "bold": true,
+                "highlighted": "lightblue"
+              },
+              {
+                "kind": "text",
+                "bold": true,
+                "highlighted": "lightblue",
+                "text": "instructions"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "after"
+              }
+            ]
+          },
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "Before"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "bold": true,
+                "highlighted": "lightblue",
+                "text": "the"
+              },
+              {
+                "kind": "whitespace",
+                "bold": true,
+                "highlighted": "lightblue"
+              },
+              {
+                "kind": "text",
+                "bold": true,
+                "highlighted": "lightblue",
+                "text": "example"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "after"
+              }
+            ]
+          },
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "Before"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "bold": true,
+                "highlighted": "lightblue",
+                "text": "the"
+              },
+              {
+                "kind": "whitespace",
+                "bold": true,
+                "highlighted": "lightblue"
+              },
+              {
+                "kind": "text",
+                "bold": true,
+                "highlighted": "lightblue",
+                "text": "clue"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "after"
+              }
+            ]
+          }
+        ],
+        first: false,
+        centered: true,
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_highlighted.0.0')
+  })
+
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_highlighted pagelet 0 section 1', () => {
+    cy.mount(TricolorSection, {
+      props: {
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "Before"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "bold": true,
+                "highlighted": "lightblue",
+                "text": "the"
+              },
+              {
+                "kind": "whitespace",
+                "bold": true,
+                "highlighted": "lightblue"
+              },
+              {
+                "kind": "text",
+                "bold": true,
+                "highlighted": "lightblue",
+                "text": "wording"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "after"
+              }
+            ]
+          }
+        ],
+        first: false,
+        centered: false,
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_highlighted.0.1')
+  })
+
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_highlighted pagelet 1 section 0', () => {
+    cy.mount(MonocolorSection, {
+      props: {
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "Before"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "bold": true,
+                "highlighted": "lightblue",
+                "text": "the"
+              },
+              {
+                "kind": "whitespace",
+                "bold": true,
+                "highlighted": "lightblue"
+              },
+              {
+                "kind": "text",
+                "bold": true,
+                "highlighted": "lightblue",
+                "text": "reference"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "after"
+              }
+            ]
+          }
+        ],
+        first: false,
+        centered: false,
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_highlighted.1.0')
+  })
+
   it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_bold_and_italic pagelet 0 section 0', () => {
     cy.mount(MonocolorSection, {
       props: {
@@ -1132,6 +1346,160 @@ describe('TricolorSection for FormattingCompatibilityTestCase', () => {
       },
     })
     cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_choices2_with_one_line_end_in_wording.0.1')
+  })
+
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_fully_highlighted pagelet 0 section 0', () => {
+    cy.mount(MonocolorSection, {
+      props: {
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "highlighted": "lightblue",
+                "text": "The"
+              },
+              {
+                "kind": "whitespace",
+                "highlighted": "lightblue"
+              },
+              {
+                "kind": "text",
+                "highlighted": "lightblue",
+                "text": "instructions"
+              },
+              {
+                "kind": "text",
+                "highlighted": "lightblue",
+                "text": "."
+              }
+            ]
+          },
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "highlighted": "lightblue",
+                "text": "The"
+              },
+              {
+                "kind": "whitespace",
+                "highlighted": "lightblue"
+              },
+              {
+                "kind": "text",
+                "highlighted": "lightblue",
+                "text": "example"
+              },
+              {
+                "kind": "text",
+                "highlighted": "lightblue",
+                "text": "."
+              }
+            ]
+          },
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "highlighted": "lightblue",
+                "text": "The"
+              },
+              {
+                "kind": "whitespace",
+                "highlighted": "lightblue"
+              },
+              {
+                "kind": "text",
+                "highlighted": "lightblue",
+                "text": "clue"
+              },
+              {
+                "kind": "text",
+                "highlighted": "lightblue",
+                "text": "."
+              }
+            ]
+          }
+        ],
+        first: false,
+        centered: true,
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_fully_highlighted.0.0')
+  })
+
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_fully_highlighted pagelet 0 section 1', () => {
+    cy.mount(TricolorSection, {
+      props: {
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "highlighted": "lightblue",
+                "text": "The"
+              },
+              {
+                "kind": "whitespace",
+                "highlighted": "lightblue"
+              },
+              {
+                "kind": "text",
+                "highlighted": "lightblue",
+                "text": "wording"
+              },
+              {
+                "kind": "text",
+                "highlighted": "lightblue",
+                "text": "."
+              }
+            ]
+          }
+        ],
+        first: false,
+        centered: false,
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_fully_highlighted.0.1')
+  })
+
+  it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_fully_highlighted pagelet 1 section 0', () => {
+    cy.mount(MonocolorSection, {
+      props: {
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "highlighted": "lightblue",
+                "text": "The"
+              },
+              {
+                "kind": "whitespace",
+                "highlighted": "lightblue"
+              },
+              {
+                "kind": "text",
+                "highlighted": "lightblue",
+                "text": "reference"
+              },
+              {
+                "kind": "text",
+                "highlighted": "lightblue",
+                "text": "."
+              }
+            ]
+          }
+        ],
+        first: false,
+        centered: false,
+        modelValue: {},
+      },
+    })
+    cy.screenshot('gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_fully_highlighted.1.0')
   })
 
   it('renders gabby.adaptation.formatting_compatibility_tests.FormattingCompatibilityTestCase.test_manual_item_with_one_line_end pagelet 0 section 1', () => {

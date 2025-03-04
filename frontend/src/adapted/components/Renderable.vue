@@ -27,13 +27,13 @@ const tricolorable = computed(() => !props.nested)
 <template>
   <template v-if="node.kind === 'whitespace'">
     <span
-      :class="{bold: node.bold, italic: node.italic}"
+      :class="{bold: node.bold, italic: node.italic, highlighted: !!node.highlighted}"
       :style="!!node.highlighted ? {background: node.highlighted} : {}"
     >&nbsp;&nbsp;<wbr /></span>
   </template>
   <template v-else-if="node.kind === 'text'">
     <span
-      :class="{bold: node.bold, italic: node.italic, tricolorable}"
+      :class="{bold: node.bold, italic: node.italic, highlighted: !!node.highlighted, tricolorable}"
       :style="!!node.highlighted ? {background: node.highlighted} : {}"
     >
       {{ node.text }}
@@ -99,5 +99,18 @@ span.bold {
 span.boxed {
   padding: 4px;
   border: 2px solid black;
+}
+
+span.highlighted {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+span.highlighted:last-child, span.highlighted:has(+ :not(.highlighted)) {
+  padding-right: 4px;
+}
+
+span.highlighted:first-child, :not(span.highlighted) + span.highlighted {
+  padding-left: 4px;
 }
 </style>
