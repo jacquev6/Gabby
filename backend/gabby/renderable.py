@@ -20,16 +20,13 @@ class Text(PydanticBase):
     text: str
 
 
-PassiveLeafRenderable = Whitespace | Text
-
-
 class PassiveSequence(PydanticBase):
     kind: Literal["passiveSequence"]
     contents: list[PassiveRenderable]
     boxed: bool = False
 
 
-PassiveRenderable = PassiveLeafRenderable | PassiveSequence
+PassiveRenderable = Whitespace | Text | PassiveSequence
 
 
 class FreeTextInput(PydanticBase):
@@ -48,6 +45,7 @@ class SelectableInput(PydanticBase):
     kind: Literal["selectableInput"]
     colors: list[str]
     boxed: bool = False
+    padding: tuple[float, float] = (0.0, 0.0)
     contents: list[PassiveRenderable]
 
 

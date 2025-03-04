@@ -698,6 +698,10 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
                 "colors": [
                   "red"
                 ],
+                "padding": [
+                  16.0,
+                  3.2
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -724,6 +728,10 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
                 "kind": "selectableInput",
                 "colors": [
                   "red"
+                ],
+                "padding": [
+                  16.0,
+                  3.2
                 ],
                 "contents": [
                   {
@@ -766,6 +774,10 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
                 "kind": "selectableInput",
                 "colors": [
                   "red"
+                ],
+                "padding": [
+                  16.0,
+                  3.2
                 ],
                 "contents": [
                   {
@@ -810,6 +822,10 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
                 "colors": [
                   "red"
                 ],
+                "padding": [
+                  16.0,
+                  3.2
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -851,6 +867,10 @@ describe('TricolorSection for LenientParagraphTestCase', () => {
                 "kind": "selectableInput",
                 "colors": [
                   "red"
+                ],
+                "padding": [
+                  16.0,
+                  3.2
                 ],
                 "contents": [
                   {

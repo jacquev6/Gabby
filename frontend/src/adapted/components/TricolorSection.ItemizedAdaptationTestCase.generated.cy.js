@@ -3241,6 +3241,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "colors": [
                   "red"
                 ],
+                "padding": [
+                  2.0,
+                  2.0
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -3252,6 +3256,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "kind": "selectableInput",
                 "colors": [
                   "red"
+                ],
+                "padding": [
+                  2.0,
+                  2.0
                 ],
                 "contents": [
                   {
@@ -3265,6 +3273,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "colors": [
                   "red"
                 ],
+                "padding": [
+                  2.0,
+                  2.0
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -3276,6 +3288,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "kind": "selectableInput",
                 "colors": [
                   "red"
+                ],
+                "padding": [
+                  2.0,
+                  2.0
                 ],
                 "contents": [
                   {
@@ -3292,6 +3308,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "colors": [
                   "red"
                 ],
+                "padding": [
+                  2.0,
+                  2.0
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -3303,6 +3323,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "kind": "selectableInput",
                 "colors": [
                   "red"
+                ],
+                "padding": [
+                  2.0,
+                  2.0
                 ],
                 "contents": [
                   {
@@ -3323,6 +3347,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "colors": [
                   "red"
                 ],
+                "padding": [
+                  2.0,
+                  2.0
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -3335,6 +3363,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "colors": [
                   "red"
                 ],
+                "padding": [
+                  2.0,
+                  2.0
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -3346,6 +3378,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "kind": "selectableInput",
                 "colors": [
                   "red"
+                ],
+                "padding": [
+                  2.0,
+                  2.0
                 ],
                 "contents": [
                   {
@@ -3362,6 +3398,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "colors": [
                   "red"
                 ],
+                "padding": [
+                  2.0,
+                  2.0
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -3373,6 +3413,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "kind": "selectableInput",
                 "colors": [
                   "red"
+                ],
+                "padding": [
+                  2.0,
+                  2.0
                 ],
                 "contents": [
                   {
@@ -3386,6 +3430,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "colors": [
                   "red"
                 ],
+                "padding": [
+                  2.0,
+                  2.0
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -3397,6 +3445,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "kind": "selectableInput",
                 "colors": [
                   "red"
+                ],
+                "padding": [
+                  2.0,
+                  2.0
                 ],
                 "contents": [
                   {
@@ -3410,6 +3462,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "colors": [
                   "red"
                 ],
+                "padding": [
+                  2.0,
+                  2.0
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -3422,6 +3478,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "colors": [
                   "red"
                 ],
+                "padding": [
+                  2.0,
+                  2.0
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -3433,6 +3493,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "kind": "selectableInput",
                 "colors": [
                   "red"
+                ],
+                "padding": [
+                  2.0,
+                  2.0
                 ],
                 "contents": [
                   {
@@ -3618,6 +3682,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                   "yellow",
                   "orange"
                 ],
+                "padding": [
+                  16.0,
+                  3.2
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -3645,6 +3713,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                   "green",
                   "yellow",
                   "orange"
+                ],
+                "padding": [
+                  16.0,
+                  3.2
                 ],
                 "contents": [
                   {
@@ -3905,6 +3977,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "colors": [
                   "red"
                 ],
+                "padding": [
+                  16.0,
+                  3.2
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -3954,6 +4030,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "kind": "selectableInput",
                 "colors": [
                   "red"
+                ],
+                "padding": [
+                  16.0,
+                  3.2
                 ],
                 "contents": [
                   {
@@ -4011,6 +4091,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "kind": "selectableInput",
                 "colors": [
                   "red"
+                ],
+                "padding": [
+                  16.0,
+                  3.2
                 ],
                 "contents": [
                   {
@@ -4075,6 +4159,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "colors": [
                   "red"
                 ],
+                "padding": [
+                  16.0,
+                  3.2
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -4131,6 +4219,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "kind": "selectableInput",
                 "colors": [
                   "red"
+                ],
+                "padding": [
+                  16.0,
+                  3.2
                 ],
                 "contents": [
                   {
@@ -4214,6 +4306,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "colors": [
                   "red"
                 ],
+                "padding": [
+                  16.0,
+                  3.2
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -4267,6 +4363,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "kind": "selectableInput",
                 "colors": [
                   "red"
+                ],
+                "padding": [
+                  16.0,
+                  3.2
                 ],
                 "contents": [
                   {
@@ -4324,6 +4424,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "kind": "selectableInput",
                 "colors": [
                   "red"
+                ],
+                "padding": [
+                  16.0,
+                  3.2
                 ],
                 "contents": [
                   {
@@ -4392,6 +4496,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "colors": [
                   "red"
                 ],
+                "padding": [
+                  16.0,
+                  3.2
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -4448,6 +4556,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "kind": "selectableInput",
                 "colors": [
                   "red"
+                ],
+                "padding": [
+                  16.0,
+                  3.2
                 ],
                 "contents": [
                   {
@@ -4531,6 +4643,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "colors": [
                   "red"
                 ],
+                "padding": [
+                  16.0,
+                  3.2
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -4584,6 +4700,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "kind": "selectableInput",
                 "colors": [
                   "red"
+                ],
+                "padding": [
+                  16.0,
+                  3.2
                 ],
                 "contents": [
                   {
@@ -4641,6 +4761,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "kind": "selectableInput",
                 "colors": [
                   "red"
+                ],
+                "padding": [
+                  16.0,
+                  3.2
                 ],
                 "contents": [
                   {
@@ -4709,6 +4833,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "colors": [
                   "red"
                 ],
+                "padding": [
+                  16.0,
+                  3.2
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -4765,6 +4893,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                 "kind": "selectableInput",
                 "colors": [
                   "red"
+                ],
+                "padding": [
+                  16.0,
+                  3.2
                 ],
                 "contents": [
                   {
@@ -5004,6 +5136,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                   "yellow",
                   "orange"
                 ],
+                "padding": [
+                  16.0,
+                  3.2
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -5051,6 +5187,10 @@ describe('TricolorSection for ItemizedAdaptationTestCase', () => {
                   "green",
                   "yellow",
                   "orange"
+                ],
+                "padding": [
+                  16.0,
+                  3.2
                 ],
                 "contents": [
                   {

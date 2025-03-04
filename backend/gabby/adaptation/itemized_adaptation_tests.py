@@ -47,26 +47,58 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                                 paragraphs=[
                                     r.Paragraph(
                                         contents=[
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="T")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="h")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="i")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="s")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(2.0, 2.0), contents=[r.Text(kind="text", text="T")]
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(2.0, 2.0), contents=[r.Text(kind="text", text="h")]
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(2.0, 2.0), contents=[r.Text(kind="text", text="i")]
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(2.0, 2.0), contents=[r.Text(kind="text", text="s")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="i")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="s")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(2.0, 2.0), contents=[r.Text(kind="text", text="i")]
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(2.0, 2.0), contents=[r.Text(kind="text", text="s")]
+                                            ),
                                             r.Text(kind="text", text=","),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="t")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="h")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="e")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(2.0, 2.0), contents=[r.Text(kind="text", text="t")]
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(2.0, 2.0), contents=[r.Text(kind="text", text="h")]
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(2.0, 2.0), contents=[r.Text(kind="text", text="e")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="w")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="o")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="r")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="d")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="i")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="n")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="g")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(2.0, 2.0), contents=[r.Text(kind="text", text="w")]
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(2.0, 2.0), contents=[r.Text(kind="text", text="o")]
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(2.0, 2.0), contents=[r.Text(kind="text", text="r")]
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(2.0, 2.0), contents=[r.Text(kind="text", text="d")]
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(2.0, 2.0), contents=[r.Text(kind="text", text="i")]
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(2.0, 2.0), contents=[r.Text(kind="text", text="n")]
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(2.0, 2.0), contents=[r.Text(kind="text", text="g")]
+                                            ),
                                             r.Text(kind="text", text="."),
                                         ]
                                     )
@@ -181,7 +213,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                                                 kind="selectableInput", colors=["green", "yellow", "orange"], contents=[r.Text(kind="text", text="is")]
                                             ),
                                             r.SelectableInput(
-                                                kind="selectableInput", colors=["green", "yellow", "orange"], contents=[r.Text(kind="text", text=",")]
+                                                kind="selectableInput",
+                                                colors=["green", "yellow", "orange"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=",")],
                                             ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
@@ -192,7 +227,10 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                                                 kind="selectableInput", colors=["green", "yellow", "orange"], contents=[r.Text(kind="text", text="wording")]
                                             ),
                                             r.SelectableInput(
-                                                kind="selectableInput", colors=["green", "yellow", "orange"], contents=[r.Text(kind="text", text=".")]
+                                                kind="selectableInput",
+                                                colors=["green", "yellow", "orange"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=".")],
                                             ),
                                         ]
                                     )
@@ -246,14 +284,20 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.Text(kind="text", text="is"),
                                             r.SelectableInput(
-                                                kind="selectableInput", colors=["green", "yellow", "orange"], contents=[r.Text(kind="text", text=",")]
+                                                kind="selectableInput",
+                                                colors=["green", "yellow", "orange"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=",")],
                                             ),
                                             r.Whitespace(kind="whitespace"),
                                             r.Text(kind="text", text="the"),
                                             r.Whitespace(kind="whitespace"),
                                             r.Text(kind="text", text="wording"),
                                             r.SelectableInput(
-                                                kind="selectableInput", colors=["green", "yellow", "orange"], contents=[r.Text(kind="text", text=".")]
+                                                kind="selectableInput",
+                                                colors=["green", "yellow", "orange"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=".")],
                                             ),
                                         ]
                                     )
@@ -376,7 +420,9 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="list")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="element")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -387,14 +433,18 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="Second")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="element")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=",")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=",")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="still")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="in")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="list")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                         ]
                                     ),
                                 ],
@@ -416,14 +466,18 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="Third")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="element")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="The")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="last")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="one")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="!")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="!")]
+                                            ),
                                         ]
                                     )
                                 ],
@@ -480,7 +534,9 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="list")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="element")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -491,14 +547,18 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="Second")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="element")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=",")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=",")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="still")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="in")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="list")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                         ]
                                     ),
                                 ],
@@ -520,14 +580,18 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="Third")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="element")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="The")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="last")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="one")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="!")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="!")]
+                                            ),
                                         ]
                                     )
                                 ],
@@ -583,7 +647,9 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="list")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="element")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -593,14 +659,18 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="Second")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="element")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=",")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=",")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="still")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="in")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="list")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                         ]
                                     ),
                                 ],
@@ -621,14 +691,18 @@ class ItemizedAdaptationTestCase(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="Third")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="element")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="The")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="last")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="one")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="!")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="!")]
+                                            ),
                                         ]
                                     )
                                 ],

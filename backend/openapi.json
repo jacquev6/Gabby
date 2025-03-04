@@ -871,6 +871,24 @@
             "const": "selectableInput",
             "title": "Kind",
             "type": "string"
+          },
+          "padding": {
+            "default": [
+              0.0,
+              0.0
+            ],
+            "maxItems": 2,
+            "minItems": 2,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "title": "Padding",
+            "type": "array"
           }
         },
         "required": [

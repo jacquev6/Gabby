@@ -1689,6 +1689,10 @@ describe('TricolorSection for FixturesTestCase', () => {
                   "#bbbbff",
                   "#bbffbb"
                 ],
+                "padding": [
+                  16.0,
+                  3.2
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -1902,6 +1906,10 @@ describe('TricolorSection for FixturesTestCase', () => {
                   "#bbbbff",
                   "#bbffbb"
                 ],
+                "padding": [
+                  16.0,
+                  3.2
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -2047,6 +2055,10 @@ describe('TricolorSection for FixturesTestCase', () => {
                   "#bbbbff",
                   "#bbffbb"
                 ],
+                "padding": [
+                  16.0,
+                  3.2
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -2076,6 +2088,10 @@ describe('TricolorSection for FixturesTestCase', () => {
                   "#ffc0cb",
                   "#bbbbff",
                   "#bbffbb"
+                ],
+                "padding": [
+                  16.0,
+                  3.2
                 ],
                 "contents": [
                   {
@@ -2110,6 +2126,10 @@ describe('TricolorSection for FixturesTestCase', () => {
                   "#bbbbff",
                   "#bbffbb"
                 ],
+                "padding": [
+                  16.0,
+                  3.2
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -2143,6 +2163,10 @@ describe('TricolorSection for FixturesTestCase', () => {
                   "#bbbbff",
                   "#bbffbb"
                 ],
+                "padding": [
+                  16.0,
+                  3.2
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -2175,6 +2199,10 @@ describe('TricolorSection for FixturesTestCase', () => {
                   "#ffc0cb",
                   "#bbbbff",
                   "#bbffbb"
+                ],
+                "padding": [
+                  16.0,
+                  3.2
                 ],
                 "contents": [
                   {
@@ -2227,6 +2255,10 @@ describe('TricolorSection for FixturesTestCase', () => {
                   "#bbbbff",
                   "#bbffbb"
                 ],
+                "padding": [
+                  16.0,
+                  3.2
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -2242,6 +2274,10 @@ describe('TricolorSection for FixturesTestCase', () => {
                   "#bbbbff",
                   "#bbffbb"
                 ],
+                "padding": [
+                  16.0,
+                  3.2
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -2256,6 +2292,10 @@ describe('TricolorSection for FixturesTestCase', () => {
                   "#ffc0cb",
                   "#bbbbff",
                   "#bbffbb"
+                ],
+                "padding": [
+                  16.0,
+                  3.2
                 ],
                 "contents": [
                   {
@@ -2308,6 +2348,10 @@ describe('TricolorSection for FixturesTestCase', () => {
                   "#ffc0cb",
                   "#bbbbff",
                   "#bbffbb"
+                ],
+                "padding": [
+                  16.0,
+                  3.2
                 ],
                 "contents": [
                   {
@@ -2470,6 +2514,10 @@ describe('TricolorSection for FixturesTestCase', () => {
                   "#ffc0cb",
                   "#bbbbff",
                   "#bbffbb"
+                ],
+                "padding": [
+                  16.0,
+                  3.2
                 ],
                 "contents": [
                   {
@@ -2717,6 +2765,10 @@ describe('TricolorSection for FixturesTestCase', () => {
                   "#ffc0cb",
                   "#bbbbff",
                   "#bbffbb"
+                ],
+                "padding": [
+                  16.0,
+                  3.2
                 ],
                 "contents": [
                   {

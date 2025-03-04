@@ -69,7 +69,7 @@ async def log_requests_and_responses(request: fastapi.Request, call_next):
 def export_project(project_id: str, session: SessionDependable, authenticated_user: MandatoryAuthTokenDependable, download: bool = True):
     project = session.get(Project, ProjectsResource.sqids.decode(project_id)[0])
     data = (
-        json.dumps(dict(projectId=project.id, exercises=[exercise.make_adapted().model_dump() for exercise in project.exercises]))
+        json.dumps(dict(projectId=project.id, exercises=[exercise.make_adapted().model_dump(exclude_unset=True) for exercise in project.exercises]))
         .replace("\\", "\\\\")
         .replace('"', '\\"')
     )

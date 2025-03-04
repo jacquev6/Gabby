@@ -1984,7 +1984,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="beb")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=".")],
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -1999,7 +2004,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="babab")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=",")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=",")],
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="Acfab")]
@@ -2044,7 +2054,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="écobe")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=".")],
+                                            ),
                                         ]
                                     ),
                                 ],
@@ -2128,7 +2143,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="abebaeb")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=".")],
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -2166,7 +2186,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="Aucbbabae")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=".")],
+                                            ),
                                         ]
                                     ),
                                 ],
@@ -2237,7 +2262,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="fbabçaac")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=".")],
+                                            ),
                                         ]
                                     )
                                 ],
@@ -3159,7 +3189,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="babfobobabuec")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=".")],
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -3186,7 +3221,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="cobfc")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=".")],
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -3268,7 +3308,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="bbûbe")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="*")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text="*")],
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="boc")]
@@ -3277,7 +3322,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="baacobc")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=".")],
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -3325,7 +3375,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="œufc")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=".")],
+                                            ),
                                         ]
                                     ),
                                 ],
@@ -3407,7 +3462,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="bababuec")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=".")],
+                                            ),
                                         ]
                                     ),
                                 ],
@@ -4585,7 +4645,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="bacce")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ub")]),
                                             r.Whitespace(kind="whitespace"),
@@ -4600,7 +4662,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                         contents=[
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="bécobbebb")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="dec")]),
                                             r.Whitespace(kind="whitespace"),
@@ -4608,12 +4672,16 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="coubabeub")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ub")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ab")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="-")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="-")]
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -4624,7 +4692,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="fbeuba")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ube")]),
                                             r.Whitespace(kind="whitespace"),
@@ -4632,7 +4702,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="febbababeuce")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                         ]
                                     ),
                                 ],
@@ -4679,7 +4751,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="abbbaace")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ube")]),
                                             r.Whitespace(kind="whitespace"),
@@ -4690,7 +4764,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                         contents=[
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="abae")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="fobbe")]),
                                             r.Whitespace(kind="whitespace"),
@@ -5548,13 +5624,19 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                         ]
                                     ),
                                     r.Paragraph(
-                                        contents=[r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="*")])]
+                                        contents=[
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="*")]
+                                            )
+                                        ]
                                     ),
                                     r.Paragraph(
                                         contents=[
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="bbafebcaèbe")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ub")]),
                                             r.Whitespace(kind="whitespace"),
@@ -5562,7 +5644,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="boube")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ube")]),
                                             r.Whitespace(kind="whitespace"),
@@ -5609,7 +5693,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                         contents=[
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="babaabube")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ub")]),
                                             r.Whitespace(kind="whitespace"),
@@ -5617,7 +5703,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="bédaéfab")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ub")]),
                                             r.Whitespace(kind="whitespace"),
@@ -5628,7 +5716,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                         contents=[
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="fbeuba")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ub")]),
                                             r.Whitespace(kind="whitespace"),
@@ -5636,7 +5726,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="babeau")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ube")]),
                                             r.Whitespace(kind="whitespace"),
@@ -5644,7 +5736,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="fobêb")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -5659,7 +5753,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="bbeu")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ube")]),
                                             r.Whitespace(kind="whitespace"),
@@ -5667,7 +5763,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="cbaabe")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                         ]
                                     ),
                                 ],
@@ -5714,7 +5812,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="cobbu")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ube")]),
                                             r.Whitespace(kind="whitespace"),
@@ -5847,7 +5947,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="bucée")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="fabacaeb")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -5875,7 +5977,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="babbeaub")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="cébèbbec")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                         ]
                                     ),
                                 ],
@@ -5924,7 +6028,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="cbaaob")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="boab")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text=",")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=",")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="Babbaeb")]),
                                             r.Whitespace(kind="whitespace"),
@@ -5933,7 +6039,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="Bobabe")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="dec")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="-")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="-")]
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -5945,7 +6053,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="beub")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="cabbeb")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -5958,7 +6068,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ce")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="bebfc")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text=",")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=",")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="Abèc")]),
                                             r.Whitespace(kind="whitespace"),
@@ -6010,7 +6122,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="bobbbeucec")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ffobobbaffaec")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -6023,7 +6137,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="abc")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="bebbbebobb")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text=",")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=",")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="abc")]),
                                             r.Whitespace(kind="whitespace"),
@@ -6037,7 +6153,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ebfocabaob")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="abbacbabue")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                         ]
                                     ),
                                 ],
@@ -6191,7 +6309,10 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
-                                                kind="selectableInput", colors=["#ffff00", "#ffc0cb", "#bbbbff"], contents=[r.Text(kind="text", text="–")]
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text="–")],
                                             ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
@@ -6213,7 +6334,10 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
-                                                kind="selectableInput", colors=["#ffff00", "#ffc0cb", "#bbbbff"], contents=[r.Text(kind="text", text="–")]
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text="–")],
                                             ),
                                         ]
                                     ),
@@ -6236,7 +6360,10 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
-                                                kind="selectableInput", colors=["#ffff00", "#ffc0cb", "#bbbbff"], contents=[r.Text(kind="text", text="–")]
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text="–")],
                                             ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
@@ -6263,7 +6390,10 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
-                                                kind="selectableInput", colors=["#ffff00", "#ffc0cb", "#bbbbff"], contents=[r.Text(kind="text", text="–")]
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text="–")],
                                             ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
@@ -6283,7 +6413,10 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
-                                                kind="selectableInput", colors=["#ffff00", "#ffc0cb", "#bbbbff"], contents=[r.Text(kind="text", text="–")]
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text="–")],
                                             ),
                                         ]
                                     ),
@@ -6362,7 +6495,10 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
-                                                kind="selectableInput", colors=["#ffff00", "#ffc0cb", "#bbbbff"], contents=[r.Text(kind="text", text="–")]
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text="–")],
                                             ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
@@ -6382,7 +6518,10 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
-                                                kind="selectableInput", colors=["#ffff00", "#ffc0cb", "#bbbbff"], contents=[r.Text(kind="text", text="–")]
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text="–")],
                                             ),
                                         ]
                                     ),
@@ -6405,7 +6544,10 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
-                                                kind="selectableInput", colors=["#ffff00", "#ffc0cb", "#bbbbff"], contents=[r.Text(kind="text", text="–")]
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb", "#bbbbff"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text="–")],
                                             ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
@@ -8857,10 +8999,14 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ube")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="îbe")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="*")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="*")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="décebbe")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -8893,7 +9039,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                                 contents=[r.Text(kind="text", text="d"), r.Text(kind="text", text="’")],
                                             ),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="acbbobobae")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                         ]
                                     ),
                                 ],
@@ -8950,7 +9098,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ba")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="fbabe")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -8977,7 +9127,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ba")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="fbuae")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -8998,7 +9150,9 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="eb")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="boac")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                         ]
                                     ),
                                 ],
@@ -10933,13 +11087,17 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="fabaace")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ub")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="facabd")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ube")]),
                                             r.Whitespace(kind="whitespace"),
@@ -10955,13 +11113,17 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="afebce")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ub")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="cobbeb")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ube")]),
                                             r.Whitespace(kind="whitespace"),
@@ -10975,19 +11137,29 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="cafoab")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="cûbebebb")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="*")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="*")]
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="cabe")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="décobbaac")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="cabfbe")]),
                                         ]
@@ -11131,17 +11303,23 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="boubbefac")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ub")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="babebac")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="badac")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="dec")]),
                                             r.Whitespace(kind="whitespace"),
@@ -11157,17 +11335,23 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="oc")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ub")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ac")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="dabc")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
                                                 kind="selectableInput",
@@ -11186,17 +11370,23 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="cacbuc")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="fuac")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ub")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="abac")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ub")]),
                                             r.Whitespace(kind="whitespace"),
@@ -11266,21 +11456,29 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="babc")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="baac")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ub")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="fabuc")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="baufaac")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="fébac")]),
                                         ]
@@ -11292,23 +11490,31 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="bouc")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="fouc")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="be")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="baïc")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ub")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="bafac")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ub")]),
                                             r.Whitespace(kind="whitespace"),
@@ -11535,7 +11741,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="boubbabdace")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=",")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=",")],
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="ab")]),
                                             r.Whitespace(kind="whitespace"),
@@ -11660,7 +11871,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="boab")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=".")],
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="Ube")]
@@ -11690,7 +11906,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="dacebbe")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=",")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=",")],
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="ab")]),
                                             r.Whitespace(kind="whitespace"),
@@ -11710,7 +11931,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="fbocubeb")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=".")],
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="Ab")]),
                                             r.Whitespace(kind="whitespace"),
@@ -11862,7 +12088,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="foabec")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=".")],
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -11897,7 +12128,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="Bebbbabde")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=",")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=",")],
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="ube")]
@@ -11911,11 +12147,24 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="bua")]
                                             ),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="[")]),
                                             r.SelectableInput(
-                                                kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="...")]
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text="[")],
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="]")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text="...")],
+                                            ),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text="]")],
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="ce")]),
                                             r.Whitespace(kind="whitespace"),
@@ -12033,7 +12282,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="fabc")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=".")],
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="Febcabb")]
@@ -12102,7 +12356,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="deub")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=",")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=",")],
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="ebbe")]
@@ -12124,7 +12383,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="aîbé")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=".")],
+                                            ),
                                         ]
                                     ),
                                 ],
@@ -12214,7 +12478,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="Fabbabd")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=",")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=",")],
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="Bec")]
@@ -12235,7 +12504,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="Bbébob")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=",")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=",")],
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -12257,7 +12531,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="bbaabe")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=",")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=",")],
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="Bubf")]
@@ -12270,12 +12549,22 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="Édabeub")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=",")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=",")],
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
                                         contents=[
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="©")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text="©")],
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="Baobeb")]
@@ -12284,7 +12573,12 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text="Fabbabd")]
                                             ),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00", "#ffc0cb"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput",
+                                                colors=["#ffff00", "#ffc0cb"],
+                                                padding=(16.0, 3.2),
+                                                contents=[r.Text(kind="text", text=".")],
+                                            ),
                                         ]
                                     ),
                                 ],
@@ -14022,17 +14316,23 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="cabbabbe")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="cobbebceb")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ub")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="coab")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ube")]),
                                             r.Whitespace(kind="whitespace"),
@@ -14048,19 +14348,25 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="cabafeau")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ub")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="cfebab")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ub")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="cbaaob")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ub")]),
                                             r.Whitespace(kind="whitespace"),
@@ -14076,17 +14382,23 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="bebceau")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="cacceb")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ub")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="babçob")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ub")]),
                                             r.Whitespace(kind="whitespace"),
@@ -14146,15 +14458,21 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="becebbe")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="cobfbeb")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="occufeb")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ub")]),
                                             r.Whitespace(kind="whitespace"),
@@ -14170,19 +14488,25 @@ class DatabaseAsUnitTests0003(AdaptationTestCase):
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="fbace")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ube")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="bebcobbbe")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="ub")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="cfaudbob")]),
                                             r.Whitespace(kind="whitespace"),
-                                            r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="–")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["#ffff00"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="–")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["#ffff00"], contents=[r.Text(kind="text", text="bbabc")]),
                                         ]

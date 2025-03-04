@@ -16,6 +16,7 @@ import sqlalchemy as sql
 import sqlalchemy_data_model_visualizer
 import sqlalchemy_utils.functions
 
+from . import adaptation
 from . import database_utils
 from . import deltas
 from . import exercises
@@ -205,32 +206,7 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
             adaptation=exercise.adaptation,
         )
 
-    def renderable_repr(r):
-        s = (
-            repr(r)
-            .replace("Exercise(", "r.Exercise(")
-            .replace("Paragraph(", "r.Paragraph(")
-            .replace("Section(", "r.Section(")
-            .replace("Pagelet(", "r.Pagelet(")
-            .replace("Text(", "r.Text(")
-            .replace("Whitespace(", "r.Whitespace(")
-            .replace("FreeTextInput(", "r.FreeTextInput(")
-            .replace("MultipleChoicesInput(", "r.MultipleChoicesInput(")
-            .replace("SelectableInput(", "r.SelectableInput(")
-            .replace("PassiveSequence(", "r.PassiveSequence(")
-            .replace("AnySequence(", "r.AnySequence(")
-            .replace("bold=False", "")
-            .replace("italic=False", "")
-            .replace("highlighted=None", "")
-            .replace("boxed=False", "")
-            .replace("show_arrow_before=False", "")
-            .replace("show_choices_by_default=False", "")
-            .replace("vertical=False", "")
-            .replace("fixed_case=True", "")
-        )
-        while (new_s := s.replace(", , ", ", ").replace(", )", ")")) != s:
-            s = new_s
-        return s
+    renderable_repr = adaptation.AdaptationTestCase.renderable_repr
 
     def gen(batch_index, exercises_batch):
         yield "# WARNING: this file is generated (from database content). Manual changes will be lost."

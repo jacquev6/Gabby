@@ -282,6 +282,10 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
                 "colors": [
                   "red"
                 ],
+                "padding": [
+                  16.0,
+                  3.2
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -323,6 +327,10 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
                 "colors": [
                   "red"
                 ],
+                "padding": [
+                  16.0,
+                  3.2
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -363,6 +371,10 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
                 "kind": "selectableInput",
                 "colors": [
                   "red"
+                ],
+                "padding": [
+                  16.0,
+                  3.2
                 ],
                 "contents": [
                   {
@@ -580,6 +592,10 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
                 "colors": [
                   "red"
                 ],
+                "padding": [
+                  16.0,
+                  3.2
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -653,6 +669,10 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
                 "colors": [
                   "red"
                 ],
+                "padding": [
+                  16.0,
+                  3.2
+                ],
                 "contents": [
                   {
                     "kind": "text",
@@ -725,6 +745,10 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
                 "kind": "selectableInput",
                 "colors": [
                   "red"
+                ],
+                "padding": [
+                  16.0,
+                  3.2
                 ],
                 "contents": [
                   {

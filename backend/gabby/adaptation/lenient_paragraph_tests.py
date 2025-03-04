@@ -278,15 +278,21 @@ class LenientParagraphTestCase(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="strict")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="paragraph")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=",")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=",")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="with")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="...")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="...")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="some")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="punctuation")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                         ]
                                     ),
                                     r.Paragraph(
@@ -294,12 +300,16 @@ class LenientParagraphTestCase(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="And")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="this")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=",")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=",")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="is")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="a")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="...")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text="...")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="lenient")]),
                                             r.Whitespace(kind="whitespace"),

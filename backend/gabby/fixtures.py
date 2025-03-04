@@ -1479,6 +1479,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                                 r.SelectableInput(
                                                     kind="selectableInput",
                                                     colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                    padding=(16.0, 3.2),
                                                     contents=[r.Text(kind="text", text=",")],
                                                 ),
                                                 r.Whitespace(kind="whitespace"),
@@ -1550,6 +1551,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                                 r.SelectableInput(
                                                     kind="selectableInput",
                                                     colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                    padding=(16.0, 3.2),
                                                     contents=[r.Text(kind="text", text=".")],
                                                 ),
                                             ]
@@ -1601,6 +1603,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                                 r.SelectableInput(
                                                     kind="selectableInput",
                                                     colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                    padding=(16.0, 3.2),
                                                     contents=[r.Text(kind="text", text="(")],
                                                 ),
                                                 r.SelectableInput(
@@ -1611,6 +1614,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                                 r.SelectableInput(
                                                     kind="selectableInput",
                                                     colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                    padding=(16.0, 3.2),
                                                     contents=[r.Text(kind="text", text=",")],
                                                 ),
                                                 r.Whitespace(kind="whitespace"),
@@ -1622,6 +1626,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                                 r.SelectableInput(
                                                     kind="selectableInput",
                                                     colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                    padding=(16.0, 3.2),
                                                     contents=[r.Text(kind="text", text=",")],
                                                 ),
                                                 r.Whitespace(kind="whitespace"),
@@ -1633,6 +1638,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                                 r.SelectableInput(
                                                     kind="selectableInput",
                                                     colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                    padding=(16.0, 3.2),
                                                     contents=[r.Text(kind="text", text=",")],
                                                 ),
                                                 r.Whitespace(kind="whitespace"),
@@ -1644,6 +1650,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                                 r.SelectableInput(
                                                     kind="selectableInput",
                                                     colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                    padding=(16.0, 3.2),
                                                     contents=[r.Text(kind="text", text=",")],
                                                 ),
                                                 r.Whitespace(kind="whitespace"),
@@ -1661,16 +1668,19 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                                 r.SelectableInput(
                                                     kind="selectableInput",
                                                     colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                    padding=(16.0, 3.2),
                                                     contents=[r.Text(kind="text", text="…")],
                                                 ),
                                                 r.SelectableInput(
                                                     kind="selectableInput",
                                                     colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                    padding=(16.0, 3.2),
                                                     contents=[r.Text(kind="text", text=")")],
                                                 ),
                                                 r.SelectableInput(
                                                     kind="selectableInput",
                                                     colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                    padding=(16.0, 3.2),
                                                     contents=[r.Text(kind="text", text=".")],
                                                 ),
                                             ]
@@ -1691,6 +1701,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                                 r.SelectableInput(
                                                     kind="selectableInput",
                                                     colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                    padding=(16.0, 3.2),
                                                     contents=[r.Text(kind="text", text=",")],
                                                 ),
                                                 r.Whitespace(kind="whitespace"),
@@ -1745,6 +1756,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                                 r.SelectableInput(
                                                     kind="selectableInput",
                                                     colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                    padding=(16.0, 3.2),
                                                     contents=[r.Text(kind="text", text="°")],
                                                 ),
                                                 r.SelectableInput(
@@ -1826,6 +1838,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                                 r.SelectableInput(
                                                     kind="selectableInput",
                                                     colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
+                                                    padding=(16.0, 3.2),
                                                     contents=[r.Text(kind="text", text=".")],
                                                 ),
                                             ]

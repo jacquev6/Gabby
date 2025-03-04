@@ -395,7 +395,7 @@ class _Adapter:
                     begin += len(next_placeholder[1])
                 elif next_manual_item is not None and next_disruption == next_manual_item.begin:
                     assert self.manual_items_are_items
-                    for r in self.decorate_item(self.adapt_formatted_text(wording, next_manual_item.begin, next_manual_item.end)):
+                    for r in self.decorate_item("generic", self.adapt_formatted_text(wording, next_manual_item.begin, next_manual_item.end)):
                         yield (paragraph_index, r)
                     if self.single_item_per_paragraph:
                         paragraph_index += 1
@@ -525,7 +525,7 @@ class _Adapter:
 
             (b, e) = token
             for b in range(b, e):
-                for r2 in self.decorate_item(self.adapt_formatted_text(wording, b, b + 1)):
+                for r2 in self.decorate_item("letter", self.adapt_formatted_text(wording, b, b + 1)):
                     yield (paragraph_index, r2)
                 if self.single_item_per_paragraph:
                     paragraph_index += 1
@@ -552,7 +552,7 @@ class _Adapter:
                     # or punctuation
                     r = self.adapt_formatted_text(wording, b, e)
                     if self.punctuation_is_items:
-                        for r2 in self.decorate_item(r):
+                        for r2 in self.decorate_item("punctuation", r):
                             yield (paragraph_index, r2)
                         if self.single_item_per_paragraph:
                             paragraph_index += 1
@@ -565,7 +565,7 @@ class _Adapter:
                 # Word
                 r = self.adapt_formatted_text(wording, b, e)
                 if self.words_are_items:
-                    for r2 in self.decorate_item(r):
+                    for r2 in self.decorate_item("generic", r):
                         yield (paragraph_index, r2)
                     if self.single_item_per_paragraph:
                         paragraph_index += 1
@@ -592,7 +592,7 @@ class _Adapter:
             first = False
             if self.mcq_for_repeated_items is None:
                 r = self.adapt_formatted_text(wording, b, e)
-                for r2 in self.decorate_item(r):
+                for r2 in self.decorate_item("generic", r):
                     yield (paragraph_index, r2)
             else:
                 yield (paragraph_index, self.adapt_sentence_repeated_with_mcq(wording, b, e))
@@ -659,7 +659,7 @@ class _Adapter:
             (b, e) = token
             if b < e:
                 # Item
-                for r2 in self.decorate_item(self.adapt_formatted_text(wording, b, e)):
+                for r2 in self.decorate_item("generic", self.adapt_formatted_text(wording, b, e)):
                     yield (paragraph_index, r2)
                 if self.single_item_per_paragraph:
                     paragraph_index += 1
@@ -668,9 +668,20 @@ class _Adapter:
 
         assert begin == end, (begin, end)
 
-    def decorate_item(self, r: Iterable[renderable.PassiveRenderable]) -> Iterable[renderable.AnyRenderable]:
+    def decorate_item(
+        self, item_kind: typing.Literal["letter", "punctuation", "generic"], r: Iterable[renderable.PassiveRenderable]
+    ) -> Iterable[renderable.AnyRenderable]:
         if self.items_are_selectable:
-            yield renderable.SelectableInput(kind="selectableInput", contents=list(r), colors=self.colors_for_selectable_items, boxed=self.items_are_boxed)
+            if item_kind == "letter":
+                kwargs = {"padding": (2.0, 2.0)}
+            elif item_kind == "punctuation":
+                kwargs = {"padding": (16.0, 3.2)}
+            else:
+                assert item_kind == "generic"
+                kwargs = {}
+            yield renderable.SelectableInput(
+                kind="selectableInput", contents=list(r), colors=self.colors_for_selectable_items, boxed=self.items_are_boxed, **kwargs
+            )
         elif self.mcq_below_items is not None:
             rr = list(typing.cast(Iterable[renderable.AnyRenderable], r))
             if len(rr) == 1:
@@ -732,7 +743,7 @@ class _Adapter:
 
     def adapt_formatted_text(
         self, section: AnnotatedSection, begin: int, end: int, additional_format_parameters: dict[str, Any] = {}
-    ) -> Iterable[renderable.PassiveLeafRenderable]:
+    ) -> Iterable[renderable.PassiveRenderable]:
         assert begin < end, (begin, end)
 
         for parts in self.split(r"(\.\.\.|\s+|\W)", section, begin, end, ignore_disruptions=True):
@@ -984,7 +995,7 @@ class AdaptationTestCase(unittest.TestCase):
     @staticmethod
     def renderable_repr(r: renderable.Exercise | renderable.Paragraph) -> str:
         s = (
-            repr([r])[1:-1]
+            repr(r)
             .replace("Exercise(", "r.Exercise(")
             .replace("Pagelet(", "r.Pagelet(")
             .replace("Section(", "r.Section(")
@@ -1003,6 +1014,8 @@ class AdaptationTestCase(unittest.TestCase):
             .replace("show_arrow_before=False", "")
             .replace("show_choices_by_default=False", "")
             .replace("vertical=False", "")
+            .replace("fixed_case=True", "")
+            .replace("padding=(0.0, 0.0)", "")
         )
         while (new_s := s.replace(", , ", ", ").replace(", )", ")")) != s:
             s = new_s

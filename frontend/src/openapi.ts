@@ -445,6 +445,14 @@ export interface components {
        * @constant
        */
       kind: "selectableInput";
+      /**
+       * Padding
+       * @default [
+       *   0,
+       *   0
+       * ]
+       */
+      padding?: [number, number];
     };
     /** SentencesItems */
     SentencesItems: {

@@ -741,7 +741,9 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                                             r.Text(kind="text", text="est"),
                                             r.Whitespace(kind="whitespace"),
                                             r.Text(kind="text", text="belle"),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.Text(kind="text", text="L"),
                                             r.Text(kind="text", text="'"),
@@ -750,7 +752,9 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                                             r.Text(kind="text", text="est"),
                                             r.Whitespace(kind="whitespace"),
                                             r.Text(kind="text", text="fermée"),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.Text(kind="text", text="L"),
                                             r.Text(kind="text", text="’"),
@@ -759,7 +763,9 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                                             r.Text(kind="text", text="est"),
                                             r.Whitespace(kind="whitespace"),
                                             r.Text(kind="text", text="verte"),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                         ]
                                     )
                                 ],
@@ -830,7 +836,9 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="est")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="belle")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="L"), r.Text(kind="text", text="'")]
@@ -840,7 +848,9 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="est")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="fermée")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(
                                                 kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="L"), r.Text(kind="text", text="’")]
@@ -850,7 +860,9 @@ class SelectThingsAdaptationTestCase(AdaptationTestCase):
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="est")]),
                                             r.Whitespace(kind="whitespace"),
                                             r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text="verte")]),
-                                            r.SelectableInput(kind="selectableInput", colors=["red"], contents=[r.Text(kind="text", text=".")]),
+                                            r.SelectableInput(
+                                                kind="selectableInput", colors=["red"], padding=(16.0, 3.2), contents=[r.Text(kind="text", text=".")]
+                                            ),
                                         ]
                                     )
                                 ],

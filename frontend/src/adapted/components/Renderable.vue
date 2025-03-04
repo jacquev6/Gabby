@@ -62,6 +62,7 @@ const tricolorable = computed(() => !props.nested)
       v-model="models[modelKey]"
       :boxed="!!node.boxed"
       :colors="node.colors"
+      :padding="node.padding"
     >
       <Renderable v-for="(sub, index) in node.contents" :node="sub" v-model="models" :modelKey="[...props.modelKey, index]" :nested />
     </SelectableText>
