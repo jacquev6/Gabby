@@ -42,6 +42,10 @@ defineExpose({
   setSelection(index: number, length: number) {
     editor.value?.setSelection(index, length)
   },
+  getSelectedRange() {
+    console.assert(editor.value !== null)
+    return editor.value.getSelectedRange()
+  },
   getLength() {
     return editor.value?.getLength() ?? 0
   },

@@ -450,4 +450,47 @@ describe('Gabby', () => {
     cy.get('highlighted-blot').should('have.css', 'background-color', purple)
     cy.get('span.tricolorable').should('have.css', 'background-color', purple)
   })
+
+  it('highlights after the click on the highlighted button', () => {
+    cy.viewport(1400, 1200)
+
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+    setAliases()
+
+    cy.get('@instructions').type('foo')
+    cy.get('input').first().focus().blur()  // Because .blur() doesn't work on the WYSIWYG editor
+    cy.get('@bold').should('be.disabled')
+    cy.get('@highlighted').should('be.enabled').click()
+    cy.get('button:contains("Done")').click()
+    cy.get('button:contains("Done")').should('not.exist')
+    cy.get('@highlighted').should('be.enabled').click()
+    cy.get('button:contains("Done")').should('exist')
+
+    cy.get('@instructions').find('p').then(el => {
+      const node = el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 0, node, 1)
+    })
+
+    const yellow = 'rgb(255, 255, 0)'
+    cy.get('highlighted-blot').should('have.css', 'background-color', yellow).should('have.text', 'f')
+    cy.get('span.tricolorable').should('have.css', 'background-color', yellow)
+
+    cy.get('@instructions').find('p').then(el => {
+      const node = el[0].lastChild
+      console.assert(node !== null)
+      selectRange(node, 1, node, 1)
+    })
+    cy.get('button:contains("Done")').should('not.exist')
+
+    cy.get('@instructions').find('p').then(el => {
+      const node = el[0].lastChild
+      console.assert(node !== null)
+      selectRange(node, 1, node, 2)
+    })
+
+    cy.get('highlighted-blot').should('have.length', 1)
+    cy.get('@highlighted').click()
+    cy.get('highlighted-blot').should('have.length', 2)
+  })
 })

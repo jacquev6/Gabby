@@ -92,6 +92,15 @@ const selfRef = ref<HTMLDivElement | null>(null)
 const colorPicker = ref<InstanceType<typeof FloatingColorPicker> | null>(null)
 const highlightingColor = ref(allColorsForSelectableEffect[0])
 
+function highlight() {
+  console.assert(props.fields !== null)
+  if (props.fields.getSelectedRange() !== null) {
+    props.fields.toggle('highlighted', highlightingColor.value)
+  } else {
+    model.value.inProgress = {kind: 'highlighting', color: highlightingColor.value}
+  }
+}
+
 async function chooseHighlightingColor(event: MouseEvent) {
   console.assert(colorPicker.value !== null)
   props.fields
@@ -149,9 +158,8 @@ async function chooseHighlightingColor(event: MouseEvent) {
                 ><img :style="{height: '1.25em'}" src="/italic.svg" /></BButton>
                 <BButton
                   sm secondary
-                  :disabled="fields.focusedWysiwygField == null"
                   :class="{active: fields.currentWysiwygFormat.highlighted}"
-                  @click="fields.toggle('highlighted', highlightingColor)"
+                  @click="highlight"
                   data-cy="format-highlighted"
                   @contextmenu.prevent="chooseHighlightingColor"
                 >
@@ -240,6 +248,17 @@ async function chooseHighlightingColor(event: MouseEvent) {
           <div style="position: absolute; top: 50px; left: 10%; width: 80%; background-color: white; padding: 1em;">
             {{ $t('repeatedWithMcqCreationInstructions') }}
             <BButton secondary sm @click="model.inProgress = {kind: 'nothing'}">{{ $t('repeatedWithMcqCreationFinished') }}</BButton>
+          </div>
+        </div>
+
+        <div
+          v-if="model.inProgress.kind === 'highlighting'"
+          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); cursor: initial;"
+          @mousedown="e => e.stopPropagation()" @touchstart="e => e.stopPropagation()"
+        >
+          <div style="position: absolute; top: 50px; left: 10%; width: 80%; background-color: white; padding: 1em;">
+            {{ $t('highlightingInstructions') }}
+            <BButton secondary sm @click="model.inProgress = {kind: 'nothing'}">{{ $t('highlightingFinished') }}</BButton>
           </div>
         </div>
       </div>

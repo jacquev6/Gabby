@@ -54,6 +54,10 @@ defineExpose({
     console.assert(quill.value !== null)
     quill.value.setSelection(index, length)
   },
+  getSelectedRange() {
+    console.assert(quill.value !== null)
+    return quill.value.getSelectedRange()
+  },
   getLength() {
     console.assert(quill.value !== null)
     return quill.value.getLength()

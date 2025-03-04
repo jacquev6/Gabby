@@ -164,6 +164,7 @@
   "multipleChoicesInstructions": "Select a set of choices in the \"Instructions\" or \"Wording\" fields in the \"Edition\" column. Include start, stop and separator characters.",
   "newMcqFieldInstructions": "Click in the \"Wording\" field in the \"Edition\" column, where you want to add MCQ field(s). Then select a set of choices in the \"Instructions\" field.",
   "repeatedWithMcqCreationInstructions": "Select the words to be replaced in the \"Wording\" field in the \"Edition\" column. Then select a set of choices in the \"Instructions\" field.",
+  "highlightingInstructions": "Select the text to be highlighted in text fields in the \"Edition\" column. Then click in one field without selecting text to finish.",
   "choicesSettingsSeparators": "Separators",
   "choicesSettingsStart": "Start",
   "choicesSettingsStop": "Stop",
@@ -171,6 +172,7 @@
   "choicesSettingsCancel": "Cancel",
   "choicesSettingsDelete": "Delete",
   "repeatedWithMcqCreationFinished": "Done",
+  "highlightingFinished": "Done",
 
   "tools": "Tools",
   "undo": "Undo",

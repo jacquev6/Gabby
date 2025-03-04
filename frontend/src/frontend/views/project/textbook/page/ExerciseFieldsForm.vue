@@ -97,6 +97,9 @@ export type InProgress = {
   uid: string
 } | {
   kind: 'repeatedWithMcqCreation'
+} | {
+  kind: 'highlighting'
+  color: string
 }
 
 // Colors provided by the client, in display order
@@ -517,6 +520,16 @@ const currentWysiwygFormat = computed(() => {
   }
 })
 
+function getSelectedRange() {
+  if (focusedWysiwygField.value === null) {
+    return null
+  } else {
+    const editor = editors[focusedWysiwygField.value]
+    console.assert(editor.value !== null)
+    return editor.value.getSelectedRange()
+  }
+}
+
 
 const selBlotColors = computed(() => {
   return Object.fromEntries(model.value.adaptationSettings.itemized.effects.selectable.allColors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
@@ -578,7 +591,9 @@ function selectionChangeInInstructions(range: {index: number, length: number}) {
   console.assert(instructionsEditor.value !== null)
   console.assert(instructionsEditor.value.quill !== null)
 
-  if (model.value.inProgress.kind === 'multipleChoicesCreation') {
+  if (model.value.inProgress.kind == 'highlighting') {
+    highlight(instructionsEditor.value)
+  } else if (model.value.inProgress.kind === 'multipleChoicesCreation') {
     selectionChangeInInstructionsOrWording('instructions', range)
   } else if (model.value.inProgress.kind === 'newMcqField') {
     if (range.length !== 0) {
@@ -595,7 +610,9 @@ function selectionChangeInWording(range: {index: number, length: number}) {
   console.assert(wordingEditor.value !== null)
   console.assert(wordingEditor.value.quill !== null)
 
-  if (model.value.inProgress.kind === 'multipleChoicesCreation') {
+  if (model.value.inProgress.kind == 'highlighting') {
+    highlight(wordingEditor.value)
+  } else if (model.value.inProgress.kind === 'multipleChoicesCreation') {
     selectionChangeInInstructionsOrWording('wording', range)
   } else if (model.value.inProgress.kind === 'newMcqField') {
     if (range.length === 0) {
@@ -618,12 +635,47 @@ function selectionChangeInWording(range: {index: number, length: number}) {
   }
 }
 
+function selectionChangeInExample() {
+  console.assert(exampleEditor.value !== null)
+
+  if (model.value.inProgress.kind == 'highlighting') {
+    highlight(exampleEditor.value)
+  }
+}
+
+function selectionChangeInClue() {
+  console.assert(clueEditor.value !== null)
+
+  if (model.value.inProgress.kind == 'highlighting') {
+    highlight(clueEditor.value)
+  }
+}
+
+function selectionChangeInTextReference() {
+  console.assert(textReferenceEditor.value !== null)
+
+  if (model.value.inProgress.kind == 'highlighting') {
+    highlight(textReferenceEditor.value)
+  }
+}
+
+function highlight(editor: InstanceType<typeof WysiwygEditor> | InstanceType<typeof OptionalWysiwygEditor>) {
+  console.assert(model.value.inProgress.kind === 'highlighting')
+
+  if (editor.getSelectedRange().length === 0) {
+    model.value.inProgress = {kind: 'nothing'}
+  } else {
+    editor.toggle('highlighted', model.value.inProgress.color)
+  }
+}
+
 defineExpose({
   saveDisabled,
   highlightSuffix,
   toggle,
   focusedWysiwygField,
   currentWysiwygFormat,
+  getSelectedRange,
 })
 </script>
 
@@ -674,6 +726,7 @@ defineExpose({
             :compatibleFormats="wysiwygCompatibleFormats"
             :contagiousFormats="wysiwygContagiousFormats"
             v-model="model.example"
+            @selectionChange="selectionChangeInExample"
           />
         </div>
         <div :class="{col: allOptionalsAreCollapsed}" style="padding: 0;">
@@ -685,6 +738,7 @@ defineExpose({
             :compatibleFormats="wysiwygCompatibleFormats"
             :contagiousFormats="wysiwygContagiousFormats"
             v-model="model.clue"
+            @selectionChange="selectionChangeInClue"
           />
         </div>
         <div :class="{col: allOptionalsAreCollapsed}" style="padding: 0;">
@@ -696,6 +750,7 @@ defineExpose({
             :compatibleFormats="wysiwygCompatibleFormats"
             :contagiousFormats="wysiwygContagiousFormats"
             v-model="model.textReference"
+            @selectionChange="selectionChangeInTextReference"
           />
         </div>
       </div>

@@ -164,6 +164,7 @@
   "multipleChoicesInstructions": "Sélectionnez un ensemble de choix dans le champ \"Consigne\" ou \"Énoncé\" de la colonne \"Édition\". Incluez les caractère de début, fin et séparation.",
   "newMcqFieldInstructions": "Cliquez dans le champs \"Énoncé\" de la colonne \"Édition\", où vous voulez insérer des champs QCM. Puis sélectionnez un ensemble de choix dans le champ \"Consigne\".",
   "repeatedWithMcqCreationInstructions": "Sélectionnez les mots à remplacer dans le champs \"Énoncé\" de la colonne \"Édition\". Puis sélectionnez un ensemble de choix dans le champ \"Consigne\".",
+  "highlightingInstructions": "Sélectionnez le texte à surligner dans les champs texte de la colonne \"Édition\". Puis cliquez dans un champ sans sélectionner de texte pour terminer.",
   "choicesSettingsSeparators": "Séparateurs",
   "choicesSettingsStart": "Début",
   "choicesSettingsStop": "Fin",
@@ -171,6 +172,7 @@
   "choicesSettingsCancel": "Annuler",
   "choicesSettingsDelete": "Supprimer",
   "repeatedWithMcqCreationFinished": "Terminé",
+  "highlightingFinished": "Terminé",
 
   "tools": "Outils",
   "undo": "Annuler",
