@@ -540,14 +540,8 @@ class _Adapter:
         assert self.words_are_items or self.punctuation_is_items
         assert begin < end, (begin, end)
 
-        # @todo Clarify spec with client, remove these weird specific cases.
-        if self.words_are_items and not self.punctuation_is_items or self.words_are_items and self.punctuation_is_items and self.items_are_boxed:
-            # Keep apostrophes near the preceding word, for French elision.
-            regex = r"((?:(?=[^\u2019\u0027\u02BC])(?:\.\.\.|\s+|\W|\b)))"
-        else:
-            regex = r"(\.\.\.|\s+|\W)"
-
-        for separator, token in self.split(regex, wording, begin, end):
+        # This regex keeps apostrophes with the preceding word, for French elision.
+        for separator, token in self.split(r"((?:(?=[^\u2019\u0027\u02BC])(?:\.\.\.|\s+|\W|\b)))", wording, begin, end):
             if separator is not None:
                 (b, e) = separator
                 if wording.text[b:e].strip() == "":

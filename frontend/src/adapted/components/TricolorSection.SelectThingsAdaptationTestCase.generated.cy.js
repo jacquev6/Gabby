@@ -297,16 +297,8 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
                 "text": "L"
               },
               {
-                "kind": "selectableInput",
-                "colors": [
-                  "red"
-                ],
-                "contents": [
-                  {
-                    "kind": "text",
-                    "text": "'"
-                  }
-                ]
+                "kind": "text",
+                "text": "'"
               },
               {
                 "kind": "text",
@@ -346,16 +338,8 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
                 "text": "L"
               },
               {
-                "kind": "selectableInput",
-                "colors": [
-                  "red"
-                ],
-                "contents": [
-                  {
-                    "kind": "text",
-                    "text": "\u2019"
-                  }
-                ]
+                "kind": "text",
+                "text": "\u2019"
               },
               {
                 "kind": "text",
@@ -447,14 +431,8 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
                 "text": "L"
               },
               {
-                "kind": "passiveSequence",
-                "contents": [
-                  {
-                    "kind": "text",
-                    "text": "'"
-                  }
-                ],
-                "boxed": true
+                "kind": "text",
+                "text": "'"
               },
               {
                 "kind": "text",
@@ -492,14 +470,8 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
                 "text": "L"
               },
               {
-                "kind": "passiveSequence",
-                "contents": [
-                  {
-                    "kind": "text",
-                    "text": "\u2019"
-                  }
-                ],
-                "boxed": true
+                "kind": "text",
+                "text": "\u2019"
               },
               {
                 "kind": "text",
@@ -627,15 +599,7 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
                   {
                     "kind": "text",
                     "text": "L"
-                  }
-                ]
-              },
-              {
-                "kind": "selectableInput",
-                "colors": [
-                  "red"
-                ],
-                "contents": [
+                  },
                   {
                     "kind": "text",
                     "text": "'"
@@ -708,15 +672,7 @@ describe('TricolorSection for SelectThingsAdaptationTestCase', () => {
                   {
                     "kind": "text",
                     "text": "L"
-                  }
-                ]
-              },
-              {
-                "kind": "selectableInput",
-                "colors": [
-                  "red"
-                ],
-                "contents": [
+                  },
                   {
                     "kind": "text",
                     "text": "\u2019"

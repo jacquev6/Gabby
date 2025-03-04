@@ -1816,12 +1816,7 @@ class FixturesTestCase(testing.TransactionTestCase, adaptation.AdaptationTestCas
                                                 r.SelectableInput(
                                                     kind="selectableInput",
                                                     colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                    contents=[r.Text(kind="text", text="d")],
-                                                ),
-                                                r.SelectableInput(
-                                                    kind="selectableInput",
-                                                    colors=["#ffff00", "#ffc0cb", "#bbbbff", "#bbffbb"],
-                                                    contents=[r.Text(kind="text", text="’")],
+                                                    contents=[r.Text(kind="text", text="d"), r.Text(kind="text", text="’")],
                                                 ),
                                                 r.SelectableInput(
                                                     kind="selectableInput",

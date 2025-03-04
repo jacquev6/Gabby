@@ -2688,18 +2688,7 @@ describe('TricolorSection for FixturesTestCase', () => {
                   {
                     "kind": "text",
                     "text": "d"
-                  }
-                ]
-              },
-              {
-                "kind": "selectableInput",
-                "colors": [
-                  "#ffff00",
-                  "#ffc0cb",
-                  "#bbbbff",
-                  "#bbffbb"
-                ],
-                "contents": [
+                  },
                   {
                     "kind": "text",
                     "text": "\u2019"
