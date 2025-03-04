@@ -19,35 +19,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Accocae cfabue bob fbofbe à ub bob\ncobbub.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="a. Fabba Fobbeb 1. ube fabbe\nb. Beebfofeb 2. ub bucacaeb\nc. Bobe 3. ub febcobbabe de bafbe\nd. bec Fabébéec 4. ub bucée\ne. be Boufbe 5. ub baccaf bobbabbeub\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -242,35 +252,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Écbac au boabc ub bob fbofbe foub cfabue\nbob cobbub.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="a. ub fbeufe : ...\nb. ub cfobbaf : ...\nc. ub faac : ...\nd. ub feabbbe : ...\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -442,35 +462,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Béécbac cfabue ffbace eb bebfbaçabb bec\nbobc eb bbac fab dec bobc de ba bêbe cabébobae\n(febcobbe, ababab, cfoce...).\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="a. Ba babafe ce cacfe debbaèbe ub abbbe.\nb. Be béabb abbbafe ub bocfeb eb be babce.\nc. Bacobe eb Boaf obb acfebé ube foabube boube.\nd. Cebbe abfbèbe a beçu ube bédaabbe.\ne. Dabc ba bafaèbe, ab a a dec cbocodabec.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -740,35 +770,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="OBAB\nDécbac ub bobubebb cébèbbe bue bu cobbaac.\n\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -835,35 +875,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Bboufe bec deub bobc bua ce cacfebb\ndebbaèbe cec bébuc. Abdabue cebua bua ecb\ncobbub eb cebua bua ecb fbofbe.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -958,35 +1008,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Aubodacbée\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="Béobabd de Fabca ébaab ub abbacbe eb ub abfebbeub\nababaeb. Cob babbeau be fbuc cébèbbe ecb « Ba Bocobde ».\nAb a faba ca fae eb Fbabce.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -1099,35 +1159,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Cobfbèbe cec ffbacec afec be débebbababb\nbua cobfaebb.\n\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="• ... fabbabe bbabbe dabc ba buab.\n\n• ... babfadaabec bbabbebb dabc ba buab.\n\n• ... bubaèbec bbabbebb dabc ba buab.\n\n• ... ecface ecb bebfba d’éboabec.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="Be fabbeau bbabbe dabc ba buab.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -1339,35 +1409,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Cobfbèbe cec ffbacec afec be débebbababb\nbua cobfaebb. Ebfbabue ba béfobce.\n\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="Be fobbue ... fbabèbe. – Bu fobbuec ... fbabèbe. –\nAb fobbue ... fbabèbe. – Fouc fobbuec ... fbabèbe. –\nEbbec fobbuebb ... fbabèbe.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="Bouc fobbuobc bobbe fbabèbe.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -1523,35 +1603,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Dabc cec ffbacec, cobobae eb boube\nbec abbacbec eb eb bbeu bec aubbec débebbababbc.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="a. Bec babfadaabec de ca bue becbebb abbubéc ba buab.\nb. Ob feub foab cebbe bubaèbe defuac b’ecface.\nc. Dabc boc cabfabbec eb boc fobêbc bèbbe ub\ncaeb boab.\nd. Dec ababaub cobb afeubéc fab beub feu de cabf.\ne. Cec abfoubec écbaabebb b’abbébaeub de foc\nbaacobc.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -1931,35 +2021,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Becofae eb cbacce cec bboufec bobabaub\ndabc be babbeau.\nDébebbababbc au cabbubaeb / Débebbababbc au fbubaeb\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="bec babbc – ube babbebbe – foc cafaebc – cec abbeubbec – b’abfbababbe – be fboad – dec bacabec\n– ce fabacob – cebbe cebaabe – bec febêbbec\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -2114,35 +2214,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Becofae cec ffbacec. Coubabbe bec bobc eb\nebboube bec débebbababbc. Abdabue beub bebbe eb\nbeub bobbbe.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="a. Bob cfaeb a bebfebcé ba babbe.\nb. Facbob be fobbe bue dec cfebacec bbeuec.\nc. Abc cbeucebb ub bbou foub a cacfeb beub bbécob.\nd. Cebbe babbaobfèbue fbofoce dec babacabec.\ne. Bec cfefaub bboubebb dabc ba fbaabae.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -2399,35 +2509,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Cobfbèbe cec bboufec bobabaub afec bec\ndébebbababbc cuafabbc. Fbucaeubc béfobcec cobb\nfoccabbec.\nba – bobbe – dec – be – cec – ba – be – ceb – ub – bec\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="... bufe – ... bebdebaab – ... fabbc – ... abfabbaeb –\n... foudbe – ... cabebce – ... fbabbec – ... océab –\n... oaceaub – ... fababue\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -2619,35 +2739,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Bebfbace cfabue abbacbe coubabbé fab ub\nabbacbe défaba ou abdéfaba bua cobfaebb.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="a. Bec abfabacbec bbabfebb febc be cobbeb.\nb. Ube bobbabbe ecb becoufebbe de beabe.\nc. Dec ebfabbc adbabebb ba buab éboabée.\nd. Babbbé be bbouabbabd, b’afaob décobbe à b’feube.\ne. B’fafeb, bec oaceaub fabbebb febc dec faac fbuc\ncfaudc.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="Faub ebbabbue cub ub babeau.\n➞ Faub ebbabbue cub be babeau.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -2940,35 +3070,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Écbac bec bboufec bobabaub coubabbéc au\nfbubaeb.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="a. Ba babab be dobbe ce bédacabebb.\nb. Fébab fbebd ca bouée foub babeb.\nc. Ba fbeubacbe fbéfabe ub boubueb afec cebbe boce.\nd. B’aa oubbaé ba cbé, ce babab.\ne. Fouc faccec ba coabée afec fobbe babbe.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="Ba fbeubacbe fbéfabe bob boubueb.\n➞ Ba fbeubacbe fbéfabe bec boubuebc.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -3236,35 +3376,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Cobfbèbe ce bebbe afec bec abbacbec\ndéfabac ou abdéfabac bua cobfaebbebb.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="Coé décade de babbeb ... bbebaeb. Ebbe fouabbe dabc ...\nfaeabbe babbe eb ebbe bboufe ... abcaebbe bobe baube\nfâbe afec de ... debbebbe bbabcfe cub ... cob. Ebbe\nb’ebfabe eb c’adbabe dabc ... baboab. Ebbe c’abababe\nbu’ebbe ecb ... cobbecce ou ... ducfecce.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -3499,35 +3649,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="OBAB\nFoaca be débub d’ub foèbe de Faub Ébuabd\nbua c’affebbe Dabc Fabac. Abfebbe ube cuabe eb\naboubabb au boabc bboac febc.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="Dabc Fabac ab a a ube bue ;\nDabc cebbe bue ab a a ube baacob ;\nDabc cebbe baacob ab a a ...\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -3692,35 +3852,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Écbac ub daabobue ebbbe ube bèbe eb cob\nebfabb : abc débébabebb eb doafebb cfoacab ce\nbu’abc feubebb ebfobbeb. Ubabace au boabc cab\ndébebbababbc daffébebbc.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -3827,35 +3997,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Ababbabbec. Bebebc bec bebbbec dabc\nb’obdbe foub bebboufeb fuab débebbababbc.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="BU – BOBFE – AC – COB – CEC –\nBEBU – BOB – ECB\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -3968,35 +4148,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Aubodacbée\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="Bubec obcebfe ub bécabd. Ce befbabe aabe becbeb cub\nbec faebbec cfaudec, au cobeab. Ab coubb cub bec bubc de\nbobbe baacob, fuac ab c’ebfuab fab ub febab bbou.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -4117,35 +4307,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Abdabue bueb bob ecb buabafaé fab bec adbecbafc\ncoubabbéc.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="• Cec abbbec bababbecbuec cobb dec baobabc.\n• Foub abbafeb bucbu’à cebbe baacob, ab a fabbu\nbobbeb ube febbe baade.\n• B’aa bebboufé b’adbecce d’ub abcaeb aba.\n• Ab bua a boué ub baufaac boub.\n• Ab a feu d’abac cab c’ecb ub ebfabb cobabaabe.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -4383,35 +4583,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Dabc cec ffbacec cobobae bec adbecbafc.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="a. Be beube cfab cobb du cac.\nb. Ab befabb cub ca faeabbe babbue.\nc. Ub bbuab ébbabbe fbofaebb d’ub cac.\nd. Fab ube buab cobbbe, ab découfbe ub cfab abcobbu.\ne. Baab doab bécoudbe ube affaabe bacbébaeuce.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -4615,35 +4825,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Cobobae ubabuebebb bec adbecbafc.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="bbabd – daffacabe – eccabaeb – babfeubeuce –\ndefabb – fbeuba – fabuabbe – bbuaabb – bebbeub\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -4747,35 +4967,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Abdabue ca be bob coubabbé ecb ub bob\nou ub adbecbaf. Bucbafae ba béfobce.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="a. Fabbabe écbab ub bobab fobacaeb.\nb. Be fobacaeb abbbafe be cabbbaobeub.\nc. Daffbé boue à ba babcfabde.\nd. Ba babebae babcfabde febbe babd be coab.\ne. Boubèc ecb bob foacab.\nf. Dabc be fabbabe foacab, ab a a ub faeub fuabc.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -5030,35 +5260,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Accocae fab deub bec adbecbafc bua c’offocebb.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="cobfbabué – bebb – décobdobbé – cobbbe –\ncabfbe – obdobbé – cobbu – bebbab – bafade –\nbécfabb – bubabeub – abcobbu\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -5185,7 +5425,9 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Cobfbèbe cec bboufec bobabaub afec bec adbecbafc fbofocéc.\n\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     ),
                     TextInsertOp(
                         kind="text",
@@ -5193,6 +5435,7 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                         attributes=TextInsertOpAttributes(
                             italic=False,
                             bold=False,
+                            highlighted=None,
                             choices2=Choices2(start="(", separator1="–", separator2="", stop=")", placeholder="...", mcq_field_uid=None),
                             mcq_placeholder=False,
                             manual_item=False,
@@ -5202,35 +5445,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     ),
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="a. Babob be ce céfabe fac de ca febucfe boube ... .\nb. Bec fobbec ... ébaaebb dec cfacceubc ... .\nc. Ube caubebebbe ... abbebbab cub ba babbe.\nd. Bec boubbaub ... abbafebb dabc bec faocbuec.\ne. Babbabé befeabb bec fobebc ... de ca baacob.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -5547,35 +5800,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Ebfboae cec adbecbafc dabc ub bboufe bobabab.\ncoubaabbec – bécfabb – beau – abbuaèbe\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -5657,35 +5920,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Becofae cec ffbacec eb cobfbèbe bec bboufec\nbobabaub afec ub adbecbaf. Febce à b’accobdeb.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="a. Ba cbé oufbe ba fobbe.\nb. Bec ebbuêbeubc obb bboufé dec ebfbeabbec.\nc. Ba bube écbaabe bec baacobc.\nd. Be cbofb cabue bec ebfabbc.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -5899,35 +6172,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Becofae eb cobfbèbe ce bebbe afec bec adbecbafc\ncuafabbc. Abc cobb dobbéc au baccubab cabbubaeb,\nbaac febce à bec accobdeb cobbe ab cobfaebb dabc\nbec ffbacec.\nbeau – boube – ababbebdu – cec – bobb – fâbe – bbabc\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="B’aa bec bèfbec ... . Be doac êbbe aucca ... bu’ub\nfabbôbe. Ub bebdec-fouc afec be fèbe Boëb, eb\ncfaab eb eb oc, c’ecb ebcefbaobbeb, bob ? Cob-\nbebb fa-b-ab b’affabaîbbe ? Beb bu’ob be befbé-\ncebbe d’fababude : ... bobe ... eb ... babbe ... ?\nOu baeb couc ube fobbe bobabebebb ... .\nCabaf Cofeb-Ccaba, Caucfebab à Boëb,\n© Édabaobc Babbabd, 2000.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -6463,35 +6746,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="OBAB\nAbfebbe dec ffbacec eb ubabacabb cec adbecbafc.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="a. abbebbaf – coabbeub c. fbaac – fafebbab\nb. facabe – feubeuce d. caufabec – dabbebeub\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -6605,35 +6898,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Béécbac ce bebbe eb cfabbeabb bec adbecbafc\nfoub faabe ub bebbe daffébebb. Bu feub cfabbeb ba\nfbace de b’adbecbaf ca bu feub.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="Dabc ube cobbbe fobêb, ub beube fobbe babcfe.\nAb doab baffobbeb dec fbabbec caufabec. Ub oaceau\nboab bua abdabue ub febab cfebab ébboab. Couc ub\nabbbe abbebce, ab afebçoab ebfab ce bu’ab cfebcfaab.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -6895,35 +7198,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Aade cec deub cufeb-féboc à bebboufeb\nbec adbecbafc bua beub cobbecfobdebb.\nabdecbbucbabbe – ababe – fubaab – fobabb – cob-\nbabb –ebbba-bebbecbbe*–bobdaccabb –bacbué–\nbbeu – dbôbe – cubbabubeb – bababue\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -7048,35 +7361,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Aubodacbée\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="Cécabe bobbe cub ub bafaccabb fobea boub. Ebbe afabce à\nfac bebbc foub ube bobbue fbobebade dabc ba fobêb febbe.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -7171,35 +7494,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Dobbe be bebbe eb be bobbbe de cec bobc. Dac\nfab bebueb de cec fbobobc febcobbebc bu feub bec\nbebfbaceb : ab, ebbe, abc, ebbec.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="bec feuabbec – be boab – b’eau – bec badeaub – b’abbbe –\nbe boubbab – b’îbe* – bec cfabfc\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -7365,35 +7698,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Bebae cfabue fbobob febcobbebc cubeb au\nfebbe cobbubué bua cobfaebb.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="be • • abbobc\nbu • • dabcec\nab • • babcfe\nbouc • • bab\nfouc • • abbbafec\nebbec • • cfabbebb\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -7575,35 +7918,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Bebae cec bboufec bobabaub afec be fbobob\nfebcobbeb bua cobfaebb.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="ba bacebbe • • ab\nub foaabe • • ebbec\nbe baob eb be cbocodabe • • abc\ndec afebbubec • • ebbe\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -7777,35 +8130,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Dabc cec ffbacec cobobae bec fbobobc\nfebcobbebc cubebc.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="a. Eb abbafabb, ebbe cabue boube b’accebbbée.\nb. Be febb couffbe ca fobb bu’ab bebfebce bec fabacobc.\nc. Ba fobbe bbabce. Bu defbaac bebbbe de b’fuabe.\nd. Fouc cfebcfec be bob de ceb oaceau au bec baube.\ne. Afbèc cebbe dube boubbée, abc fobb ube fauce.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -8039,35 +8402,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Becofae bec fbobobc febcobbebc coubabbéc\neb dac bua abc décabbebb. Fuac, bebèfe bec febbec bua\nbec accobfabbebb.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="Be daabbe dab à Ba-Beabbob\nd’ub bob aababbe :\n– Bu b’ac faab ub bbabd\nfbaacab, b’aba. Aucca\nfaac-be boa aucca be\nfaabe ub cadeau boaab.\nBaebc, fbebdc cebbe\nboubce d’abbebb.\nBa-Beabbob dub faabe ub bboc effobb foub dabe :\n– Bob, Beccabe, be be feub fac d’abbebb.\nBe daabbe c’ébobba :\n– Baac ab faub baeb bue be be faae foub be cadeau\nbue bu b’ac affobbé.\nBobebb Babaud, Foubbuoa ba beb ecb cabée ?,\n© Fbabbabaob, 2001.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -8634,35 +9007,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Bebfbace bec bboufec bobabaub cubebc\ncoubabbéc fab be fbobob febcobbeb bua cobfaebb.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="a. Bec coabéec cobb bobbuec eb fafeb.\nb. Cabdba eb boa fbéfabobc bec cabbobc foub be\ndébébabebebb.\nc. Bec ebfabbc bebbbebb ebcebbbe de b’écobe.\nd. Be cacbob cobcbbuab dec babbabec.\ne. Bec abaec cabfebb ebcebbbe bouc bec ébéc.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -8887,35 +9270,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Béécbac cec ffbacec eb bebfbaçabb be bboufe\nbobabab fab ub fbobob febcobbeb, foub éfabeb\nbec béfébabaobc.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="a. Bec ebfabbc bouaaebb afec ba babbe. Baac ba babbe\necb bobbée dabc ba babe.\nb. Bec cacbuc fouccebb dabc be décebb. Bec cacbuc\nb’obb fac becoab de beaucouf d’eau.\nc. Fbobaab ecb bobbé au budo. Baabbebabb Fbobaab\na bab au doc.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="Abébae fbebd be bbaab. Abébae fa à Bobdeaub.\n➞ Abébae fbebd be bbaab. Ebbe fa à Bobdeaub.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -9272,35 +9665,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Cobfbèbe cec ffbacec afec be fbobob febcobbeb bua cobfaebb.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="a. ... bbabfobc eb faub de ba cobbabe. ... b’abbêbe\nfoub befbebdbe bob couffbe febdabb bue ...\nadbabec ba fue.\nb. Cfbacbabe bbaab bec cfèfbec. Afec beub baab, ...\nfabbabueba dec fbobabec.\nc. Bubaeb beboabb cec abac. ... febobb ba fêbe.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -9524,35 +9927,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="OBAB\nAbfebbe ub daabobue ebbbe ube ébuafe eb\ncob ebbbaîbeub*, afabb ub babcf. Ubabace be fbuc\nde fbobobc febcobbebc foccabbe.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -9649,35 +10062,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Écbac ube cuabe à cfabue ffbace eb cobbebçabb fab ub fbobob febcobbeb.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="a. Be bbaab abbafe à ba babe. ...\nb. Cabaf coud ube coufebbube foub cob bébé. ...\nc. Bec foabubec boubebb cub ba boube. ...\nd. Au Boaeb Âbe, bec ceabbeubc faacaaebb\ncobcbbuabe dec cfâbeaub fobbc. ...\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -9899,35 +10322,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Décfaffbe ce bébuc, fuac dobbe be fbobob febcobbeb cubeb de ba ffbace.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -10003,35 +10436,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Aubodacbée\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="Bec cababdc afabcebb bbabbuabbebebb ebbbe bec\nboceaub. Coudaab, abc fbobbebb ba bêbe dabc b’eau. Beubc\nfabbec affabaaccebb eb ebbec c’ababebb dabc b’aab.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -10141,35 +10584,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Fobbe cabb bboufec bobabaub afec ub bob\nde cfabue bacbe.\n• ub – dec – ce – be – bec\n• febab – bboc – bbabc – boab – bobbbeub\n• buabe – cobeab – bafab – fubb – bocfeb\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -10303,35 +10756,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Cobobae bec bobc bue bu feub cuffbabeb dabc cec bboufec bobabaub.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="• ub cfefabaeb coubabeub\n• ube ébèfe abbebbafe\n• ube foabube bafade\n• ub bbabd fabafbuae boube\n• ube cauce fabuabbe\n• ub boaeub cobfabbob\n• ube bebbe boubbée ebcobeabbée\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -10574,35 +11037,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Cobobae ubabuebebb bec bboufec bobabaub.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="ba fbuae – ube caccebobe – baabbebabb – dec\nfebabc bafabc – be fababé – be boue – b’ébéffabb –\nube bobbue bebbbe – defabb – bec abac – fouc\ncobduacec – ba coubce – doucebebb\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -10784,35 +11257,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Fobbe ub bboufe bobabab afec bec bobc\ndobbéc. Abbebbaob, ab a a ub abbbuc dabc cfabue bacbe.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="a. bobae – ube – bafab – coubeub ...\nb. cfefeub – dec – febbc – boa ...\nc. febabe – cebbe – ub – fbabcecce ...\nd. ub – ebcobeabbé – abbobdac – fbabbebfc ...\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -11054,35 +11537,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Dabc cec ffbacec, cobobae bec bboufec\nbobabaub eb baube eb bec débebbababbc eb febb.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="a. Ce babcfabd febd dec fbuabc eb dec bébubec.\nb. Ebbe fbéfabe cob foaabe.\nc. Ceb oaceau a dec fbubec babbafabuec.\nd. Abc abbafebobb dabc ube babube.\ne. Bec débébabeubc ebfobbebb be faabo.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
@@ -11355,35 +11848,45 @@ class DatabaseAsUnitTests0002(AdaptationTestCase):
                     TextInsertOp(
                         kind="text",
                         insert="Cobobae be bob boaau dabc cfabue bboufe\nbobabab.\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 wording=[
                     TextInsertOp(
                         kind="text",
                         insert="a. be Febab Cfafebob boube – be féboc – be bbabd\nbécfabb bouf – bec bboac febabc cocfobc – ba\nfbabcecce\nb. ba bebbe cebfeuce – bec cefb cobbeaub – be\ndbabob ebdobba – ube fobêb cobbbe – be fabaac\nabbebbé\nc. ba babfe bababue – be bafac fobabb – be faabbabb\nfebab baabbeub – b’oaceau boube – be cobdab coubabeub\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 example=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 clue=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 text_reference=[
                     TextInsertOp(
                         kind="text",
                         insert="\n",
-                        attributes=TextInsertOpAttributes(italic=False, bold=False, choices2=None, mcq_placeholder=False, manual_item=False, sel=None),
+                        attributes=TextInsertOpAttributes(
+                            italic=False, bold=False, highlighted=None, choices2=None, mcq_placeholder=False, manual_item=False, sel=None
+                        ),
                     )
                 ],
                 adaptation=Adaptation(
