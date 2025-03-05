@@ -98,6 +98,7 @@ const backdropCoversBoundingRect2 = useElementBounding(backdropCovers2)
 
 const backdropStyles = computed(() => {
   const boundingRects = [backdropCoversBoundingRect1, backdropCoversBoundingRect2]
+  boundingRects.forEach(rect => rect.update())
 
   const top = Math.min(...boundingRects.map(rect => rect.top.value))
   const bottom = Math.max(...boundingRects.map(rect => rect.bottom.value))
