@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, inject, watch } from 'vue'
-import { useFloating, shift, autoUpdate } from '@floating-ui/vue'
+import { useFloating, shift, flip, autoUpdate } from '@floating-ui/vue'
 import type { Paragraph } from '$adapted/types'
 import Renderable from './Renderable.vue'
 
@@ -51,7 +51,7 @@ const { floatingStyles } = useFloating(
   floating,
   {
     placement: 'bottom',
-    middleware: [shift({crossAxis: true})],
+    middleware: [flip(), shift({crossAxis: true})],
     whileElementsMounted: autoUpdate,
   },
 );
