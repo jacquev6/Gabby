@@ -798,9 +798,10 @@ class _Adapter:
             yield renderable.Whitespace(kind="whitespace")
             yield renderable.Text(kind="text", text="ou")  # @todo Fix this if we ever support exercises in English
             yield renderable.Whitespace(kind="whitespace")
-        yield renderable.PassiveSequence(
-            kind="passiveSequence", contents=list(self.adapt_formatted_text(instructions, choice_locations[-1].begin, choice_locations[-1].end)), boxed=True
-        )
+        if len(choice_locations) > 0:
+            yield renderable.PassiveSequence(
+                kind="passiveSequence", contents=list(self.adapt_formatted_text(instructions, choice_locations[-1].begin, choice_locations[-1].end)), boxed=True
+            )
 
     def make_multiple_choices_input(
         self, section: AnnotatedSection, begin: int, end: int, choices: deltas.Choices2, *, fixed_case: bool = True

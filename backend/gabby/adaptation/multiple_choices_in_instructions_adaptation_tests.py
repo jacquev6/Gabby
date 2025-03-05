@@ -773,6 +773,50 @@ class MultipleChoicesInInstructionsAdaptationTestCase(AdaptationTestCase):
             ),
         )
 
+    def test_choices2_made_of_whitespace_only(self):
+        self.do_test(
+            e.Exercise(
+                number="number",
+                textbook_page=42,
+                instructions=[
+                    d.TextInsertOp(insert="Choose", attributes={}),
+                    d.TextInsertOp(insert=" ", attributes={"choices2": {"start": "", "separator1": "or", "separator2": "", "stop": "", "placeholder": ""}}),
+                    d.TextInsertOp(insert=".\n", attributes={}),
+                ],
+                adaptation=Adaptation(
+                    kind="multiple-choices",
+                    wording_paragraphs_per_pagelet=3,
+                    single_item_per_paragraph=False,
+                    placeholder_for_fill_with_free_text=None,
+                    items=None,
+                    items_are_selectable=None,
+                    items_are_boxed=False,
+                    items_have_mcq_beside=False,
+                    items_have_mcq_below=False,
+                    items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
+                    items_are_repeated_with_mcq=False,
+                    show_arrow_before_mcq_fields=False,
+                    show_mcq_choices_by_default=False,
+                ),
+            ),
+            r.Exercise(
+                number="number",
+                textbook_page=42,
+                pagelets=[
+                    r.Pagelet(
+                        sections=[
+                            r.Section(
+                                paragraphs=[r.Paragraph(contents=[r.Text(kind="text", text="Choose"), r.Text(kind="text", text=".")])],
+                                centered=True,
+                                tricolored=False,
+                            ),
+                            r.Section(paragraphs=[], centered=False, tricolored=True),
+                        ]
+                    )
+                ],
+            ),
+        )
+
     def test_two_choices2(self):
         self.do_test(
             e.Exercise(
