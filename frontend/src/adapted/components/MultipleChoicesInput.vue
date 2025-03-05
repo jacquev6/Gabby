@@ -70,15 +70,17 @@ const backdropCovers = inject<string>('adaptedExerciseBackdropCovers', 'body')
 </script>
 
 <template>
-  <span v-bind="$attrs" style="display: inline flow-root; vertical-align: top">
-    <template v-if="showArrowBefore">→</template>
-    <span ref="reference" class="main" :class="{open: showChoices}" @click="showChoices = !showChoices">
-      <template v-if="model !== undefined">
-        <Renderable v-for="node in choices[model]" :node :nested="true" v-model="unusedModels" :modelKey="[0]" />
-      </template>
-      <template v-else>
-        {{ placeholder }}
-      </template>
+  <span style="display: inline flow-root; vertical-align: top">
+    <span v-bind="$attrs">
+      <template v-if="showArrowBefore">→</template>
+      <span ref="reference" class="main" :class="{open: showChoices}" @click="showChoices = !showChoices">
+        <template v-if="model !== undefined">
+          <Renderable v-for="node in choices[model]" :node :nested="true" v-model="unusedModels" :modelKey="[0]" />
+        </template>
+        <template v-else>
+          {{ placeholder }}
+        </template>
+      </span>
     </span>
     <!-- Insert hidden nodes in the DOM to ensure the floating choices does not cover any text. -->
     <span class="choices" style="display: block; margin-top: -24px; max-width: 0; overflow: hidden; visibility: hidden;">
