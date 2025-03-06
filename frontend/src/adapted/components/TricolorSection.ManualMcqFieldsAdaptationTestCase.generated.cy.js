@@ -1,3 +1,4 @@
+import MonocolorSection from './MonocolorSection.vue'
 import TricolorSection from './TricolorSection.vue'
 
 describe('TricolorSection for ManualMcqFieldsAdaptationTestCase', () => {
@@ -5,23 +6,103 @@ describe('TricolorSection for ManualMcqFieldsAdaptationTestCase', () => {
     cy.viewport(1000, 100)
   })
 
-  it('renders gabby.adaptation.ManualMcqFieldsAdaptationTestCase.test_simplest pagelet 0 instructions', () => {
-    cy.mount(TricolorSection, {
+  it('renders gabby.adaptation.manual_mcq_fields_adaptation_tests.ManualMcqFieldsAdaptationTestCase.test_simplest pagelet 0 section 0', () => {
+    cy.mount(MonocolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "passiveSequence", "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "alpha"}], "boxed": true}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": ","}, {"kind": "whitespace"}, {"kind": "passiveSequence", "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "bravo"}], "boxed": true}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "ou"}, {"kind": "whitespace"}, {"kind": "passiveSequence", "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "charlie"}], "boxed": true}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "alpha"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "bravo"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "ou"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "charlie"
+                  }
+                ],
+                "boxed": true
+              }
+            ]
+          }
+        ],
+        first: false,
+        centered: true,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.ManualMcqFieldsAdaptationTestCase.test_simplest.0.instructions')
+    cy.screenshot('gabby.adaptation.manual_mcq_fields_adaptation_tests.ManualMcqFieldsAdaptationTestCase.test_simplest.0.0')
   })
 
-  it('renders gabby.adaptation.ManualMcqFieldsAdaptationTestCase.test_simplest pagelet 0 wording', () => {
+  it('renders gabby.adaptation.manual_mcq_fields_adaptation_tests.ManualMcqFieldsAdaptationTestCase.test_simplest pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "alpha"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "bravo"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "charlie"}]], "show_choices_by_default": false}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "multipleChoicesInput",
+                "choices": [
+                  [
+                    {
+                      "kind": "text",
+                      "text": "Alpha"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "Bravo"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "Charlie"
+                    }
+                  ]
+                ]
+              }
+            ]
+          }
+        ],
+        first: false,
+        centered: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.ManualMcqFieldsAdaptationTestCase.test_simplest.0.wording')
+    cy.screenshot('gabby.adaptation.manual_mcq_fields_adaptation_tests.ManualMcqFieldsAdaptationTestCase.test_simplest.0.1')
   })
 })

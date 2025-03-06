@@ -26,7 +26,7 @@ const model = defineModel<number>({required: true})
 
 div.control {
   height: 100%;
-  background: grey;
+  background: lightgrey;
   font-size: calc(.9 * var(--control-width));
   line-height: 0;
   font-family: Arial,sans-serif;
@@ -41,7 +41,7 @@ div.control {
 div.arrow {
   height: calc(2 * var(--control-width));
   width: 100%;
-  background: lightgray;
+  background: grey;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -64,6 +64,6 @@ div.control.disabled {
 }
 
 div.control.disabled div.arrow {
-  color: grey;
+  color: lightgrey;
 }
 </style>

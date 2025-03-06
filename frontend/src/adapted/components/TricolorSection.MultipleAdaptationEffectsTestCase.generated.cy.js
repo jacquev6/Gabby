@@ -1,3 +1,4 @@
+import MonocolorSection from './MonocolorSection.vue'
 import TricolorSection from './TricolorSection.vue'
 
 describe('TricolorSection for MultipleAdaptationEffectsTestCase', () => {
@@ -5,63 +6,462 @@ describe('TricolorSection for MultipleAdaptationEffectsTestCase', () => {
     cy.viewport(1000, 100)
   })
 
-  it('renders gabby.adaptation.MultipleAdaptationEffectsTestCase.test_fill_with_free_text_and_multiple_choices_in_instructions pagelet 0 instructions', () => {
-    cy.mount(TricolorSection, {
+  it('renders gabby.adaptation.multiple_adaptation_effects_tests.MultipleAdaptationEffectsTestCase.test_fill_with_free_text_and_multiple_choices_in_instructions pagelet 0 section 0', () => {
+    cy.mount(MonocolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "instructions"}, {"kind": "whitespace"}, {"kind": "passiveSequence", "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "short"}], "boxed": true}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "ou"}, {"kind": "whitespace"}, {"kind": "passiveSequence", "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "long"}], "boxed": true}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "instructions"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "short"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "ou"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "long"
+                  }
+                ],
+                "boxed": true
+              }
+            ]
+          }
+        ],
+        first: false,
+        centered: true,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.MultipleAdaptationEffectsTestCase.test_fill_with_free_text_and_multiple_choices_in_instructions.0.instructions')
+    cy.screenshot('gabby.adaptation.multiple_adaptation_effects_tests.MultipleAdaptationEffectsTestCase.test_fill_with_free_text_and_multiple_choices_in_instructions.0.0')
   })
 
-  it('renders gabby.adaptation.MultipleAdaptationEffectsTestCase.test_fill_with_free_text_and_multiple_choices_in_instructions pagelet 0 wording', () => {
+  it('renders gabby.adaptation.multiple_adaptation_effects_tests.MultipleAdaptationEffectsTestCase.test_fill_with_free_text_and_multiple_choices_in_instructions pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "The"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "wording"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "of"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "this"}, {"kind": "whitespace"}, {"kind": "freeTextInput"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "is"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "a"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "short"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "long"}]], "show_choices_by_default": false}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "sentence"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "."}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "The"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "wording"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "of"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "this"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "freeTextInput"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "is"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "a"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "multipleChoicesInput",
+                "choices": [
+                  [
+                    {
+                      "kind": "text",
+                      "text": "short"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "long"
+                    }
+                  ]
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "sentence"
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          }
+        ],
+        first: false,
+        centered: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.MultipleAdaptationEffectsTestCase.test_fill_with_free_text_and_multiple_choices_in_instructions.0.wording')
+    cy.screenshot('gabby.adaptation.multiple_adaptation_effects_tests.MultipleAdaptationEffectsTestCase.test_fill_with_free_text_and_multiple_choices_in_instructions.0.1')
   })
 
-  it('renders gabby.adaptation.MultipleAdaptationEffectsTestCase.test_many_adaptations_in_same_exercise pagelet 0 instructions', () => {
-    cy.mount(TricolorSection, {
+  it('renders gabby.adaptation.multiple_adaptation_effects_tests.MultipleAdaptationEffectsTestCase.test_many_adaptations_in_same_exercise pagelet 0 section 0', () => {
+    cy.mount(MonocolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "Choose"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "wisely"}, {"kind": "whitespace"}, {"kind": "passiveSequence", "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "alpha"}], "boxed": true}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "ou"}, {"kind": "whitespace"}, {"kind": "passiveSequence", "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "bravo"}], "boxed": true}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "Choose"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "wisely"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "alpha"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "ou"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "bravo"
+                  }
+                ],
+                "boxed": true
+              }
+            ]
+          }
+        ],
+        first: false,
+        centered: true,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.MultipleAdaptationEffectsTestCase.test_many_adaptations_in_same_exercise.0.instructions')
+    cy.screenshot('gabby.adaptation.multiple_adaptation_effects_tests.MultipleAdaptationEffectsTestCase.test_many_adaptations_in_same_exercise.0.0')
   })
 
-  it('renders gabby.adaptation.MultipleAdaptationEffectsTestCase.test_many_adaptations_in_same_exercise pagelet 0 wording', () => {
+  it('renders gabby.adaptation.multiple_adaptation_effects_tests.MultipleAdaptationEffectsTestCase.test_many_adaptations_in_same_exercise pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "selectableInput", "colors": ["red", "yellow"], "boxed": true, "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "Hello"}]}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "alpha"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "bravo"}]], "show_choices_by_default": false}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "charlie"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "delta"}]], "show_choices_by_default": false}, {"kind": "whitespace"}, {"kind": "freeTextInput"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "."}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "selectableInput",
+                "colors": [
+                  "red",
+                  "yellow"
+                ],
+                "boxed": true,
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "Hello"
+                  }
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "multipleChoicesInput",
+                "choices": [
+                  [
+                    {
+                      "kind": "text",
+                      "text": "alpha"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "bravo"
+                    }
+                  ]
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "multipleChoicesInput",
+                "choices": [
+                  [
+                    {
+                      "kind": "text",
+                      "text": "charlie"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "delta"
+                    }
+                  ]
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "freeTextInput"
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          }
+        ],
+        first: false,
+        centered: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.MultipleAdaptationEffectsTestCase.test_many_adaptations_in_same_exercise.0.wording')
+    cy.screenshot('gabby.adaptation.multiple_adaptation_effects_tests.MultipleAdaptationEffectsTestCase.test_many_adaptations_in_same_exercise.0.1')
   })
 
-  it('renders gabby.adaptation.MultipleAdaptationEffectsTestCase.test_multiple_choices_in_instructions_and_wording pagelet 0 instructions', () => {
-    cy.mount(TricolorSection, {
+  it('renders gabby.adaptation.multiple_adaptation_effects_tests.MultipleAdaptationEffectsTestCase.test_multiple_choices_in_instructions_and_wording pagelet 0 section 0', () => {
+    cy.mount(MonocolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "Choose"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "wisely"}, {"kind": "whitespace"}, {"kind": "passiveSequence", "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "alpha"}], "boxed": true}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "ou"}, {"kind": "whitespace"}, {"kind": "passiveSequence", "contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "bravo"}], "boxed": true}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "."}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "Choose"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "wisely"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "alpha"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "ou"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "passiveSequence",
+                "contents": [
+                  {
+                    "kind": "text",
+                    "text": "bravo"
+                  }
+                ],
+                "boxed": true
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          }
+        ],
+        first: false,
+        centered: true,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.MultipleAdaptationEffectsTestCase.test_multiple_choices_in_instructions_and_wording.0.instructions')
+    cy.screenshot('gabby.adaptation.multiple_adaptation_effects_tests.MultipleAdaptationEffectsTestCase.test_multiple_choices_in_instructions_and_wording.0.0')
   })
 
-  it('renders gabby.adaptation.MultipleAdaptationEffectsTestCase.test_multiple_choices_in_instructions_and_wording pagelet 0 wording', () => {
+  it('renders gabby.adaptation.multiple_adaptation_effects_tests.MultipleAdaptationEffectsTestCase.test_multiple_choices_in_instructions_and_wording pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "A"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "a"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "b"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "c"}]], "show_choices_by_default": false}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "B"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "d"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "e"}]], "show_choices_by_default": false}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "C"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "alpha"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "bravo"}]], "show_choices_by_default": false}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "."}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "A"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "multipleChoicesInput",
+                "choices": [
+                  [
+                    {
+                      "kind": "text",
+                      "text": "a"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "b"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "c"
+                    }
+                  ]
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "B"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "multipleChoicesInput",
+                "choices": [
+                  [
+                    {
+                      "kind": "text",
+                      "text": "d"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "e"
+                    }
+                  ]
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "C"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "multipleChoicesInput",
+                "choices": [
+                  [
+                    {
+                      "kind": "text",
+                      "text": "alpha"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "bravo"
+                    }
+                  ]
+                ]
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          }
+        ],
+        first: false,
+        centered: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.MultipleAdaptationEffectsTestCase.test_multiple_choices_in_instructions_and_wording.0.wording')
+    cy.screenshot('gabby.adaptation.multiple_adaptation_effects_tests.MultipleAdaptationEffectsTestCase.test_multiple_choices_in_instructions_and_wording.0.1')
   })
 })

@@ -58,21 +58,9 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
 
     def setUp(self):
         super().setUp()
-        self.create_model(
-            UserEmailAddress,
-            user=self.create_model(User, username="john", clear_text_password="password"),
-            address="john@example.com",
-        )
-        self.create_model(
-            UserEmailAddress,
-            user=self.create_model(User, username=None, clear_text_password="anonymous-1"),
-            address="anonymous-1@example.com",
-        )
-        self.create_model(
-            UserEmailAddress,
-            user=self.create_model(User, username=None, clear_text_password="anonymous-2"),
-            address="anonymous-2@example.com",
-        )
+        self.create_model(UserEmailAddress, user=self.create_model(User, username="john", clear_text_password="password"), address="john@example.com")
+        self.create_model(UserEmailAddress, user=self.create_model(User, username=None, clear_text_password="anonymous-1"), address="anonymous-1@example.com")
+        self.create_model(UserEmailAddress, user=self.create_model(User, username=None, clear_text_password="anonymous-2"), address="anonymous-2@example.com")
 
     def test_unauthenticated__ok_on_optional(self):
         response = self.api_client.get("http://server/optional-authenticated")
@@ -209,19 +197,9 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
         self.assertLessEqual(before + datetime.timedelta(days=365), valid_until)
         self.assertLessEqual(valid_until, after + datetime.timedelta(days=365))
 
-        self.assertEqual(token, {
-            "userId": 2,
-            "validUntil": valid_until.isoformat(),
-        })
+        self.assertEqual(token, {"userId": 2, "validUntil": valid_until.isoformat()})
         # Try to set 'validUntil' in the token
-        tempered_token = jwt.encode(
-            {
-                "userId": 2,
-                "validUntil": (valid_until + datetime.timedelta(hours=24)).isoformat(),
-            },
-            "not-the-secret",
-            algorithm="HS256",
-        )
+        tempered_token = jwt.encode({"userId": 2, "validUntil": (valid_until + datetime.timedelta(hours=24)).isoformat()}, "not-the-secret", algorithm="HS256")
 
         # Be detected
         response = self.api_client.get("http://server/optional-authenticated", headers={"Authorization": f"Bearer {tempered_token}"})
@@ -239,19 +217,9 @@ class AuthenticationApiTestCase(testing.ApiTestCase):
         token = jwt.decode(response.json()["access_token"], options={"verify_signature": False})
         valid_until = token["validUntil"]
 
-        self.assertEqual(token, {
-            "userId": 2,
-            "validUntil": valid_until,
-        })
+        self.assertEqual(token, {"userId": 2, "validUntil": valid_until})
         # Try to set 'userId' in the token
-        tempered_token = jwt.encode(
-            {
-                "userId": 3,
-                "validUntil": valid_until,
-            },
-            "not-the-secret",
-            algorithm="HS256",
-        )
+        tempered_token = jwt.encode({"userId": 3, "validUntil": valid_until}, "not-the-secret", algorithm="HS256")
 
         # Be detected
         response = self.api_client.get("http://server/optional-authenticated", headers={"Authorization": f"Bearer {tempered_token}"})
@@ -283,24 +251,18 @@ class UsersApiTestCase(testing.ApiTestCase):
 
         response = self.get("http://server/users/ckylfa")
         self.assertEqual(response.status_code, 200, response.json())
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "user",
-                "id": "ckylfa",
-                "links": {
-                    "self": "http://server/users/ckylfa",
-                },
-                "attributes": {
-                    "username": "john",
-                    "createdAt": self.john_created_at,
-                    "updatedAt": self.john_updated_at,
-                },
-                "relationships": {
-                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
-                    "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
-                },
+        self.assertEqual(
+            response.json(),
+            {
+                "data": {
+                    "type": "user",
+                    "id": "ckylfa",
+                    "links": {"self": "http://server/users/ckylfa"},
+                    "attributes": {"username": "john", "createdAt": self.john_created_at, "updatedAt": self.john_updated_at},
+                    "relationships": {"createdBy": {"data": {"type": "user", "id": "fvirvd"}}, "updatedBy": {"data": {"type": "user", "id": "fvirvd"}}},
+                }
             },
-        })
+        )
 
     def test_get_anonymous_by_id(self):
         self.expect_commits_rollbacks(2, 0)
@@ -308,24 +270,18 @@ class UsersApiTestCase(testing.ApiTestCase):
 
         response = self.get("http://server/users/jahykn")
         self.assertEqual(response.status_code, 200, response.json())
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "user",
-                "id": "jahykn",
-                "links": {
-                    "self": "http://server/users/jahykn",
-                },
-                "attributes": {
-                    "username": None,
-                    "createdAt": self.anonymous_created_at,
-                    "updatedAt": self.anonymous_updated_at,
-                },
-                "relationships": {
-                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
-                    "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
-                },
+        self.assertEqual(
+            response.json(),
+            {
+                "data": {
+                    "type": "user",
+                    "id": "jahykn",
+                    "links": {"self": "http://server/users/jahykn"},
+                    "attributes": {"username": None, "createdAt": self.anonymous_created_at, "updatedAt": self.anonymous_updated_at},
+                    "relationships": {"createdBy": {"data": {"type": "user", "id": "fvirvd"}}, "updatedBy": {"data": {"type": "user", "id": "fvirvd"}}},
+                }
             },
-        })
+        )
 
     def test_get_named_by_current(self):
         self.expect_commits_rollbacks(2, 0)
@@ -333,24 +289,18 @@ class UsersApiTestCase(testing.ApiTestCase):
 
         response = self.get("http://server/users/current")
         self.assertEqual(response.status_code, 200, response.json())
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "user",
-                "id": "ckylfa",
-                "links": {
-                    "self": "http://server/users/ckylfa",
-                },
-                "attributes": {
-                    "username": "john",
-                    "createdAt": self.john_created_at,
-                    "updatedAt": self.john_updated_at,
-                },
-                "relationships": {
-                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
-                    "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
-                },
+        self.assertEqual(
+            response.json(),
+            {
+                "data": {
+                    "type": "user",
+                    "id": "ckylfa",
+                    "links": {"self": "http://server/users/ckylfa"},
+                    "attributes": {"username": "john", "createdAt": self.john_created_at, "updatedAt": self.john_updated_at},
+                    "relationships": {"createdBy": {"data": {"type": "user", "id": "fvirvd"}}, "updatedBy": {"data": {"type": "user", "id": "fvirvd"}}},
+                }
             },
-        })
+        )
 
     def test_get_anonymous_by_current(self):
         self.expect_commits_rollbacks(2, 0)
@@ -358,111 +308,69 @@ class UsersApiTestCase(testing.ApiTestCase):
 
         response = self.get("http://server/users/current")
         self.assertEqual(response.status_code, 200, response.json())
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "user",
-                "id": "jahykn",
-                "links": {
-                    "self": "http://server/users/jahykn",
-                },
-                "attributes": {
-                    "username": None,
-                    "createdAt": self.anonymous_created_at,
-                    "updatedAt": self.anonymous_updated_at,
-                },
-                "relationships": {
-                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
-                    "updatedBy": {"data": {"type": "user", "id": "fvirvd"}},
-                },
+        self.assertEqual(
+            response.json(),
+            {
+                "data": {
+                    "type": "user",
+                    "id": "jahykn",
+                    "links": {"self": "http://server/users/jahykn"},
+                    "attributes": {"username": None, "createdAt": self.anonymous_created_at, "updatedAt": self.anonymous_updated_at},
+                    "relationships": {"createdBy": {"data": {"type": "user", "id": "fvirvd"}}, "updatedBy": {"data": {"type": "user", "id": "fvirvd"}}},
+                }
             },
-        })
+        )
 
     def test_patch_current__username(self):
         self.expect_commits_rollbacks(2, 0)
         self.login("anonymous@example.com", "anonymous")
 
-        payload = {
-            "data": {
-                "type": "user",
-                "id": "current",
-                "attributes": {
-                    "username": "jane",
-                },
-            },
-        }
+        payload = {"data": {"type": "user", "id": "current", "attributes": {"username": "jane"}}}
         response = self.patch("http://server/users/current", payload)
         self.assertEqual(response.status_code, 200, response.json())
         updated_at = response.json()["data"]["attributes"]["updatedAt"]
         self.assertGreater(datetime.datetime.fromisoformat(updated_at), datetime.datetime.fromisoformat(self.anonymous_created_at))
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "user",
-                "id": "jahykn",
-                "links": {
-                    "self": "http://server/users/jahykn",
-                },
-                "attributes": {
-                    "username": "jane",
-                    "createdAt": self.anonymous_created_at,
-                    "updatedAt": updated_at
-                },
-                "relationships": {
-                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
-                    "updatedBy": {"data": {"type": "user", "id": "jahykn"}},
-                },
+        self.assertEqual(
+            response.json(),
+            {
+                "data": {
+                    "type": "user",
+                    "id": "jahykn",
+                    "links": {"self": "http://server/users/jahykn"},
+                    "attributes": {"username": "jane", "createdAt": self.anonymous_created_at, "updatedAt": updated_at},
+                    "relationships": {"createdBy": {"data": {"type": "user", "id": "fvirvd"}}, "updatedBy": {"data": {"type": "user", "id": "jahykn"}}},
+                }
             },
-        })
+        )
 
     def test_patch_current__password(self):
         self.expect_commits_rollbacks(3, 0)
         self.login("anonymous@example.com", "anonymous")
 
-        payload = {
-            "data": {
-                "type": "user",
-                "id": "current",
-                "attributes": {
-                    "clearTextPassword": "new-password",
-                },
-            },
-        }
+        payload = {"data": {"type": "user", "id": "current", "attributes": {"clearTextPassword": "new-password"}}}
         response = self.patch("http://server/users/current", payload)
         self.assertEqual(response.status_code, 200, response.json())
         updated_at = response.json()["data"]["attributes"]["updatedAt"]
         self.assertGreater(datetime.datetime.fromisoformat(updated_at), datetime.datetime.fromisoformat(self.anonymous_created_at))
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "user",
-                "id": "jahykn",
-                "links": {
-                    "self": "http://server/users/jahykn",
-                },
-                "attributes": {
-                    "username": None,
-                    "createdAt": self.anonymous_created_at,
-                    "updatedAt": updated_at
-                },
-                "relationships": {
-                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
-                    "updatedBy": {"data": {"type": "user", "id": "jahykn"}},
-                },
+        self.assertEqual(
+            response.json(),
+            {
+                "data": {
+                    "type": "user",
+                    "id": "jahykn",
+                    "links": {"self": "http://server/users/jahykn"},
+                    "attributes": {"username": None, "createdAt": self.anonymous_created_at, "updatedAt": updated_at},
+                    "relationships": {"createdBy": {"data": {"type": "user", "id": "fvirvd"}}, "updatedBy": {"data": {"type": "user", "id": "jahykn"}}},
+                }
             },
-        })
+        )
 
         self.login("anonymous@example.com", "new-password")
 
     def test_patch_current__unauthenticated(self):
         self.expect_rollback()
 
-        payload = {
-            "data": {
-                "type": "user",
-                "id": "current",
-                "attributes": {
-                    "username": "jane",
-                },
-            },
-        }
+        payload = {"data": {"type": "user", "id": "current", "attributes": {"username": "jane"}}}
         response = self.patch("http://server/users/current", payload)
         self.assertEqual(response.status_code, 401, response.json())
         self.assertEqual(response.json(), {"detail": "Invalid or expired token"})
@@ -471,51 +379,29 @@ class UsersApiTestCase(testing.ApiTestCase):
         self.expect_commits_rollbacks(2, 0)
         self.login("anonymous@example.com", "anonymous")
 
-        payload = {
-            "data": {
-                "type": "user",
-                "id": "current",
-                "attributes": {
-                    "username": "jane",
-                },
-            },
-        }
+        payload = {"data": {"type": "user", "id": "current", "attributes": {"username": "jane"}}}
         response = self.patch("http://server/users/jahykn", payload)
         self.assertEqual(response.status_code, 200, response.json())
         updated_at = response.json()["data"]["attributes"]["updatedAt"]
         self.assertGreater(datetime.datetime.fromisoformat(updated_at), datetime.datetime.fromisoformat(self.anonymous_created_at))
-        self.assertEqual(response.json(), {
-            "data": {
-                "type": "user",
-                "id": "jahykn",
-                "links": {
-                    "self": "http://server/users/jahykn",
-                },
-                "attributes": {
-                    "username": "jane",
-                    "createdAt": self.anonymous_created_at,
-                    "updatedAt": updated_at
-                },
-                "relationships": {
-                    "createdBy": {"data": {"type": "user", "id": "fvirvd"}},
-                    "updatedBy": {"data": {"type": "user", "id": "jahykn"}},
-                },
+        self.assertEqual(
+            response.json(),
+            {
+                "data": {
+                    "type": "user",
+                    "id": "jahykn",
+                    "links": {"self": "http://server/users/jahykn"},
+                    "attributes": {"username": "jane", "createdAt": self.anonymous_created_at, "updatedAt": updated_at},
+                    "relationships": {"createdBy": {"data": {"type": "user", "id": "fvirvd"}}, "updatedBy": {"data": {"type": "user", "id": "jahykn"}}},
+                }
             },
-        })
+        )
 
     def test_patch_by_id__someone_else(self):
         self.expect_commits_rollbacks(1, 1)
         self.login("anonymous@example.com", "anonymous")
 
-        payload = {
-            "data": {
-                "type": "user",
-                "id": "current",
-                "attributes": {
-                    "username": "jane",
-                },
-            },
-        }
+        payload = {"data": {"type": "user", "id": "current", "attributes": {"username": "jane"}}}
         response = self.patch("http://server/users/ckylfa", payload)
         self.assertEqual(response.status_code, 403, response.json())
-        self.assertEqual(response.json(), {'detail': 'You can only edit your own user'})
+        self.assertEqual(response.json(), {"detail": "You can only edit your own user"})

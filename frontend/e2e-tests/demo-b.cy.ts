@@ -1,4 +1,4 @@
-import { loadFixtures, login, notBusy, traceRectangle, visit } from "./utils"
+import { loadFixtures, login, notBusy, traceRectangle, visit, selectRange, pressEnter } from "./utils"
 
 
 describe('Gabby', () => {
@@ -17,21 +17,6 @@ describe('Gabby', () => {
     cy.get('label:contains("Adaptation type") + select').as('adaptationType')
     cy.get('label:contains("Instructions") + div.ql-container div.ql-editor').as('instructions')
     cy.get('label:contains("Wording") + div.ql-container div.ql-editor').as('wording')
-  }
-
-  function selectRange(startNode: Node, startOffset: number, endNode: Node, endOffset: number) {
-    cy.window().then(window => {
-      cy.document().then(document => {
-        var range = document.createRange()
-        range.setStart(startNode, startOffset)
-        range.setEnd(endNode, endOffset)
-
-        var sel = window.getSelection()
-        console.assert(sel !== null)
-        sel.removeAllRanges()
-        sel.addRange(range)
-      })
-    })
   }
 
   function screenshot(testName: string, screenshotName: string, options: {clearSel: boolean} = {clearSel: true}) {
@@ -91,7 +76,6 @@ describe('Gabby', () => {
       console.assert(node !== null)
       selectRange(node, 18, node, 34)
     })
-    cy.get('button:contains("OK")').should('exist')
     cy.get('label:contains("Start") + input').should('have.value', '')
     cy.get('label:contains("Stop") + input').should('have.value', '')
     cy.get('label:contains("Separators") + input').should('have.value', '/')
@@ -99,7 +83,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Placeholder") + input').click().type('...')
     cy.get('label:contains("Placeholder") + input').should('be.focused').blur()
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-2', {clearSel: false})
-    cy.get('button:contains("OK")').click()
+    pressEnter()
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-3')
 
     cy.get('button:contains("Multiple choices")').click()
@@ -109,7 +93,6 @@ describe('Gabby', () => {
       console.assert(node !== null)
       selectRange(node, 16, node, 35)
     })
-    cy.get('button:contains("OK")').should('exist')
     cy.get('label:contains("Start") + input').should('have.value', '')
     cy.get('label:contains("Stop") + input').should('have.value', '')
     cy.get('label:contains("Separators") + input').should('have.value', '*')
@@ -117,7 +100,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Placeholder") + input').click().type('@@@')
     cy.get('label:contains("Placeholder") + input').should('be.focused').blur()
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-5', {clearSel: false})
-    cy.get('button:contains("OK")').click()
+    pressEnter()
     screenshot('multiple-choices-with-two-set-of-choices-in-instructions', 'edit-6')
 
     cy.get('button:contains("Save then back")').click()

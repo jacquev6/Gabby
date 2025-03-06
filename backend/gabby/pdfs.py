@@ -16,9 +16,7 @@ from .wrapping import wrap, set_wrapper, OrmWrapper, make_sqids, orm_wrapper_wit
 class PdfFile(OrmBase, CreatedByAtMixin):
     __tablename__ = "pdf_files"
 
-    __table_args__ = (
-        sql.CheckConstraint("regexp_like(sha256, '^[0-9a-f]{64}$')", name="check_sha256_format"),
-    )
+    __table_args__ = (sql.CheckConstraint("regexp_like(sha256, '^[0-9a-f]{64}$')", name="check_sha256_format"),)
 
     sha256: orm.Mapped[str] = orm.mapped_column(primary_key=True)
     bytes_count: orm.Mapped[int]
@@ -36,20 +34,8 @@ class PdfFilesResource:
 
     default_page_size = settings.GENERIC_DEFAULT_API_PAGE_SIZE
 
-    def create_item(
-        self,
-        sha256,
-        bytes_count,
-        pages_count,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
-        pdf_file = PdfFile(
-            sha256=sha256,
-            bytes_count=bytes_count,
-            pages_count=pages_count,
-            created_by=authenticated_user,
-        )
+    def create_item(self, sha256, bytes_count, pages_count, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
+        pdf_file = PdfFile(sha256=sha256, bytes_count=bytes_count, pages_count=pages_count, created_by=authenticated_user)
         with session.begin_nested() as nested:
             session.add(pdf_file)
             try:
@@ -63,41 +49,20 @@ class PdfFilesResource:
                 return wrap(pdf_file)
         return get_item(session, PdfFile, sha256)
 
-    def get_item(
-        self,
-        id,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
+    def get_item(self, id, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
         return get_item(session, PdfFile, id)
 
-    def get_page(
-        self,
-        first_index,
-        page_size,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
+    def get_page(self, first_index, page_size, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
         query = sql.select(PdfFile)
         return get_page(session, query, first_index, page_size)
 
     @contextmanager
-    def save_item(
-        self,
-        item,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
+    def save_item(self, item, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
         yield
         item.updated_by = authenticated_user
         save_item(session, item)
 
-    def delete_item(
-        self,
-        item,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
+    def delete_item(self, item, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
         delete_item(session, item)
 
 
@@ -130,54 +95,23 @@ class PdfFileNamingsResource:
 
     sqids = make_sqids(singular_name)
 
-    def create_item(
-        self,
-        pdf_file, name,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
-        return create_item(
-            session, PdfFileNaming,
-            pdf_file=pdf_file,
-            name=name,
-            created_by=authenticated_user,
-        )
+    def create_item(self, pdf_file, name, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
+        return create_item(session, PdfFileNaming, pdf_file=pdf_file, name=name, created_by=authenticated_user)
 
-    def get_item(
-        self,
-        id,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
+    def get_item(self, id, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
         return get_item(session, PdfFileNaming, PdfFileNamingsResource.sqids.decode(id)[0])
 
-    def get_page(
-        self,
-        first_index,
-        page_size,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
+    def get_page(self, first_index, page_size, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
         query = sql.select(PdfFileNaming)
         return get_page(session, query, first_index, page_size)
 
     @contextmanager
-    def save_item(
-        self,
-        item,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
+    def save_item(self, item, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
         yield
         item.updated_by = authenticated_user
         save_item(session, item)
 
-    def delete_item(
-        self,
-        item,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
+    def delete_item(self, item, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
         delete_item(session, item)
 
 

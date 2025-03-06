@@ -6,6 +6,7 @@ import type { Exercise } from '$adapted/types'
 import { BButton } from '$frontend/components/opinion/bootstrap'
 import ExerciseComponent from '$adapted/components/Exercise.vue'
 import PageletsNavigationControls from '$adapted/components/PageletsNavigationControls.vue'
+import closeWithKeyboard from '$/frontend/components/closeWithKeyboard'
 
 
 const props = defineProps<{
@@ -13,11 +14,6 @@ const props = defineProps<{
   exerciseId: string,
   exercise: Exercise,
 }>()
-
-const settings = {
-  centeredInstructions: true,
-  tricolorWording: true,
-}
 
 const pageletIndex = ref(0)
 const pageletsCount = computed(() => props.exercise.pagelets.length)
@@ -37,6 +33,21 @@ const container = ref<HTMLElement | null>(null)
 const { width: containerWidth } = useElementBounding(container)
 
 const fullScreen = ref(false)
+
+let cancelClosingOnEscape: (() => void) | null = null
+
+function show() {
+  fullScreen.value = true
+  console.assert(cancelClosingOnEscape === null)
+  cancelClosingOnEscape = closeWithKeyboard(hide)
+}
+
+function hide() {
+  fullScreen.value = false
+  console.assert(cancelClosingOnEscape !== null)
+  cancelClosingOnEscape()
+  cancelClosingOnEscape = null
+}
 
 const containerStyle  = computed(() => {
   if (container.value === null) {
@@ -94,14 +105,13 @@ provide('adaptedExerciseBackdropCovers', preview)
           :exerciseId="props.exerciseId"
           :exercise
           :pageletIndex
-          :settings
           :isPreview="true"
         />
       </PageletsNavigationControls>
 
       <div v-if="fullScreen" style="position: relative;">
         <div style="position: absolute; left: 50%; transform: translate(-50%, 0); bottom: 1rem; z-index: 40;">
-          <BButton secondary sm @click="fullScreen = false">{{ $t('exitFullScreen') }}</BButton>
+          <BButton secondary sm @click="hide">{{ $t('exitFullScreen') }}</BButton>
         </div>
       </div>
     </div>
@@ -116,6 +126,6 @@ provide('adaptedExerciseBackdropCovers', preview)
     >
       {{ $t('eraseAnswers') }}
     </BButton>
-    <BButton secondary sm @click="fullScreen = true">{{ $t('fullScreen') }}</BButton>
+    <BButton secondary sm @click="show">{{ $t('fullScreen') }}</BButton>
   </p>
 </template>

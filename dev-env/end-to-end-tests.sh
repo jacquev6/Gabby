@@ -6,13 +6,13 @@ set -o pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
 
-console_options="--env ELECTRON_ENABLE_LOGGING=1"
+console_options=""
 specs_options=""
 while [ $# -gt 0 ]
 do
   case "$1" in
-    --no-console)
-      console_options=""
+    --console)
+      console_options="--env ELECTRON_ENABLE_LOGGING=1"
       shift
       ;;
     --visual)

@@ -1,6 +1,5 @@
 <script lang="ts">
-import { InlineBlot } from '$frontend/components/Quill.vue'
-import { basicBlots } from '$frontend/components/WysiwygEditor.vue'
+import { InlineBlot, BoldBlot, ItalicBlot, HighlightedBlot } from '$frontend/components/Quill.vue'
 import { Choices2Blot, McqField } from './MultipleChoicesTools.vue'
 import { SelBlot } from './SelectableEffectTools.vue'
 
@@ -16,7 +15,9 @@ class McqPlaceholderBlot extends InlineBlot {
 }
 
 export const wysiwygBlots = [
-  ...basicBlots,
+  BoldBlot,
+  ItalicBlot,
+  HighlightedBlot,
   SelBlot,
   Choices2Blot,
   McqField,
@@ -26,7 +27,18 @@ export const wysiwygBlots = [
 
 export const wysiwygContagiousFormats = ['choices2']
 
-export const wysiwygCompatibleFormats = [['bold', 'italic']]
+export const wysiwygCompatibleFormats = [
+  ['bold', 'italic', 'sel'],
+  ['bold', 'italic', 'sel', 'choices2'],
+  ['bold', 'italic', 'sel', 'mcq-placeholder'],
+  ['bold', 'italic', 'sel', 'manual-item'],
+  ['bold', 'italic', 'highlighted', 'choices2'],
+  ['bold', 'italic', 'highlighted', 'mcq-placeholder'],
+  ['bold', 'italic', 'highlighted', 'manual-item'],
+]
+
+// Formats on the left are nested inside formats on the right. Embeds shall not be in this list.
+export const wysiwygFormatsNestingOrder = ['bold', 'italic', 'highlighted', 'sel', 'choices2', 'manual-item', 'mcq-placeholder']
 </script>
 
 <script setup lang="ts">
@@ -43,9 +55,11 @@ import { BButton, BLabeledCheckbox } from '$frontend/components/opinion/bootstra
 import DistributionToggles from './DistributionToggles.vue'
 import ExerciseToolsColumnSection from './ExerciseToolsColumnSection.vue'
 import OptionalInput from '$frontend/components/OptionalInput.vue'
+import FloatingColorPicker from '$frontend/components/FloatingColorPicker.vue'
+import { allColorsForSelectableEffect } from './ExerciseFieldsForm.vue'
 
 
-defineProps<{
+const props = defineProps<{
   textbook: Textbook
   fields: InstanceType<typeof ExerciseFieldsForm> | null
   resetUndoRedo: number
@@ -74,9 +88,36 @@ const fillWithFreeTextPlaceholder = computed({
 })
 
 const selfRef = ref<HTMLDivElement | null>(null)
+
+const colorPicker = ref<InstanceType<typeof FloatingColorPicker> | null>(null)
+const highlightingColor = ref(allColorsForSelectableEffect[0])
+
+function highlight() {
+  console.assert(props.fields !== null)
+  if (props.fields.getSelectedRange() !== null) {
+    props.fields.toggle('highlighted', highlightingColor.value)
+  } else {
+    model.value.inProgress = {kind: 'highlighting', color: highlightingColor.value}
+  }
+}
+
+async function chooseHighlightingColor(event: MouseEvent) {
+  console.assert(colorPicker.value !== null)
+  props.fields
+  colorPicker.value.show(event.target as HTMLElement)
+}
 </script>
 
 <template>
+  <FloatingColorPicker
+    v-if="selfRef !== null"
+    ref="colorPicker"
+    v-model="highlightingColor"
+    :colors="allColorsForSelectableEffect"
+    backdropCovers1="#left-col-2"
+    backdropCovers2="#gutter-2"
+  />
+
   <div ref="selfRef" class="h-100 overflow-hidden d-flex flex-row position-relative" id="gutter-2">
     <div class="handle"></div>
     <div class="h-100 overflow-auto flex-fill" data-cy="gutter-2">
@@ -115,6 +156,17 @@ const selfRef = ref<HTMLDivElement | null>(null)
                   @click="fields.toggle('italic')"
                   data-cy="format-italic"
                 ><img :style="{height: '1.25em'}" src="/italic.svg" /></BButton>
+                <BButton
+                  sm secondary
+                  :class="{active: fields.currentWysiwygFormat.highlighted}"
+                  @click="highlight"
+                  data-cy="format-highlighted"
+                  @contextmenu.prevent="chooseHighlightingColor"
+                >
+                  <span :style="{backgroundColor: highlightingColor}" style="padding: 3px">
+                    <img :style="{height: '1.25em'}" src="/highlighter.png" />
+                  </span>
+                </BButton>
               </p>
 
               <p v-if="hasItems && model.adaptationSettings.itemized.effects.isSelectable">
@@ -185,6 +237,28 @@ const selfRef = ref<HTMLDivElement | null>(null)
           <div style="position: absolute; top: 50px; left: 10%; width: 80%; background-color: white; padding: 1em;">
             {{ $t('newMcqFieldInstructions') }}
             <BButton secondary sm @click="model.inProgress = {kind: 'nothing'}">{{ $t('choicesSettingsCancel') }}</BButton>
+          </div>
+        </div>
+
+        <div
+          v-if="model.inProgress.kind === 'repeatedWithMcqCreation'"
+          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); cursor: initial;"
+          @mousedown="e => e.stopPropagation()" @touchstart="e => e.stopPropagation()"
+        >
+          <div style="position: absolute; top: 50px; left: 10%; width: 80%; background-color: white; padding: 1em;">
+            {{ $t('repeatedWithMcqCreationInstructions') }}
+            <BButton secondary sm @click="model.inProgress = {kind: 'nothing'}">{{ $t('repeatedWithMcqCreationFinished') }}</BButton>
+          </div>
+        </div>
+
+        <div
+          v-if="model.inProgress.kind === 'highlighting'"
+          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); cursor: initial;"
+          @mousedown="e => e.stopPropagation()" @touchstart="e => e.stopPropagation()"
+        >
+          <div style="position: absolute; top: 50px; left: 10%; width: 80%; background-color: white; padding: 1em;">
+            {{ $t('highlightingInstructions') }}
+            <BButton secondary sm @click="model.inProgress = {kind: 'nothing'}">{{ $t('highlightingFinished') }}</BButton>
           </div>
         </div>
       </div>

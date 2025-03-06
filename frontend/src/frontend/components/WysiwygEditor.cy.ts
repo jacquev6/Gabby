@@ -9,6 +9,7 @@ describe('WysiwygEditor', () => {
     cy.mount(WysiwygEditor, {props: {
       label: 'Test',
       blots: [],
+      formatsNestingOrder: [],
       compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
@@ -24,6 +25,7 @@ describe('WysiwygEditor', () => {
     cy.mount(WysiwygEditor, {props: {
       label: 'Test',
       blots: [],
+      formatsNestingOrder: [],
       compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
@@ -40,6 +42,7 @@ describe('WysiwygEditor', () => {
     cy.mount(WysiwygEditor, {props: {
       label: 'Test',
       blots: [],
+      formatsNestingOrder: [],
       compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
@@ -55,6 +58,7 @@ describe('WysiwygEditor', () => {
     cy.mount(WysiwygEditor, {props: {
       label: 'Test',
       blots: [],
+      formatsNestingOrder: [],
       compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
@@ -70,6 +74,7 @@ describe('WysiwygEditor', () => {
     cy.mount(WysiwygEditor, {props: {
       label: 'Test',
       blots: [],
+      formatsNestingOrder: [],
       compatibleFormats: [],
       contagiousFormats: [],
       modelValue,
@@ -86,6 +91,7 @@ describe('WysiwygEditor', () => {
     cy.mount(WysiwygEditor, {props: {
       label: 'Test',
       blots: [],
+      formatsNestingOrder: [],
       compatibleFormats: [],
       contagiousFormats: [],
       modelValue,

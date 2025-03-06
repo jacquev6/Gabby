@@ -1,17 +1,12 @@
-<script lang="ts">
-import { BoldBlot, ItalicBlot } from './Quill.vue'
-
-export const basicBlots = [BoldBlot, ItalicBlot]
-</script>
-
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 
-import Quill, { type Model, type SelectionRange } from './Quill.vue'
+import Quill, { type Model, type SelectionRange, type Blot } from './Quill.vue'
 
 defineProps<{
   label: string
-  blots: (typeof BoldBlot)[]
+  blots: Blot[]
+  formatsNestingOrder: string[]
   compatibleFormats: string[][]
   contagiousFormats: string[]
 }>()
@@ -59,6 +54,10 @@ defineExpose({
     console.assert(quill.value !== null)
     quill.value.setSelection(index, length)
   },
+  getSelectedRange() {
+    console.assert(quill.value !== null)
+    return quill.value.getSelectedRange()
+  },
   getLength() {
     console.assert(quill.value !== null)
     return quill.value.getLength()
@@ -75,6 +74,7 @@ defineExpose({
       ref="quill"
       v-model="model"
       :blots
+      :formatsNestingOrder
       :compatibleFormats
       :contagiousFormats
       @focus="emit('focus')"

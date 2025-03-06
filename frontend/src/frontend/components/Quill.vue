@@ -61,6 +61,24 @@ export class ItalicBlot extends InlineBlot {
   static override blotName = 'italic'
   static override tagName = 'italic-blot'
 }
+
+export class HighlightedBlot extends InlineBlot {
+  static override blotName = 'highlighted'
+  static override tagName = 'highlighted-blot'
+
+  static override create(color: string) {
+    let node = super.create()
+    node.setAttribute('data-highlighted', color)
+    node.setAttribute('style', `background-color: ${color}`)
+    return node
+  }
+
+  static override formats(node: HTMLElement) {
+    const data = node.getAttribute('data-highlighted')
+    console.assert(data !== null)
+    return data
+  }
+}
 </script>
 
 <script setup lang="ts">
@@ -77,6 +95,7 @@ import deepEqual from 'deep-equal'
 
 const props = defineProps<{
   blots: Blot[]
+  formatsNestingOrder: string[]
   compatibleFormats: string[][]
   contagiousFormats: string[]
 }>()
@@ -86,6 +105,14 @@ const emit = defineEmits<{
   blur: []
   selectionChange: [SelectionRange]
 }>()
+
+watch(
+  () => props.formatsNestingOrder,
+  (order) => {
+    Inline.order.splice(2, 0, ...order)
+  },
+  {immediate: true},
+)
 
 const registry = computed(() => makeRegistryWithBlots(props.blots))
 
@@ -203,7 +230,6 @@ const compatibleFormats = computed(() => {
     }
   }
 
-  console.log('Compatible formats', result)
   return result
 })
 
@@ -255,6 +281,10 @@ defineExpose({
   setSelection(index: number, length: number) {
     console.assert(quill.value !== null)
     quill.value.setSelection(index, length)
+  },
+  getSelectedRange() {
+    console.assert(quill.value !== null)
+    return quill.value.getSelection(true)
   },
   getLength() {
     console.assert(quill.value !== null)

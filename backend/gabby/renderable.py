@@ -1,12 +1,15 @@
 from __future__ import annotations
 
-from typing import Literal
+from typing import Annotated, Literal
 
-from mydantic import PydanticBase
+from mydantic import PydanticBase, PydanticField
 
 
 class Whitespace(PydanticBase):
     kind: Literal["whitespace"]
+    bold: bool = False
+    italic: bool = False
+    highlighted: str | None = None
 
 
 class Text(PydanticBase):
@@ -17,16 +20,13 @@ class Text(PydanticBase):
     text: str
 
 
-PassiveLeafRenderable = Whitespace | Text
-
-
 class PassiveSequence(PydanticBase):
     kind: Literal["passiveSequence"]
-    contents: list[PassiveLeafRenderable]
+    contents: list[PassiveRenderable]
     boxed: bool = False
 
 
-PassiveRenderable = PassiveLeafRenderable | PassiveSequence
+PassiveRenderable = Whitespace | Text | PassiveSequence
 
 
 class FreeTextInput(PydanticBase):
@@ -38,12 +38,14 @@ class MultipleChoicesInput(PydanticBase):
     show_arrow_before: bool = False
     choices: list[list[PassiveRenderable]]
     show_choices_by_default: bool = False
+    fixed_case: Annotated[bool, PydanticField(exclude=True)] = True
 
 
 class SelectableInput(PydanticBase):
     kind: Literal["selectableInput"]
     colors: list[str]
     boxed: bool = False
+    padding: tuple[float, float] = (0.0, 0.0)
     contents: list[PassiveRenderable]
 
 
@@ -65,11 +67,12 @@ class Paragraph(PydanticBase):
 
 class Section(PydanticBase):
     paragraphs: list[Paragraph]
+    centered: bool
+    tricolored: bool
 
 
 class Pagelet(PydanticBase):
-    instructions: Section
-    wording: Section
+    sections: list[Section]
 
 
 class Exercise(PydanticBase):

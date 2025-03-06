@@ -2,8 +2,7 @@
 import { useApiStore } from '$frontend/stores/api'
 import type { Project, Textbook, Exercise, InCache, Exists } from '$frontend/stores/api'
 import deepEqual from 'deep-equal'
-import { type Model as Deltas } from '$frontend/components/Quill.vue'
-import { Delta } from 'quill/core'
+import { Delta as QuillDelta } from 'quill/core'
 
 
 const api = useApiStore()
@@ -11,7 +10,9 @@ const api = useApiStore()
 type Adaptation = (Exercise & InCache & Exists)['attributes']['adaptation']
 type PdfRectangle = (Exercise & InCache & Exists)['attributes']['rectangles'][number]
 
-const emptyDeltas: Deltas = [{insert: '\n', attributes: {}}]
+export type CustomDeltas = (Exercise & InCache & Exists)['attributes']['instructions']
+
+const emptyDeltas: CustomDeltas = [{insert: '\n', attributes: {}}]
 
 export const adaptationKinds: Adaptation['kind'][] = ['generic', 'fill-with-free-text', 'multiple-choices']
 
@@ -31,11 +32,11 @@ type MakeModelOptions  = {
 // - its addendum in the "Tools" column
 export type Model = MakeModelOptions & {
   number: string
-  instructions: Deltas
-  wording: Deltas
-  example: Deltas
-  clue: Deltas
-  textReference: Deltas
+  instructions: CustomDeltas
+  wording: CustomDeltas
+  example: CustomDeltas
+  clue: CustomDeltas
+  textReference: CustomDeltas
   rectangles: PdfRectangle[]
   adaptationSettings: {
     kind: Adaptation['kind']
@@ -69,29 +70,36 @@ export type Model = MakeModelOptions & {
       }
     }
   }
-  inProgress:
-    {
-      kind: 'nothing'
-    } | {
-      kind: 'multipleChoicesCreation'
-    } | {
-      kind: 'multipleChoicesEdition'
-      initial: boolean
-      stopWatching(): void
-      deleted: boolean
-      delete(): void
-      settings: {
-        start: string
-        stop: string
-        separator1: string
-        separator2: string
-        placeholder: string
-        mcqFieldUid: string | null
-      }
-    } | {
-      kind: 'newMcqField'
-      uid: string
-    }
+  inProgress: InProgress
+}
+
+export type InProgress = {
+  kind: 'nothing'
+} | {
+  kind: 'multipleChoicesCreation'
+} | {
+  kind: 'multipleChoicesEdition'
+  initial: boolean
+  stopWatching(): void
+  deleted: boolean
+  delete(): void
+  settings: {
+    start: string
+    stop: string
+    separator1: string
+    separator2: string
+    placeholder: string
+    mcqFieldUid: string | null
+  }
+  next: InProgress
+} | {
+  kind: 'newMcqField'
+  uid: string
+} | {
+  kind: 'repeatedWithMcqCreation'
+} | {
+  kind: 'highlighting'
+  color: string
 }
 
 // Colors provided by the client, in display order
@@ -219,7 +227,7 @@ export function cleanupModel(model: Model) {
   const hasManualItems = model.adaptationSettings.itemized.items.isManual
   const colorsCount = model.adaptationSettings.itemized.effects.isSelectable ? model.adaptationSettings.itemized.effects.selectable.colorsCount : 0
   for (const fieldName of ['instructions', 'wording', 'example'] as const) {
-    const newOps = new Delta()
+    const newOps = new QuillDelta()
     for (const delta of model[fieldName]) {
       if (typeof delta.insert === 'string') {
         console.assert('attributes' in delta)
@@ -435,7 +443,7 @@ import deepCopy from 'deep-copy'
 
 import { BRow, BCol, BLabeledInput, BLabeledNumberInput, BLabeledSelect } from '../../../../components/opinion/bootstrap'
 import WysiwygEditor from '$frontend/components/WysiwygEditor.vue'
-import { wysiwygBlots, wysiwygCompatibleFormats, wysiwygContagiousFormats } from './ExerciseToolsColumn.vue'
+import { wysiwygBlots, wysiwygFormatsNestingOrder, wysiwygCompatibleFormats, wysiwygContagiousFormats } from './ExerciseToolsColumn.vue'
 import OptionalWysiwygEditor from '$frontend/components/OptionalWysiwygEditor.vue'
 
 
@@ -512,67 +520,102 @@ const currentWysiwygFormat = computed(() => {
   }
 })
 
+function getSelectedRange() {
+  if (focusedWysiwygField.value === null) {
+    return null
+  } else {
+    const editor = editors[focusedWysiwygField.value]
+    console.assert(editor.value !== null)
+    return editor.value.getSelectedRange()
+  }
+}
+
 
 const selBlotColors = computed(() => {
   return Object.fromEntries(model.value.adaptationSettings.itemized.effects.selectable.allColors.map((color, i) => [`--sel-blot-color-${i + 1}`, color]))
 })
 
+
+function guessSettings(deltas: CustomDeltas, range: {index: number, length: number}, baseSettings: {mcqFieldUid: string | null, nextInProgressAfterCreation: InProgress}) {
+  const selected = deltas.map(delta => delta.insert).join('').slice(range.index, range.index + range.length)
+
+  const [start, stop] = (() => {
+    for (const [start, stop] of [['(', ')'], ['[', ']']]) {
+      if (selected.startsWith(start) && selected.endsWith(stop)) {
+        return [start, stop]
+      }
+    }
+    return ['', '']
+  })()
+
+  const separator1 = (() => {
+    for (const separator of ['/', '|', ',', '*', '◆', '●', '-', '–', '—']) {
+      if (selected.includes(separator)) {
+        return separator
+      }
+    }
+    for (const separator of ['ou']) {
+      if (selected.includes(' ' + separator + ' ')) {
+        return separator
+      }
+    }
+    return ''
+  })()
+
+  const separator2 = (() => {
+    for (const separator of ['ou']) {
+      if (separator1 !== separator && selected.includes(' ' + separator + ' ')) {
+        return separator
+      }
+    }
+    return ''
+  })()
+
+  return {
+    start,
+    stop,
+    separator1,
+    separator2,
+    placeholder: '',
+    ...baseSettings,
+  }
+}
+
 function selectionChangeInInstructionsOrWording(fieldName: 'instructions' | 'wording', range: {index: number, length: number}) {
-  console.assert(wordingEditor.value !== null)
-  console.assert(wordingEditor.value.quill !== null)
+  console.assert(model.value.inProgress.kind === 'multipleChoicesCreation')
+
+  toggle('choices2', guessSettings(model.value[fieldName], range, {mcqFieldUid: null, nextInProgressAfterCreation: {kind: 'nothing'}}))
+}
+
+function selectionChangeInInstructions(range: {index: number, length: number}) {
   console.assert(instructionsEditor.value !== null)
   console.assert(instructionsEditor.value.quill !== null)
 
-  function guessSettings(deltas: Deltas, baseSettings: {mcqFieldUid: string | null}) {
-    const selected = deltas.map(delta => delta.insert).join('').slice(range.index, range.index + range.length)
-
-    const [start, stop] = (() => {
-      for (const [start, stop] of [['(', ')'], ['[', ']']]) {
-        if (selected.startsWith(start) && selected.endsWith(stop)) {
-          return [start, stop]
-        }
-      }
-      return ['', '']
-    })()
-
-    const separator1 = (() => {
-      for (const separator of ['/', '|', ',', '*', '◆', '●', '-', '–', '—']) {
-        if (selected.includes(separator)) {
-          return separator
-        }
-      }
-      for (const separator of ['ou']) {
-        if (selected.includes(' ' + separator + ' ')) {
-          return separator
-        }
-      }
-      return ''
-    })()
-
-    const separator2 = (() => {
-      for (const separator of ['ou']) {
-        if (separator1 !== separator && selected.includes(' ' + separator + ' ')) {
-          return separator
-        }
-      }
-      return ''
-    })()
-
-    return {
-      start,
-      stop,
-      separator1,
-      separator2,
-      placeholder: '',
-      justCreated: true,
-      ...baseSettings,
+  if (model.value.inProgress.kind == 'highlighting') {
+    highlight(instructionsEditor.value)
+  } else if (model.value.inProgress.kind === 'multipleChoicesCreation') {
+    selectionChangeInInstructionsOrWording('instructions', range)
+  } else if (model.value.inProgress.kind === 'newMcqField') {
+    if (range.length !== 0) {
+      instructionsEditor.value.toggle('choices2', guessSettings(model.value.instructions, range, {mcqFieldUid: model.value.inProgress.uid, nextInProgressAfterCreation: {kind: 'nothing'}}))
+    }
+  } else if (model.value.inProgress.kind === 'repeatedWithMcqCreation') {
+    if (range.length !== 0) {
+      instructionsEditor.value.toggle('choices2', guessSettings(model.value.instructions, range, {mcqFieldUid: null, nextInProgressAfterCreation: model.value.inProgress}))
     }
   }
+}
 
-  if (model.value.inProgress.kind === 'multipleChoicesCreation') {
-    toggle('choices2', guessSettings(model.value[fieldName], {mcqFieldUid: null}))
+function selectionChangeInWording(range: {index: number, length: number}) {
+  console.assert(wordingEditor.value !== null)
+  console.assert(wordingEditor.value.quill !== null)
+
+  if (model.value.inProgress.kind == 'highlighting') {
+    highlight(wordingEditor.value)
+  } else if (model.value.inProgress.kind === 'multipleChoicesCreation') {
+    selectionChangeInInstructionsOrWording('wording', range)
   } else if (model.value.inProgress.kind === 'newMcqField') {
-    if (fieldName === 'wording' && range.length === 0) {
+    if (range.length === 0) {
       // Add space after?
       if (![' ', '\n'].includes(wordingEditor.value.quill.getText(range.index, 1))) {
         wordingEditor.value.quill.insertText(range.index, ' ', 'user')
@@ -584,18 +627,46 @@ function selectionChangeInInstructionsOrWording(fieldName: 'instructions' | 'wor
         wordingEditor.value.quill.insertText(range.index, ' ', 'user')
         wordingEditor.value.quill.setSelection(range.index + 1, 0, 'silent')
       }
-    } else if (fieldName === 'instructions' && range.length !== 0) {
-      instructionsEditor.value.toggle('choices2', guessSettings(model.value[fieldName], {mcqFieldUid: model.value.inProgress.uid}))
+    }
+  } else if (model.value.inProgress.kind === 'repeatedWithMcqCreation') {
+    if (range.length !== 0) {
+      wordingEditor.value.toggle('mcq-placeholder', true)
     }
   }
 }
 
-function selectionChangeInInstructions(range: {index: number, length: number}) {
-  selectionChangeInInstructionsOrWording('instructions', range)
+function selectionChangeInExample() {
+  console.assert(exampleEditor.value !== null)
+
+  if (model.value.inProgress.kind == 'highlighting') {
+    highlight(exampleEditor.value)
+  }
 }
 
-function selectionChangeInWording(range: {index: number, length: number}) {
-  selectionChangeInInstructionsOrWording('wording', range)
+function selectionChangeInClue() {
+  console.assert(clueEditor.value !== null)
+
+  if (model.value.inProgress.kind == 'highlighting') {
+    highlight(clueEditor.value)
+  }
+}
+
+function selectionChangeInTextReference() {
+  console.assert(textReferenceEditor.value !== null)
+
+  if (model.value.inProgress.kind == 'highlighting') {
+    highlight(textReferenceEditor.value)
+  }
+}
+
+function highlight(editor: InstanceType<typeof WysiwygEditor> | InstanceType<typeof OptionalWysiwygEditor>) {
+  console.assert(model.value.inProgress.kind === 'highlighting')
+
+  if (editor.getSelectedRange().length === 0) {
+    model.value.inProgress = {kind: 'nothing'}
+  } else {
+    editor.toggle('highlighted', model.value.inProgress.color)
+  }
 }
 
 defineExpose({
@@ -604,6 +675,7 @@ defineExpose({
   toggle,
   focusedWysiwygField,
   currentWysiwygFormat,
+  getSelectedRange,
 })
 </script>
 
@@ -627,6 +699,7 @@ defineExpose({
       ref="instructionsEditor"
       :label="$t('exerciseInstructions')"
       :blots="wysiwygBlots"
+      :formatsNestingOrder="wysiwygFormatsNestingOrder"
       :compatibleFormats="wysiwygCompatibleFormats"
       :contagiousFormats="wysiwygContagiousFormats"
       v-model="model.instructions"
@@ -636,6 +709,7 @@ defineExpose({
       ref="wordingEditor"
       :label="$t('exerciseWording')"
       :blots="wysiwygBlots"
+      :formatsNestingOrder="wysiwygFormatsNestingOrder"
       :compatibleFormats="wysiwygCompatibleFormats"
       :contagiousFormats="wysiwygContagiousFormats"
       v-model="model.wording"
@@ -648,9 +722,11 @@ defineExpose({
             ref="exampleEditor"
             :label="$t('exerciseExample')"
             :blots="wysiwygBlots"
+            :formatsNestingOrder="wysiwygFormatsNestingOrder"
             :compatibleFormats="wysiwygCompatibleFormats"
             :contagiousFormats="wysiwygContagiousFormats"
             v-model="model.example"
+            @selectionChange="selectionChangeInExample"
           />
         </div>
         <div :class="{col: allOptionalsAreCollapsed}" style="padding: 0;">
@@ -658,9 +734,11 @@ defineExpose({
             ref="clueEditor"
             :label="$t('exerciseClue')"
             :blots="wysiwygBlots"
+            :formatsNestingOrder="wysiwygFormatsNestingOrder"
             :compatibleFormats="wysiwygCompatibleFormats"
             :contagiousFormats="wysiwygContagiousFormats"
             v-model="model.clue"
+            @selectionChange="selectionChangeInClue"
           />
         </div>
         <div :class="{col: allOptionalsAreCollapsed}" style="padding: 0;">
@@ -668,9 +746,11 @@ defineExpose({
             ref="textReferenceEditor"
             :label="$t('exerciseTextReference')"
             :blots="wysiwygBlots"
+            :formatsNestingOrder="wysiwygFormatsNestingOrder"
             :compatibleFormats="wysiwygCompatibleFormats"
             :contagiousFormats="wysiwygContagiousFormats"
             v-model="model.textReference"
+            @selectionChange="selectionChangeInTextReference"
           />
         </div>
       </div>

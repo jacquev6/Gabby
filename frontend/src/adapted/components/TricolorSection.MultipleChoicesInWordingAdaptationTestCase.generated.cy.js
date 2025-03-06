@@ -1,3 +1,4 @@
+import MonocolorSection from './MonocolorSection.vue'
 import TricolorSection from './TricolorSection.vue'
 
 describe('TricolorSection for MultipleChoicesInWordingAdaptationTestCase', () => {
@@ -5,83 +6,583 @@ describe('TricolorSection for MultipleChoicesInWordingAdaptationTestCase', () =>
     cy.viewport(1000, 100)
   })
 
-  it('renders gabby.adaptation.MultipleChoicesInWordingAdaptationTestCase.test_choices2_with_empty_separator pagelet 0 instructions', () => {
-    cy.mount(TricolorSection, {
+  it('renders gabby.adaptation.multiple_choices_in_wording_adaptation_tests.MultipleChoicesInWordingAdaptationTestCase.test_choices2_with_empty_separator pagelet 0 section 0', () => {
+    cy.mount(MonocolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "Choose"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "wisely"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "."}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "Choose"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "wisely"
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          }
+        ],
+        first: false,
+        centered: true,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.MultipleChoicesInWordingAdaptationTestCase.test_choices2_with_empty_separator.0.instructions')
+    cy.screenshot('gabby.adaptation.multiple_choices_in_wording_adaptation_tests.MultipleChoicesInWordingAdaptationTestCase.test_choices2_with_empty_separator.0.0')
   })
 
-  it('renders gabby.adaptation.MultipleChoicesInWordingAdaptationTestCase.test_choices2_with_empty_separator pagelet 0 wording', () => {
+  it('renders gabby.adaptation.multiple_choices_in_wording_adaptation_tests.MultipleChoicesInWordingAdaptationTestCase.test_choices2_with_empty_separator pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "A"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "blah / blih"}]], "show_choices_by_default": false}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "."}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "A"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "multipleChoicesInput",
+                "choices": [
+                  [
+                    {
+                      "kind": "text",
+                      "text": "blah"
+                    },
+                    {
+                      "kind": "whitespace"
+                    },
+                    {
+                      "kind": "text",
+                      "text": "/"
+                    },
+                    {
+                      "kind": "whitespace"
+                    },
+                    {
+                      "kind": "text",
+                      "text": "blih"
+                    }
+                  ]
+                ]
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          }
+        ],
+        first: false,
+        centered: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.MultipleChoicesInWordingAdaptationTestCase.test_choices2_with_empty_separator.0.wording')
+    cy.screenshot('gabby.adaptation.multiple_choices_in_wording_adaptation_tests.MultipleChoicesInWordingAdaptationTestCase.test_choices2_with_empty_separator.0.1')
   })
 
-  it('renders gabby.adaptation.MultipleChoicesInWordingAdaptationTestCase.test_choices2_with_empty_start_and_stop pagelet 0 wording', () => {
+  it('renders gabby.adaptation.multiple_choices_in_wording_adaptation_tests.MultipleChoicesInWordingAdaptationTestCase.test_choices2_with_empty_start_and_stop pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "A"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "blah"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "blih"}]], "show_choices_by_default": false}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "."}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "A"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "multipleChoicesInput",
+                "choices": [
+                  [
+                    {
+                      "kind": "text",
+                      "text": "blah"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "blih"
+                    }
+                  ]
+                ]
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          }
+        ],
+        first: false,
+        centered: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.MultipleChoicesInWordingAdaptationTestCase.test_choices2_with_empty_start_and_stop.0.wording')
+    cy.screenshot('gabby.adaptation.multiple_choices_in_wording_adaptation_tests.MultipleChoicesInWordingAdaptationTestCase.test_choices2_with_empty_start_and_stop.0.1')
   })
 
-  it('renders gabby.adaptation.MultipleChoicesInWordingAdaptationTestCase.test_choices2_with_placeholder_after pagelet 0 wording', () => {
+  it('renders gabby.adaptation.multiple_choices_in_wording_adaptation_tests.MultipleChoicesInWordingAdaptationTestCase.test_choices2_with_placeholder_after pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "The"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "sky"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "is"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "blue"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "red"}]], "show_choices_by_default": false}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "."}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "The"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "sky"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "is"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "multipleChoicesInput",
+                "choices": [
+                  [
+                    {
+                      "kind": "text",
+                      "text": "blue"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "red"
+                    }
+                  ]
+                ]
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          }
+        ],
+        first: false,
+        centered: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.MultipleChoicesInWordingAdaptationTestCase.test_choices2_with_placeholder_after.0.wording')
+    cy.screenshot('gabby.adaptation.multiple_choices_in_wording_adaptation_tests.MultipleChoicesInWordingAdaptationTestCase.test_choices2_with_placeholder_after.0.1')
   })
 
-  it('renders gabby.adaptation.MultipleChoicesInWordingAdaptationTestCase.test_choices2_with_two_placeholders pagelet 0 wording', () => {
+  it('renders gabby.adaptation.multiple_choices_in_wording_adaptation_tests.MultipleChoicesInWordingAdaptationTestCase.test_choices2_with_two_placeholders pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "The"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "sky"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "is"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "blue"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "yellow"}]], "show_choices_by_default": false}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": ","}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "the"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "sun"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "is"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "blue"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "yellow"}]], "show_choices_by_default": false}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "."}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "The"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "sky"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "is"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "multipleChoicesInput",
+                "choices": [
+                  [
+                    {
+                      "kind": "text",
+                      "text": "blue"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "yellow"
+                    }
+                  ]
+                ]
+              },
+              {
+                "kind": "text",
+                "text": ","
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "the"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "sun"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "is"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "multipleChoicesInput",
+                "choices": [
+                  [
+                    {
+                      "kind": "text",
+                      "text": "blue"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "yellow"
+                    }
+                  ]
+                ]
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          }
+        ],
+        first: false,
+        centered: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.MultipleChoicesInWordingAdaptationTestCase.test_choices2_with_two_placeholders.0.wording')
+    cy.screenshot('gabby.adaptation.multiple_choices_in_wording_adaptation_tests.MultipleChoicesInWordingAdaptationTestCase.test_choices2_with_two_placeholders.0.1')
   })
 
-  it('renders gabby.adaptation.MultipleChoicesInWordingAdaptationTestCase.test_simple pagelet 0 wording', () => {
+  it('renders gabby.adaptation.multiple_choices_in_wording_adaptation_tests.MultipleChoicesInWordingAdaptationTestCase.test_simple pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "A"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "a"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "b"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "c"}]], "show_choices_by_default": false}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "B"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "d"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "e"}]], "show_choices_by_default": false}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "."}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "A"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "multipleChoicesInput",
+                "choices": [
+                  [
+                    {
+                      "kind": "text",
+                      "text": "a"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "b"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "c"
+                    }
+                  ]
+                ]
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "B"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "multipleChoicesInput",
+                "choices": [
+                  [
+                    {
+                      "kind": "text",
+                      "text": "d"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "e"
+                    }
+                  ]
+                ]
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          }
+        ],
+        first: false,
+        centered: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.MultipleChoicesInWordingAdaptationTestCase.test_simple.0.wording')
+    cy.screenshot('gabby.adaptation.multiple_choices_in_wording_adaptation_tests.MultipleChoicesInWordingAdaptationTestCase.test_simple.0.1')
   })
 
-  it('renders gabby.adaptation.MultipleChoicesInWordingAdaptationTestCase.test_two_choices2_with_identical_placeholders pagelet 0 wording', () => {
+  it('renders gabby.adaptation.multiple_choices_in_wording_adaptation_tests.MultipleChoicesInWordingAdaptationTestCase.test_two_choices2_with_identical_placeholders pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "The"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "sky"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "is"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "blue"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "red"}]], "show_choices_by_default": false}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "."}]}, {"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "The"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "sun"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "is"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "green"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "yellow"}]], "show_choices_by_default": false}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "."}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "The"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "sky"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "is"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "multipleChoicesInput",
+                "choices": [
+                  [
+                    {
+                      "kind": "text",
+                      "text": "blue"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "red"
+                    }
+                  ]
+                ]
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          },
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "The"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "sun"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "is"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "multipleChoicesInput",
+                "choices": [
+                  [
+                    {
+                      "kind": "text",
+                      "text": "green"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "yellow"
+                    }
+                  ]
+                ]
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          }
+        ],
+        first: false,
+        centered: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.MultipleChoicesInWordingAdaptationTestCase.test_two_choices2_with_identical_placeholders.0.wording')
+    cy.screenshot('gabby.adaptation.multiple_choices_in_wording_adaptation_tests.MultipleChoicesInWordingAdaptationTestCase.test_two_choices2_with_identical_placeholders.0.1')
   })
 
-  it('renders gabby.adaptation.MultipleChoicesInWordingAdaptationTestCase.test_two_choices2_with_matching_placeholders pagelet 0 wording', () => {
+  it('renders gabby.adaptation.multiple_choices_in_wording_adaptation_tests.MultipleChoicesInWordingAdaptationTestCase.test_two_choices2_with_matching_placeholders pagelet 0 section 1', () => {
     cy.mount(TricolorSection, {
       props: {
-        paragraphs: [{"contents": [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "The"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "sky"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "is"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "blue"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "red"}]], "show_choices_by_default": false}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": ","}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "the"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "sun"}, {"kind": "whitespace"}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "is"}, {"kind": "whitespace"}, {"kind": "multipleChoicesInput", "show_arrow_before": false, "choices": [[{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "green"}], [{"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "yellow"}]], "show_choices_by_default": false}, {"kind": "text", "bold": false, "italic": false, "highlighted": null, "text": "."}]}],
+        paragraphs: [
+          {
+            "contents": [
+              {
+                "kind": "text",
+                "text": "The"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "sky"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "is"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "multipleChoicesInput",
+                "choices": [
+                  [
+                    {
+                      "kind": "text",
+                      "text": "blue"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "red"
+                    }
+                  ]
+                ]
+              },
+              {
+                "kind": "text",
+                "text": ","
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "the"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "sun"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "text",
+                "text": "is"
+              },
+              {
+                "kind": "whitespace"
+              },
+              {
+                "kind": "multipleChoicesInput",
+                "choices": [
+                  [
+                    {
+                      "kind": "text",
+                      "text": "green"
+                    }
+                  ],
+                  [
+                    {
+                      "kind": "text",
+                      "text": "yellow"
+                    }
+                  ]
+                ]
+              },
+              {
+                "kind": "text",
+                "text": "."
+              }
+            ]
+          }
+        ],
+        first: false,
+        centered: false,
         modelValue: {},
       },
     })
-    cy.screenshot('gabby.adaptation.MultipleChoicesInWordingAdaptationTestCase.test_two_choices2_with_matching_placeholders.0.wording')
+    cy.screenshot('gabby.adaptation.multiple_choices_in_wording_adaptation_tests.MultipleChoicesInWordingAdaptationTestCase.test_two_choices2_with_matching_placeholders.0.1')
   })
 })

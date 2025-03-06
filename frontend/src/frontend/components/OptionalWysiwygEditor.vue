@@ -10,6 +10,7 @@ import deepEqual from 'deep-equal'
 defineProps<{
   label: string,
   blots: (typeof BoldBlot)[]
+  formatsNestingOrder: string[]
   compatibleFormats: string[][]
   contagiousFormats: string[]
 }>()
@@ -41,6 +42,10 @@ defineExpose({
   setSelection(index: number, length: number) {
     editor.value?.setSelection(index, length)
   },
+  getSelectedRange() {
+    console.assert(editor.value !== null)
+    return editor.value.getSelectedRange()
+  },
   getLength() {
     return editor.value?.getLength() ?? 0
   },
@@ -55,6 +60,7 @@ defineExpose({
     ref="editor"
     :label
     :blots
+    :formatsNestingOrder
     :compatibleFormats
     :contagiousFormats
     v-model="model"

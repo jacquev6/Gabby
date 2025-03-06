@@ -1,4 +1,4 @@
-import { visit, login, loadFixtures, notBusy } from './utils'
+import { visit, login, loadFixtures, notBusy, selectRange, pressEscape } from './utils'
 
 
 describe('Gabby', () => {
@@ -182,5 +182,142 @@ describe('Gabby', () => {
     cy.get('div:contains("Selectable") > input').should('be.disabled').should('not.be.checked')
     cy.get('div:contains("Boxed") > input').should('be.disabled').should('not.be.checked')
     cy.get('div:contains("1 item per line") > input').should('be.disabled').should('not.be.checked')
+  })
+
+  it('applies choices to all MCQ fields - with MCQ definition with uid', () => {
+    cy.viewport(1200, 1200)
+
+    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
+
+    cy.get('label:contains("Instructions") + .ql-container > .ql-editor').as('instructions')
+    cy.get('label:contains("Wording") + .ql-container > .ql-editor').as('wording')
+
+    cy.get('@instructions').type('alpha/bravo/delta')
+    cy.get('@wording').type('Blah blah blah')
+
+    cy.get('button:contains("Add an MCQ field")').click()
+    cy.get('@wording').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 4, node, 4)
+    })
+    cy.get('button:contains("Cancel")').click()
+
+    cy.get('button:contains("Add an MCQ field")').click()
+    cy.get('@wording').find('p').then($el => {
+      const node = $el[0].lastChild
+      console.assert(node !== null)
+      selectRange(node, 5, node, 5)
+    })
+    cy.wait(100)
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 0, node, 17)
+    })
+    cy.wait(100)
+    pressEscape()
+    notBusy()
+
+    cy.get('span.main').should('have.length', 2)
+    cy.get('span.choice1').should('not.exist')
+    cy.get('span.main').eq(1).click()
+    cy.get('span.choice1').should('have.length', 1)
+    cy.get('div.backdrop').click()
+    cy.get('span.choice1').should('not.exist')
+
+    cy.get('span.main').eq(0).click()
+    cy.get('span.choice1').should('not.exist')
+    cy.get('div.backdrop').click()
+
+    cy.get('button:contains("Apply choices to all MCQ fields")').click()
+    notBusy()
+
+    cy.get('span.main').should('have.length', 2)
+
+    cy.get('span.choice1').should('not.exist')
+    cy.get('span.main').eq(1).click()
+    cy.get('span.choice1').should('have.length', 1)
+    cy.get('div.backdrop').click()
+    cy.get('span.choice1').should('not.exist')
+
+    cy.get('span.choice1').should('not.exist')
+    cy.get('span.main').eq(0).click()
+    cy.get('span.choice1').should('have.length', 1)
+    cy.get('div.backdrop').click()
+    cy.get('span.choice1').should('not.exist')
+  })
+
+  it('applies choices to all MCQ fields - with MCQ definition without uid', () => {
+    cy.viewport(1200, 1200)
+
+    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
+
+    cy.get('label:contains("Instructions") + .ql-container > .ql-editor').as('instructions')
+    cy.get('label:contains("Wording") + .ql-container > .ql-editor').as('wording')
+
+    cy.get('@instructions').type('alpha/bravo/delta')
+    cy.get('@wording').type('Blah blah blah')
+
+    cy.get('button:contains("Add an MCQ field")').click()
+    cy.get('@wording').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 4, node, 4)
+    })
+    cy.get('button:contains("Cancel")').click()
+
+    cy.get('button:contains("Add an MCQ field")').click()
+    cy.get('@wording').find('p').then($el => {
+      const node = $el[0].lastChild
+      console.assert(node !== null)
+      selectRange(node, 5, node, 5)
+    })
+    cy.get('button:contains("Cancel")').click()
+
+    cy.get('button:contains("Multiple choices")').click()
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 0, node, 17)
+    })
+    cy.wait(100)
+    pressEscape()
+    notBusy()
+
+    cy.get('span.main').should('have.length', 2)
+    cy.get('span.main').eq(1).click()
+    cy.get('span.choice1').should('not.exist')
+    cy.get('div.backdrop').click()
+
+    cy.get('span.main').eq(0).click()
+    cy.get('span.choice1').should('not.exist')
+    cy.get('div.backdrop').click()
+
+    cy.get('button:contains("Apply choices to all MCQ fields")').click()
+    notBusy()
+
+    cy.get('span.main').should('have.length', 2)
+
+    cy.get('span.choice1').should('not.exist')
+    cy.get('span.main').eq(1).click()
+    cy.get('span.choice1').should('have.length', 1)
+    cy.get('div.backdrop').click()
+    cy.get('span.choice1').should('not.exist')
+
+    cy.get('span.choice1').should('not.exist')
+    cy.get('span.main').eq(0).click()
+    cy.get('span.choice1').should('have.length', 1)
+    cy.get('div.backdrop').click()
+    cy.get('span.choice1').should('not.exist')
+  })
+
+  it('does not crash when blanking the page number', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-6/new-exercise')
+
+    cy.get('label:contains("Page")').eq(1).next().type('{backspace}').should('have.value', '')
+    // Just check something to make sure the page did not show the "A bug happened" message
+    cy.get('label:contains("Page")').eq(1).next().type('7')
+    cy.get(':contains("not the one displayed")').should('exist')
   })
 })

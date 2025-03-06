@@ -1,20 +1,5 @@
-import { loadFixtures, login, notBusy, visit } from './utils'
+import { loadFixtures, login, notBusy, visit, selectRange, pressEnter } from './utils'
 
-
-function selectRange(startNode: Node, startOffset: number, endNode: Node, endOffset: number) {
-  cy.window().then(window => {
-    cy.document().then(document => {
-      var range = document.createRange()
-      range.setStart(startNode, startOffset)
-      range.setEnd(endNode, endOffset)
-
-      var sel = window.getSelection()
-      console.assert(sel !== null)
-      sel.removeAllRanges()
-      sel.addRange(range)
-    })
-  })
-}
 
 function screenshot(screenshotName: string, options: {clearSel: boolean} = {clearSel: true}) {
   if (options.clearSel) {
@@ -52,7 +37,7 @@ describe('Gabby', () => {
       selectRange(node, 0, node, 53)
     })
     cy.get('label:contains("Placeholder") + input').click().should('be.enabled').type('...')
-    cy.get('button:contains("OK")').click()
+    pressEnter()
 
     cy.get('button:contains("Full screen")').click()
     cy.get('span.main').eq(0).click()
@@ -78,7 +63,7 @@ describe('Gabby', () => {
       selectRange(node, 0, node, 73)
     })
     cy.get('label:contains("Placeholder") + input').click().should('be.enabled').type('...')
-    cy.get('button:contains("OK")').click()
+    pressEnter()
 
     cy.get('button:contains("Full screen")').click()
     cy.get('span.main').eq(0).click()
@@ -192,7 +177,7 @@ describe('Gabby', () => {
     cy.get('label:contains("Start") + input').should('have.value', '(')
     cy.get('label:contains("Stop") + input').should('have.value', ')')
     cy.get('label:contains("Placeholder") + input').click().type('…')
-    cy.get('button:contains("OK")').click()
+    pressEnter()
 
     cy.get('button:contains("Full screen")').click()
     screenshot('similar-mcqs-1')
@@ -217,7 +202,7 @@ describe('Gabby', () => {
     })
     cy.get('label:contains("Separators") + input').should('have.value', 'ou')
     cy.get('label:contains("Placeholder") + input').click().type('...')
-    cy.get('button:contains("OK")').click()
+    pressEnter()
     cy.get('div:contains("Show choices by default") > input').click()
     cy.get('span[title="2 lines per page"]').click()
     cy.get('button:contains("Full screen")').click()
@@ -250,7 +235,7 @@ describe('Gabby', () => {
     })
     cy.get('label:contains("Separators") + input').should('have.value', 'ou')
     cy.get('label:contains("Placeholder") + input').click().type('...')
-    cy.get('button:contains("OK")').click()
+    pressEnter()
     cy.get('div:contains("Show choices by default") > input').click()
     cy.get('span[title="2 lines per page"]').click()
     cy.get('button:contains("Full screen")').click()
@@ -277,5 +262,117 @@ describe('Gabby', () => {
     cy.get('div:contains("Words") > input').should('be.checked')
     cy.get('div:contains("1 item per line") > input').scrollIntoView().should('be.checked')
     screenshot('single-item-per-line-2')
+  })
+
+  it('allows bold and italic in MCQ choices in instructions', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+
+    cy.get('label:contains("Instructions") + .ql-container > .ql-editor').as('instructions')
+    cy.get('label:contains("Wording") + .ql-container > .ql-editor').as('wording')
+
+    cy.get('@instructions').click().type('{selectAll}Choose between A plain choice/An italic choice/A bold choice.', {delay: 0})
+    cy.get('@wording').click().type('{selectAll}...', {delay: 0})
+
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 33, node, 39)
+    })
+    cy.get('button[data-cy="format-italic"]').click()
+
+    cy.get('button:contains("Multiple choices")').click()
+    cy.get('@instructions').find('p').then($el => {
+      const startNode = $el[0].firstChild
+      console.assert(startNode !== null)
+      const endNode = $el[0].lastChild
+      console.assert(endNode !== null)
+      selectRange(startNode, 15, endNode, 21)
+    })
+    cy.get('label:contains("Separators") + input').should('have.value', '/')
+    cy.get('label:contains("Placeholder") + input').click().type('...')
+    pressEnter()
+    cy.get('choices2-blot > italic-blot').should('exist')
+    cy.get('italic-blot > choices2-blot').should('not.exist')
+    cy.get('@instructions').click()
+    cy.get('@instructions').find('choices2-blot').should('have.length', 1).then($el => {
+      const node = $el[0].lastChild
+      console.assert(node !== null)
+      selectRange(node, 10, node, 14)
+    })
+    cy.get('button[data-cy="format-bold"]').scrollIntoView().should('be.enabled').click()
+    cy.get('choices2-blot > bold-blot').should('exist')
+    cy.get('bold-blot > choices2-blot').should('not.exist')
+    cy.get('@instructions').find('choices2-blot').should('have.length', 1)
+
+    cy.get('span.main').click()
+    screenshot('mcq-in-instructions-with-formatted-choices-1')
+    cy.get('button:contains("Full screen")').click()
+    screenshot('mcq-in-instructions-with-formatted-choices-2')
+  })
+
+  it('allows bold and italic in MCQ placeholder in "Double: word -> MCQ"', () => {
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+
+    cy.get('label:contains("Instructions") + .ql-container > .ql-editor').as('instructions')
+    cy.get('label:contains("Wording") + .ql-container > .ql-editor').as('wording')
+
+    cy.get('@instructions').click().type('{selectAll}Choisis le bon verbe conjugué disez/dites.', {delay: 0})
+    cy.get('@wording').click().type('{selectAll}Vous (dire) toujours la vérité.', {delay: 0})
+
+    cy.get('@wording').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 7, node, 8)
+    })
+    cy.get('button[data-cy="format-bold"]').click()
+
+    cy.get('div:contains("Double: word → MCQ") > input').check()
+    cy.get('@wording').find('p').then($el => {
+      const startNode = $el[0].firstChild
+      console.assert(startNode !== null)
+      const endNode = $el[0].lastChild
+      console.assert(endNode !== null)
+      selectRange(startNode, 5, endNode, 3)
+    })
+    cy.get('mcq-placeholder-blot > bold-blot').should('exist')
+    cy.get('bold-blot > mcq-placeholder-blot').should('not.exist')
+    cy.get('@wording').find('mcq-placeholder-blot').should('have.length', 1)
+    cy.get('button:contains("Done")').click()
+
+    cy.get('mcq-placeholder-blot').then($el => {
+      const node = $el[0].lastChild
+      console.assert(node !== null)
+      selectRange(node, 0, node, 1)
+    })
+    cy.get('button[data-cy="format-italic"]').click()
+    cy.get('mcq-placeholder-blot > italic-blot').should('exist')
+    cy.get('italic-blot > mcq-placeholder-blot').should('not.exist')
+    cy.get('@wording').find('mcq-placeholder-blot').should('have.length', 1)
+
+    cy.get('button:contains("Multiple choices")').click()
+    cy.get('@instructions').find('p').then($el => {
+      const node = $el[0].firstChild
+      console.assert(node !== null)
+      selectRange(node, 30, node, 41)
+    })
+    cy.wait(100)  // @todo Understand why this wait is needed. (We have many other similar situations where it's not needed)
+    pressEnter()
+
+    cy.get('span.main').click()
+    screenshot('bold-in-mcq-placeholder-1')
+    cy.get('button:contains("Full screen")').click()
+    screenshot('bold-in-mcq-placeholder-2')
+  })
+
+  it("doesn't show vertical borders around line breaks in boxed items", () => {
+    visit('/project-xkopqm/textbook-klxufv/page-7/new-exercise')
+
+    cy.get('label:contains("Wording") + .ql-container > .ql-editor').type('This is a short sentence in a rectangle. This one is broken up in two half-rectangles. And this one spans three lines, so its middle part only has top and bottom borders.', {delay: 0})
+
+    cy.get('div:contains("Sentences") > input').check()
+    cy.get('div:contains("Boxed") > input').check()
+
+    cy.get('button:contains("Full screen")').click()
+    screenshot('no-vertical-border-around-line-breaks')
   })
 })

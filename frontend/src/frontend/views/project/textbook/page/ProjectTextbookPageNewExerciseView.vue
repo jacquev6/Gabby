@@ -83,14 +83,13 @@ async function changeDisplayedPage(newDisplayedPage: number) {
 }
 
 const watcherForModelTextbookPage = watchPausable(() => model.textbookPage, newTextbookPage => {
-  console.assert(newTextbookPage !== null)
   if (newTextbookPage === displayedPage.value) {
     router.replace({
       name: 'project-textbook-page-new-exercise',
       params: {page: newTextbookPage},
       query: {},
     })
-  } else {
+  } else if (newTextbookPage !== null) {
     router.replace({
       name: 'project-textbook-page-new-exercise',
       params: {

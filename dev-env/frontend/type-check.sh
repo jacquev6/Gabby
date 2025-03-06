@@ -28,7 +28,7 @@ if git \
       -e ': any$' -e ': any[^/]' \
       -e 'as any$' -e 'as any[^/]' \
       -e '@ts-ignore$' -e '@ts-ignore[^/]' \
-      -e '\<Number$' -e '\<Number[^.]' \
+      -e '\<Number$' -e '\<Number[^).]' \
       -e '\<String$' -e '\<String[^.]' \
       -e '\<Boolean$' -e '\<Boolean[^.]' \
       -e '\<Symbol$' -e '\<Symbol[^.(]' \

@@ -3,6 +3,8 @@ import { useFloating, arrow, shift } from '@floating-ui/vue'
 import { computed, ref, watch } from 'vue'
 import { useElementBounding } from '@vueuse/core'
 
+import closeWithKeyboard from './closeWithKeyboard'
+
 
 const props = defineProps<{
   backdropCovers1: string
@@ -20,13 +22,20 @@ const floatingContainer = ref<HTMLElement | null>(null)
 const floatingArrow = ref<HTMLElement | null>(null)
 const floatingContent = ref<HTMLElement | null>(null)
 
+let cancelClosingOnEscape: (() => void) | null = null
+
 function show(ref: HTMLElement) {
   inDom.value = true
   floatingReference.value = ref
+  console.assert(cancelClosingOnEscape === null)
+  cancelClosingOnEscape = closeWithKeyboard(hide, {withEscape: true, withEnter: true})
 }
 
 function hide() {
   inDom.value = false
+  console.assert(cancelClosingOnEscape !== null)
+  cancelClosingOnEscape()
+  cancelClosingOnEscape = null
 }
 
 watch(floatingContent, floatingContent => {
@@ -89,6 +98,7 @@ const backdropCoversBoundingRect2 = useElementBounding(backdropCovers2)
 
 const backdropStyles = computed(() => {
   const boundingRects = [backdropCoversBoundingRect1, backdropCoversBoundingRect2]
+  boundingRects.forEach(rect => rect.update())
 
   const top = Math.min(...boundingRects.map(rect => rect.top.value))
   const bottom = Math.max(...boundingRects.map(rect => rect.bottom.value))

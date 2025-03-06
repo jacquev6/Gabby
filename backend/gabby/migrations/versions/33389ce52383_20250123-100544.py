@@ -32,7 +32,10 @@ def upgrade():
             for field in ["_instructions", "_wording", "_example", "_clue", "_text_reference"]:
                 value = fix_ellipsis(getattr(exercise, field))
                 for insert_operation in value:
-                    assert "selectable" not in insert_operation["attributes"], ("Unhandled old 'selectable' attribute", exercise.id)  # None in real-life DB => don't need to migrate
+                    assert "selectable" not in insert_operation["attributes"], (
+                        "Unhandled old 'selectable' attribute",
+                        exercise.id,
+                    )  # None in real-life DB => don't need to migrate
                 setattr(exercise, field, value)
 
             exercise._rectangles = fix_ellipsis(exercise._rectangles)

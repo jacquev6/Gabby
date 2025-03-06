@@ -120,6 +120,9 @@ function test(name: string, paragraphs: Paragraph[], options: TestOptions = {}) 
     cy.mount(TricolorSection, {
       props: {
         paragraphs,
+        first: false,
+        centered: false,
+        tricolored: false,
         modelValue: {},
       }
     })

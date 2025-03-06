@@ -5,14 +5,14 @@ boto3  # AWS, used e.g. for database backups to S3
 click  # Command-line parsing
 fastapi  # API framework
 httpx  # For unit testing: https://fastapi.tiangolo.com/tutorial/testing/
+mypy  # Static type checker
 psycopg2-binary  # For PostgreSQL
 pyhumps  # Convert between cases
 pyjwt  # For authentication tokens
+PyPDF2  # Only for test fixtures for now
 python-multipart  # OAuth2 authentication uses multipart
 sqids  # Opaque IDs
 sqlalchemy  # Database ORM
 sqlalchemy-data-model-visualizer  # Draw database schema
 sqlalchemy-utils  # Database utilities
 uvicorn[standard]  # ASGI server
-
-PyPDF2  # Only for test fixtures for now

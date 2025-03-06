@@ -22,16 +22,28 @@ function recolor() {
   if (container.value !== null) {
     const tricolorables = Array.from(container.value.getElementsByClassName('tricolorable') as HTMLCollectionOf<HTMLElement>)
 
-    let colorIndex = -1
-    let previousOffsetLeft: number | null = null
+    type Line = { top: number, bottom: number, tricolorables: HTMLElement[] }
+    const lines: Line[] = []
 
     tricolorables.forEach(element => {
-      const offsetLeft = element.offsetLeft
-      if (previousOffsetLeft === null || offsetLeft <= previousOffsetLeft) {
-        colorIndex++
+      const { top, bottom } = element.getBoundingClientRect()
+      const line = lines.find(line => line.top < bottom && line.bottom > top)
+      if (line) {
+        line.top = Math.min(line.top, top)
+        line.bottom = Math.max(line.bottom, bottom)
+        line.tricolorables.push(element)
+      } else {
+        lines.push({ top, bottom, tricolorables: [element] })
       }
-      previousOffsetLeft = offsetLeft
-      element.style.color = colors[colorIndex % colors.length]
+    })
+
+    lines.sort((a, b) => a.top - b.top)
+
+    lines.forEach((line, i) => {
+      const color = colors[i % colors.length]
+      line.tricolorables.forEach(element => {
+        element.style.color = color
+      })
     })
   }
 }

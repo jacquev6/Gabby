@@ -23,14 +23,8 @@ def upgrade():
         sa.Column("username", sa.String(), nullable=True),
         sa.Column("hashed_password", sa.String(), nullable=True),
         sa.CheckConstraint("regexp_like(username, '^[-_A-Za-z0-9]+$')", name="check_username"),
-        sa.ForeignKeyConstraint(
-            ["created_by_id"],
-            ["users.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["updated_by_id"],
-            ["users.id"],
-        ),
+        sa.ForeignKeyConstraint(["created_by_id"], ["users.id"]),
+        sa.ForeignKeyConstraint(["updated_by_id"], ["users.id"]),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
@@ -41,14 +35,8 @@ def upgrade():
         sa.Column("created_by_id", sa.Integer(), nullable=False),
         sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
         sa.Column("updated_by_id", sa.Integer(), nullable=False),
-        sa.ForeignKeyConstraint(
-            ["created_by_id"],
-            ["users.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["updated_by_id"],
-            ["users.id"],
-        ),
+        sa.ForeignKeyConstraint(["created_by_id"], ["users.id"]),
+        sa.ForeignKeyConstraint(["updated_by_id"], ["users.id"]),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
@@ -59,10 +47,7 @@ def upgrade():
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
         sa.Column("created_by_id", sa.Integer(), nullable=False),
         sa.CheckConstraint("regexp_like(sha256, '^[0-9a-f]{64}$')", name="check_sha256_format"),
-        sa.ForeignKeyConstraint(
-            ["created_by_id"],
-            ["users.id"],
-        ),
+        sa.ForeignKeyConstraint(["created_by_id"], ["users.id"]),
         sa.PrimaryKeyConstraint("sha256"),
     )
     op.create_table(
@@ -74,18 +59,9 @@ def upgrade():
         sa.Column("created_by_id", sa.Integer(), nullable=True),
         sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
         sa.Column("updated_by_id", sa.Integer(), nullable=True),
-        sa.ForeignKeyConstraint(
-            ["created_by_id"],
-            ["users.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["prev_id"],
-            ["pings.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["updated_by_id"],
-            ["users.id"],
-        ),
+        sa.ForeignKeyConstraint(["created_by_id"], ["users.id"]),
+        sa.ForeignKeyConstraint(["prev_id"], ["pings.id"]),
+        sa.ForeignKeyConstraint(["updated_by_id"], ["users.id"]),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
@@ -97,14 +73,8 @@ def upgrade():
         sa.Column("created_by_id", sa.Integer(), nullable=False),
         sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
         sa.Column("updated_by_id", sa.Integer(), nullable=False),
-        sa.ForeignKeyConstraint(
-            ["created_by_id"],
-            ["users.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["updated_by_id"],
-            ["users.id"],
-        ),
+        sa.ForeignKeyConstraint(["created_by_id"], ["users.id"]),
+        sa.ForeignKeyConstraint(["updated_by_id"], ["users.id"]),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
@@ -120,39 +90,21 @@ def upgrade():
         "adaptations__fwft",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("placeholder", sa.String(), nullable=False),
-        sa.ForeignKeyConstraint(
-            ["id"],
-            ["adaptations.id"],
-        ),
+        sa.ForeignKeyConstraint(["id"], ["adaptations.id"]),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
-        "adaptations__g",
-        sa.Column("id", sa.Integer(), nullable=False),
-        sa.ForeignKeyConstraint(
-            ["id"],
-            ["adaptations.id"],
-        ),
-        sa.PrimaryKeyConstraint("id"),
+        "adaptations__g", sa.Column("id", sa.Integer(), nullable=False), sa.ForeignKeyConstraint(["id"], ["adaptations.id"]), sa.PrimaryKeyConstraint("id")
     )
     op.create_table(
         "adaptations__mcii",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("placeholder", sa.String(), nullable=False),
-        sa.ForeignKeyConstraint(
-            ["id"],
-            ["adaptations.id"],
-        ),
+        sa.ForeignKeyConstraint(["id"], ["adaptations.id"]),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
-        "adaptations__mciw",
-        sa.Column("id", sa.Integer(), nullable=False),
-        sa.ForeignKeyConstraint(
-            ["id"],
-            ["adaptations.id"],
-        ),
-        sa.PrimaryKeyConstraint("id"),
+        "adaptations__mciw", sa.Column("id", sa.Integer(), nullable=False), sa.ForeignKeyConstraint(["id"], ["adaptations.id"]), sa.PrimaryKeyConstraint("id")
     )
     op.create_table(
         "adaptations__st",
@@ -160,10 +112,7 @@ def upgrade():
         sa.Column("punctuation", sa.Boolean(), nullable=False),
         sa.Column("words", sa.Boolean(), nullable=False),
         sa.Column("colors", sa.Integer(), nullable=False),
-        sa.ForeignKeyConstraint(
-            ["id"],
-            ["adaptations.id"],
-        ),
+        sa.ForeignKeyConstraint(["id"], ["adaptations.id"]),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
@@ -173,14 +122,8 @@ def upgrade():
         sa.Column("name", sa.String(), nullable=False),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
         sa.Column("created_by_id", sa.Integer(), nullable=False),
-        sa.ForeignKeyConstraint(
-            ["created_by_id"],
-            ["users.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["pdf_file_sha256"],
-            ["pdf_files.sha256"],
-        ),
+        sa.ForeignKeyConstraint(["created_by_id"], ["users.id"]),
+        sa.ForeignKeyConstraint(["pdf_file_sha256"], ["pdf_files.sha256"]),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
@@ -196,18 +139,9 @@ def upgrade():
         sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
         sa.Column("updated_by_id", sa.Integer(), nullable=False),
         sa.CheckConstraint("regexp_like(isbn, '^[0-9]+$')", name="check_isbn_format"),
-        sa.ForeignKeyConstraint(
-            ["created_by_id"],
-            ["users.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["project_id"],
-            ["projects.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["updated_by_id"],
-            ["users.id"],
-        ),
+        sa.ForeignKeyConstraint(["created_by_id"], ["users.id"]),
+        sa.ForeignKeyConstraint(["project_id"], ["projects.id"]),
+        sa.ForeignKeyConstraint(["updated_by_id"], ["users.id"]),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("id", "project_id"),
     )
@@ -228,29 +162,12 @@ def upgrade():
         sa.Column("created_by_id", sa.Integer(), nullable=False),
         sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
         sa.Column("updated_by_id", sa.Integer(), nullable=False),
-        sa.CheckConstraint(
-            "(textbook_id IS NULL) = (textbook_page IS NULL)", name="textbook_id_textbook_page_consistently_null"
-        ),
-        sa.ForeignKeyConstraint(
-            ["adaptation_id"],
-            ["adaptations.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["created_by_id"],
-            ["users.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["project_id", "textbook_id"],
-            ["textbooks.project_id", "textbooks.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["project_id"],
-            ["projects.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["updated_by_id"],
-            ["users.id"],
-        ),
+        sa.CheckConstraint("(textbook_id IS NULL) = (textbook_page IS NULL)", name="textbook_id_textbook_page_consistently_null"),
+        sa.ForeignKeyConstraint(["adaptation_id"], ["adaptations.id"]),
+        sa.ForeignKeyConstraint(["created_by_id"], ["users.id"]),
+        sa.ForeignKeyConstraint(["project_id", "textbook_id"], ["textbooks.project_id", "textbooks.id"]),
+        sa.ForeignKeyConstraint(["project_id"], ["projects.id"]),
+        sa.ForeignKeyConstraint(["updated_by_id"], ["users.id"]),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("adaptation_id"),
         sa.UniqueConstraint("textbook_id", "textbook_page", "number"),
@@ -267,22 +184,10 @@ def upgrade():
         sa.Column("created_by_id", sa.Integer(), nullable=False),
         sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
         sa.Column("updated_by_id", sa.Integer(), nullable=False),
-        sa.ForeignKeyConstraint(
-            ["created_by_id"],
-            ["users.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["pdf_file_sha256"],
-            ["pdf_files.sha256"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["textbook_id"],
-            ["textbooks.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["updated_by_id"],
-            ["users.id"],
-        ),
+        sa.ForeignKeyConstraint(["created_by_id"], ["users.id"]),
+        sa.ForeignKeyConstraint(["pdf_file_sha256"], ["pdf_files.sha256"]),
+        sa.ForeignKeyConstraint(["textbook_id"], ["textbooks.id"]),
+        sa.ForeignKeyConstraint(["updated_by_id"], ["users.id"]),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
@@ -294,18 +199,9 @@ def upgrade():
         sa.Column("created_by_id", sa.Integer(), nullable=False),
         sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.text("now()"), nullable=False),
         sa.Column("updated_by_id", sa.Integer(), nullable=False),
-        sa.ForeignKeyConstraint(
-            ["created_by_id"],
-            ["users.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["exercise_id"],
-            ["exercises.id"],
-        ),
-        sa.ForeignKeyConstraint(
-            ["updated_by_id"],
-            ["users.id"],
-        ),
+        sa.ForeignKeyConstraint(["created_by_id"], ["users.id"]),
+        sa.ForeignKeyConstraint(["exercise_id"], ["exercises.id"]),
+        sa.ForeignKeyConstraint(["updated_by_id"], ["users.id"]),
         sa.PrimaryKeyConstraint("id"),
     )
     # ### end Alembic commands ###

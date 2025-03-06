@@ -21,6 +21,7 @@ from mydantic import PydanticBase, PydanticField
 
 # Tests for this code are in an other file ('.tests') to break a circular dependency with '..testing'
 
+
 # https://stackoverflow.com/a/17576095/905845
 class WriteOnlyProperty(object):
     def __init__(self, func):
@@ -38,15 +39,15 @@ class User(OrmBase):
     # Can't use 'CreatedUpdatedByAtMixin' because of circular dependency
     created_at: orm.Mapped[datetime.datetime] = orm.mapped_column(sql.DateTime(timezone=True), server_default=sql.func.now())
     created_by_id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey("users.id"))
-    created_by: orm.Mapped['User'] = orm.relationship(foreign_keys=[created_by_id], remote_side=[id], post_update=True)
+    created_by: orm.Mapped["User"] = orm.relationship(foreign_keys=[created_by_id], remote_side=[id], post_update=True)
     updated_at: orm.Mapped[datetime.datetime] = orm.mapped_column(sql.DateTime(timezone=True), server_default=sql.func.now(), onupdate=sql.func.now())
     updated_by_id: orm.Mapped[int] = orm.mapped_column(sql.ForeignKey("users.id"))
-    updated_by: orm.Mapped['User'] = orm.relationship(foreign_keys=[updated_by_id], remote_side=[id], post_update=True)
+    updated_by: orm.Mapped["User"] = orm.relationship(foreign_keys=[updated_by_id], remote_side=[id], post_update=True)
 
     username: orm.Mapped[str | None] = orm.mapped_column()
     hashed_password: orm.Mapped[str | None] = orm.mapped_column()
 
-    email_addresses: orm.Mapped[list['UserEmailAddress']] = orm.relationship("UserEmailAddress", back_populates="user")
+    email_addresses: orm.Mapped[list["UserEmailAddress"]] = orm.relationship("UserEmailAddress", back_populates="user")
 
     __table_args__ = (
         # NEVER allow '@' in usernames, to avoid confusion with email addresses
@@ -110,34 +111,26 @@ def authenticate(session, *, username, clear_text_password):
 
 def make_access_token(user: User, validity: datetime.timedelta):
     valid_until = datetime.datetime.now(tz=datetime.timezone.utc) + validity
-    token = {
-        "userId": user.id,
-        "validUntil": valid_until.isoformat(),
-    }
+    token = {"userId": user.id, "validUntil": valid_until.isoformat()}
     return (jwt.encode(token, settings.SECRET_KEY, algorithm="HS256"), valid_until)
 
 
 def authentication_dependable(
-    session: SessionDependable,
-    credentials: Annotated[OAuth2PasswordRequestForm, Depends()],
-    options: Annotated[str | None, Form()] = None,
+    session: SessionDependable, credentials: Annotated[OAuth2PasswordRequestForm, Depends()], options: Annotated[str | None, Form()] = None
 ):
     user = authenticate(session, username=credentials.username, clear_text_password=credentials.password)
     if user is None:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Incorrect username or password")
 
     default_validity = datetime.timedelta(days=365)  # @todo Reduce validity (long validity requested by client during development to ease testing)
+
     class Options(PydanticBase):
         validity: Annotated[datetime.timedelta, PydanticField(strict=False)] = default_validity
 
     options = Options(**({} if options is None else json.loads(options)))
     options.validity = min(options.validity, default_validity)
     (access_token, valid_until) = make_access_token(user, options.validity)
-    return {
-        "access_token": access_token,
-        "valid_until": valid_until,
-        "token_type": "bearer",
-    }
+    return {"access_token": access_token, "valid_until": valid_until, "token_type": "bearer"}
 
 
 AuthenticationDependable = Annotated[dict, Depends(authentication_dependable)]
@@ -160,6 +153,7 @@ def get_optional_user_id_from_token(token: str | None):
             else:
                 return token["userId"]
 
+
 def get_optional_user_from_token(session: Session, token: str | None):
     user_id = get_optional_user_id_from_token(token)
 
@@ -175,8 +169,7 @@ def get_optional_user_from_token(session: Session, token: str | None):
 
 
 def optional_auth_bearer_dependable(
-    session: SessionDependable,
-    token: Annotated[str | None, Depends(OAuth2PasswordBearer(tokenUrl="token", auto_error=False))],
+    session: SessionDependable, token: Annotated[str | None, Depends(OAuth2PasswordBearer(tokenUrl="token", auto_error=False))]
 ):
     return get_optional_user_from_token(session, token)
 
@@ -198,10 +191,7 @@ def mandatory_auth_bearer_dependable(user: OptionalAuthBearerDependable):
 MandatoryAuthBearerDependable = Annotated[User, Depends(mandatory_auth_bearer_dependable)]
 
 
-def mandatory_auth_token_dependable(
-    session: SessionDependable,
-    token: str,
-):
+def mandatory_auth_token_dependable(session: SessionDependable, token: str):
     make_user_mandatory(get_optional_user_from_token(session, token))
 
 
@@ -218,24 +208,14 @@ class UsersResource:
 
     sqids = make_sqids(singular_name)
 
-    def get_item(
-        self,
-        id,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
+    def get_item(self, id, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
         if id == "current":
             return wrap(authenticated_user)
         else:
             return get_item(session, User, UsersResource.sqids.decode(id)[0])
 
     @contextmanager
-    def save_item(
-        self,
-        item,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
+    def save_item(self, item, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
         if unwrap(item) != authenticated_user:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You can only edit your own user")
         yield

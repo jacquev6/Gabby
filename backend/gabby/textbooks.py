@@ -34,20 +34,19 @@ class Textbook(OrmBase, CreatedUpdatedByAtMixin):
 
     sections: orm.Mapped[list["Section"]] = orm.relationship(back_populates="textbook")
     exercises: orm.Mapped[list["Exercise"]] = orm.relationship(
-        back_populates="textbook",
-        cascade="all, delete-orphan",
-        foreign_keys="Exercise.textbook_id",
-        order_by="[Exercise.textbook_page, Exercise.number]",
+        back_populates="textbook", cascade="all, delete-orphan", foreign_keys="Exercise.textbook_id", order_by="[Exercise.textbook_page, Exercise.number]"
     )
 
     @property
     def suggested_items_separators(self):
         # Filtering in memory exercises are already loaded
-        return sorted(set(
-            exercise.adaptation.items.separator
-            for exercise in self.exercises
-            if exercise.adaptation.items is not None and exercise.adaptation.items.kind == "separated"
-        ))
+        return sorted(
+            set(
+                exercise.adaptation.items.separator
+                for exercise in self.exercises
+                if exercise.adaptation.items is not None and exercise.adaptation.items.kind == "separated"
+            )
+        )
 
 
 class TextbooksResource:
@@ -60,18 +59,10 @@ class TextbooksResource:
 
     sqids = make_sqids(singular_name)
 
-    def create_item(
-        self,
-        project,
-        title,
-        publisher,
-        year,
-        isbn,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
+    def create_item(self, project, title, publisher, year, isbn, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
         return create_item(
-            session, Textbook,
+            session,
+            Textbook,
             project=project,
             title=title,
             publisher=publisher,
@@ -81,41 +72,20 @@ class TextbooksResource:
             updated_by=authenticated_user,
         )
 
-    def get_item(
-        self,
-        id,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
+    def get_item(self, id, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
         return get_item(session, Textbook, TextbooksResource.sqids.decode(id)[0])
 
-    def get_page(
-        self,
-        first_index,
-        page_size,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
+    def get_page(self, first_index, page_size, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
         query = sql.select(Textbook)
         return get_page(session, query, first_index, page_size)
 
     @contextmanager
-    def save_item(
-        self,
-        item,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
+    def save_item(self, item, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
         yield
         item.updated_by = authenticated_user
         save_item(session, item)
 
-    def delete_item(
-        self,
-        item,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
+    def delete_item(self, item, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
         delete_item(session, item)
 
 
@@ -158,7 +128,8 @@ class SectionsResource:
         authenticated_user: MandatoryAuthBearerDependable,
     ):
         return create_item(
-            session, Section,
+            session,
+            Section,
             textbook=textbook,
             pdf_file=pdf_file,
             textbook_start_page=textbook_start_page,
@@ -168,41 +139,20 @@ class SectionsResource:
             updated_by=authenticated_user,
         )
 
-    def get_item(
-        self,
-        id,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
+    def get_item(self, id, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
         return get_item(session, Section, SectionsResource.sqids.decode(id)[0])
 
-    def get_page(
-        self,
-        first_index,
-        page_size,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
+    def get_page(self, first_index, page_size, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
         query = sql.select(Section)
         return get_page(session, query, first_index, page_size)
 
     @contextmanager
-    def save_item(
-        self,
-        item,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
+    def save_item(self, item, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
         yield
         item.updated_by = authenticated_user
         save_item(session, item)
 
-    def delete_item(
-        self,
-        item,
-        session: SessionDependable,
-        authenticated_user: MandatoryAuthBearerDependable,
-    ):
+    def delete_item(self, item, session: SessionDependable, authenticated_user: MandatoryAuthBearerDependable):
         delete_item(session, item)
 
 

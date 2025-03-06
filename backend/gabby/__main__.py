@@ -16,6 +16,7 @@ import sqlalchemy as sql
 import sqlalchemy_data_model_visualizer
 import sqlalchemy_utils.functions
 
+from . import adaptation
 from . import database_utils
 from . import deltas
 from . import exercises
@@ -40,6 +41,7 @@ assert parsed_database_url.scheme == "postgresql+psycopg2"
 
 parsed_database_backups_url = urlparse(settings.DATABASE_BACKUPS_URL)
 
+
 @main.command()
 def backup_database():
     now = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -50,6 +52,7 @@ def backup_database():
 
     pg_dump = subprocess.run(
         [
+            # fmt: off
             "pg_dump",
             "--host", parsed_database_url.hostname,
             "--username", parsed_database_url.username,
@@ -57,6 +60,7 @@ def backup_database():
             "--dbname", parsed_database_url.path[1:],
             "--file", "-",
             "--create", "--column-inserts", "--quote-all-identifiers",
+            # fmt: on
         ],
         env=dict(os.environ, PGPASSWORD=parsed_database_url.password),
         check=True,
@@ -129,18 +133,20 @@ def restore_database(backup_url, yes, patch_according_to_settings):
         sql = re.sub(r" Owner: \w+", f" Owner: {parsed_database_url.username}", sql)
         sql = re.sub(r"-- Name: \w+; Type: DATABASE;", f"-- Name: {parsed_database_url.path[1:]}; Type: DATABASE;", sql)
         # Postgres commands
-        sql = re.sub(r"connect \"\w+\"", f"connect \"{parsed_database_url.path[1:]}\"", sql)
+        sql = re.sub(r"connect \"\w+\"", f'connect "{parsed_database_url.path[1:]}"', sql)
         # Actual SQL
-        sql = re.sub(r" OWNER TO \"\w+\";", f" OWNER TO \"{parsed_database_url.username}\";", sql)
-        sql = re.sub(r"DATABASE \"\w+\"", f"DATABASE \"{parsed_database_url.path[1:]}\"", sql)
+        sql = re.sub(r" OWNER TO \"\w+\";", f' OWNER TO "{parsed_database_url.username}";', sql)
+        sql = re.sub(r"DATABASE \"\w+\"", f'DATABASE "{parsed_database_url.path[1:]}"', sql)
 
     subprocess.run(
         [
+            # fmt: off
             "psql",
             "--host", parsed_placeholder_database_url.hostname,
             "--username", parsed_placeholder_database_url.username,
             "--no-password",
             "--dbname", parsed_placeholder_database_url.path[1:],
+            # fmt: on
         ],
         env=dict(os.environ, PGPASSWORD=parsed_placeholder_database_url.password),
         check=True,
@@ -166,12 +172,14 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
     # Waste data to avoid issues with copyrighted material (extracted from textbooks)
     def waste_char(c):
         return {
+            # fmt: off
             # Keep "abcdef" unchanged for lists (hoping no list is longer than 6 items)
             # Keep "ou" unchanged for French separator2
             "I": "A", "Y": "A",
             "G": "B", "H": "F", "J": "B", "K": "F", "L": "B", "M": "B", "N": "B", "P": "F", "Q": "B", "R": "B", "S": "C", "T": "B", "V": "F", "W": "F", "X": "B", "Z": "C",
             "i": "a", "y": "a",
             "g": "b", "h": "f", "j": "b", "k": "f", "l": "b", "m": "b", "n": "b", "p": "f", "q": "b", "r": "b", "s": "c", "t": "b", "v": "f", "w": "f", "x": "b", "z": "c",
+            # fmt: on
         }.get(c, c)
 
     def waste_string(s):
@@ -180,16 +188,8 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
     def waste_delta(delta):
         attributes = delta.attributes
         if "choices2" in attributes:
-            attributes = {
-                "choices2": {
-                    k: waste_string(v)
-                    for k, v in attributes["choices2"].items()
-                }
-            }
-        return deltas.TextInsertOp(
-            insert=waste_string(delta.insert),
-            attributes=attributes,
-        )
+            attributes = {"choices2": {k: waste_string(v) if v is not None else None for k, v in attributes["choices2"].items()}}
+        return deltas.TextInsertOp(insert=waste_string(delta.insert), attributes=attributes)
 
     def waste_deltas(deltas):
         return [waste_delta(delta) for delta in deltas]
@@ -206,19 +206,7 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
             adaptation=exercise.adaptation,
         )
 
-    def renderable_repr(section):
-        return (
-            repr(section)
-            .replace("Paragraph(", "r.Paragraph(")
-            .replace("Section(", "r.Section(")
-            .replace("Pagelet(", "r.Pagelet(")
-            .replace("Text(", "r.Text(")
-            .replace("Whitespace(", "r.Whitespace(")
-            .replace("FreeTextInput(", "r.FreeTextInput(")
-            .replace("MultipleChoicesInput(", "r.MultipleChoicesInput(")
-            .replace("SelectableInput(", "r.SelectableInput(")
-            .replace("PassiveSequence(", "r.PassiveSequence(")
-        )
+    renderable_repr = adaptation.AdaptationTestCase.renderable_repr
 
     def gen(batch_index, exercises_batch):
         yield "# WARNING: this file is generated (from database content). Manual changes will be lost."
@@ -226,8 +214,8 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
         yield "from .. import exercises as e"
         yield "from .. import renderable as r"
         yield "from ..adaptation import AdaptationTestCase"
-        yield "from ..api_models import Adaptation, CharactersItems, TokensItems, SentencesItems, ManualItems, Selectable, PredefinedMcq"
-        yield "from ..deltas import TextInsertOp"
+        yield "from ..api_models import Adaptation, CharactersItems, TokensItems, SentencesItems, ManualItems, SeparatedItems, Selectable, PredefinedMcq"
+        yield "from ..deltas import TextInsertOp, TextInsertOpAttributes, Choices2"
         yield ""
         yield ""
         yield f"class DatabaseAsUnitTests{batch_index:04}(AdaptationTestCase):"
@@ -238,7 +226,10 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
             yield f"    def test_exercise_{exercise.id:04}(self):"
 
             exercise = waste_exercise(exercise)
-            adapted = exercise.make_adapted()
+            try:
+                adapted = exercise.make_adapted()
+            except AssertionError:
+                adapted = None
 
             yield f"        self.do_test("
             yield f"            e.Exercise("
@@ -251,30 +242,31 @@ def dump_database_as_unit_tests(output_module, tests_per_file, limit, format):
             yield f"                text_reference={repr(exercise.text_reference)},"
             yield f"                adaptation={repr(exercise.adaptation)},"
             yield f"            ),"
-            yield f"            r.Exercise("
-            yield f"                number={repr(exercise.number)},"
-            yield f"                textbook_page={repr(exercise.textbook_page)},"
-            yield f"                pagelets=["
-            for pagelet in adapted.pagelets:
-                yield f"                    r.Pagelet("
-                yield f"                        instructions={renderable_repr(pagelet.instructions)},"
-                yield f"                        wording={renderable_repr(pagelet.wording)},"
-                yield f"                    ),"
-            yield f"                ],"
-            yield f"            ),"
+            if adapted is None:
+                yield f"            None,"
+            else:
+                yield f"            {renderable_repr(adapted)},"
             yield f"        )"
             yield f""
 
     database_engine = database_utils.create_engine(settings.DATABASE_URL)
 
     with orm.Session(database_engine) as session:
-        for batch_index, exercises_batch in enumerate(itertools.batched(limit_query(session.query(orm_models.Exercise).order_by(orm_models.Exercise.id)), tests_per_file)):
+        for batch_index, exercises_batch in enumerate(
+            itertools.batched(limit_query(session.query(orm_models.Exercise).order_by(orm_models.Exercise.id)), tests_per_file)
+        ):
             test = "\n".join(gen(batch_index, exercises_batch))
             if format:
                 # Black does not have a Python API, so use it as a command-line tool.
                 # https://black.readthedocs.io/en/stable/faq.html#does-black-have-an-api
                 t0 = time.perf_counter()
-                test = subprocess.run(["black", "--line-length", "120", "-"], universal_newlines=True, input=test, check=True, capture_output=True).stdout
+                test = subprocess.run(
+                    ["black", "--line-length", "160", "--skip-magic-trailing-comma", "--fast", "-"],
+                    universal_newlines=True,
+                    input=test,
+                    check=True,
+                    capture_output=True,
+                ).stdout
                 print(f"Formatted batch {batch_index} in {time.perf_counter() - t0:.2f}s", file=sys.stderr)
             with open(f"gabby/{output_module}/tests_{batch_index:04}.py", "w") as f:
                 f.write(test)

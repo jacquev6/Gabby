@@ -38,30 +38,14 @@ app = FastAPI(
 )
 
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
 
-app.include_router(
-    make_jsonapi_router(
-        resources=api_resources.resources,
-        polymorphism=api_resources.polymorphism,
-        batching=True,
-    ),
-    prefix="/api",
-)
+app.include_router(make_jsonapi_router(resources=api_resources.resources, polymorphism=api_resources.polymorphism, batching=True), prefix="/api")
 
 
 @app.middleware("http")
-async def log_requests_and_responses(
-    request: fastapi.Request,
-    call_next
-):
+async def log_requests_and_responses(request: fastapi.Request, call_next):
     if (request.method, request.url.path) in [
         ("POST", "/api/token"),  # Don't log clear-text passwords
         ("POST", "/api/parsedExercises"),  # Reduce volumes of logs of low interest
@@ -70,7 +54,7 @@ async def log_requests_and_responses(
     else:
         authorization_header = request.headers.get("authorization")
         if authorization_header is not None and authorization_header.startswith("Bearer "):
-            user = get_optional_user_id_from_token(authorization_header[len("Bearer "):])
+            user = get_optional_user_id_from_token(authorization_header[len("Bearer ") :])
         else:
             user = None
         body = await request.body()
@@ -82,33 +66,21 @@ async def log_requests_and_responses(
 
 
 @app.get("/api/project-{project_id}.html")
-def export_project(
-    project_id: str,
-    session: SessionDependable,
-    authenticated_user: MandatoryAuthTokenDependable,
-    download: bool = True,
-):
+def export_project(project_id: str, session: SessionDependable, authenticated_user: MandatoryAuthTokenDependable, download: bool = True):
     project = session.get(Project, ProjectsResource.sqids.decode(project_id)[0])
-    data = json.dumps(dict(
-        projectId=project.id,
-        exercises=[
-            exercise.make_adapted().model_dump()
-            for exercise in project.exercises
-        ],
-    )).replace("\\", "\\\\").replace('"', "\\\"")
+    data = (
+        json.dumps(dict(projectId=project.id, exercises=[exercise.make_adapted().model_dump(exclude_unset=True) for exercise in project.exercises]))
+        .replace("\\", "\\\\")
+        .replace('"', '\\"')
+    )
     with open("gabby/templates/adapted/index.html") as f:
         template = f.read()
 
-    headers = {
-        "Content-Type": "text/html",
-    }
+    headers = {"Content-Type": "text/html"}
     if download:
         headers["Content-Disposition"] = f'attachment; filename="{project.title}.html"'
 
-    return HTMLResponse(
-        content=template.replace("{{ data }}", data),
-        headers=headers,
-    )
+    return HTMLResponse(content=template.replace("{{ data }}", data), headers=headers)
 
 
 @app.post("/api/token")
@@ -118,6 +90,7 @@ def login(authentication: AuthenticationDependable):
 
 # Test-only URL. Not in 'api/...' to avoid accidentally exposing it.
 if settings.EXPOSE_RESET_FOR_TESTS_URL:
+
     @app.post("/reset-for-tests/yes-im-sure")
     def reset_for_tests(session: SessionDependable, fixtures: str = None):
         load_fixtures(session, [] if fixtures is None else fixtures.split(","))

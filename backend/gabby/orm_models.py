@@ -6,14 +6,4 @@ from .textbooks import Section, Textbook
 from .users import User, UserEmailAddress
 
 
-all_models = [
-    Exercise,
-    PdfFile,
-    PdfFileNaming,
-    Ping,
-    Project,
-    Section,
-    Textbook,
-    User,
-    UserEmailAddress,
-]
+all_models = [Exercise, PdfFile, PdfFileNaming, Ping, Project, Section, Textbook, User, UserEmailAddress]

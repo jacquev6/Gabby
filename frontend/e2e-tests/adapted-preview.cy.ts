@@ -1,6 +1,5 @@
 import { loadFixtures, login, notBusy, visit } from './utils'
 
-
 describe('Gabby', () => {
   before(console.clear)
 

@@ -6,14 +6,11 @@ import type { Paragraph } from '$adapted/types'
 import Renderable from './Renderable.vue'
 
 
-const props = withDefaults(defineProps<{
+const props = defineProps<{
   paragraphs: Paragraph[]
-  centered?: boolean
-  first?: boolean
-}>(), {
-  centered: false,
-  first: false,
-})
+  centered: boolean
+  first: boolean
+}>()
 
 const models = defineModel<Record<string, any/* @todo Type */>>({
   required: true,
@@ -32,7 +29,7 @@ const style = computed(() => ({
 
 <template>
   <p v-for="(paragraph, paragraphIndex) in paragraphs" :style :class="{first: first && paragraphIndex === 0}">
-    <Renderable v-for="(node, nodeIndex) in paragraph.contents" :node="node" v-model="models" :modelKey="[paragraphIndex, nodeIndex]" />
+    <Renderable v-for="(node, nodeIndex) in paragraph.contents" :node="node" v-model="models" :nested="false" :modelKey="[paragraphIndex, nodeIndex]" />
   </p>
 </template>
 
@@ -44,6 +41,6 @@ p {
 }
 
 p.first {
-  margin-top: -24px;
+  margin-top: -19px;
 }
 </style>

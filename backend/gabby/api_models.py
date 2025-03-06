@@ -13,20 +13,25 @@ class CreatedByAtMixin:
     created_at: Annotated[datetime.datetime, Computed()]
     created_by: Annotated[User, Computed()]
 
+
 class UpdatedByAtMixin:
     updated_at: Annotated[datetime.datetime, Computed()]
     updated_by: Annotated[User, Computed()]
 
+
 class CreatedUpdatedByAtMixin(CreatedByAtMixin, UpdatedByAtMixin):
     pass
+
 
 class OptionalCreatedByAtMixin:
     created_at: Annotated[datetime.datetime, Computed()]
     created_by: Annotated[User | None, Computed()] = None
 
+
 class OptionalUpdatedByAtMixin:
     updated_at: Annotated[datetime.datetime, Computed()]
     updated_by: Annotated[User | None, Computed()] = None
+
 
 class OptionalCreatedUpdatedByAtMixin(OptionalCreatedByAtMixin, OptionalUpdatedByAtMixin):
     pass
@@ -91,14 +96,17 @@ class Point(PydanticBase):
     x: float
     y: float
 
+
 class PdfRectangle(PydanticBase):
     pdf_sha256: str
     pdf_page: int
     # @todo Migrate all coordinates to "relative"
+    # fmt: off
     coordinates: Literal[
         "pdfjs",  # As returned by PdfJs
         "relative",  # To the size of the page, in the range [0, 1], with (0, 0) at the top-left corner.
     ]
+    # fmt: on
     start: Point
     stop: Point
     text: str | None
@@ -111,29 +119,37 @@ class CharactersItems(PydanticBase):
     kind: Literal["characters"]
     letters: bool
 
+
 class TokensItems(PydanticBase):
     kind: Literal["tokens"]
     words: bool
     punctuation: bool
 
+
 class SentencesItems(PydanticBase):
     kind: Literal["sentences"]
 
+
 class ManualItems(PydanticBase):
     kind: Literal["manual"]
+
 
 class SeparatedItems(PydanticBase):
     kind: Literal["separated"]
     separator: str
 
+
+Items = CharactersItems | TokensItems | SentencesItems | ManualItems | SeparatedItems
+
+
 class Selectable(PydanticBase):
     colors: list[str]
 
-Items = CharactersItems | TokensItems | SentencesItems | ManualItems | SeparatedItems
 
 class PredefinedMcq(PydanticBase):
     grammatical_gender: bool
     grammatical_number: bool
+
 
 class Adaptation(PydanticBase):
     kind: Literal["generic", "fill-with-free-text", "multiple-choices"]
@@ -149,6 +165,7 @@ class Adaptation(PydanticBase):
     items_are_repeated_with_mcq: bool
     show_arrow_before_mcq_fields: bool
     show_mcq_choices_by_default: bool
+
 
 class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
     project: Annotated[Project, Constant()]
@@ -176,14 +193,12 @@ class Exercise(PydanticBase, CreatedUpdatedByAtMixin):
         items_are_boxed=False,
         items_have_mcq_beside=False,
         items_have_mcq_below=False,
-        items_have_predefined_mcq=PredefinedMcq(
-            grammatical_gender=False,
-            grammatical_number=False,
-        ),
+        items_have_predefined_mcq=PredefinedMcq(grammatical_gender=False, grammatical_number=False),
         items_are_repeated_with_mcq=False,
         show_arrow_before_mcq_fields=False,
         show_mcq_choices_by_default=False,
     )
+
 
 class ParsedExercise(PydanticBase):
     number: Annotated[str, WriteOnly()]

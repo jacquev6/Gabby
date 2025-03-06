@@ -27,6 +27,9 @@ const props = {
     {contents: [...makeSentence('A'), {kind: 'whitespace'}, ...makeSentence('B'), {kind: 'whitespace'}, ...makeSentence('C')]},
     {contents: [...makeSentence('D'), {kind: 'whitespace'}, ...makeSentence('E'), {kind: 'whitespace'}, ...makeSentence('F')]},
   ] as Paragraph[],
+  first: false,
+  centered: false,
+  tricolored: false,
   paragraphIndexOffset: 0,
   modelValue: {} as Record<string, any/* @todo Type */>,
 }
@@ -92,16 +95,21 @@ describe('TricolorSection', () => {
     cy.mount(TricolorSection, mountOptions)
     cy.viewport(1140, 600)
 
-    cy.vue().then((w) => w.setProps({paragraphs: [{contents: [
-      ...makeSentence('A', 10), {kind: 'whitespace'},
-      ...makeSentence('B', 10), {kind: 'whitespace'},
-      ...makeSentence('C', 10), {kind: 'whitespace'},
-      ...makeSentence('D', 10), {kind: 'whitespace'},
-      ...makeSentence('E', 10), {kind: 'whitespace'},
-      ...makeSentence('F', 10), {kind: 'whitespace'},
-      ...makeSentence('G', 10), {kind: 'whitespace'},
-      ...makeSentence('H', 10)
-    ]}]}))
+    cy.vue().then((w) => w.setProps({
+      paragraphs: [{contents: [
+        ...makeSentence('A', 10), {kind: 'whitespace'},
+        ...makeSentence('B', 10), {kind: 'whitespace'},
+        ...makeSentence('C', 10), {kind: 'whitespace'},
+        ...makeSentence('D', 10), {kind: 'whitespace'},
+        ...makeSentence('E', 10), {kind: 'whitespace'},
+        ...makeSentence('F', 10), {kind: 'whitespace'},
+        ...makeSentence('G', 10), {kind: 'whitespace'},
+        ...makeSentence('H', 10)
+      ]}],
+      first: false,
+      centered: false,
+      tricolored: false,
+    }))
 
     cy.get('span:contains("AA")').last().should('have.css', 'color', color1)
     cy.get('span:contains("BI")').last().should('have.css', 'color', color1)
@@ -127,6 +135,9 @@ describe('TricolorSection', () => {
           paragraphs: [
             {contents: makeSentence('A', 10)},
           ],
+          first: false,
+          centered: false,
+          tricolored: false,
           paragraphIndexOffset: 0,
           modelValue: [],
         },
@@ -153,6 +164,9 @@ describe('TricolorSection', () => {
           paragraphs: [{
             contents: [makeToken('abcdefghijkl'), {kind: 'whitespace'}, makeToken('mnopqrstuvwxyz')],
           }],
+          first: false,
+          centered: false,
+          tricolored: false,
           paragraphIndexOffset: 0,
           modelValue: [],
         },
