@@ -12,30 +12,66 @@ Les améliorations techniques ne figurent que dans le `log git <https://github.c
 Les titres des sections de ce document correspondent au champ ``Gabby version`` dans le "À propos".
 Les versions sont nommées selon leur date de publication, au format ``YYYYMMDD-HHMMSS`` (année, mois, jour, tiret, heure, minute, seconde).
 
+20250306-143722
+---------------
+
+(La `milestone GitHub avec les issues traitées <https://github.com/jacquev6/Gabby/milestone/4>`__.)
+
+- Interface :
+    - Les menus (édition de QCM, choix de couleur) se ferment avec "Echap". Le menu d'édition des QCM se ferme aussi avec "Entrée". Le bouton "OK" du menu d'édition des QCM a été retiré (`#58 <https://github.com/jacquev6/Gabby/issues/58>`__`)
+    - La visualisation plein écran de l'exercice adapté se ferme avec "Echap" (`#87 <https://github.com/jacquev6/Gabby/issues/87>`__`)
+    - Les barres de navigation dans l'exercice adaptée sont d'un gris plus clair (`#85 <https://github.com/jacquev6/Gabby/issues/85>`__`)
+
+- Formatage :
+    - La fonctionnalité de surlignage a été ajoutée (`#101 <https://github.com/jacquev6/Gabby/issues/101>`__`)
+    - Le formatage basique (gras, italique, surlignage) est maintenant compatible avec les QCM, les items manuels, etc. Il est maintenant possible d'avoir des retours à la ligne au sein d'une définition de QCM, d'un items manuel, etc. (`#62 <https://github.com/jacquev6/Gabby/issues/62>`__`)
+    - Dans l'exercice adapté, les cadres autour des items s'étalant sur plusieurs lignes sont maintenant ouverts en fin et en début de ligne (`#84 <https://github.com/jacquev6/Gabby/issues/84>`__`)
+    - Dans l'exercice adapté, les références de texte sont affichées en noir, alignées à gauche sur la dernière page, sans sauts à la ligne (`#86 <https://github.com/jacquev6/Gabby/issues/86>`__`)
+    - Des marges et du padding ont été ajoutés (`#88 <https://github.com/jacquev6/Gabby/issues/88>`__`, `#89 <https://github.com/jacquev6/Gabby/issues/89>`__`, `#99 <https://github.com/jacquev6/Gabby/issues/99>`__`, `#105 <https://github.com/jacquev6/Gabby/issues/105>`__`, `#106 <https://github.com/jacquev6/Gabby/issues/106>`__`, `#107 <https://github.com/jacquev6/Gabby/issues/107>`__`)
+
+- Choix multiples :
+    - Le workflow de la fonctionnalité "Double : mot → QCM" a été rendu plus rapide (`#71 <https://github.com/jacquev6/Gabby/issues/71>`__`)
+    - Un bouton "Appliquer les choix à tous les champs QCM" a été ajouté (`#72 <https://github.com/jacquev6/Gabby/issues/72>`__`)
+    - Les choix d'un champ QCM sont maintenant affichés au dessus du champs quand il n'y a pas de place en dessous (`#83 <https://github.com/jacquev6/Gabby/issues/83>`__`)
+    - Les valeurs proposées ont une majuscule lorsque le champ est en début de phrase (`#91 <https://github.com/jacquev6/Gabby/issues/91>`__`)
+    - Les choix dans la consigne ne sont plus séparés par des virgules (`#92 <https://github.com/jacquev6/Gabby/issues/92>`__`)
+    - Les champs QCM "sous chaque item" bénéficient de l'alternance des couleurs. La flèche avant les champs QCM a été changée (`#103 <https://github.com/jacquev6/Gabby/issues/103>`__`)
+    - Les phrases répétées de "Double : mot → QCM" sont précédées d'une flèche (`#108 <https://github.com/jacquev6/Gabby/issues/108>`__`)
+
+- Items et effets :
+    - L'apostrophe est toujours considérée comme appartenant au mot précédent (`#104 <https://github.com/jacquev6/Gabby/issues/104>`__`)
+
+- Bugs :
+    - Les backdrops (surfaces grisées en arrière plan) des menus (édition de QCM, choix de couleur) sont maintenant toujours à la bonne place (`#35 <https://github.com/jacquev6/Gabby/issues/35>`__`)
+    - Les items manuels sont cohérents entre la colonne "Edition" et la colonne "Exercice adapté" (`#100 <https://github.com/jacquev6/Gabby/issues/100>`__)
+    - Un crash lorsqu'une définition de QCM est constituée entièrement d'espaces ne se produira plus (`#90 <https://github.com/jacquev6/Gabby/issues/90>`__`)
+    - Un crash lorsque le champ page est vide ne se produira plus (`#95 <https://github.com/jacquev6/Gabby/issues/95>`__`)
+    - Le champs "Trou à remplir" lors de l'édition d'un QCM dans un exercice existant avait été retiré par erreur et a été remis (`#98 <https://github.com/jacquev6/Gabby/issues/98>`__`)
+
 20250213-143554
 ---------------
 
 (La `milestone GitHub avec les issues traitées <https://github.com/jacquev6/Gabby/milestone/3>`__.)
 
 - Interface :
-    Réorganisation de la colonne "Outils" (`#73 <https://github.com/jacquev6/Gabby/issues/73>`__)
-    Réglage de la répartition des lignes par page avec des carrés sur une seule ligne plutôt que des boites à cocher (`#63 <https://github.com/jacquev6/Gabby/issues/63>`__)
-    Possibilité de formatter du texte en même temps gras et italique (début de `#62 <https://github.com/jacquev6/Gabby/issues/62>`__, à garder ouverte)
+    - Réorganisation de la colonne "Outils" (`#73 <https://github.com/jacquev6/Gabby/issues/73>`__)
+    - Réglage de la répartition des lignes par page avec des carrés sur une seule ligne plutôt que des boites à cocher (`#63 <https://github.com/jacquev6/Gabby/issues/63>`__)
+    - Possibilité de formatter du texte en même temps gras et italique (début de `#62 <https://github.com/jacquev6/Gabby/issues/62>`__, à garder ouverte)
 
 - Items et effets :
-    Désactivation des cases à cocher des effets quand aucun item n'est sélectionné (`#57 <https://github.com/jacquev6/Gabby/issues/57>`__)
-    Nouveau type d'items: "Séparé par", avec séparateur libre et suggestions des séparateurs déjà utilisés dans le manuel (`#54 <https://github.com/jacquev6/Gabby/issues/54>`__)
+    - Désactivation des cases à cocher des effets quand aucun item n'est sélectionné (`#57 <https://github.com/jacquev6/Gabby/issues/57>`__)
+    - Nouveau type d'items: "Séparé par", avec séparateur libre et suggestions des séparateurs déjà utilisés dans le manuel (`#54 <https://github.com/jacquev6/Gabby/issues/54>`__)
 
 - Choix multiples :
-    Début de la fonctionnalité d'ajout manuel de champs QCM (`#64 <https://github.com/jacquev6/Gabby/issues/64>`__, à fermer et à compléter avec de nouvelle issues)
-    Début de la fonctionnalité "Double : mot → QCM". Ce workflow prototype demande encore beaucoup de clics et gagnera à être raffiné. (`#71 <https://github.com/jacquev6/Gabby/issues/71>`__, à fermer et à compléter avec de nouvelle issues)
-    Ajout des QCM pré-définis "Genre" et "Nombre" (`#70 <https://github.com/jacquev6/Gabby/issues/70>`__)
-    Possibilité d'afficher un champ QCM sous (`#67 <https://github.com/jacquev6/Gabby/issues/67>`__) et à coté (`#66 <https://github.com/jacquev6/Gabby/issues/66>`__) de chaque item
-    Possibilité d'afficher une flèche avant les champs QCM (`#65 <https://github.com/jacquev6/Gabby/issues/65>`__)
-    Possibilité d'afficher les choix des QCM lors de l'affichage de l'exercice (`#69 <https://github.com/jacquev6/Gabby/issues/69>`__)
+    - Début de la fonctionnalité d'ajout manuel de champs QCM (`#64 <https://github.com/jacquev6/Gabby/issues/64>`__, à fermer et à compléter avec de nouvelle issues)
+    - Début de la fonctionnalité "Double : mot → QCM". Ce workflow prototype demande encore beaucoup de clics et gagnera à être raffiné (`#71 <https://github.com/jacquev6/Gabby/issues/71>`__, à fermer et à compléter avec de nouvelle issues)
+    - Ajout des QCM pré-définis "Genre" et "Nombre" (`#70 <https://github.com/jacquev6/Gabby/issues/70>`__)
+    - Possibilité d'afficher un champ QCM sous (`#67 <https://github.com/jacquev6/Gabby/issues/67>`__) et à coté (`#66 <https://github.com/jacquev6/Gabby/issues/66>`__) de chaque item
+    - Possibilité d'afficher une flèche avant les champs QCM (`#65 <https://github.com/jacquev6/Gabby/issues/65>`__)
+    - Possibilité d'afficher les choix des QCM lors de l'affichage de l'exercice (`#69 <https://github.com/jacquev6/Gabby/issues/69>`__)
 
 Présentation de l'exercice adapté:
-    Possibilité d'afficher un item par ligne (`#68 <https://github.com/jacquev6/Gabby/issues/68>`__)
+    - Possibilité d'afficher un item par ligne (`#68 <https://github.com/jacquev6/Gabby/issues/68>`__)
 
 Le `PDF de demo <https://github.com/jacquev6/Gabby/blob/main/pdf-examples/demo.pdf>`__ a été mis à jour avec un exercice illustrant chaque nouvelle fonctionnalité. Voir en particulier les dernières pages du PDF.
 
